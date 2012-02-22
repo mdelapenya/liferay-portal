@@ -195,7 +195,7 @@ public class SetupWizardUtil {
 
 		_initPlugins();
 
-		boolean propertiesFileCreated = true;
+		boolean propertiesFileCreated = false;
 
 		if (adminUserUpdated) {
 			propertiesFileCreated = _writePropertiesFile(unicodeProperties);

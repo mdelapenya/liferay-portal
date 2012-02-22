@@ -45,12 +45,12 @@
 	<div id="content">
 		<div id="main-content">
 
-            <%
-            UnicodeProperties unicodeProperties = (UnicodeProperties)session.getAttribute(WebKeys.SETUP_WIZARD_PROPERTIES);
+			<%
+			UnicodeProperties unicodeProperties = (UnicodeProperties)session.getAttribute(WebKeys.SETUP_WIZARD_PROPERTIES);
 			%>
 
 			<c:choose>
-				<c:when test="<%= Validator.isNull(unicodeProperties) %>">
+				<c:when test="<%= unicodeProperties == null %>">
 
 					<%
 					boolean defaultDatabase = SetupWizardUtil.isDefaultDatabase(request);
@@ -345,10 +345,10 @@
 				<c:otherwise>
 
 					<%
-                    SetupWizardUtil.setSetupFinished(true);
+					SetupWizardUtil.setSetupFinished(true);
 
-                    boolean adminUserUpdated = GetterUtil.getBoolean((Boolean)session.getAttribute(WebKeys.SETUP_WIZARD_USER_UPDATED));
-                    boolean propertiesFileCreated = GetterUtil.getBoolean((Boolean)session.getAttribute(WebKeys.SETUP_WIZARD_PROPERTIES_FILE_CREATED));
+					boolean adminUserUpdated = GetterUtil.getBoolean((Boolean)session.getAttribute(WebKeys.SETUP_WIZARD_USER_UPDATED));
+					boolean propertiesFileCreated = GetterUtil.getBoolean((Boolean)session.getAttribute(WebKeys.SETUP_WIZARD_PROPERTIES_FILE_CREATED));
 					%>
 
 					<c:choose>
