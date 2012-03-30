@@ -17,26 +17,24 @@
 <%@ include file="/html/portlet/trash/init.jsp" %>
 
 <%
-List<TrashEntry> trashEntries = TrashEntryLocalServiceUtil.getEntries(themeDisplay.getCompanyGroupId());
+int trashEntriesCount = TrashEntryLocalServiceUtil.getTrashEntriesCount(themeDisplay.getScopeGroupId());
 %>
 
 <aui:layout>
-
-	<c:if test="<%= trashEntries.size() > 0 %>">
+	<c:if test="<%= trashEntriesCount > 0 %>">
 		<aui:button-row>
 			<aui:button name="emptyTrashButton" value="empty-trash" />
 		</aui:button-row>
 	</c:if>
 
 	<liferay-ui:search-container
-		emptyResultsMessage="no-trash-entries-were-found"
+		emptyResultsMessage="the-recycle-bin-is-empty"
 		headerNames="primaryKey,type, status"
-		id="trashEntriesSearchContainer"
 		rowChecker="<%= new RowChecker(renderResponse) %>"
 	>
 		<liferay-ui:search-container-results
-			results="<%= trashEntries %>"
-			total="<%= trashEntries.size() %>"
+			results="<%= TrashEntryLocalServiceUtil.getEntries(themeDisplay.getScopeGroupId(), searchContainer.getStart(), searchContainer.getEnd()) %>"
+			total="<%= trashEntriesCount %>"
 		/>
 
 		<liferay-ui:search-container-row

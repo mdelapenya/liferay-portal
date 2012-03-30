@@ -19,15 +19,4 @@
 <%@ page import="com.liferay.portlet.trash.model.TrashEntry" %><%@
 page import="com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil" %>
 
-<%
-PortletPreferences preferences = renderRequest.getPreferences();
-
-String portletResource = ParamUtil.getString(request, "portletResource");
-
-if (Validator.isNotNull(portletResource)) {
-	preferences = PortletPreferencesFactoryUtil.getPortletSetup(request, portletResource);
-}
-
-%>
-
 <%@ include file="/html/portlet/trash/init-ext.jsp" %>
