@@ -129,61 +129,47 @@ public class LocalizationImpl implements Localization {
 	}
 
 	public Locale getDefaultImportLocale(
-			String className, long classPK, Locale contentDefaultLocale,
-			Locale[] contentAvailableLocales) {
+		String className, long classPK, Locale contentDefaultLocale,
+		Locale[] contentAvailableLocales) {
 
-		Locale defaultImportLocale = null;
+		Locale[] availableLocales = LanguageUtil.getAvailableLocales();
 
-		Locale[] targetAvailableLocales = LanguageUtil.getAvailableLocales();
+		if (ArrayUtil.contains(availableLocales, contentDefaultLocale)) {
+			return contentDefaultLocale;
+		}
 
-		if (!ArrayUtil.contains(targetAvailableLocales, contentDefaultLocale)) {
+		Locale defaultLocale = LocaleUtil.getDefault();
 
-			// portal default locale has priority
+		if (ArrayUtil.contains(
+				contentAvailableLocales, defaultLocale)) {
 
-			Locale portalDefaultLocale = LocaleUtil.getDefault();
+			return defaultLocale;
+		}
 
+		for (Locale contentAvailableLocale : contentAvailableLocales) {
 			if (ArrayUtil.contains(
-				contentAvailableLocales, portalDefaultLocale)) {
+					availableLocales, contentAvailableLocale)) {
 
-				defaultImportLocale = portalDefaultLocale;
-			}
-			else {
-				for (Locale contentAvailableLocale : contentAvailableLocales) {
-					if (ArrayUtil.contains(
-							targetAvailableLocales, contentAvailableLocale)) {
-
-						defaultImportLocale = contentAvailableLocale;
-
-						break;
-					}
-				}
-			}
-
-			if (defaultImportLocale == null) {
-
-				defaultImportLocale = portalDefaultLocale;
-
-				if (_log.isWarnEnabled()) {
-					StringBundler sb = new StringBundler();
-
-					sb.append("Language ");
-					sb.append(LocaleUtil.toLanguageId(contentDefaultLocale));
-					sb.append(" is missing for ");
-					sb.append(className);
-					sb.append(" with primaryKey ");
-					sb.append(classPK);
-					sb.append(", setting it as default to ");
-					sb.append(LocaleUtil.toLanguageId(defaultImportLocale));
-
-					_log.warn(sb.toString());
-				}
+				return contentAvailableLocale;
 			}
 		}
-		else {
-			defaultImportLocale = contentDefaultLocale;
+
+		if (_log.isWarnEnabled()) {
+			StringBundler sb = new StringBundler();
+
+			sb.append("Language ");
+			sb.append(LocaleUtil.toLanguageId(contentDefaultLocale));
+			sb.append(" is missing for ");
+			sb.append(className);
+			sb.append(" with primaryKey ");
+			sb.append(classPK);
+			sb.append(", setting default language to ");
+			sb.append(LocaleUtil.toLanguageId(defaultLocale));
+
+			_log.warn(sb.toString());
 		}
 
-		return defaultImportLocale;
+		return defaultLocale;
 	}
 
 	public String getDefaultLocale(String xml) {
