@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.asset.model;
 
+import com.liferay.portal.LocaleException;
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.AttachedModel;
@@ -747,7 +748,8 @@ public interface AssetEntryModel extends AttachedModel, BaseModel<AssetEntry>,
 
 	public int hashCode();
 
-	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale)
+		throws LocaleException;
 
 	public CacheModel<AssetEntry> toCacheModel();
 

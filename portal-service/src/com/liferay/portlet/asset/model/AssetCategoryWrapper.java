@@ -736,7 +736,8 @@ public class AssetCategoryWrapper implements AssetCategory,
 	}
 
 	public void prepareLocalizedFieldsForImport(
-		java.util.Locale defaultImportLocale) {
+		java.util.Locale defaultImportLocale)
+		throws com.liferay.portal.LocaleException {
 		_assetCategory.prepareLocalizedFieldsForImport(defaultImportLocale);
 	}
 

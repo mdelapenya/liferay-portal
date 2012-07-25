@@ -412,7 +412,8 @@ public class LayoutPrototypeWrapper implements LayoutPrototype,
 	}
 
 	public void prepareLocalizedFieldsForImport(
-		java.util.Locale defaultImportLocale) {
+		java.util.Locale defaultImportLocale)
+		throws com.liferay.portal.LocaleException {
 		_layoutPrototype.prepareLocalizedFieldsForImport(defaultImportLocale);
 	}
 

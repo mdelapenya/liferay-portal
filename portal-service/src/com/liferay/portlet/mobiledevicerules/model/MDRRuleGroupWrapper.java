@@ -611,7 +611,8 @@ public class MDRRuleGroupWrapper implements MDRRuleGroup,
 	}
 
 	public void prepareLocalizedFieldsForImport(
-		java.util.Locale defaultImportLocale) {
+		java.util.Locale defaultImportLocale)
+		throws com.liferay.portal.LocaleException {
 		_mdrRuleGroup.prepareLocalizedFieldsForImport(defaultImportLocale);
 	}
 

@@ -357,7 +357,8 @@ public class PollsChoiceWrapper implements PollsChoice,
 	}
 
 	public void prepareLocalizedFieldsForImport(
-		java.util.Locale defaultImportLocale) {
+		java.util.Locale defaultImportLocale)
+		throws com.liferay.portal.LocaleException {
 		_pollsChoice.prepareLocalizedFieldsForImport(defaultImportLocale);
 	}
 

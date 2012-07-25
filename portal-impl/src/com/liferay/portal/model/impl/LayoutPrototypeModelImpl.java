@@ -14,6 +14,7 @@
 
 package com.liferay.portal.model.impl;
 
+import com.liferay.portal.LocaleException;
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -522,7 +523,8 @@ public class LayoutPrototypeModelImpl extends BaseModelImpl<LayoutPrototype>
 		layoutPrototypeModelImpl._columnBitmask = 0;
 	}
 
-	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale) {
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale)
+		throws LocaleException {
 		setName(getName(defaultImportLocale), defaultImportLocale,
 			defaultImportLocale);
 	}

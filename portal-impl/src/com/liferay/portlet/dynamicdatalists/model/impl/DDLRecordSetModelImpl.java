@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.dynamicdatalists.model.impl;
 
+import com.liferay.portal.LocaleException;
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSON;
@@ -755,7 +756,8 @@ public class DDLRecordSetModelImpl extends BaseModelImpl<DDLRecordSet>
 		ddlRecordSetModelImpl._columnBitmask = 0;
 	}
 
-	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale) {
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale)
+		throws LocaleException {
 		setName(getName(defaultImportLocale), defaultImportLocale,
 			defaultImportLocale);
 		setDescription(getDescription(defaultImportLocale),

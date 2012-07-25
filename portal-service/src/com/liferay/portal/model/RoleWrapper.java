@@ -574,7 +574,8 @@ public class RoleWrapper implements Role, ModelWrapper<Role> {
 	}
 
 	public void prepareLocalizedFieldsForImport(
-		java.util.Locale defaultImportLocale) {
+		java.util.Locale defaultImportLocale)
+		throws com.liferay.portal.LocaleException {
 		_role.prepareLocalizedFieldsForImport(defaultImportLocale);
 	}
 
