@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.journal.model.impl;
 
+import com.liferay.portal.LocaleException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -191,7 +192,9 @@ public class JournalArticleImpl extends JournalArticleBaseImpl {
 	}
 
 	@Override
-	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale) {
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale)
+		throws LocaleException{
+
 		super.prepareLocalizedFieldsForImport(defaultImportLocale);
 
 		String defaultImportLanguageId = LocaleUtil.toLanguageId(

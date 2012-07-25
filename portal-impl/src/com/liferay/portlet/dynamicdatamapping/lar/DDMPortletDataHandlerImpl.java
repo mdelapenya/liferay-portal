@@ -42,6 +42,7 @@ import com.liferay.portlet.dynamicdatamapping.service.DDMStructureLocalServiceUt
 import com.liferay.portlet.dynamicdatamapping.service.DDMTemplateLocalServiceUtil;
 import com.liferay.portlet.dynamicdatamapping.service.persistence.DDMStructureUtil;
 import com.liferay.portlet.dynamicdatamapping.service.persistence.DDMTemplateUtil;
+import com.liferay.portlet.dynamicdatamapping.util.DDMXMLUtil;
 
 import java.util.List;
 import java.util.Locale;
@@ -333,16 +334,6 @@ public class DDMPortletDataHandlerImpl extends BasePortletDataHandler {
 			ddmStructureDefaultLocale, ddmStructureAvailableLocales);
 
 		ddmStructure.prepareLocalizedFieldsForImport(defaultImportLocale);
-
-		try {
-			ddmStructure.setXsd(
-				LocalizationUtil.fixContentDefaultLocale(
-					ddmStructure.getXsd(), ddmStructureDefaultLocale,
-					defaultImportLocale));
-		}
-		catch (Exception e) {
-			throw new LocaleException(e);
-		}
 	}
 
 	@Override
