@@ -710,6 +710,12 @@ public class DDLRecordSetWrapper implements DDLRecordSet,
 		return _ddlRecordSet.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale)
+		throws com.liferay.portal.LocaleException {
+		_ddlRecordSet.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.dynamicdatalists.model.DDLRecordSet> toCacheModel() {
 		return _ddlRecordSet.toCacheModel();
 	}

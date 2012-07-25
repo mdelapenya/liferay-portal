@@ -14,6 +14,7 @@
 
 package com.liferay.portal.model;
 
+import com.liferay.portal.LocaleException;
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.service.ServiceContext;
 
@@ -303,6 +304,9 @@ public interface LayoutSetPrototypeModel extends BaseModel<LayoutSetPrototype> {
 	public int compareTo(LayoutSetPrototype layoutSetPrototype);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale)
+		throws LocaleException;
 
 	public CacheModel<LayoutSetPrototype> toCacheModel();
 

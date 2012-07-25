@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
 
 import java.io.IOException;
+import java.util.Locale;
 
 /**
  * @author Bruno Basto
@@ -46,6 +47,15 @@ public class DDMXMLUtil {
 		PortalRuntimePermission.checkSetBeanProperty(getClass());
 
 		_ddmXML = ddmXML;
+	}
+
+	public static String updateXMLDefaultLocale(
+			String xml, Locale contentDefaultLocale,
+			Locale contentNewDefaultLocale)
+		throws DocumentException, IOException {
+
+		return getDDMXML().updateXMLDefaultLocale(
+			xml, contentDefaultLocale, contentNewDefaultLocale);
 	}
 
 	private static DDMXML _ddmXML;

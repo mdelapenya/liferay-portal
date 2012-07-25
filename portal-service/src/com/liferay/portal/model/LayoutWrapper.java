@@ -1430,6 +1430,12 @@ public class LayoutWrapper implements Layout, ModelWrapper<Layout> {
 		return _layout.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale)
+		throws com.liferay.portal.LocaleException {
+		_layout.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.Layout> toCacheModel() {
 		return _layout.toCacheModel();
 	}

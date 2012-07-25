@@ -411,6 +411,12 @@ public class LayoutPrototypeWrapper implements LayoutPrototype,
 		return _layoutPrototype.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale)
+		throws com.liferay.portal.LocaleException {
+		_layoutPrototype.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.LayoutPrototype> toCacheModel() {
 		return _layoutPrototype.toCacheModel();
 	}
