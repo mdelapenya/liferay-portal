@@ -1493,17 +1493,6 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 			defaultImportLocale);
 		setDescription(getDescription(defaultImportLocale),
 			defaultImportLocale, defaultImportLocale);
-
-		String defaultExportedLanguageId = LocaleUtil.toLanguageId(
-			defaultImportLocale);
-
-		String content = LocalizationUtil.updateLocalization(
-			getContent(), "static-content",
-			LocalizationUtil.getLocalization(
-				getContent(), defaultExportedLanguageId),
-			defaultExportedLanguageId, defaultExportedLanguageId, true, true);
-
-		setContent(content);
 	}
 
 	@Override

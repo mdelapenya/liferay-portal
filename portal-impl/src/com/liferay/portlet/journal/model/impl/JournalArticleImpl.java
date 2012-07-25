@@ -190,6 +190,22 @@ public class JournalArticleImpl extends JournalArticleBaseImpl {
 		}
 	}
 
+	@Override
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale) {
+		super.prepareLocalizedFieldsForImport(defaultImportLocale);
+
+		String defaultImportLanguageId = LocaleUtil.toLanguageId(
+			defaultImportLocale);
+
+		String content = LocalizationUtil.updateLocalization(
+			getContent(), "static-content",
+			LocalizationUtil.getLocalization(
+				getContent(), defaultImportLanguageId),
+			defaultImportLanguageId, defaultImportLanguageId, true, true);
+
+		setContent(content);
+	}
+
 	public void setSmallImageType(String smallImageType) {
 		_smallImageType = smallImageType;
 	}
