@@ -3470,16 +3470,15 @@ public class JournalArticleLocalServiceImpl
 			String smallImageURL, File smallImageFile, byte[] smallImageBytes)
 		throws PortalException, SystemException {
 
-		Locale defaultLocale = LocaleUtil.fromLanguageId(
+		Locale articleDefaultLocale = LocaleUtil.fromLanguageId(
 			LocalizationUtil.getDefaultLocale(content));
 
 		Locale[] availableLocales = LanguageUtil.getAvailableLocales();
 
-		if (!ArrayUtil.contains(availableLocales, defaultLocale)) {
+		if (!ArrayUtil.contains(availableLocales, articleDefaultLocale)) {
 			LocaleException le = new LocaleException();
 
-			Locale[] sourceAvailableLocales = new Locale[1];
-			sourceAvailableLocales[0] = defaultLocale;
+			Locale[] sourceAvailableLocales = {articleDefaultLocale};
 
 			le.setSourceAvailableLocales(sourceAvailableLocales);
 			le.setTargetAvailableLocales(availableLocales);
@@ -3489,7 +3488,7 @@ public class JournalArticleLocalServiceImpl
 
 		if ((classNameId == 0) &&
 			(titleMap.isEmpty() ||
-			 Validator.isNull(titleMap.get(defaultLocale)))) {
+			 Validator.isNull(titleMap.get(articleDefaultLocale)))) {
 
 			throw new ArticleTitleException();
 		}

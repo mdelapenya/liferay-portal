@@ -660,11 +660,11 @@ public class DDMStructureLocalServiceImpl
 					throw new StructureXsdException();
 				}
 
-				Locale[] availableLocales = LocaleUtil.fromLanguageIds(
+				Locale[] contentAvailableLocales = LocaleUtil.fromLanguageIds(
 					StringUtil.split(
 						rootElement.attributeValue("available-locales")));
 
-				validateLanguages(availableLocales);
+				validateLanguages(contentAvailableLocales);
 
 				elements.addAll(rootElement.elements());
 
@@ -687,31 +687,25 @@ public class DDMStructureLocalServiceImpl
 		}
 	}
 
-	protected void validateLanguages(Locale[] availableLocales)
+	protected void validateLanguages(Locale[] contentAvailableLocales)
 		throws PortalException {
 
-		Locale[] targetAvailableLocales = LanguageUtil.getAvailableLocales();
+		Locale[] availableLocales = LanguageUtil.getAvailableLocales();
 
-		boolean existsLocale = false;
-
-		for (Locale sourceAvailableLocale : availableLocales) {
+		for (Locale contentAvailableLocale : contentAvailableLocales) {
 			if (ArrayUtil.contains(
-					targetAvailableLocales, sourceAvailableLocale)) {
+					availableLocales, contentAvailableLocale)) {
 
-				existsLocale = true;
-
-				break;
+				return;
 			}
 		}
 
-		if (!existsLocale) {
-			LocaleException le = new LocaleException();
+		LocaleException le = new LocaleException();
 
-			le.setSourceAvailableLocales(availableLocales);
-			le.setTargetAvailableLocales(targetAvailableLocales);
+		le.setSourceAvailableLocales(contentAvailableLocales);
+		le.setTargetAvailableLocales(availableLocales);
 
-			throw le;
-		}
+		throw le;
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(
