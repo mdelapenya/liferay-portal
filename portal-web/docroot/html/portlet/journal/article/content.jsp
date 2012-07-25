@@ -180,7 +180,7 @@ if (Validator.isNotNull(content)) {
 		<liferay-ui:error exception="<%= LocaleException.class %>">
 
 			<%
-				LocaleException le = (LocaleException)errorException;
+			LocaleException le = (LocaleException)errorException;
 			%>
 
 			<liferay-ui:message arguments="<%= new String[] {StringUtil.merge(le.getSourceAvailableLocales()), StringUtil.merge(le.getTargetAvailableLocales())} %>" key="the-default-language-x-does-not-match-the-portal's-available-languages-x" />
