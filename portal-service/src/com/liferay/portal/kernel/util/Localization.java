@@ -56,11 +56,6 @@ public interface Localization {
 	 */
 	public Object deserialize(JSONObject jsonObject);
 
-	public String fixContentDefaultLocale(
-			String xml, Locale contentDefaultLocale,
-			Locale contentAvailableLocale)
-		throws DocumentException, IOException;
-
 	/**
 	 * Returns the available locales from the localizations XML
 	 *
@@ -69,6 +64,15 @@ public interface Localization {
 	 */
 	public String[] getAvailableLocales(String xml);
 
+	/**
+	 * Returns a valid default locale for importing a localized entity
+	 *
+	 * @param  className the class name of the entity
+	 * @param  classPK the primary keys of the entity
+	 * @param  contentDefaultLocale the default Locale of the entity
+	 * @param  contentAvailableLocales the available locales of the entity
+	 * @return the valid locale
+	 */
 	public Locale getDefaultImportLocale(
 		String className, long classPK, Locale contentDefaultLocale,
 		Locale[] contentAvailableLocales);

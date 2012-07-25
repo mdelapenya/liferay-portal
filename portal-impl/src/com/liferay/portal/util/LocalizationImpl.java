@@ -85,42 +85,6 @@ public class LocalizationImpl implements Localization {
 		return map;
 	}
 
-	public String fixContentDefaultLocale(
-			String xml, Locale contentDefaultLocale,
-			Locale availableDefaultLocale)
-		throws DocumentException, IOException {
-
-		Document xsd = SAXReaderUtil.read(xml);
-
-		Element rootElement = xsd.getRootElement();
-
-		Attribute availableLocales = rootElement.attribute(_AVAILABLE_LOCALES);
-
-		String availableDefaultLocaleId = LocaleUtil.toLanguageId(
-			availableDefaultLocale);
-
-		if (availableLocales.getValue().indexOf(
-				availableDefaultLocaleId) == -1) {
-
-			StringBundler sb = new StringBundler(3);
-
-			sb.append(availableLocales.getValue());
-			sb.append(StringPool.COMMA);
-			sb.append(availableDefaultLocaleId);
-
-			availableLocales.setValue(sb.toString());
-		}
-
-		Attribute defaultLocale = rootElement.attribute(_DEFAULT_LOCALE);
-
-		defaultLocale.setValue(availableDefaultLocaleId);
-
-		_fixElementsDefaultLocale(
-			rootElement, contentDefaultLocale, availableDefaultLocale);
-
-		return xsd.formattedString();
-	}
-
 	public String[] getAvailableLocales(String xml) {
 		String attributeValue = _getRootAttribute(
 			xml, _AVAILABLE_LOCALES, StringPool.BLANK);
@@ -927,38 +891,6 @@ public class LocalizationImpl implements Localization {
 		}
 	}
 
-	private void _fixElementsDefaultLocale(
-		Element rootElement, Locale contentDefaultLocale,
-		Locale contentAvailableLocale) {
-
-		for (Element child : rootElement.elements(_DYNAMIC_ELEMENT)) {
-
-			Element metaDataImportElement =
-				(Element) child.selectSingleNode(
-					"meta-data[@locale='" + contentAvailableLocale.toString() +
-						"']");
-
-			if (metaDataImportElement == null) {
-				Element metaDataElement =
-					(Element) child.selectSingleNode(
-						"meta-data[@locale='" +
-							contentDefaultLocale.toString() + "']");
-
-				Element copiedMetadataElement = metaDataElement.createCopy();
-
-				Attribute attributeLocale = copiedMetadataElement.attribute(
-					_LOCALE);
-
-				attributeLocale.setValue(contentAvailableLocale.toString());
-
-				child.add(copiedMetadataElement);
-			}
-
-			_fixElementsDefaultLocale(
-				child, contentDefaultLocale, contentAvailableLocale);
-		}
-	}
-
 	private String _getCachedValue(
 		String xml, String requestedLanguageId, boolean useDefault) {
 
@@ -1092,13 +1024,9 @@ public class LocalizationImpl implements Localization {
 
 	private static final String _DEFAULT_LOCALE = "default-locale";
 
-	private static final String _DYNAMIC_ELEMENT = "dynamic-element";
-
 	private static final String _EMPTY_ROOT_NODE = "<root />";
 
 	private static final String _LANGUAGE_ID = "language-id";
-
-	private static final String _LOCALE = "locale";
 
 	private static final String _ROOT = "root";
 

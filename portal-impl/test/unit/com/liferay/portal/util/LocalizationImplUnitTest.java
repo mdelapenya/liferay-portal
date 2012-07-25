@@ -31,6 +31,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
 
+import com.liferay.portlet.dynamicdatamapping.util.DDMXMLUtil;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
@@ -99,7 +100,7 @@ public class LocalizationImplUnitTest extends PowerMockito {
 
 				String rootXML = rootElement.asXML();
 
-				structureXML = LocalizationUtil.fixContentDefaultLocale(
+				structureXML = DDMXMLUtil.updateXMLDefaultLocale(
 					rootXML, contentDefaultLocale, availableDefaultLocale);
 
 				StringBundler sb = new StringBundler();

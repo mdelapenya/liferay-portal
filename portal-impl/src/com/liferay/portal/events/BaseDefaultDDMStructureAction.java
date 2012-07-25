@@ -29,6 +29,7 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructureConstants;
 import com.liferay.portlet.dynamicdatamapping.service.DDMStructureLocalServiceUtil;
+import com.liferay.portlet.dynamicdatamapping.util.DDMXMLUtil;
 import com.liferay.util.ContentUtil;
 
 import java.io.IOException;
@@ -92,7 +93,7 @@ public abstract class BaseDefaultDDMStructureAction extends SimpleAction {
 			Locale ddmStructureDefaultLocale = LocaleUtil.fromLanguageId(
 				defaultLocaleAttribute.getValue());
 
-			xsd = LocalizationUtil.fixContentDefaultLocale(
+			xsd = DDMXMLUtil.updateXMLDefaultLocale(
 				xsd, ddmStructureDefaultLocale, LocaleUtil.getDefault());
 
 			DDMStructureLocalServiceUtil.addStructure(

@@ -44,15 +44,6 @@ public class LocalizationUtil {
 		return getLocalization().deserialize(jsonObject);
 	}
 
-	public static String fixContentDefaultLocale(
-			String xml, Locale contentDefaultLocale,
-			Locale availableDefaultLocale)
-		throws DocumentException, IOException {
-
-		return getLocalization().fixContentDefaultLocale(
-			xml, contentDefaultLocale, availableDefaultLocale);
-	}
-
 	public static String[] getAvailableLocales(String xml) {
 		return getLocalization().getAvailableLocales(xml);
 	}
