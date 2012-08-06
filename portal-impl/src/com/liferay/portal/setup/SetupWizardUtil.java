@@ -427,17 +427,17 @@ public class SetupWizardUtil {
 
 			user = UserLocalServiceUtil.getUserByEmailAddress(
 				themeDisplay.getCompanyId(), emailAddress);
+
+			if (!emailAddress.equals("test@liferay.com")) {
+				User testUser = UserLocalServiceUtil.getUserByEmailAddress(
+					themeDisplay.getCompanyId(), "test@liferay.com");
+
+				UserLocalServiceUtil.updateStatus(
+					testUser.getUserId(), WorkflowConstants.STATUS_INACTIVE);
+			}
 		}
 
 		user = UserLocalServiceUtil.updatePasswordReset(user.getUserId(), true);
-
-		if (!emailAddress.equals("test@liferay.com")) {
-			User testUser = UserLocalServiceUtil.getUserByEmailAddress(
-				themeDisplay.getCompanyId(), "test@liferay.com");
-
-			UserLocalServiceUtil.updateStatus(
-				testUser.getUserId(), WorkflowConstants.STATUS_INACTIVE);
-		}
 
 		HttpSession session = request.getSession();
 
