@@ -82,7 +82,7 @@ public class PortalLDAPImporterImplTest {
 	public void testImportLDAPUsers() throws Exception {
 		configLDAPServer(_companyId);
 
-		if (!checkLDAPConnectivity()) {
+		if (!isLDAPConnected()) {
 			_log.warn("Connection with LDAP not available. Test won't execute");
 
 			return;
@@ -145,7 +145,7 @@ public class PortalLDAPImporterImplTest {
 		}
 	}
 
-	protected boolean checkLDAPConnectivity() throws Exception {
+	protected boolean isLDAPConnected() throws Exception {
 		LdapContext ldapContext = PortalLDAPUtil.getContext(
 			_ldapServerId, _companyId);
 
