@@ -17,7 +17,9 @@ package com.liferay.portlet.social.service;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.User;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceTestUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
@@ -50,6 +52,47 @@ public class BaseSocialActivityTestCase {
 			clazz.getClassLoader(), new String[] {xml});
 	}
 
+	public void tearDown() throws Exception {
+		if (_actorUser != null) {
+			UserLocalServiceUtil.deleteUser(_actorUser);
+
+			_actorUser = null;
+		}
+
+		if (_assetEntry != null) {
+			AssetEntryLocalServiceUtil.deleteEntry(_assetEntry);
+
+			_assetEntry = null;
+		}
+
+		if (_creatorUser != null) {
+			UserLocalServiceUtil.deleteUser(_creatorUser);
+
+			_creatorUser = null;
+		}
+
+		if (_group != null) {
+			GroupLocalServiceUtil.deleteGroup(_group);
+
+			_group = null;
+		}
+	}
+
+	protected SocialActivity addActivity(User user, int type) {
+		SocialActivity activity = new SocialActivityImpl();
+
+		activity.setAssetEntry(_assetEntry);
+		activity.setClassNameId(_assetEntry.getClassNameId());
+		activity.setClassPK(_assetEntry.getClassPK());
+		activity.setCompanyId(_group.getCompanyId());
+		activity.setGroupId(_group.getGroupId());
+		activity.setType(type);
+		activity.setUserId(user.getUserId());
+		activity.setUserUuid(user.getUuid());
+
+		return activity;
+	}
+
 	protected void addAsset() throws Exception {
 		_assetEntry = AssetEntryLocalServiceUtil.updateEntry(
 			_creatorUser.getUserId(), _group.getGroupId(), TEST_MODEL, 1, null,
@@ -66,21 +109,6 @@ public class BaseSocialActivityTestCase {
 
 		_creatorUser = ServiceTestUtil.addUser(
 			"creator", false, new long[] {_group.getGroupId()});
-	}
-
-	protected SocialActivity addActivity(User user, int type) {
-		SocialActivity activity = new SocialActivityImpl();
-
-		activity.setAssetEntry(_assetEntry);
-		activity.setClassNameId(_assetEntry.getClassNameId());
-		activity.setClassPK(_assetEntry.getClassPK());
-		activity.setCompanyId(_group.getCompanyId());
-		activity.setGroupId(_group.getGroupId());
-		activity.setType(type);
-		activity.setUserId(user.getUserId());
-		activity.setUserUuid(user.getUuid());
-
-		return activity;
 	}
 
 	protected SocialActivityCounter getActivityCounter(
