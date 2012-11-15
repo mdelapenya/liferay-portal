@@ -28,12 +28,12 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
  * @author Zsolt Berentey
+ * @author Manuel de la Peña
  */
 @ExecutionTestListeners(
 	listeners = {
@@ -44,18 +44,10 @@ import org.junit.runner.RunWith;
 public class SocialActivityCounterLocalServiceTest
 	extends BaseSocialActivityTestCase {
 
-	@BeforeClass
-	public static void setUp() throws Exception {
-		BaseSocialActivityTestCase.setUp();
-	}
-
-	@After
-	public void afterTest() throws Exception {
-		BaseSocialActivityTestCase.tearDown();
-	}
-
 	@Before
-	public void beforeTest() throws Exception {
+	public void setUp() throws Exception {
+		super.setUp();
+
 		addGroup();
 
 		addUsers();
@@ -64,6 +56,11 @@ public class SocialActivityCounterLocalServiceTest
 
 		SocialActivitySettingLocalServiceUtil.updateActivitySetting(
 			_group.getGroupId(), TEST_MODEL, true);
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		super.tearDown();
 	}
 
 	@Test
