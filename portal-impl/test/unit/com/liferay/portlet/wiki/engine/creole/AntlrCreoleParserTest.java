@@ -60,6 +60,11 @@ import org.junit.Test;
 public class AntlrCreoleParserTest {
 
 	@Test
+	public void testMakeFail() {
+		throw new RuntimeException("Failing");
+	}
+
+	@Test
 	public void testParseCorrectlyBoldContentInListItems() {
 		BaseListNode unorderedListNode = parseBaseListNode("list-6.creole");
 
