@@ -687,10 +687,10 @@ that may or may not be enforced with a unique index at the database level. Case
 				}
 				else {
 					if (getDB().isSupportsInlineDistinct()) {
-						query.append(${entity.name}ModelImpl.ORDER_BY_JPQL);
+						query.append(${entity.name}ModelImpl.ORDER_BY_ENTITY_ALIAS);
 					}
 					else {
-						query.append(${entity.name}ModelImpl.ORDER_BY_SQL);
+						query.append(${entity.name}ModelImpl.ORDER_BY_ENTITY_TABLE);
 					}
 				}
 
@@ -926,10 +926,10 @@ that may or may not be enforced with a unique index at the database level. Case
 				}
 				else {
 					if (getDB().isSupportsInlineDistinct()) {
-						query.append(${entity.name}ModelImpl.ORDER_BY_JPQL);
+						query.append(${entity.name}ModelImpl.ORDER_BY_ENTITY_ALIAS);
 					}
 					else {
-						query.append(${entity.name}ModelImpl.ORDER_BY_SQL);
+						query.append(${entity.name}ModelImpl.ORDER_BY_ENTITY_TABLE);
 					}
 				}
 
@@ -1166,10 +1166,10 @@ that may or may not be enforced with a unique index at the database level. Case
 					}
 					else {
 						if (getDB().isSupportsInlineDistinct()) {
-							query.append(${entity.name}ModelImpl.ORDER_BY_JPQL);
+							query.append(${entity.name}ModelImpl.ORDER_BY_ENTITY_ALIAS);
 						}
 						else {
-							query.append(${entity.name}ModelImpl.ORDER_BY_SQL);
+							query.append(${entity.name}ModelImpl.ORDER_BY_ENTITY_TABLE);
 						}
 					}
 
