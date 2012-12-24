@@ -869,7 +869,7 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 				sql = _SQL_SELECT_${entity.alias?upper_case};
 
 				if (pagination) {
-					sql = sql.concat(${entity.name}ModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(${entity.name}ModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -1052,7 +1052,7 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 							sql = _SQL_GET${tempEntity.names?upper_case};
 
 							if (pagination) {
-								sql = sql.concat(${tempEntity.packagePath}.model.impl.${tempEntity.name}ModelImpl.ORDER_BY_SQL);
+								sql = sql.concat(${tempEntity.packagePath}.model.impl.${tempEntity.name}ModelImpl.ORDER_BY_ENTITY_TABLE);
 							}
 						}
 
