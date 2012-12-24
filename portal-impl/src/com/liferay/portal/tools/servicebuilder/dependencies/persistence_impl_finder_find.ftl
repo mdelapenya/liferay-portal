@@ -234,7 +234,9 @@ that may or may not be enforced with a unique index at the database level. Case
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ${entity.name}Impl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -509,7 +511,9 @@ that may or may not be enforced with a unique index at the database level. Case
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, ${entity.name}Impl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -640,7 +644,9 @@ that may or may not be enforced with a unique index at the database level. Case
 				try {
 					session = openSession();
 
-					Query q = session.createQuery(sql);
+					SQLQuery q = session.createSQLQuery(sql);
+
+					q.addEntity(_ENTITY_ALIAS, ${entity.name}Impl.class);
 
 					QueryPos qPos = QueryPos.getInstance(q);
 
@@ -809,7 +815,9 @@ that may or may not be enforced with a unique index at the database level. Case
 
 				String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(), ${entity.name}.class.getName(), _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, _FILTER_ENTITY_TABLE_FILTER_USERID_COLUMN<#if finder.hasColumn("groupId")>, groupId</#if>);
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ${entity.name}Impl.class);
 
 				q.setFirstResult(0);
 				q.setMaxResults(2);
@@ -1126,7 +1134,9 @@ that may or may not be enforced with a unique index at the database level. Case
 					try {
 						session = openSession();
 
-						Query q = session.createQuery(sql);
+						SQLQuery q = session.createSQLQuery(sql);
+
+						q.addEntity(_ENTITY_ALIAS, ${entity.name}Impl.class);
 
 						QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1480,7 +1490,9 @@ that may or may not be enforced with a unique index at the database level. Case
 				try {
 					session = openSession();
 
-					Query q = session.createQuery(sql);
+					SQLQuery q = session.createSQLQuery(sql);
+
+					q.addEntity(_ENTITY_ALIAS, ${entity.name}Impl.class);
 
 					QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1679,7 +1691,9 @@ that may or may not be enforced with a unique index at the database level. Case
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ${entity.name}Impl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
