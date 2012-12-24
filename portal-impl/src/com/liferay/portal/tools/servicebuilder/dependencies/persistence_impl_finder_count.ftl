@@ -49,7 +49,9 @@ public int countBy${finder.name}(
 		try {
 			session = openSession();
 
-			Query q = session.createQuery(sql);
+			SQLQuery q = session.createSQLQuery(sql);
+
+			q.addScalar(COUNT_COLUMN_NAME, com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
@@ -127,7 +129,9 @@ public int countBy${finder.name}(
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME, com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -196,7 +200,9 @@ public int countBy${finder.name}(
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME, com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -320,7 +326,9 @@ public int countBy${finder.name}(
 				try {
 					session = openSession();
 
-					Query q = session.createQuery(sql);
+					SQLQuery q = session.createSQLQuery(sql);
+
+					q.addScalar(COUNT_COLUMN_NAME, com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 					QueryPos qPos = QueryPos.getInstance(q);
 

@@ -878,7 +878,9 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ${entity.name}Impl.class);
 
 				if (!pagination) {
 					list = (List<${entity.name}>)QueryUtil.list(q, getDialect(), start, end, false);
@@ -934,7 +936,9 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_${entity.alias?upper_case});
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_${entity.alias?upper_case});
+
+				q.addScalar(COUNT_COLUMN_NAME, com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -2018,16 +2022,16 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 		}
 	</#if>
 
-	private static final String _SQL_SELECT_${entity.alias?upper_case} = "SELECT ${entity.alias} FROM ${entity.name} ${entity.alias}";
+	private static final String _SQL_SELECT_${entity.alias?upper_case} = "SELECT {${entity.alias}.*} FROM ${entity.table} ${entity.alias}";
 
 	<#if entity.getFinderList()?size != 0>
-		private static final String _SQL_SELECT_${entity.alias?upper_case}_WHERE = "SELECT ${entity.alias} FROM ${entity.name} ${entity.alias} WHERE ";
+		private static final String _SQL_SELECT_${entity.alias?upper_case}_WHERE = "SELECT {${entity.alias}.*} FROM ${entity.table} ${entity.alias} WHERE ";
 	</#if>
 
-	private static final String _SQL_COUNT_${entity.alias?upper_case} = "SELECT COUNT(${entity.alias}) FROM ${entity.name} ${entity.alias}";
+	private static final String _SQL_COUNT_${entity.alias?upper_case} = "SELECT COUNT(*) AS COUNT_VALUE FROM ${entity.table} ${entity.alias}";
 
 	<#if entity.getFinderList()?size != 0>
-		private static final String _SQL_COUNT_${entity.alias?upper_case}_WHERE = "SELECT COUNT(${entity.alias}) FROM ${entity.name} ${entity.alias} WHERE ";
+		private static final String _SQL_COUNT_${entity.alias?upper_case}_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM ${entity.table} ${entity.alias} WHERE ";
 	</#if>
 
 	<#list entity.columnList as column>
@@ -2067,6 +2071,8 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 			private static final String _FILTER_ENTITY_TABLE = "${entity.table}";
 		</#if>
 	</#if>
+
+	private static final String _ENTITY_ALIAS = "${entity.alias}";
 
 	private static final String _ORDER_BY_ENTITY_ALIAS = "${entity.alias}.";
 
