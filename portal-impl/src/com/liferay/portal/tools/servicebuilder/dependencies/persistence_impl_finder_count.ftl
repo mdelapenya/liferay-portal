@@ -194,30 +194,6 @@ public int countBy${finder.name}(
 			<#include "persistence_impl_count_by_query.ftl">
 
 			String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(), ${entity.name}.class.getName(), _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, _FILTER_ENTITY_TABLE_FILTER_USERID_COLUMN<#if finder.hasColumn("groupId")>, groupId</#if>);
-
-			Session session = null;
-
-			try {
-				session = openSession();
-
-				SQLQuery q = session.createSQLQuery(sql);
-
-				q.addScalar(COUNT_COLUMN_NAME, com.liferay.portal.kernel.dao.orm.Type.LONG);
-
-				QueryPos qPos = QueryPos.getInstance(q);
-
-				<#include "persistence_impl_finder_qpos.ftl">
-
-				Long count = (Long)q.uniqueResult();
-
-				return count.intValue();
-			}
-			catch (Exception e) {
-				throw processException(e);
-			}
-			finally {
-				closeSession(session);
-			}
 		<#else>
 			StringBundler query = new StringBundler(${finderColsList?size + 1});
 
@@ -226,31 +202,31 @@ public int countBy${finder.name}(
 			<#include "persistence_impl_finder_cols.ftl">
 
 			String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(), ${entity.name}.class.getName(), _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN<#if finder.hasColumn("groupId")>, groupId</#if>);
-
-			Session session = null;
-
-			try {
-				session = openSession();
-
-				SQLQuery q = session.createSQLQuery(sql);
-
-				q.addScalar(COUNT_COLUMN_NAME, com.liferay.portal.kernel.dao.orm.Type.LONG);
-
-				QueryPos qPos = QueryPos.getInstance(q);
-
-				<#include "persistence_impl_finder_qpos.ftl">
-
-				Long count = (Long)q.uniqueResult();
-
-				return count.intValue();
-			}
-			catch (Exception e) {
-				throw processException(e);
-			}
-			finally {
-				closeSession(session);
-			}
 		</#if>
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSQLQuery(sql);
+
+			q.addScalar(COUNT_COLUMN_NAME, com.liferay.portal.kernel.dao.orm.Type.LONG);
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			<#include "persistence_impl_finder_qpos.ftl">
+
+			Long count = (Long)q.uniqueResult();
+
+			return count.intValue();
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
 	}
 
 	<#if finder.hasArrayableOperator()>
@@ -312,38 +288,6 @@ public int countBy${finder.name}(
 				<#include "persistence_impl_count_by_arrayable_query.ftl">
 
 				String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(), ${entity.name}.class.getName(), _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, _FILTER_ENTITY_TABLE_FILTER_USERID_COLUMN
-
-				<#if finder.hasColumn("groupId")>,
-					<#if finder.getColumn("groupId").hasArrayableOperator()>
-						groupIds
-					<#else>
-						groupId
-					</#if>
-				</#if>);
-
-				Session session = null;
-
-				try {
-					session = openSession();
-
-					SQLQuery q = session.createSQLQuery(sql);
-
-					q.addScalar(COUNT_COLUMN_NAME, com.liferay.portal.kernel.dao.orm.Type.LONG);
-
-					QueryPos qPos = QueryPos.getInstance(q);
-
-					<#include "persistence_impl_finder_arrayable_qpos.ftl">
-
-					Long count = (Long)q.uniqueResult();
-
-					return count.intValue();
-				}
-				catch (Exception e) {
-					throw processException(e);
-				}
-				finally {
-					closeSession(session);
-				}
 			<#else>
 				StringBundler query = new StringBundler();
 
@@ -352,39 +296,39 @@ public int countBy${finder.name}(
 				<#include "persistence_impl_finder_arrayable_cols.ftl">
 
 				String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(), ${entity.name}.class.getName(), _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN
-
-				<#if finder.hasColumn("groupId")>,
-					<#if finder.getColumn("groupId").hasArrayableOperator()>
-						groupIds
-					<#else>
-						groupId
-					</#if>
-				</#if>);
-
-				Session session = null;
-
-				try {
-					session = openSession();
-
-					SQLQuery q = session.createSQLQuery(sql);
-
-					q.addScalar(COUNT_COLUMN_NAME, com.liferay.portal.kernel.dao.orm.Type.LONG);
-
-					QueryPos qPos = QueryPos.getInstance(q);
-
-					<#include "persistence_impl_finder_arrayable_qpos.ftl">
-
-					Long count = (Long)q.uniqueResult();
-
-					return count.intValue();
-				}
-				catch (Exception e) {
-					throw processException(e);
-				}
-				finally {
-					closeSession(session);
-				}
 			</#if>
+
+			<#if finder.hasColumn("groupId")>,
+				<#if finder.getColumn("groupId").hasArrayableOperator()>
+					groupIds
+				<#else>
+					groupId
+				</#if>
+			</#if>);
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME, com.liferay.portal.kernel.dao.orm.Type.LONG);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				<#include "persistence_impl_finder_arrayable_qpos.ftl">
+
+				Long count = (Long)q.uniqueResult();
+
+				return count.intValue();
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
 		}
 	</#if>
 </#if>
