@@ -114,11 +114,7 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 	<#assign orderByEntityAlias = "">
 
 	<#list orderList as order>
-		<#if entity.hasCompoundPK() && order.isPrimary()>
-			<#assign orderByEntityAlias = orderByEntityAlias + entity.alias + ".id." + order.name>
-		<#else>
-			<#assign orderByEntityAlias = orderByEntityAlias + entity.alias + "." + order.name>
-		</#if>
+		<#assign orderByEntityAlias = orderByEntityAlias + entity.alias + "." + order.DBName>
 
 		<#if order.isOrderByAscending()>
 			<#assign orderByEntityAlias = orderByEntityAlias + " ASC">
