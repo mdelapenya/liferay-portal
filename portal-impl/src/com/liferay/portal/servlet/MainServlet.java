@@ -364,6 +364,8 @@ public class MainServlet extends ActionServlet {
 	public void service(
 			HttpServletRequest request, HttpServletResponse response)
 		throws IOException, ServletException {
+		
+		System.out.println("HOLA MANU!");
 
 		if (_log.isDebugEnabled()) {
 			_log.debug("Process service request");
