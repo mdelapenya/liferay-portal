@@ -60,28 +60,14 @@ public class JournalTestUtil {
 
 		ServiceContext serviceContext = ServiceTestUtil.getServiceContext();
 
-		StringBundler sb = new StringBundler(3 + 6 * _locales.length);
-
-		sb.append("<?xml version=\"1.0\"?><root available-locales=");
-		sb.append("\"en_US,es_ES,de_DE\" default-locale=\"en_US\">");
-
-		for (Locale locale : _locales) {
-			sb.append("<static-content language-id=\"");
-			sb.append(LocaleUtil.toLanguageId(locale));
-			sb.append("\"><![CDATA[<p>");
-			sb.append(content);
-			sb.append(LocaleUtil.toLanguageId(locale));
-			sb.append("</p>]]></static-content>");
-		}
-
-		sb.append("</root>");
+		String localizedContent = generateLocalizedContent(content, Locale.US);
 
 		return JournalArticleLocalServiceUtil.addArticle(
 			TestPropsValues.getUserId(), groupId, folderId, 0, 0,
-			StringPool.BLANK, true, 1, titleMap, descriptionMap, sb.toString(),
-			"general", null, null, null, 1, 1, 1965, 0, 0, 0, 0, 0, 0, 0, true,
-			0, 0, 0, 0, 0, true, false, false, null, null, null, null,
-			serviceContext);
+			StringPool.BLANK, true, 1, titleMap, descriptionMap,
+			localizedContent, "general", null, null, null, 1, 1, 1965, 0, 0, 0,
+			0, 0, 0, 0, true, 0, 0, 0, 0, 0, true, false, false, null, null,
+			null, null, serviceContext);
 	}
 
 	public static JournalArticle addArticle(
@@ -119,10 +105,20 @@ public class JournalTestUtil {
 		return addDDMStructure(getSampleStructureXSD());
 	}
 
+	public static DDMStructure addDDMStructure(Locale locale) throws Exception {
+		return addDDMStructure(getSampleStructureXSD(), locale);
+	}
+
 	public static DDMStructure addDDMStructure(String xsd) throws Exception {
+		return addDDMStructure(xsd, Locale.US);
+	}
+
+	public static DDMStructure addDDMStructure(
+		String xsd, Locale locale) throws Exception {
+
 		Map<Locale, String> nameMap = new HashMap<Locale, String>();
 
-		nameMap.put(Locale.US, "Test Structure");
+		nameMap.put(locale, "Test Structure");
 
 		ServiceContext serviceContext = new ServiceContext();
 
@@ -217,6 +213,45 @@ public class JournalTestUtil {
 		return document;
 	}
 
+	public static String generateLocalizedContent(
+		String content, Locale defaultLocale) {
+
+		StringBundler sb = new StringBundler(8 + 6 * _locales.length);
+
+		StringBuilder availableLocales = new StringBuilder();
+
+		for (int i = 0; i < _locales.length; i++) {
+			Locale locale = _locales[i];
+
+			availableLocales.append(LocaleUtil.toLanguageId(locale));
+
+			if (i != (_locales.length - 1)) {
+				availableLocales.append(StringPool.COMMA);
+			}
+		}
+
+		sb.append("<?xml version=\"1.0\"?><root available-locales=");
+		sb.append("\"");
+		sb.append(availableLocales.toString());
+		sb.append("\" ");
+		sb.append("default-locale=\"");
+		sb.append(LocaleUtil.toLanguageId(defaultLocale));
+		sb.append("\">");
+
+		for (Locale locale : _locales) {
+			sb.append("<static-content language-id=\"");
+			sb.append(LocaleUtil.toLanguageId(locale));
+			sb.append("\"><![CDATA[<p>");
+			sb.append(content);
+			sb.append(LocaleUtil.toLanguageId(locale));
+			sb.append("</p>]]></static-content>");
+		}
+
+		sb.append("</root>");
+
+		return sb.toString();
+	}
+
 	public static String getSampleStructuredContent() {
 		Document document = createDocument("en_US", "en_US");
 
@@ -224,6 +259,19 @@ public class JournalTestUtil {
 			document.getRootElement(), "text", "name");
 
 		addDynamicContent(dynamicElement, "en_US", "Joe Bloggs");
+
+		return document.asXML();
+	}
+
+	public static String getSampleStructuredContent(Locale locale) {
+		Document document = createDocument(
+			locale.getDisplayName(), locale.getDisplayName());
+
+		Element dynamicElement = addDynamicElement(
+			document.getRootElement(), "text", "name");
+
+		addDynamicContent(
+			dynamicElement, locale.getDisplayName(), "Joe Bloggs");
 
 		return document.asXML();
 	}
