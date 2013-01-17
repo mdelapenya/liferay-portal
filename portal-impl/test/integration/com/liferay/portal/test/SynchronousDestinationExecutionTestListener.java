@@ -27,11 +27,13 @@ public class SynchronousDestinationExecutionTestListener
 
 	@Override
 	public void runAfterClass(TestContext testContext) {
-		_setSync(false);
+		_setSync(_previousSync);
 	}
 
 	@Override
 	public void runBeforeClass(TestContext testContext) {
+		_previousSync = ProxyModeThreadLocal.isForceSync();
+
 		Class<?> testClass = testContext.getClazz();
 
 		_sync = AnnotationLocator.locate(testClass, Sync.class);
@@ -44,6 +46,8 @@ public class SynchronousDestinationExecutionTestListener
 			ProxyModeThreadLocal.setForceSync(sync);
 		}
 	}
+
+	private boolean _previousSync;
 
 	private Sync _sync;
 
