@@ -252,6 +252,11 @@ public class JournalTestUtilTest {
 	}
 
 	@Test
+	public void testPass() throws Exception {
+		Assert.assertTrue(true);
+	}
+
+	@Test
 	public void testUpdateArticle() throws Exception {
 		JournalArticle article = JournalTestUtil.addArticle(
 			_group.getGroupId(), "Test Article", "This is a test article.");
