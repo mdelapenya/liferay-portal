@@ -230,6 +230,11 @@ public class JournalTestUtilTest {
 	}
 
 	@Test
+	public void testFail() {
+		Assert.fail("Failing test");
+	}
+
+	@Test
 	public void testGetSampleStructuredContent() throws Exception {
 		String content = JournalUtil.transform(
 			null, getTokens(), Constants.VIEW, "en_US",
