@@ -106,7 +106,7 @@ public class StartupHelper {
 	}
 
 	public void upgradeProcess(int buildNumber) throws UpgradeException {
-		if (buildNumber == ReleaseInfo.getParentBuildNumber()) {
+		/*if (buildNumber == ReleaseInfo.getParentBuildNumber()) {
 			if (_log.isDebugEnabled()) {
 				_log.debug(
 					"Skipping upgrade process from " + buildNumber + " to " +
@@ -114,7 +114,7 @@ public class StartupHelper {
 			}
 
 			return;
-		}
+		}*/
 
 		String[] upgradeProcessClassNames = getUpgradeProcessClassNames(
 			PropsKeys.UPGRADE_PROCESSES);

@@ -100,7 +100,7 @@ public class DBUpgrader {
 
 		int buildNumber = ReleaseLocalServiceUtil.getBuildNumberOrCreate();
 
-		if (buildNumber > ReleaseInfo.getParentBuildNumber()) {
+		/*if (buildNumber > ReleaseInfo.getParentBuildNumber()) {
 			StringBundler sb = new StringBundler(6);
 
 			sb.append("Attempting to deploy an older Liferay Portal version. ");
@@ -118,7 +118,7 @@ public class DBUpgrader {
 			System.out.println(msg);
 
 			throw new RuntimeException(msg);
-		}
+		}*/
 
 		// Reload SQL
 
