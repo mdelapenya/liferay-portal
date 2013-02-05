@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!-- This is a stupid change to test the new Jenkins notifications -->
 
 <project name="portal" basedir="." default="compile" xmlns:antelope="antlib:ise.antelope.tasks">
 	<property name="project.dir" value="." />
