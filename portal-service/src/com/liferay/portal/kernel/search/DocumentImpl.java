@@ -325,9 +325,7 @@ public class DocumentImpl implements Document {
 	}
 
 	public void addNumber(String name, Double[] values) {
-		addNumber(
-			name, String.valueOf(ArrayUtil.toStringArray(values)),
-			Double.class);
+		addNumber(name, ArrayUtil.toStringArray(values), Double.class);
 	}
 
 	public void addNumber(String name, float value) {
