@@ -14,9 +14,7 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchWebsiteException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -2790,7 +2788,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 */
 	public Website remove(long websiteId)
 		throws NoSuchWebsiteException, SystemException {
-		return remove(Long.valueOf(websiteId));
+		return remove((Serializable)websiteId);
 	}
 
 	/**
@@ -2905,7 +2903,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			if ((websiteModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(websiteModelImpl.getOriginalCompanyId())
+						websiteModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
@@ -2913,9 +2911,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(websiteModelImpl.getCompanyId())
-					};
+				args = new Object[] { websiteModelImpl.getCompanyId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
 					args);
@@ -2926,14 +2922,14 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			if ((websiteModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(websiteModelImpl.getOriginalUserId())
+						websiteModelImpl.getOriginalUserId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
 					args);
 
-				args = new Object[] { Long.valueOf(websiteModelImpl.getUserId()) };
+				args = new Object[] { websiteModelImpl.getUserId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
@@ -2943,8 +2939,8 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			if ((websiteModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(websiteModelImpl.getOriginalCompanyId()),
-						Long.valueOf(websiteModelImpl.getOriginalClassNameId())
+						websiteModelImpl.getOriginalCompanyId(),
+						websiteModelImpl.getOriginalClassNameId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -2952,8 +2948,8 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(websiteModelImpl.getCompanyId()),
-						Long.valueOf(websiteModelImpl.getClassNameId())
+						websiteModelImpl.getCompanyId(),
+						websiteModelImpl.getClassNameId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -2964,9 +2960,9 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			if ((websiteModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(websiteModelImpl.getOriginalCompanyId()),
-						Long.valueOf(websiteModelImpl.getOriginalClassNameId()),
-						Long.valueOf(websiteModelImpl.getOriginalClassPK())
+						websiteModelImpl.getOriginalCompanyId(),
+						websiteModelImpl.getOriginalClassNameId(),
+						websiteModelImpl.getOriginalClassPK()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C, args);
@@ -2974,9 +2970,9 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(websiteModelImpl.getCompanyId()),
-						Long.valueOf(websiteModelImpl.getClassNameId()),
-						Long.valueOf(websiteModelImpl.getClassPK())
+						websiteModelImpl.getCompanyId(),
+						websiteModelImpl.getClassNameId(),
+						websiteModelImpl.getClassPK()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C, args);
@@ -2987,10 +2983,10 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			if ((websiteModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C_C_P.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(websiteModelImpl.getOriginalCompanyId()),
-						Long.valueOf(websiteModelImpl.getOriginalClassNameId()),
-						Long.valueOf(websiteModelImpl.getOriginalClassPK()),
-						Boolean.valueOf(websiteModelImpl.getOriginalPrimary())
+						websiteModelImpl.getOriginalCompanyId(),
+						websiteModelImpl.getOriginalClassNameId(),
+						websiteModelImpl.getOriginalClassPK(),
+						websiteModelImpl.getOriginalPrimary()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C_P, args);
@@ -2998,10 +2994,10 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(websiteModelImpl.getCompanyId()),
-						Long.valueOf(websiteModelImpl.getClassNameId()),
-						Long.valueOf(websiteModelImpl.getClassPK()),
-						Boolean.valueOf(websiteModelImpl.getPrimary())
+						websiteModelImpl.getCompanyId(),
+						websiteModelImpl.getClassNameId(),
+						websiteModelImpl.getClassPK(),
+						websiteModelImpl.getPrimary()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C_P, args);
@@ -3046,13 +3042,24 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 *
 	 * @param primaryKey the primary key of the website
 	 * @return the website
-	 * @throws com.liferay.portal.NoSuchModelException if a website with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchWebsiteException if a website with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public Website findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchWebsiteException, SystemException {
+		Website website = fetchByPrimaryKey(primaryKey);
+
+		if (website == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchWebsiteException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return website;
 	}
 
 	/**
@@ -3065,18 +3072,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 */
 	public Website findByPrimaryKey(long websiteId)
 		throws NoSuchWebsiteException, SystemException {
-		Website website = fetchByPrimaryKey(websiteId);
-
-		if (website == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + websiteId);
-			}
-
-			throw new NoSuchWebsiteException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				websiteId);
-		}
-
-		return website;
+		return findByPrimaryKey((Serializable)websiteId);
 	}
 
 	/**
@@ -3089,19 +3085,8 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	@Override
 	public Website fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the website with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param websiteId the primary key of the website
-	 * @return the website, or <code>null</code> if a website with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public Website fetchByPrimaryKey(long websiteId) throws SystemException {
 		Website website = (Website)EntityCacheUtil.getResult(WebsiteModelImpl.ENTITY_CACHE_ENABLED,
-				WebsiteImpl.class, websiteId);
+				WebsiteImpl.class, primaryKey);
 
 		if (website == _nullWebsite) {
 			return null;
@@ -3113,20 +3098,19 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			try {
 				session = openSession();
 
-				website = (Website)session.get(WebsiteImpl.class,
-						Long.valueOf(websiteId));
+				website = (Website)session.get(WebsiteImpl.class, primaryKey);
 
 				if (website != null) {
 					cacheResult(website);
 				}
 				else {
 					EntityCacheUtil.putResult(WebsiteModelImpl.ENTITY_CACHE_ENABLED,
-						WebsiteImpl.class, websiteId, _nullWebsite);
+						WebsiteImpl.class, primaryKey, _nullWebsite);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(WebsiteModelImpl.ENTITY_CACHE_ENABLED,
-					WebsiteImpl.class, websiteId);
+					WebsiteImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -3136,6 +3120,17 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 		}
 
 		return website;
+	}
+
+	/**
+	 * Returns the website with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param websiteId the primary key of the website
+	 * @return the website, or <code>null</code> if a website with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Website fetchByPrimaryKey(long websiteId) throws SystemException {
+		return fetchByPrimaryKey((Serializable)websiteId);
 	}
 
 	/**
@@ -3337,128 +3332,6 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
 	private static final String _SQL_SELECT_WEBSITE = "SELECT website FROM Website website";
 	private static final String _SQL_SELECT_WEBSITE_WHERE = "SELECT website FROM Website website WHERE ";
 	private static final String _SQL_COUNT_WEBSITE = "SELECT COUNT(website) FROM Website website";

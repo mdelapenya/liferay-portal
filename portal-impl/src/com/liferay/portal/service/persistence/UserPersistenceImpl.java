@@ -14,7 +14,6 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchUserException;
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
@@ -51,19 +50,6 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.UserImpl;
 import com.liferay.portal.model.impl.UserModelImpl;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
-
-import com.liferay.portlet.announcements.service.persistence.AnnouncementsDeliveryPersistence;
-import com.liferay.portlet.asset.service.persistence.AssetEntryPersistence;
-import com.liferay.portlet.blogs.service.persistence.BlogsStatsUserPersistence;
-import com.liferay.portlet.documentlibrary.service.persistence.DLFileRankPersistence;
-import com.liferay.portlet.expando.service.persistence.ExpandoValuePersistence;
-import com.liferay.portlet.messageboards.service.persistence.MBBanPersistence;
-import com.liferay.portlet.messageboards.service.persistence.MBMessagePersistence;
-import com.liferay.portlet.messageboards.service.persistence.MBStatsUserPersistence;
-import com.liferay.portlet.messageboards.service.persistence.MBThreadFlagPersistence;
-import com.liferay.portlet.shopping.service.persistence.ShoppingCartPersistence;
-import com.liferay.portlet.social.service.persistence.SocialActivityPersistence;
-import com.liferay.portlet.social.service.persistence.SocialRequestPersistence;
 
 import java.io.Serializable;
 
@@ -211,16 +197,18 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			query.append(_SQL_SELECT_USER_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			if (orderByComparator != null) {
@@ -243,7 +231,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -430,16 +418,18 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 		query.append(_SQL_SELECT_USER_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_UUID_2);
 		}
 
 		if (orderByComparator != null) {
@@ -510,7 +500,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -565,16 +555,18 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			query.append(_SQL_COUNT_USER_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			String sql = query.toString();
@@ -588,7 +580,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -611,7 +603,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 	private static final String _FINDER_COLUMN_UUID_UUID_1 = "user.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "user.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(user.uuid IS NULL OR user.uuid = ?)";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(user.uuid IS NULL OR user.uuid = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
 			UserModelImpl.FINDER_CACHE_ENABLED, UserImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByUuid_C",
@@ -729,16 +721,18 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			query.append(_SQL_SELECT_USER_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -763,7 +757,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -966,16 +960,18 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 		query.append(_SQL_SELECT_USER_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 		}
 
 		query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1048,7 +1044,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -1109,16 +1105,18 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			query.append(_SQL_COUNT_USER_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1134,7 +1132,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -1159,7 +1157,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "user.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "user.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(user.uuid IS NULL OR user.uuid = ?) AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(user.uuid IS NULL OR user.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "user.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_COMPANYID =
 		new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
@@ -1952,16 +1950,18 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			query.append(_SQL_SELECT_USER_WHERE);
 
+			boolean bindEmailAddress = false;
+
 			if (emailAddress == null) {
 				query.append(_FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_1);
 			}
+			else if (emailAddress.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_3);
+			}
 			else {
-				if (emailAddress.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_2);
-				}
+				bindEmailAddress = true;
+
+				query.append(_FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_2);
 			}
 
 			if (orderByComparator != null) {
@@ -1984,7 +1984,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (emailAddress != null) {
+				if (bindEmailAddress) {
 					qPos.add(emailAddress);
 				}
 
@@ -2175,16 +2175,18 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 		query.append(_SQL_SELECT_USER_WHERE);
 
+		boolean bindEmailAddress = false;
+
 		if (emailAddress == null) {
 			query.append(_FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_1);
 		}
+		else if (emailAddress.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_3);
+		}
 		else {
-			if (emailAddress.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_2);
-			}
+			bindEmailAddress = true;
+
+			query.append(_FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_2);
 		}
 
 		if (orderByComparator != null) {
@@ -2255,7 +2257,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (emailAddress != null) {
+		if (bindEmailAddress) {
 			qPos.add(emailAddress);
 		}
 
@@ -2312,16 +2314,18 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			query.append(_SQL_COUNT_USER_WHERE);
 
+			boolean bindEmailAddress = false;
+
 			if (emailAddress == null) {
 				query.append(_FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_1);
 			}
+			else if (emailAddress.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_3);
+			}
 			else {
-				if (emailAddress.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_2);
-				}
+				bindEmailAddress = true;
+
+				query.append(_FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_2);
 			}
 
 			String sql = query.toString();
@@ -2335,7 +2339,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (emailAddress != null) {
+				if (bindEmailAddress) {
 					qPos.add(emailAddress);
 				}
 
@@ -2358,7 +2362,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 	private static final String _FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_1 = "user.emailAddress IS NULL";
 	private static final String _FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_2 = "user.emailAddress = ?";
-	private static final String _FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_3 = "(user.emailAddress IS NULL OR user.emailAddress = ?)";
+	private static final String _FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_3 = "(user.emailAddress IS NULL OR user.emailAddress = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_PORTRAITID = new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
 			UserModelImpl.FINDER_CACHE_ENABLED, UserImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByPortraitId",
@@ -2916,10 +2920,14 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			query.append(_FINDER_COLUMN_C_CD_COMPANYID_2);
 
+			boolean bindCreateDate = false;
+
 			if (createDate == null) {
 				query.append(_FINDER_COLUMN_C_CD_CREATEDATE_1);
 			}
 			else {
+				bindCreateDate = true;
+
 				query.append(_FINDER_COLUMN_C_CD_CREATEDATE_2);
 			}
 
@@ -2945,7 +2953,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 				qPos.add(companyId);
 
-				if (createDate != null) {
+				if (bindCreateDate) {
 					qPos.add(CalendarUtil.getTimestamp(createDate));
 				}
 
@@ -3149,10 +3157,14 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 		query.append(_FINDER_COLUMN_C_CD_COMPANYID_2);
 
+		boolean bindCreateDate = false;
+
 		if (createDate == null) {
 			query.append(_FINDER_COLUMN_C_CD_CREATEDATE_1);
 		}
 		else {
+			bindCreateDate = true;
+
 			query.append(_FINDER_COLUMN_C_CD_CREATEDATE_2);
 		}
 
@@ -3226,7 +3238,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 		qPos.add(companyId);
 
-		if (createDate != null) {
+		if (bindCreateDate) {
 			qPos.add(CalendarUtil.getTimestamp(createDate));
 		}
 
@@ -3287,10 +3299,14 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			query.append(_FINDER_COLUMN_C_CD_COMPANYID_2);
 
+			boolean bindCreateDate = false;
+
 			if (createDate == null) {
 				query.append(_FINDER_COLUMN_C_CD_CREATEDATE_1);
 			}
 			else {
+				bindCreateDate = true;
+
 				query.append(_FINDER_COLUMN_C_CD_CREATEDATE_2);
 			}
 
@@ -3307,7 +3323,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 				qPos.add(companyId);
 
-				if (createDate != null) {
+				if (bindCreateDate) {
 					qPos.add(CalendarUtil.getTimestamp(createDate));
 				}
 
@@ -3449,10 +3465,14 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			query.append(_FINDER_COLUMN_C_MD_COMPANYID_2);
 
+			boolean bindModifiedDate = false;
+
 			if (modifiedDate == null) {
 				query.append(_FINDER_COLUMN_C_MD_MODIFIEDDATE_1);
 			}
 			else {
+				bindModifiedDate = true;
+
 				query.append(_FINDER_COLUMN_C_MD_MODIFIEDDATE_2);
 			}
 
@@ -3478,7 +3498,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 				qPos.add(companyId);
 
-				if (modifiedDate != null) {
+				if (bindModifiedDate) {
 					qPos.add(CalendarUtil.getTimestamp(modifiedDate));
 				}
 
@@ -3682,10 +3702,14 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 		query.append(_FINDER_COLUMN_C_MD_COMPANYID_2);
 
+		boolean bindModifiedDate = false;
+
 		if (modifiedDate == null) {
 			query.append(_FINDER_COLUMN_C_MD_MODIFIEDDATE_1);
 		}
 		else {
+			bindModifiedDate = true;
+
 			query.append(_FINDER_COLUMN_C_MD_MODIFIEDDATE_2);
 		}
 
@@ -3759,7 +3783,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 		qPos.add(companyId);
 
-		if (modifiedDate != null) {
+		if (bindModifiedDate) {
 			qPos.add(CalendarUtil.getTimestamp(modifiedDate));
 		}
 
@@ -3820,10 +3844,14 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			query.append(_FINDER_COLUMN_C_MD_COMPANYID_2);
 
+			boolean bindModifiedDate = false;
+
 			if (modifiedDate == null) {
 				query.append(_FINDER_COLUMN_C_MD_MODIFIEDDATE_1);
 			}
 			else {
+				bindModifiedDate = true;
+
 				query.append(_FINDER_COLUMN_C_MD_MODIFIEDDATE_2);
 			}
 
@@ -3840,7 +3868,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 				qPos.add(companyId);
 
-				if (modifiedDate != null) {
+				if (bindModifiedDate) {
 					qPos.add(CalendarUtil.getTimestamp(modifiedDate));
 				}
 
@@ -4194,16 +4222,18 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			query.append(_FINDER_COLUMN_C_SN_COMPANYID_2);
 
+			boolean bindScreenName = false;
+
 			if (screenName == null) {
 				query.append(_FINDER_COLUMN_C_SN_SCREENNAME_1);
 			}
+			else if (screenName.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_SN_SCREENNAME_3);
+			}
 			else {
-				if (screenName.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_SN_SCREENNAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_SN_SCREENNAME_2);
-				}
+				bindScreenName = true;
+
+				query.append(_FINDER_COLUMN_C_SN_SCREENNAME_2);
 			}
 
 			String sql = query.toString();
@@ -4219,7 +4249,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 				qPos.add(companyId);
 
-				if (screenName != null) {
+				if (bindScreenName) {
 					qPos.add(screenName);
 				}
 
@@ -4302,16 +4332,18 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			query.append(_FINDER_COLUMN_C_SN_COMPANYID_2);
 
+			boolean bindScreenName = false;
+
 			if (screenName == null) {
 				query.append(_FINDER_COLUMN_C_SN_SCREENNAME_1);
 			}
+			else if (screenName.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_SN_SCREENNAME_3);
+			}
 			else {
-				if (screenName.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_SN_SCREENNAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_SN_SCREENNAME_2);
-				}
+				bindScreenName = true;
+
+				query.append(_FINDER_COLUMN_C_SN_SCREENNAME_2);
 			}
 
 			String sql = query.toString();
@@ -4327,7 +4359,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 				qPos.add(companyId);
 
-				if (screenName != null) {
+				if (bindScreenName) {
 					qPos.add(screenName);
 				}
 
@@ -4351,7 +4383,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	private static final String _FINDER_COLUMN_C_SN_COMPANYID_2 = "user.companyId = ? AND ";
 	private static final String _FINDER_COLUMN_C_SN_SCREENNAME_1 = "user.screenName IS NULL";
 	private static final String _FINDER_COLUMN_C_SN_SCREENNAME_2 = "user.screenName = ?";
-	private static final String _FINDER_COLUMN_C_SN_SCREENNAME_3 = "(user.screenName IS NULL OR user.screenName = ?)";
+	private static final String _FINDER_COLUMN_C_SN_SCREENNAME_3 = "(user.screenName IS NULL OR user.screenName = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_EA = new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
 			UserModelImpl.FINDER_CACHE_ENABLED, UserImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByC_EA",
@@ -4448,16 +4480,18 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			query.append(_FINDER_COLUMN_C_EA_COMPANYID_2);
 
+			boolean bindEmailAddress = false;
+
 			if (emailAddress == null) {
 				query.append(_FINDER_COLUMN_C_EA_EMAILADDRESS_1);
 			}
+			else if (emailAddress.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_EA_EMAILADDRESS_3);
+			}
 			else {
-				if (emailAddress.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_EA_EMAILADDRESS_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_EA_EMAILADDRESS_2);
-				}
+				bindEmailAddress = true;
+
+				query.append(_FINDER_COLUMN_C_EA_EMAILADDRESS_2);
 			}
 
 			String sql = query.toString();
@@ -4473,7 +4507,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 				qPos.add(companyId);
 
-				if (emailAddress != null) {
+				if (bindEmailAddress) {
 					qPos.add(emailAddress);
 				}
 
@@ -4556,16 +4590,18 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			query.append(_FINDER_COLUMN_C_EA_COMPANYID_2);
 
+			boolean bindEmailAddress = false;
+
 			if (emailAddress == null) {
 				query.append(_FINDER_COLUMN_C_EA_EMAILADDRESS_1);
 			}
+			else if (emailAddress.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_EA_EMAILADDRESS_3);
+			}
 			else {
-				if (emailAddress.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_EA_EMAILADDRESS_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_EA_EMAILADDRESS_2);
-				}
+				bindEmailAddress = true;
+
+				query.append(_FINDER_COLUMN_C_EA_EMAILADDRESS_2);
 			}
 
 			String sql = query.toString();
@@ -4581,7 +4617,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 				qPos.add(companyId);
 
-				if (emailAddress != null) {
+				if (bindEmailAddress) {
 					qPos.add(emailAddress);
 				}
 
@@ -4605,7 +4641,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	private static final String _FINDER_COLUMN_C_EA_COMPANYID_2 = "user.companyId = ? AND ";
 	private static final String _FINDER_COLUMN_C_EA_EMAILADDRESS_1 = "user.emailAddress IS NULL";
 	private static final String _FINDER_COLUMN_C_EA_EMAILADDRESS_2 = "user.emailAddress = ?";
-	private static final String _FINDER_COLUMN_C_EA_EMAILADDRESS_3 = "(user.emailAddress IS NULL OR user.emailAddress = ?)";
+	private static final String _FINDER_COLUMN_C_EA_EMAILADDRESS_3 = "(user.emailAddress IS NULL OR user.emailAddress = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_FID = new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
 			UserModelImpl.FINDER_CACHE_ENABLED, UserImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByC_FID",
@@ -4936,16 +4972,18 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			query.append(_FINDER_COLUMN_C_O_COMPANYID_2);
 
+			boolean bindOpenId = false;
+
 			if (openId == null) {
 				query.append(_FINDER_COLUMN_C_O_OPENID_1);
 			}
+			else if (openId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_O_OPENID_3);
+			}
 			else {
-				if (openId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_O_OPENID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_O_OPENID_2);
-				}
+				bindOpenId = true;
+
+				query.append(_FINDER_COLUMN_C_O_OPENID_2);
 			}
 
 			String sql = query.toString();
@@ -4961,7 +4999,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 				qPos.add(companyId);
 
-				if (openId != null) {
+				if (bindOpenId) {
 					qPos.add(openId);
 				}
 
@@ -5051,16 +5089,18 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			query.append(_FINDER_COLUMN_C_O_COMPANYID_2);
 
+			boolean bindOpenId = false;
+
 			if (openId == null) {
 				query.append(_FINDER_COLUMN_C_O_OPENID_1);
 			}
+			else if (openId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_O_OPENID_3);
+			}
 			else {
-				if (openId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_O_OPENID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_O_OPENID_2);
-				}
+				bindOpenId = true;
+
+				query.append(_FINDER_COLUMN_C_O_OPENID_2);
 			}
 
 			String sql = query.toString();
@@ -5076,7 +5116,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 				qPos.add(companyId);
 
-				if (openId != null) {
+				if (bindOpenId) {
 					qPos.add(openId);
 				}
 
@@ -5100,7 +5140,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	private static final String _FINDER_COLUMN_C_O_COMPANYID_2 = "user.companyId = ? AND ";
 	private static final String _FINDER_COLUMN_C_O_OPENID_1 = "user.openId IS NULL";
 	private static final String _FINDER_COLUMN_C_O_OPENID_2 = "user.openId = ?";
-	private static final String _FINDER_COLUMN_C_O_OPENID_3 = "(user.openId IS NULL OR user.openId = ?)";
+	private static final String _FINDER_COLUMN_C_O_OPENID_3 = "(user.openId IS NULL OR user.openId = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C_S = new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
 			UserModelImpl.FINDER_CACHE_ENABLED, UserImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_S",
@@ -5740,17 +5780,25 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			query.append(_FINDER_COLUMN_C_CD_MD_COMPANYID_2);
 
+			boolean bindCreateDate = false;
+
 			if (createDate == null) {
 				query.append(_FINDER_COLUMN_C_CD_MD_CREATEDATE_1);
 			}
 			else {
+				bindCreateDate = true;
+
 				query.append(_FINDER_COLUMN_C_CD_MD_CREATEDATE_2);
 			}
+
+			boolean bindModifiedDate = false;
 
 			if (modifiedDate == null) {
 				query.append(_FINDER_COLUMN_C_CD_MD_MODIFIEDDATE_1);
 			}
 			else {
+				bindModifiedDate = true;
+
 				query.append(_FINDER_COLUMN_C_CD_MD_MODIFIEDDATE_2);
 			}
 
@@ -5776,11 +5824,11 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 				qPos.add(companyId);
 
-				if (createDate != null) {
+				if (bindCreateDate) {
 					qPos.add(CalendarUtil.getTimestamp(createDate));
 				}
 
-				if (modifiedDate != null) {
+				if (bindModifiedDate) {
 					qPos.add(CalendarUtil.getTimestamp(modifiedDate));
 				}
 
@@ -5999,17 +6047,25 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 		query.append(_FINDER_COLUMN_C_CD_MD_COMPANYID_2);
 
+		boolean bindCreateDate = false;
+
 		if (createDate == null) {
 			query.append(_FINDER_COLUMN_C_CD_MD_CREATEDATE_1);
 		}
 		else {
+			bindCreateDate = true;
+
 			query.append(_FINDER_COLUMN_C_CD_MD_CREATEDATE_2);
 		}
+
+		boolean bindModifiedDate = false;
 
 		if (modifiedDate == null) {
 			query.append(_FINDER_COLUMN_C_CD_MD_MODIFIEDDATE_1);
 		}
 		else {
+			bindModifiedDate = true;
+
 			query.append(_FINDER_COLUMN_C_CD_MD_MODIFIEDDATE_2);
 		}
 
@@ -6083,11 +6139,11 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 		qPos.add(companyId);
 
-		if (createDate != null) {
+		if (bindCreateDate) {
 			qPos.add(CalendarUtil.getTimestamp(createDate));
 		}
 
-		if (modifiedDate != null) {
+		if (bindModifiedDate) {
 			qPos.add(CalendarUtil.getTimestamp(modifiedDate));
 		}
 
@@ -6150,17 +6206,25 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			query.append(_FINDER_COLUMN_C_CD_MD_COMPANYID_2);
 
+			boolean bindCreateDate = false;
+
 			if (createDate == null) {
 				query.append(_FINDER_COLUMN_C_CD_MD_CREATEDATE_1);
 			}
 			else {
+				bindCreateDate = true;
+
 				query.append(_FINDER_COLUMN_C_CD_MD_CREATEDATE_2);
 			}
+
+			boolean bindModifiedDate = false;
 
 			if (modifiedDate == null) {
 				query.append(_FINDER_COLUMN_C_CD_MD_MODIFIEDDATE_1);
 			}
 			else {
+				bindModifiedDate = true;
+
 				query.append(_FINDER_COLUMN_C_CD_MD_MODIFIEDDATE_2);
 			}
 
@@ -6177,11 +6241,11 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 				qPos.add(companyId);
 
-				if (createDate != null) {
+				if (bindCreateDate) {
 					qPos.add(CalendarUtil.getTimestamp(createDate));
 				}
 
-				if (modifiedDate != null) {
+				if (bindModifiedDate) {
 					qPos.add(CalendarUtil.getTimestamp(modifiedDate));
 				}
 
@@ -6218,43 +6282,28 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			UserImpl.class, user.getPrimaryKey(), user);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_CONTACTID,
-			new Object[] { Long.valueOf(user.getContactId()) }, user);
+			new Object[] { user.getContactId() }, user);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_PORTRAITID,
-			new Object[] { Long.valueOf(user.getPortraitId()) }, user);
+			new Object[] { user.getPortraitId() }, user);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_U,
-			new Object[] {
-				Long.valueOf(user.getCompanyId()),
-				Long.valueOf(user.getUserId())
-			}, user);
+			new Object[] { user.getCompanyId(), user.getUserId() }, user);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_DU,
-			new Object[] {
-				Long.valueOf(user.getCompanyId()),
-				Boolean.valueOf(user.getDefaultUser())
-			}, user);
+			new Object[] { user.getCompanyId(), user.getDefaultUser() }, user);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_SN,
-			new Object[] { Long.valueOf(user.getCompanyId()), user.getScreenName() },
-			user);
+			new Object[] { user.getCompanyId(), user.getScreenName() }, user);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_EA,
-			new Object[] {
-				Long.valueOf(user.getCompanyId()),
-				
-			user.getEmailAddress()
-			}, user);
+			new Object[] { user.getCompanyId(), user.getEmailAddress() }, user);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_FID,
-			new Object[] {
-				Long.valueOf(user.getCompanyId()),
-				Long.valueOf(user.getFacebookId())
-			}, user);
+			new Object[] { user.getCompanyId(), user.getFacebookId() }, user);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_O,
-			new Object[] { Long.valueOf(user.getCompanyId()), user.getOpenId() },
-			user);
+			new Object[] { user.getCompanyId(), user.getOpenId() }, user);
 
 		user.resetOriginalValues();
 	}
@@ -6327,43 +6376,272 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		}
 	}
 
+	protected void cacheUniqueFindersCache(User user) {
+		if (user.isNew()) {
+			Object[] args = new Object[] { user.getContactId() };
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_CONTACTID, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_CONTACTID, args, user);
+
+			args = new Object[] { user.getPortraitId() };
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_PORTRAITID, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_PORTRAITID, args,
+				user);
+
+			args = new Object[] { user.getCompanyId(), user.getUserId() };
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_U, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_U, args, user);
+
+			args = new Object[] { user.getCompanyId(), user.getDefaultUser() };
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_DU, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_DU, args, user);
+
+			args = new Object[] { user.getCompanyId(), user.getScreenName() };
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_SN, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_SN, args, user);
+
+			args = new Object[] { user.getCompanyId(), user.getEmailAddress() };
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_EA, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_EA, args, user);
+
+			args = new Object[] { user.getCompanyId(), user.getFacebookId() };
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_FID, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_FID, args, user);
+
+			args = new Object[] { user.getCompanyId(), user.getOpenId() };
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_O, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_O, args, user);
+		}
+		else {
+			UserModelImpl userModelImpl = (UserModelImpl)user;
+
+			if ((userModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_CONTACTID.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] { user.getContactId() };
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_CONTACTID, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_CONTACTID, args,
+					user);
+			}
+
+			if ((userModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_PORTRAITID.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] { user.getPortraitId() };
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_PORTRAITID,
+					args, Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_PORTRAITID,
+					args, user);
+			}
+
+			if ((userModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_C_U.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						user.getCompanyId(), user.getUserId()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_U, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_U, args, user);
+			}
+
+			if ((userModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_C_DU.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						user.getCompanyId(), user.getDefaultUser()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_DU, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_DU, args, user);
+			}
+
+			if ((userModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_C_SN.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						user.getCompanyId(), user.getScreenName()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_SN, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_SN, args, user);
+			}
+
+			if ((userModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_C_EA.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						user.getCompanyId(), user.getEmailAddress()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_EA, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_EA, args, user);
+			}
+
+			if ((userModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_C_FID.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						user.getCompanyId(), user.getFacebookId()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_FID, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_FID, args, user);
+			}
+
+			if ((userModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_C_O.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						user.getCompanyId(), user.getOpenId()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_O, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_O, args, user);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(User user) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CONTACTID,
-			new Object[] { Long.valueOf(user.getContactId()) });
+		UserModelImpl userModelImpl = (UserModelImpl)user;
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_PORTRAITID,
-			new Object[] { Long.valueOf(user.getPortraitId()) });
+		Object[] args = new Object[] { user.getContactId() };
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_U,
-			new Object[] {
-				Long.valueOf(user.getCompanyId()),
-				Long.valueOf(user.getUserId())
-			});
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CONTACTID, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CONTACTID, args);
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_DU,
-			new Object[] {
-				Long.valueOf(user.getCompanyId()),
-				Boolean.valueOf(user.getDefaultUser())
-			});
+		if ((userModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_CONTACTID.getColumnBitmask()) != 0) {
+			args = new Object[] { userModelImpl.getOriginalContactId() };
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_SN,
-			new Object[] { Long.valueOf(user.getCompanyId()), user.getScreenName() });
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CONTACTID, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CONTACTID, args);
+		}
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_EA,
-			new Object[] {
-				Long.valueOf(user.getCompanyId()),
-				
-			user.getEmailAddress()
-			});
+		args = new Object[] { user.getPortraitId() };
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_FID,
-			new Object[] {
-				Long.valueOf(user.getCompanyId()),
-				Long.valueOf(user.getFacebookId())
-			});
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_PORTRAITID, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_PORTRAITID, args);
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_O,
-			new Object[] { Long.valueOf(user.getCompanyId()), user.getOpenId() });
+		if ((userModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_PORTRAITID.getColumnBitmask()) != 0) {
+			args = new Object[] { userModelImpl.getOriginalPortraitId() };
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_PORTRAITID, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_PORTRAITID, args);
+		}
+
+		args = new Object[] { user.getCompanyId(), user.getUserId() };
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_U, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_U, args);
+
+		if ((userModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_C_U.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					userModelImpl.getOriginalCompanyId(),
+					userModelImpl.getOriginalUserId()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_U, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_U, args);
+		}
+
+		args = new Object[] { user.getCompanyId(), user.getDefaultUser() };
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_DU, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_DU, args);
+
+		if ((userModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_C_DU.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					userModelImpl.getOriginalCompanyId(),
+					userModelImpl.getOriginalDefaultUser()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_DU, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_DU, args);
+		}
+
+		args = new Object[] { user.getCompanyId(), user.getScreenName() };
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_SN, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_SN, args);
+
+		if ((userModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_C_SN.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					userModelImpl.getOriginalCompanyId(),
+					userModelImpl.getOriginalScreenName()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_SN, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_SN, args);
+		}
+
+		args = new Object[] { user.getCompanyId(), user.getEmailAddress() };
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_EA, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_EA, args);
+
+		if ((userModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_C_EA.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					userModelImpl.getOriginalCompanyId(),
+					userModelImpl.getOriginalEmailAddress()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_EA, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_EA, args);
+		}
+
+		args = new Object[] { user.getCompanyId(), user.getFacebookId() };
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_FID, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_FID, args);
+
+		if ((userModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_C_FID.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					userModelImpl.getOriginalCompanyId(),
+					userModelImpl.getOriginalFacebookId()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_FID, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_FID, args);
+		}
+
+		args = new Object[] { user.getCompanyId(), user.getOpenId() };
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_O, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_O, args);
+
+		if ((userModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_C_O.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					userModelImpl.getOriginalCompanyId(),
+					userModelImpl.getOriginalOpenId()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_O, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_O, args);
+		}
 	}
 
 	/**
@@ -6394,7 +6672,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	 * @throws SystemException if a system exception occurred
 	 */
 	public User remove(long userId) throws NoSuchUserException, SystemException {
-		return remove(Long.valueOf(userId));
+		return remove((Serializable)userId);
 	}
 
 	/**
@@ -6580,7 +6858,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
 						userModelImpl.getOriginalUuid(),
-						Long.valueOf(userModelImpl.getOriginalCompanyId())
+						userModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
@@ -6588,8 +6866,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 					args);
 
 				args = new Object[] {
-						userModelImpl.getUuid(),
-						Long.valueOf(userModelImpl.getCompanyId())
+						userModelImpl.getUuid(), userModelImpl.getCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
@@ -6600,7 +6877,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			if ((userModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(userModelImpl.getOriginalCompanyId())
+						userModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
@@ -6608,7 +6885,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,
 					args);
 
-				args = new Object[] { Long.valueOf(userModelImpl.getCompanyId()) };
+				args = new Object[] { userModelImpl.getCompanyId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
 					args);
@@ -6638,8 +6915,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			if ((userModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_CD.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(userModelImpl.getOriginalCompanyId()),
-						
+						userModelImpl.getOriginalCompanyId(),
 						userModelImpl.getOriginalCreateDate()
 					};
 
@@ -6648,8 +6924,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(userModelImpl.getCompanyId()),
-						
+						userModelImpl.getCompanyId(),
 						userModelImpl.getCreateDate()
 					};
 
@@ -6661,8 +6936,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			if ((userModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_MD.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(userModelImpl.getOriginalCompanyId()),
-						
+						userModelImpl.getOriginalCompanyId(),
 						userModelImpl.getOriginalModifiedDate()
 					};
 
@@ -6671,8 +6945,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(userModelImpl.getCompanyId()),
-						
+						userModelImpl.getCompanyId(),
 						userModelImpl.getModifiedDate()
 					};
 
@@ -6684,8 +6957,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			if ((userModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_S.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(userModelImpl.getOriginalCompanyId()),
-						Integer.valueOf(userModelImpl.getOriginalStatus())
+						userModelImpl.getOriginalCompanyId(),
+						userModelImpl.getOriginalStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_S, args);
@@ -6693,8 +6966,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(userModelImpl.getCompanyId()),
-						Integer.valueOf(userModelImpl.getStatus())
+						userModelImpl.getCompanyId(), userModelImpl.getStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_S, args);
@@ -6705,10 +6977,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			if ((userModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_CD_MD.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(userModelImpl.getOriginalCompanyId()),
-						
+						userModelImpl.getOriginalCompanyId(),
 						userModelImpl.getOriginalCreateDate(),
-						
 						userModelImpl.getOriginalModifiedDate()
 					};
 
@@ -6717,10 +6987,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(userModelImpl.getCompanyId()),
-						
+						userModelImpl.getCompanyId(),
 						userModelImpl.getCreateDate(),
-						
 						userModelImpl.getModifiedDate()
 					};
 
@@ -6733,196 +7001,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		EntityCacheUtil.putResult(UserModelImpl.ENTITY_CACHE_ENABLED,
 			UserImpl.class, user.getPrimaryKey(), user);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_CONTACTID,
-				new Object[] { Long.valueOf(user.getContactId()) }, user);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_PORTRAITID,
-				new Object[] { Long.valueOf(user.getPortraitId()) }, user);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_U,
-				new Object[] {
-					Long.valueOf(user.getCompanyId()),
-					Long.valueOf(user.getUserId())
-				}, user);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_DU,
-				new Object[] {
-					Long.valueOf(user.getCompanyId()),
-					Boolean.valueOf(user.getDefaultUser())
-				}, user);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_SN,
-				new Object[] {
-					Long.valueOf(user.getCompanyId()),
-					
-				user.getScreenName()
-				}, user);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_EA,
-				new Object[] {
-					Long.valueOf(user.getCompanyId()),
-					
-				user.getEmailAddress()
-				}, user);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_FID,
-				new Object[] {
-					Long.valueOf(user.getCompanyId()),
-					Long.valueOf(user.getFacebookId())
-				}, user);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_O,
-				new Object[] { Long.valueOf(user.getCompanyId()), user.getOpenId() },
-				user);
-		}
-		else {
-			if ((userModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_CONTACTID.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(userModelImpl.getOriginalContactId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CONTACTID,
-					args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CONTACTID,
-					args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_CONTACTID,
-					new Object[] { Long.valueOf(user.getContactId()) }, user);
-			}
-
-			if ((userModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_PORTRAITID.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(userModelImpl.getOriginalPortraitId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_PORTRAITID,
-					args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_PORTRAITID,
-					args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_PORTRAITID,
-					new Object[] { Long.valueOf(user.getPortraitId()) }, user);
-			}
-
-			if ((userModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_U.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(userModelImpl.getOriginalCompanyId()),
-						Long.valueOf(userModelImpl.getOriginalUserId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_U, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_U, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_U,
-					new Object[] {
-						Long.valueOf(user.getCompanyId()),
-						Long.valueOf(user.getUserId())
-					}, user);
-			}
-
-			if ((userModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_DU.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(userModelImpl.getOriginalCompanyId()),
-						Boolean.valueOf(userModelImpl.getOriginalDefaultUser())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_DU, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_DU, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_DU,
-					new Object[] {
-						Long.valueOf(user.getCompanyId()),
-						Boolean.valueOf(user.getDefaultUser())
-					}, user);
-			}
-
-			if ((userModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_SN.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(userModelImpl.getOriginalCompanyId()),
-						
-						userModelImpl.getOriginalScreenName()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_SN, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_SN, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_SN,
-					new Object[] {
-						Long.valueOf(user.getCompanyId()),
-						
-					user.getScreenName()
-					}, user);
-			}
-
-			if ((userModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_EA.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(userModelImpl.getOriginalCompanyId()),
-						
-						userModelImpl.getOriginalEmailAddress()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_EA, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_EA, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_EA,
-					new Object[] {
-						Long.valueOf(user.getCompanyId()),
-						
-					user.getEmailAddress()
-					}, user);
-			}
-
-			if ((userModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_FID.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(userModelImpl.getOriginalCompanyId()),
-						Long.valueOf(userModelImpl.getOriginalFacebookId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_FID, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_FID, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_FID,
-					new Object[] {
-						Long.valueOf(user.getCompanyId()),
-						Long.valueOf(user.getFacebookId())
-					}, user);
-			}
-
-			if ((userModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_O.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(userModelImpl.getOriginalCompanyId()),
-						
-						userModelImpl.getOriginalOpenId()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_O, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_O, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_O,
-					new Object[] {
-						Long.valueOf(user.getCompanyId()),
-						
-					user.getOpenId()
-					}, user);
-			}
-		}
+		clearUniqueFindersCache(user);
+		cacheUniqueFindersCache(user);
 
 		return user;
 	}
@@ -6986,13 +7066,24 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	 *
 	 * @param primaryKey the primary key of the user
 	 * @return the user
-	 * @throws com.liferay.portal.NoSuchModelException if a user with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchUserException if a user with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public User findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchUserException, SystemException {
+		User user = fetchByPrimaryKey(primaryKey);
+
+		if (user == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchUserException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return user;
 	}
 
 	/**
@@ -7005,18 +7096,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	 */
 	public User findByPrimaryKey(long userId)
 		throws NoSuchUserException, SystemException {
-		User user = fetchByPrimaryKey(userId);
-
-		if (user == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + userId);
-			}
-
-			throw new NoSuchUserException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				userId);
-		}
-
-		return user;
+		return findByPrimaryKey((Serializable)userId);
 	}
 
 	/**
@@ -7029,19 +7109,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	@Override
 	public User fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the user with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param userId the primary key of the user
-	 * @return the user, or <code>null</code> if a user with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public User fetchByPrimaryKey(long userId) throws SystemException {
 		User user = (User)EntityCacheUtil.getResult(UserModelImpl.ENTITY_CACHE_ENABLED,
-				UserImpl.class, userId);
+				UserImpl.class, primaryKey);
 
 		if (user == _nullUser) {
 			return null;
@@ -7053,19 +7122,19 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			try {
 				session = openSession();
 
-				user = (User)session.get(UserImpl.class, Long.valueOf(userId));
+				user = (User)session.get(UserImpl.class, primaryKey);
 
 				if (user != null) {
 					cacheResult(user);
 				}
 				else {
 					EntityCacheUtil.putResult(UserModelImpl.ENTITY_CACHE_ENABLED,
-						UserImpl.class, userId, _nullUser);
+						UserImpl.class, primaryKey, _nullUser);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(UserModelImpl.ENTITY_CACHE_ENABLED,
-					UserImpl.class, userId);
+					UserImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -7075,6 +7144,17 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		}
 
 		return user;
+	}
+
+	/**
+	 * Returns the user with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param userId the primary key of the user
+	 * @return the user, or <code>null</code> if a user with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public User fetchByPrimaryKey(long userId) throws SystemException {
+		return fetchByPrimaryKey((Serializable)userId);
 	}
 
 	/**
@@ -9755,168 +9835,32 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
 	@BeanReference(type = GroupPersistence.class)
 	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
-	@BeanReference(type = AnnouncementsDeliveryPersistence.class)
-	protected AnnouncementsDeliveryPersistence announcementsDeliveryPersistence;
-	@BeanReference(type = AssetEntryPersistence.class)
-	protected AssetEntryPersistence assetEntryPersistence;
-	@BeanReference(type = BlogsStatsUserPersistence.class)
-	protected BlogsStatsUserPersistence blogsStatsUserPersistence;
-	@BeanReference(type = DLFileRankPersistence.class)
-	protected DLFileRankPersistence dlFileRankPersistence;
-	@BeanReference(type = ExpandoValuePersistence.class)
-	protected ExpandoValuePersistence expandoValuePersistence;
-	@BeanReference(type = MBBanPersistence.class)
-	protected MBBanPersistence mbBanPersistence;
-	@BeanReference(type = MBMessagePersistence.class)
-	protected MBMessagePersistence mbMessagePersistence;
-	@BeanReference(type = MBStatsUserPersistence.class)
-	protected MBStatsUserPersistence mbStatsUserPersistence;
-	@BeanReference(type = MBThreadFlagPersistence.class)
-	protected MBThreadFlagPersistence mbThreadFlagPersistence;
-	@BeanReference(type = ShoppingCartPersistence.class)
-	protected ShoppingCartPersistence shoppingCartPersistence;
-	@BeanReference(type = SocialActivityPersistence.class)
-	protected SocialActivityPersistence socialActivityPersistence;
-	@BeanReference(type = SocialRequestPersistence.class)
-	protected SocialRequestPersistence socialRequestPersistence;
 	protected ContainsGroup containsGroup;
 	protected AddGroup addGroup;
 	protected ClearGroups clearGroups;
 	protected RemoveGroup removeGroup;
+	@BeanReference(type = OrganizationPersistence.class)
+	protected OrganizationPersistence organizationPersistence;
 	protected ContainsOrganization containsOrganization;
 	protected AddOrganization addOrganization;
 	protected ClearOrganizations clearOrganizations;
 	protected RemoveOrganization removeOrganization;
+	@BeanReference(type = RolePersistence.class)
+	protected RolePersistence rolePersistence;
 	protected ContainsRole containsRole;
 	protected AddRole addRole;
 	protected ClearRoles clearRoles;
 	protected RemoveRole removeRole;
+	@BeanReference(type = TeamPersistence.class)
+	protected TeamPersistence teamPersistence;
 	protected ContainsTeam containsTeam;
 	protected AddTeam addTeam;
 	protected ClearTeams clearTeams;
 	protected RemoveTeam removeTeam;
+	@BeanReference(type = UserGroupPersistence.class)
+	protected UserGroupPersistence userGroupPersistence;
 	protected ContainsUserGroup containsUserGroup;
 	protected AddUserGroup addUserGroup;
 	protected ClearUserGroups clearUserGroups;

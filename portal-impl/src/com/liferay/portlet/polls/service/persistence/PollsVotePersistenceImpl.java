@@ -14,8 +14,6 @@
 
 package com.liferay.portlet.polls.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -36,7 +34,6 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnmodifiableList;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.polls.NoSuchVoteException;
@@ -1273,10 +1270,8 @@ public class PollsVotePersistenceImpl extends BasePersistenceImpl<PollsVote>
 			PollsVoteImpl.class, pollsVote.getPrimaryKey(), pollsVote);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_Q_U,
-			new Object[] {
-				Long.valueOf(pollsVote.getQuestionId()),
-				Long.valueOf(pollsVote.getUserId())
-			}, pollsVote);
+			new Object[] { pollsVote.getQuestionId(), pollsVote.getUserId() },
+			pollsVote);
 
 		pollsVote.resetOriginalValues();
 	}
@@ -1350,12 +1345,53 @@ public class PollsVotePersistenceImpl extends BasePersistenceImpl<PollsVote>
 		}
 	}
 
+	protected void cacheUniqueFindersCache(PollsVote pollsVote) {
+		if (pollsVote.isNew()) {
+			Object[] args = new Object[] {
+					pollsVote.getQuestionId(), pollsVote.getUserId()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_Q_U, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_Q_U, args, pollsVote);
+		}
+		else {
+			PollsVoteModelImpl pollsVoteModelImpl = (PollsVoteModelImpl)pollsVote;
+
+			if ((pollsVoteModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_Q_U.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						pollsVote.getQuestionId(), pollsVote.getUserId()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_Q_U, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_Q_U, args,
+					pollsVote);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(PollsVote pollsVote) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_Q_U,
-			new Object[] {
-				Long.valueOf(pollsVote.getQuestionId()),
-				Long.valueOf(pollsVote.getUserId())
-			});
+		PollsVoteModelImpl pollsVoteModelImpl = (PollsVoteModelImpl)pollsVote;
+
+		Object[] args = new Object[] {
+				pollsVote.getQuestionId(), pollsVote.getUserId()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_Q_U, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_Q_U, args);
+
+		if ((pollsVoteModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_Q_U.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					pollsVoteModelImpl.getOriginalQuestionId(),
+					pollsVoteModelImpl.getOriginalUserId()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_Q_U, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_Q_U, args);
+		}
 	}
 
 	/**
@@ -1383,7 +1419,7 @@ public class PollsVotePersistenceImpl extends BasePersistenceImpl<PollsVote>
 	 */
 	public PollsVote remove(long voteId)
 		throws NoSuchVoteException, SystemException {
-		return remove(Long.valueOf(voteId));
+		return remove((Serializable)voteId);
 	}
 
 	/**
@@ -1501,7 +1537,7 @@ public class PollsVotePersistenceImpl extends BasePersistenceImpl<PollsVote>
 			if ((pollsVoteModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_QUESTIONID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(pollsVoteModelImpl.getOriginalQuestionId())
+						pollsVoteModelImpl.getOriginalQuestionId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_QUESTIONID,
@@ -1509,9 +1545,7 @@ public class PollsVotePersistenceImpl extends BasePersistenceImpl<PollsVote>
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_QUESTIONID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(pollsVoteModelImpl.getQuestionId())
-					};
+				args = new Object[] { pollsVoteModelImpl.getQuestionId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_QUESTIONID,
 					args);
@@ -1522,16 +1556,14 @@ public class PollsVotePersistenceImpl extends BasePersistenceImpl<PollsVote>
 			if ((pollsVoteModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_CHOICEID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(pollsVoteModelImpl.getOriginalChoiceId())
+						pollsVoteModelImpl.getOriginalChoiceId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CHOICEID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_CHOICEID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(pollsVoteModelImpl.getChoiceId())
-					};
+				args = new Object[] { pollsVoteModelImpl.getChoiceId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CHOICEID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_CHOICEID,
@@ -1542,32 +1574,8 @@ public class PollsVotePersistenceImpl extends BasePersistenceImpl<PollsVote>
 		EntityCacheUtil.putResult(PollsVoteModelImpl.ENTITY_CACHE_ENABLED,
 			PollsVoteImpl.class, pollsVote.getPrimaryKey(), pollsVote);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_Q_U,
-				new Object[] {
-					Long.valueOf(pollsVote.getQuestionId()),
-					Long.valueOf(pollsVote.getUserId())
-				}, pollsVote);
-		}
-		else {
-			if ((pollsVoteModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_Q_U.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(pollsVoteModelImpl.getOriginalQuestionId()),
-						Long.valueOf(pollsVoteModelImpl.getOriginalUserId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_Q_U, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_Q_U, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_Q_U,
-					new Object[] {
-						Long.valueOf(pollsVote.getQuestionId()),
-						Long.valueOf(pollsVote.getUserId())
-					}, pollsVote);
-			}
-		}
+		clearUniqueFindersCache(pollsVote);
+		cacheUniqueFindersCache(pollsVote);
 
 		return pollsVote;
 	}
@@ -1600,13 +1608,24 @@ public class PollsVotePersistenceImpl extends BasePersistenceImpl<PollsVote>
 	 *
 	 * @param primaryKey the primary key of the polls vote
 	 * @return the polls vote
-	 * @throws com.liferay.portal.NoSuchModelException if a polls vote with the primary key could not be found
+	 * @throws com.liferay.portlet.polls.NoSuchVoteException if a polls vote with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public PollsVote findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchVoteException, SystemException {
+		PollsVote pollsVote = fetchByPrimaryKey(primaryKey);
+
+		if (pollsVote == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchVoteException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return pollsVote;
 	}
 
 	/**
@@ -1619,18 +1638,7 @@ public class PollsVotePersistenceImpl extends BasePersistenceImpl<PollsVote>
 	 */
 	public PollsVote findByPrimaryKey(long voteId)
 		throws NoSuchVoteException, SystemException {
-		PollsVote pollsVote = fetchByPrimaryKey(voteId);
-
-		if (pollsVote == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + voteId);
-			}
-
-			throw new NoSuchVoteException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				voteId);
-		}
-
-		return pollsVote;
+		return findByPrimaryKey((Serializable)voteId);
 	}
 
 	/**
@@ -1643,19 +1651,8 @@ public class PollsVotePersistenceImpl extends BasePersistenceImpl<PollsVote>
 	@Override
 	public PollsVote fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the polls vote with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param voteId the primary key of the polls vote
-	 * @return the polls vote, or <code>null</code> if a polls vote with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public PollsVote fetchByPrimaryKey(long voteId) throws SystemException {
 		PollsVote pollsVote = (PollsVote)EntityCacheUtil.getResult(PollsVoteModelImpl.ENTITY_CACHE_ENABLED,
-				PollsVoteImpl.class, voteId);
+				PollsVoteImpl.class, primaryKey);
 
 		if (pollsVote == _nullPollsVote) {
 			return null;
@@ -1668,19 +1665,19 @@ public class PollsVotePersistenceImpl extends BasePersistenceImpl<PollsVote>
 				session = openSession();
 
 				pollsVote = (PollsVote)session.get(PollsVoteImpl.class,
-						Long.valueOf(voteId));
+						primaryKey);
 
 				if (pollsVote != null) {
 					cacheResult(pollsVote);
 				}
 				else {
 					EntityCacheUtil.putResult(PollsVoteModelImpl.ENTITY_CACHE_ENABLED,
-						PollsVoteImpl.class, voteId, _nullPollsVote);
+						PollsVoteImpl.class, primaryKey, _nullPollsVote);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(PollsVoteModelImpl.ENTITY_CACHE_ENABLED,
-					PollsVoteImpl.class, voteId);
+					PollsVoteImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -1690,6 +1687,17 @@ public class PollsVotePersistenceImpl extends BasePersistenceImpl<PollsVote>
 		}
 
 		return pollsVote;
+	}
+
+	/**
+	 * Returns the polls vote with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param voteId the primary key of the polls vote
+	 * @return the polls vote, or <code>null</code> if a polls vote with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public PollsVote fetchByPrimaryKey(long voteId) throws SystemException {
+		return fetchByPrimaryKey((Serializable)voteId);
 	}
 
 	/**
@@ -1892,14 +1900,6 @@ public class PollsVotePersistenceImpl extends BasePersistenceImpl<PollsVote>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = PollsChoicePersistence.class)
-	protected PollsChoicePersistence pollsChoicePersistence;
-	@BeanReference(type = PollsQuestionPersistence.class)
-	protected PollsQuestionPersistence pollsQuestionPersistence;
-	@BeanReference(type = PollsVotePersistence.class)
-	protected PollsVotePersistence pollsVotePersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
 	private static final String _SQL_SELECT_POLLSVOTE = "SELECT pollsVote FROM PollsVote pollsVote";
 	private static final String _SQL_SELECT_POLLSVOTE_WHERE = "SELECT pollsVote FROM PollsVote pollsVote WHERE ";
 	private static final String _SQL_COUNT_POLLSVOTE = "SELECT COUNT(pollsVote) FROM PollsVote pollsVote";

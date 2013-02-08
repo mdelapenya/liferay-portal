@@ -14,9 +14,7 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchResourceTypePermissionException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -696,16 +694,18 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 
 			query.append(_FINDER_COLUMN_C_N_R_COMPANYID_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_C_N_R_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_N_R_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_N_R_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_N_R_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_C_N_R_NAME_2);
 			}
 
 			query.append(_FINDER_COLUMN_C_N_R_ROLEID_2);
@@ -732,7 +732,7 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 
 				qPos.add(companyId);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -955,16 +955,18 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 
 		query.append(_FINDER_COLUMN_C_N_R_COMPANYID_2);
 
+		boolean bindName = false;
+
 		if (name == null) {
 			query.append(_FINDER_COLUMN_C_N_R_NAME_1);
 		}
+		else if (name.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_C_N_R_NAME_3);
+		}
 		else {
-			if (name.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_C_N_R_NAME_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_C_N_R_NAME_2);
-			}
+			bindName = true;
+
+			query.append(_FINDER_COLUMN_C_N_R_NAME_2);
 		}
 
 		query.append(_FINDER_COLUMN_C_N_R_ROLEID_2);
@@ -1039,7 +1041,7 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 
 		qPos.add(companyId);
 
-		if (name != null) {
+		if (bindName) {
 			qPos.add(name);
 		}
 
@@ -1105,16 +1107,18 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 
 			query.append(_FINDER_COLUMN_C_N_R_COMPANYID_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_C_N_R_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_N_R_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_N_R_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_N_R_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_C_N_R_NAME_2);
 			}
 
 			query.append(_FINDER_COLUMN_C_N_R_ROLEID_2);
@@ -1132,7 +1136,7 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 
 				qPos.add(companyId);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -1158,7 +1162,7 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 	private static final String _FINDER_COLUMN_C_N_R_COMPANYID_2 = "resourceTypePermission.companyId = ? AND ";
 	private static final String _FINDER_COLUMN_C_N_R_NAME_1 = "resourceTypePermission.name IS NULL AND ";
 	private static final String _FINDER_COLUMN_C_N_R_NAME_2 = "resourceTypePermission.name = ? AND ";
-	private static final String _FINDER_COLUMN_C_N_R_NAME_3 = "(resourceTypePermission.name IS NULL OR resourceTypePermission.name = ?) AND ";
+	private static final String _FINDER_COLUMN_C_N_R_NAME_3 = "(resourceTypePermission.name IS NULL OR resourceTypePermission.name = '') AND ";
 	private static final String _FINDER_COLUMN_C_N_R_ROLEID_2 = "resourceTypePermission.roleId = ?";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_G_N_R = new FinderPath(ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
 			ResourceTypePermissionModelImpl.FINDER_CACHE_ENABLED,
@@ -1284,16 +1288,18 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 
 			query.append(_FINDER_COLUMN_C_G_N_R_GROUPID_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_C_G_N_R_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_G_N_R_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_G_N_R_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_G_N_R_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_C_G_N_R_NAME_2);
 			}
 
 			query.append(_FINDER_COLUMN_C_G_N_R_ROLEID_2);
@@ -1313,7 +1319,7 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 
 				qPos.add(groupId);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -1408,16 +1414,18 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 
 			query.append(_FINDER_COLUMN_C_G_N_R_GROUPID_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_C_G_N_R_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_G_N_R_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_G_N_R_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_G_N_R_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_C_G_N_R_NAME_2);
 			}
 
 			query.append(_FINDER_COLUMN_C_G_N_R_ROLEID_2);
@@ -1437,7 +1445,7 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 
 				qPos.add(groupId);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -1464,7 +1472,7 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 	private static final String _FINDER_COLUMN_C_G_N_R_GROUPID_2 = "resourceTypePermission.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_C_G_N_R_NAME_1 = "resourceTypePermission.name IS NULL AND ";
 	private static final String _FINDER_COLUMN_C_G_N_R_NAME_2 = "resourceTypePermission.name = ? AND ";
-	private static final String _FINDER_COLUMN_C_G_N_R_NAME_3 = "(resourceTypePermission.name IS NULL OR resourceTypePermission.name = ?) AND ";
+	private static final String _FINDER_COLUMN_C_G_N_R_NAME_3 = "(resourceTypePermission.name IS NULL OR resourceTypePermission.name = '') AND ";
 	private static final String _FINDER_COLUMN_C_G_N_R_ROLEID_2 = "resourceTypePermission.roleId = ?";
 
 	/**
@@ -1479,11 +1487,10 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_G_N_R,
 			new Object[] {
-				Long.valueOf(resourceTypePermission.getCompanyId()),
-				Long.valueOf(resourceTypePermission.getGroupId()),
-				
-			resourceTypePermission.getName(),
-				Long.valueOf(resourceTypePermission.getRoleId())
+				resourceTypePermission.getCompanyId(),
+				resourceTypePermission.getGroupId(),
+				resourceTypePermission.getName(),
+				resourceTypePermission.getRoleId()
 			}, resourceTypePermission);
 
 		resourceTypePermission.resetOriginalValues();
@@ -1562,16 +1569,67 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 		}
 	}
 
+	protected void cacheUniqueFindersCache(
+		ResourceTypePermission resourceTypePermission) {
+		if (resourceTypePermission.isNew()) {
+			Object[] args = new Object[] {
+					resourceTypePermission.getCompanyId(),
+					resourceTypePermission.getGroupId(),
+					resourceTypePermission.getName(),
+					resourceTypePermission.getRoleId()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_G_N_R, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_G_N_R, args,
+				resourceTypePermission);
+		}
+		else {
+			ResourceTypePermissionModelImpl resourceTypePermissionModelImpl = (ResourceTypePermissionModelImpl)resourceTypePermission;
+
+			if ((resourceTypePermissionModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_C_G_N_R.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						resourceTypePermission.getCompanyId(),
+						resourceTypePermission.getGroupId(),
+						resourceTypePermission.getName(),
+						resourceTypePermission.getRoleId()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_G_N_R, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_G_N_R, args,
+					resourceTypePermission);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(
 		ResourceTypePermission resourceTypePermission) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_G_N_R,
-			new Object[] {
-				Long.valueOf(resourceTypePermission.getCompanyId()),
-				Long.valueOf(resourceTypePermission.getGroupId()),
-				
-			resourceTypePermission.getName(),
-				Long.valueOf(resourceTypePermission.getRoleId())
-			});
+		ResourceTypePermissionModelImpl resourceTypePermissionModelImpl = (ResourceTypePermissionModelImpl)resourceTypePermission;
+
+		Object[] args = new Object[] {
+				resourceTypePermission.getCompanyId(),
+				resourceTypePermission.getGroupId(),
+				resourceTypePermission.getName(),
+				resourceTypePermission.getRoleId()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_G_N_R, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_G_N_R, args);
+
+		if ((resourceTypePermissionModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_C_G_N_R.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					resourceTypePermissionModelImpl.getOriginalCompanyId(),
+					resourceTypePermissionModelImpl.getOriginalGroupId(),
+					resourceTypePermissionModelImpl.getOriginalName(),
+					resourceTypePermissionModelImpl.getOriginalRoleId()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_G_N_R, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_G_N_R, args);
+		}
 	}
 
 	/**
@@ -1599,7 +1657,7 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 	 */
 	public ResourceTypePermission remove(long resourceTypePermissionId)
 		throws NoSuchResourceTypePermissionException, SystemException {
-		return remove(Long.valueOf(resourceTypePermissionId));
+		return remove((Serializable)resourceTypePermissionId);
 	}
 
 	/**
@@ -1718,16 +1776,14 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 			if ((resourceTypePermissionModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ROLEID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(resourceTypePermissionModelImpl.getOriginalRoleId())
+						resourceTypePermissionModelImpl.getOriginalRoleId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_ROLEID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ROLEID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(resourceTypePermissionModelImpl.getRoleId())
-					};
+				args = new Object[] { resourceTypePermissionModelImpl.getRoleId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_ROLEID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ROLEID,
@@ -1737,10 +1793,9 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 			if ((resourceTypePermissionModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_N_R.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(resourceTypePermissionModelImpl.getOriginalCompanyId()),
-						
+						resourceTypePermissionModelImpl.getOriginalCompanyId(),
 						resourceTypePermissionModelImpl.getOriginalName(),
-						Long.valueOf(resourceTypePermissionModelImpl.getOriginalRoleId())
+						resourceTypePermissionModelImpl.getOriginalRoleId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_N_R, args);
@@ -1748,10 +1803,9 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 					args);
 
 				args = new Object[] {
-						Long.valueOf(resourceTypePermissionModelImpl.getCompanyId()),
-						
+						resourceTypePermissionModelImpl.getCompanyId(),
 						resourceTypePermissionModelImpl.getName(),
-						Long.valueOf(resourceTypePermissionModelImpl.getRoleId())
+						resourceTypePermissionModelImpl.getRoleId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_N_R, args);
@@ -1764,41 +1818,8 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 			ResourceTypePermissionImpl.class,
 			resourceTypePermission.getPrimaryKey(), resourceTypePermission);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_G_N_R,
-				new Object[] {
-					Long.valueOf(resourceTypePermission.getCompanyId()),
-					Long.valueOf(resourceTypePermission.getGroupId()),
-					
-				resourceTypePermission.getName(),
-					Long.valueOf(resourceTypePermission.getRoleId())
-				}, resourceTypePermission);
-		}
-		else {
-			if ((resourceTypePermissionModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_G_N_R.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(resourceTypePermissionModelImpl.getOriginalCompanyId()),
-						Long.valueOf(resourceTypePermissionModelImpl.getOriginalGroupId()),
-						
-						resourceTypePermissionModelImpl.getOriginalName(),
-						Long.valueOf(resourceTypePermissionModelImpl.getOriginalRoleId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_G_N_R, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_G_N_R, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_G_N_R,
-					new Object[] {
-						Long.valueOf(resourceTypePermission.getCompanyId()),
-						Long.valueOf(resourceTypePermission.getGroupId()),
-						
-					resourceTypePermission.getName(),
-						Long.valueOf(resourceTypePermission.getRoleId())
-					}, resourceTypePermission);
-			}
-		}
+		clearUniqueFindersCache(resourceTypePermission);
+		cacheUniqueFindersCache(resourceTypePermission);
 
 		return resourceTypePermission;
 	}
@@ -1829,13 +1850,24 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 	 *
 	 * @param primaryKey the primary key of the resource type permission
 	 * @return the resource type permission
-	 * @throws com.liferay.portal.NoSuchModelException if a resource type permission with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchResourceTypePermissionException if a resource type permission with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public ResourceTypePermission findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchResourceTypePermissionException, SystemException {
+		ResourceTypePermission resourceTypePermission = fetchByPrimaryKey(primaryKey);
+
+		if (resourceTypePermission == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchResourceTypePermissionException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return resourceTypePermission;
 	}
 
 	/**
@@ -1849,19 +1881,7 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 	public ResourceTypePermission findByPrimaryKey(
 		long resourceTypePermissionId)
 		throws NoSuchResourceTypePermissionException, SystemException {
-		ResourceTypePermission resourceTypePermission = fetchByPrimaryKey(resourceTypePermissionId);
-
-		if (resourceTypePermission == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-					resourceTypePermissionId);
-			}
-
-			throw new NoSuchResourceTypePermissionException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				resourceTypePermissionId);
-		}
-
-		return resourceTypePermission;
+		return findByPrimaryKey((Serializable)resourceTypePermissionId);
 	}
 
 	/**
@@ -1874,20 +1894,8 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 	@Override
 	public ResourceTypePermission fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the resource type permission with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param resourceTypePermissionId the primary key of the resource type permission
-	 * @return the resource type permission, or <code>null</code> if a resource type permission with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public ResourceTypePermission fetchByPrimaryKey(
-		long resourceTypePermissionId) throws SystemException {
 		ResourceTypePermission resourceTypePermission = (ResourceTypePermission)EntityCacheUtil.getResult(ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
-				ResourceTypePermissionImpl.class, resourceTypePermissionId);
+				ResourceTypePermissionImpl.class, primaryKey);
 
 		if (resourceTypePermission == _nullResourceTypePermission) {
 			return null;
@@ -1900,20 +1908,20 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 				session = openSession();
 
 				resourceTypePermission = (ResourceTypePermission)session.get(ResourceTypePermissionImpl.class,
-						Long.valueOf(resourceTypePermissionId));
+						primaryKey);
 
 				if (resourceTypePermission != null) {
 					cacheResult(resourceTypePermission);
 				}
 				else {
 					EntityCacheUtil.putResult(ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
-						ResourceTypePermissionImpl.class,
-						resourceTypePermissionId, _nullResourceTypePermission);
+						ResourceTypePermissionImpl.class, primaryKey,
+						_nullResourceTypePermission);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
-					ResourceTypePermissionImpl.class, resourceTypePermissionId);
+					ResourceTypePermissionImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -1923,6 +1931,18 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 		}
 
 		return resourceTypePermission;
+	}
+
+	/**
+	 * Returns the resource type permission with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param resourceTypePermissionId the primary key of the resource type permission
+	 * @return the resource type permission, or <code>null</code> if a resource type permission with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public ResourceTypePermission fetchByPrimaryKey(
+		long resourceTypePermissionId) throws SystemException {
+		return fetchByPrimaryKey((Serializable)resourceTypePermissionId);
 	}
 
 	/**
@@ -2125,128 +2145,6 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
 	private static final String _SQL_SELECT_RESOURCETYPEPERMISSION = "SELECT resourceTypePermission FROM ResourceTypePermission resourceTypePermission";
 	private static final String _SQL_SELECT_RESOURCETYPEPERMISSION_WHERE = "SELECT resourceTypePermission FROM ResourceTypePermission resourceTypePermission WHERE ";
 	private static final String _SQL_COUNT_RESOURCETYPEPERMISSION = "SELECT COUNT(resourceTypePermission) FROM ResourceTypePermission resourceTypePermission";

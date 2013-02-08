@@ -22,6 +22,7 @@ String className = (String)request.getAttribute("edit_message.jsp-className");
 Integer depth = (Integer)request.getAttribute("edit_message.jsp-depth");
 Boolean editable = (Boolean)request.getAttribute("edit_message.jsp-editable");
 MBMessage message = (MBMessage)request.getAttribute("edit_message.jsp-message");
+Boolean showPermanentLink = (Boolean)request.getAttribute("edit-message.jsp-showPermanentLink");
 MBThread thread = (MBThread)request.getAttribute("edit_message.jsp-thread");
 %>
 
@@ -124,7 +125,16 @@ MBThread thread = (MBThread)request.getAttribute("edit_message.jsp-thread");
 		<td class="lfr-top">
 			<div class="thread-top float-container">
 				<div class="subject">
-					<a href="#<portlet:namespace />message_<%= message.getMessageId() %>" title="<liferay-ui:message key="permanent-link-to-this-item" />"><strong><%= HtmlUtil.escape(message.getSubject()) %></strong></a><br />
+					<c:choose>
+						<c:when test="<%= showPermanentLink %>">
+							<a href="#<portlet:namespace />message_<%= message.getMessageId() %>" title="<liferay-ui:message key="permanent-link-to-this-item" />"><strong><%= HtmlUtil.escape(message.getSubject()) %></strong></a>
+						</c:when>
+						<c:otherwise>
+							<strong><%= HtmlUtil.escape(message.getSubject()) %></strong>
+						</c:otherwise>
+					</c:choose>
+
+					<br />
 
 					<%
 					String assetTagNames = (String)request.getAttribute("edit_message.jsp-assetTagNames");
@@ -290,15 +300,16 @@ MBThread thread = (MBThread)request.getAttribute("edit_message.jsp-thread");
 					</div>
 				</liferay-ui:custom-attributes-available>
 
-				<%
-				List<FileEntry> deletedAttachmentsFileEntries = message.getDeletedAttachmentsFileEntries();
-				%>
+				<c:if test="<%= message.getMessageId() > 0 %>">
 
-				<c:if test="<%= (message.isAttachments() || ((deletedAttachmentsFileEntries.size() > 0) && TrashUtil.isTrashEnabled(scopeGroupId) && MBMessagePermission.contains(permissionChecker, message, ActionKeys.UPDATE))) %>">
-					<div class="message-attachments">
-						<h3><liferay-ui:message key="attachments" />:</h3>
+					<%
+					int attachmentsFileEntriesCount = message.getAttachmentsFileEntriesCount();
+					int deletedAttachmentsFileEntriesCount = message.getDeletedAttachmentsFileEntriesCount();
+					%>
 
-						<c:if test="<%= message.isAttachments() %>">
+					<c:if test="<%= ((attachmentsFileEntriesCount > 0) || ((deletedAttachmentsFileEntriesCount > 0) && TrashUtil.isTrashEnabled(scopeGroupId) && MBMessagePermission.contains(permissionChecker, message, ActionKeys.UPDATE))) %>">
+						<div class="message-attachments">
+							<h3><liferay-ui:message key="attachments" />:</h3>
 
 							<%
 							List<FileEntry> attachmentsFileEntries = message.getAttachmentsFileEntries();
@@ -353,26 +364,25 @@ MBThread thread = (MBThread)request.getAttribute("edit_message.jsp-thread");
 								}
 								%>
 
+								<c:if test="<%= (deletedAttachmentsFileEntriesCount > 0) && TrashUtil.isTrashEnabled(scopeGroupId) && MBMessagePermission.contains(permissionChecker, message, ActionKeys.UPDATE) %>">
+									<li class="message-attachment">
+										<portlet:renderURL var="viewTrashAttachmentsURL">
+											<portlet:param name="struts_action" value="/message_boards/view_deleted_message_attachments" />
+											<portlet:param name="redirect" value="<%= currentURL %>" />
+											<portlet:param name="messageId" value="<%= String.valueOf(message.getMessageId()) %>" />
+										</portlet:renderURL>
+
+										<liferay-ui:icon
+											image="delete_attachment"
+											label="<%= true %>"
+											message='<%= LanguageUtil.format(pageContext, (deletedAttachmentsFileEntriesCount == 1) ? "x-recently-removed-attachment" : "x-recently-removed-attachments", deletedAttachmentsFileEntriesCount) %>'
+											url="<%= viewTrashAttachmentsURL %>"
+										/>
+									</li>
+								</c:if>
 							</ul>
-						</c:if>
-
-						<c:if test="<%= (deletedAttachmentsFileEntries.size() > 0) && TrashUtil.isTrashEnabled(scopeGroupId) && MBMessagePermission.contains(permissionChecker, message, ActionKeys.UPDATE) %>">
-							<div class="message-attachments">
-								<portlet:renderURL var="viewTrashAttachmentsURL">
-									<portlet:param name="struts_action" value="/message_boards/view_deleted_message_attachments" />
-									<portlet:param name="redirect" value="<%= currentURL %>" />
-									<portlet:param name="messageId" value="<%= String.valueOf(message.getMessageId()) %>" />
-								</portlet:renderURL>
-
-								<liferay-ui:icon
-									image="delete_attachment"
-									label="<%= true %>"
-									message='<%= LanguageUtil.format(pageContext, (deletedAttachmentsFileEntries.size() == 1) ? "x-recently-removed-attachment" : "x-recently-removed-attachments", deletedAttachmentsFileEntries.size()) %>'
-									url="<%= viewTrashAttachmentsURL %>"
-								/>
-							</div>
-						</c:if>
-					</div>
+						</div>
+					</c:if>
 				</c:if>
 			</div>
 		</td>

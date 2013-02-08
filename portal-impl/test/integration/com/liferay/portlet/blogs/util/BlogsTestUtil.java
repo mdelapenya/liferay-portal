@@ -14,11 +14,11 @@
 
 package com.liferay.portlet.blogs.util;
 
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.kernel.workflow.WorkflowThreadLocal;
 import com.liferay.portal.model.Group;
-import com.liferay.portal.security.auth.PrincipalThreadLocal;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portlet.blogs.model.BlogsEntry;
@@ -31,46 +31,70 @@ import java.io.InputStream;
  */
 public class BlogsTestUtil {
 
-	public static BlogsEntry addBlogsEntry(
+	public static BlogsEntry addEntry(
 			long userId, Group group, boolean approved)
 		throws Exception {
 
-		String title = "Title";
-		String description = "Description";
-		String content = "Content";
-		int displayDateMonth = 1;
-		int displayDateDay = 1;
-		int displayDateYear = 2012;
-		int displayDateHour = 12;
-		int displayDateMinute = 0;
-		boolean allowPingbacks = true;
-		boolean allowTrackbacks = true;
-		String[] trackbacks = new String[0];
-		boolean smallImage = false;
-		String smallImageURL = StringPool.BLANK;
-		String smallImageFileName = StringPool.BLANK;
-		InputStream smallImageInputStream = null;
+		return addEntry(userId, group, "Title", approved);
+	}
 
-		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
-			group.getGroupId());
+	public static BlogsEntry addEntry(
+			long userId, Group group, String title, boolean approved)
+		throws Exception {
 
-		serviceContext.setWorkflowAction(WorkflowConstants.ACTION_SAVE_DRAFT);
+		boolean workflowEnabled = WorkflowThreadLocal.isEnabled();
 
-		BlogsEntry blogsEntry = BlogsEntryLocalServiceUtil.addEntry(
-			userId, title, description, content, displayDateMonth,
-			displayDateDay, displayDateYear, displayDateHour, displayDateMinute,
-			allowPingbacks, allowTrackbacks, trackbacks, smallImage,
-			smallImageURL, smallImageFileName, smallImageInputStream,
-			serviceContext);
+		try {
+			WorkflowThreadLocal.setEnabled(true);
 
-		if (approved) {
-			BlogsEntryLocalServiceUtil.updateStatus(
-				GetterUtil.getLong(PrincipalThreadLocal.getName()),
-				blogsEntry.getEntryId(), WorkflowConstants.STATUS_APPROVED,
-				serviceContext);
+			String description = "Description";
+			String content = "Content";
+			int displayDateMonth = 1;
+			int displayDateDay = 1;
+			int displayDateYear = 2012;
+			int displayDateHour = 12;
+			int displayDateMinute = 0;
+			boolean allowPingbacks = true;
+			boolean allowTrackbacks = true;
+			String[] trackbacks = new String[0];
+			boolean smallImage = false;
+			String smallImageURL = StringPool.BLANK;
+			String smallImageFileName = StringPool.BLANK;
+			InputStream smallImageInputStream = null;
+
+			ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
+				group.getGroupId());
+
+			serviceContext.setWorkflowAction(
+				WorkflowConstants.ACTION_SAVE_DRAFT);
+
+			BlogsEntry entry = BlogsEntryLocalServiceUtil.addEntry(
+				userId, title, description, content, displayDateMonth,
+				displayDateDay, displayDateYear, displayDateHour,
+				displayDateMinute, allowPingbacks, allowTrackbacks, trackbacks,
+				smallImage, smallImageURL, smallImageFileName,
+				smallImageInputStream, serviceContext);
+
+			if (approved) {
+				entry = BlogsEntryLocalServiceUtil.updateStatus(
+					userId, entry.getEntryId(),
+					WorkflowConstants.STATUS_APPROVED, serviceContext);
+			}
+
+			return entry;
 		}
+		finally {
+			WorkflowThreadLocal.setEnabled(workflowEnabled);
+		}
+	}
 
-		return blogsEntry;
+	public static BlogsEntry addEntry(
+			long userId, long groupId, String title, boolean approved)
+		throws Exception {
+
+		Group group = GroupLocalServiceUtil.getGroup(groupId);
+
+		return addEntry(userId, group, title, approved);
 	}
 
 }

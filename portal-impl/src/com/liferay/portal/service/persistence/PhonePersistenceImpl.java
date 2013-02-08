@@ -14,9 +14,7 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchPhoneException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -2786,7 +2784,7 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 	 */
 	public Phone remove(long phoneId)
 		throws NoSuchPhoneException, SystemException {
-		return remove(Long.valueOf(phoneId));
+		return remove((Serializable)phoneId);
 	}
 
 	/**
@@ -2901,7 +2899,7 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			if ((phoneModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(phoneModelImpl.getOriginalCompanyId())
+						phoneModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
@@ -2909,7 +2907,7 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,
 					args);
 
-				args = new Object[] { Long.valueOf(phoneModelImpl.getCompanyId()) };
+				args = new Object[] { phoneModelImpl.getCompanyId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
 					args);
@@ -2919,15 +2917,13 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 
 			if ((phoneModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(phoneModelImpl.getOriginalUserId())
-					};
+				Object[] args = new Object[] { phoneModelImpl.getOriginalUserId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
 					args);
 
-				args = new Object[] { Long.valueOf(phoneModelImpl.getUserId()) };
+				args = new Object[] { phoneModelImpl.getUserId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
@@ -2937,8 +2933,8 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			if ((phoneModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(phoneModelImpl.getOriginalCompanyId()),
-						Long.valueOf(phoneModelImpl.getOriginalClassNameId())
+						phoneModelImpl.getOriginalCompanyId(),
+						phoneModelImpl.getOriginalClassNameId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -2946,8 +2942,8 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(phoneModelImpl.getCompanyId()),
-						Long.valueOf(phoneModelImpl.getClassNameId())
+						phoneModelImpl.getCompanyId(),
+						phoneModelImpl.getClassNameId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -2958,9 +2954,9 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			if ((phoneModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(phoneModelImpl.getOriginalCompanyId()),
-						Long.valueOf(phoneModelImpl.getOriginalClassNameId()),
-						Long.valueOf(phoneModelImpl.getOriginalClassPK())
+						phoneModelImpl.getOriginalCompanyId(),
+						phoneModelImpl.getOriginalClassNameId(),
+						phoneModelImpl.getOriginalClassPK()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C, args);
@@ -2968,9 +2964,9 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(phoneModelImpl.getCompanyId()),
-						Long.valueOf(phoneModelImpl.getClassNameId()),
-						Long.valueOf(phoneModelImpl.getClassPK())
+						phoneModelImpl.getCompanyId(),
+						phoneModelImpl.getClassNameId(),
+						phoneModelImpl.getClassPK()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C, args);
@@ -2981,10 +2977,10 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			if ((phoneModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C_C_P.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(phoneModelImpl.getOriginalCompanyId()),
-						Long.valueOf(phoneModelImpl.getOriginalClassNameId()),
-						Long.valueOf(phoneModelImpl.getOriginalClassPK()),
-						Boolean.valueOf(phoneModelImpl.getOriginalPrimary())
+						phoneModelImpl.getOriginalCompanyId(),
+						phoneModelImpl.getOriginalClassNameId(),
+						phoneModelImpl.getOriginalClassPK(),
+						phoneModelImpl.getOriginalPrimary()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C_P, args);
@@ -2992,10 +2988,9 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(phoneModelImpl.getCompanyId()),
-						Long.valueOf(phoneModelImpl.getClassNameId()),
-						Long.valueOf(phoneModelImpl.getClassPK()),
-						Boolean.valueOf(phoneModelImpl.getPrimary())
+						phoneModelImpl.getCompanyId(),
+						phoneModelImpl.getClassNameId(),
+						phoneModelImpl.getClassPK(), phoneModelImpl.getPrimary()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C_P, args);
@@ -3041,13 +3036,24 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 	 *
 	 * @param primaryKey the primary key of the phone
 	 * @return the phone
-	 * @throws com.liferay.portal.NoSuchModelException if a phone with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchPhoneException if a phone with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public Phone findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchPhoneException, SystemException {
+		Phone phone = fetchByPrimaryKey(primaryKey);
+
+		if (phone == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchPhoneException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return phone;
 	}
 
 	/**
@@ -3060,18 +3066,7 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 	 */
 	public Phone findByPrimaryKey(long phoneId)
 		throws NoSuchPhoneException, SystemException {
-		Phone phone = fetchByPrimaryKey(phoneId);
-
-		if (phone == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + phoneId);
-			}
-
-			throw new NoSuchPhoneException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				phoneId);
-		}
-
-		return phone;
+		return findByPrimaryKey((Serializable)phoneId);
 	}
 
 	/**
@@ -3084,19 +3079,8 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 	@Override
 	public Phone fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the phone with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param phoneId the primary key of the phone
-	 * @return the phone, or <code>null</code> if a phone with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public Phone fetchByPrimaryKey(long phoneId) throws SystemException {
 		Phone phone = (Phone)EntityCacheUtil.getResult(PhoneModelImpl.ENTITY_CACHE_ENABLED,
-				PhoneImpl.class, phoneId);
+				PhoneImpl.class, primaryKey);
 
 		if (phone == _nullPhone) {
 			return null;
@@ -3108,20 +3092,19 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			try {
 				session = openSession();
 
-				phone = (Phone)session.get(PhoneImpl.class,
-						Long.valueOf(phoneId));
+				phone = (Phone)session.get(PhoneImpl.class, primaryKey);
 
 				if (phone != null) {
 					cacheResult(phone);
 				}
 				else {
 					EntityCacheUtil.putResult(PhoneModelImpl.ENTITY_CACHE_ENABLED,
-						PhoneImpl.class, phoneId, _nullPhone);
+						PhoneImpl.class, primaryKey, _nullPhone);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(PhoneModelImpl.ENTITY_CACHE_ENABLED,
-					PhoneImpl.class, phoneId);
+					PhoneImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -3131,6 +3114,17 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 		}
 
 		return phone;
+	}
+
+	/**
+	 * Returns the phone with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param phoneId the primary key of the phone
+	 * @return the phone, or <code>null</code> if a phone with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Phone fetchByPrimaryKey(long phoneId) throws SystemException {
+		return fetchByPrimaryKey((Serializable)phoneId);
 	}
 
 	/**
@@ -3332,128 +3326,6 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
 	private static final String _SQL_SELECT_PHONE = "SELECT phone FROM Phone phone";
 	private static final String _SQL_SELECT_PHONE_WHERE = "SELECT phone FROM Phone phone WHERE ";
 	private static final String _SQL_COUNT_PHONE = "SELECT COUNT(phone) FROM Phone phone";

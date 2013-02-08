@@ -14,8 +14,6 @@
 
 package com.liferay.portlet.wiki.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -23,6 +21,7 @@ import com.liferay.portal.kernel.dao.orm.FinderPath;
 import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -43,22 +42,9 @@ import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
-import com.liferay.portal.service.persistence.CompanyPersistence;
-import com.liferay.portal.service.persistence.GroupPersistence;
-import com.liferay.portal.service.persistence.PortletPreferencesPersistence;
-import com.liferay.portal.service.persistence.SubscriptionPersistence;
-import com.liferay.portal.service.persistence.UserPersistence;
-import com.liferay.portal.service.persistence.WorkflowInstanceLinkPersistence;
+import com.liferay.portal.security.permission.InlineSQLHelperUtil;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
-import com.liferay.portlet.asset.service.persistence.AssetCategoryPersistence;
-import com.liferay.portlet.asset.service.persistence.AssetEntryPersistence;
-import com.liferay.portlet.asset.service.persistence.AssetLinkPersistence;
-import com.liferay.portlet.asset.service.persistence.AssetTagPersistence;
-import com.liferay.portlet.expando.service.persistence.ExpandoValuePersistence;
-import com.liferay.portlet.messageboards.service.persistence.MBMessagePersistence;
-import com.liferay.portlet.social.service.persistence.SocialActivityPersistence;
-import com.liferay.portlet.trash.service.persistence.TrashEntryPersistence;
 import com.liferay.portlet.wiki.NoSuchPageException;
 import com.liferay.portlet.wiki.model.WikiPage;
 import com.liferay.portlet.wiki.model.impl.WikiPageImpl;
@@ -211,16 +197,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 			query.append(_SQL_SELECT_WIKIPAGE_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			if (orderByComparator != null) {
@@ -243,7 +231,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -433,16 +421,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 		query.append(_SQL_SELECT_WIKIPAGE_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_UUID_2);
 		}
 
 		if (orderByComparator != null) {
@@ -513,7 +503,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -568,16 +558,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 			query.append(_SQL_COUNT_WIKIPAGE_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			String sql = query.toString();
@@ -591,7 +583,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -614,7 +606,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 	private static final String _FINDER_COLUMN_UUID_UUID_1 = "wikiPage.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "wikiPage.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(wikiPage.uuid IS NULL OR wikiPage.uuid = ?)";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(wikiPage.uuid IS NULL OR wikiPage.uuid = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
 			WikiPageModelImpl.FINDER_CACHE_ENABLED, WikiPageImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
@@ -709,16 +701,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 			query.append(_SQL_SELECT_WIKIPAGE_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_G_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_G_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_G_GROUPID_2);
@@ -734,7 +728,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -817,16 +811,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 			query.append(_SQL_COUNT_WIKIPAGE_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_G_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_G_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_G_GROUPID_2);
@@ -842,7 +838,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -867,7 +863,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "wikiPage.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "wikiPage.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(wikiPage.uuid IS NULL OR wikiPage.uuid = ?) AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(wikiPage.uuid IS NULL OR wikiPage.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "wikiPage.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
 			WikiPageModelImpl.FINDER_CACHE_ENABLED, WikiPageImpl.class,
@@ -989,16 +985,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 			query.append(_SQL_SELECT_WIKIPAGE_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1023,7 +1021,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -1229,16 +1227,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 		query.append(_SQL_SELECT_WIKIPAGE_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 		}
 
 		query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1311,7 +1311,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -1372,16 +1372,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 			query.append(_SQL_COUNT_WIKIPAGE_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1397,7 +1399,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -1422,7 +1424,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "wikiPage.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "wikiPage.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(wikiPage.uuid IS NULL OR wikiPage.uuid = ?) AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(wikiPage.uuid IS NULL OR wikiPage.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "wikiPage.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_NODEID = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
 			WikiPageModelImpl.FINDER_CACHE_ENABLED, WikiPageImpl.class,
@@ -2007,16 +2009,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 			query.append(_SQL_SELECT_WIKIPAGE_WHERE);
 
+			boolean bindFormat = false;
+
 			if (format == null) {
 				query.append(_FINDER_COLUMN_FORMAT_FORMAT_1);
 			}
+			else if (format.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_FORMAT_FORMAT_3);
+			}
 			else {
-				if (format.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_FORMAT_FORMAT_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_FORMAT_FORMAT_2);
-				}
+				bindFormat = true;
+
+				query.append(_FINDER_COLUMN_FORMAT_FORMAT_2);
 			}
 
 			if (orderByComparator != null) {
@@ -2039,7 +2043,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (format != null) {
+				if (bindFormat) {
 					qPos.add(format);
 				}
 
@@ -2229,16 +2233,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 		query.append(_SQL_SELECT_WIKIPAGE_WHERE);
 
+		boolean bindFormat = false;
+
 		if (format == null) {
 			query.append(_FINDER_COLUMN_FORMAT_FORMAT_1);
 		}
+		else if (format.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_FORMAT_FORMAT_3);
+		}
 		else {
-			if (format.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_FORMAT_FORMAT_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_FORMAT_FORMAT_2);
-			}
+			bindFormat = true;
+
+			query.append(_FINDER_COLUMN_FORMAT_FORMAT_2);
 		}
 
 		if (orderByComparator != null) {
@@ -2309,7 +2315,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (format != null) {
+		if (bindFormat) {
 			qPos.add(format);
 		}
 
@@ -2364,16 +2370,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 			query.append(_SQL_COUNT_WIKIPAGE_WHERE);
 
+			boolean bindFormat = false;
+
 			if (format == null) {
 				query.append(_FINDER_COLUMN_FORMAT_FORMAT_1);
 			}
+			else if (format.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_FORMAT_FORMAT_3);
+			}
 			else {
-				if (format.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_FORMAT_FORMAT_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_FORMAT_FORMAT_2);
-				}
+				bindFormat = true;
+
+				query.append(_FINDER_COLUMN_FORMAT_FORMAT_2);
 			}
 
 			String sql = query.toString();
@@ -2387,7 +2395,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (format != null) {
+				if (bindFormat) {
 					qPos.add(format);
 				}
 
@@ -2410,7 +2418,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 	private static final String _FINDER_COLUMN_FORMAT_FORMAT_1 = "wikiPage.format IS NULL";
 	private static final String _FINDER_COLUMN_FORMAT_FORMAT_2 = "wikiPage.format = ?";
-	private static final String _FINDER_COLUMN_FORMAT_FORMAT_3 = "(wikiPage.format IS NULL OR wikiPage.format = ?)";
+	private static final String _FINDER_COLUMN_FORMAT_FORMAT_3 = "(wikiPage.format IS NULL OR wikiPage.format = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_R_N = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
 			WikiPageModelImpl.FINDER_CACHE_ENABLED, WikiPageImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByR_N",
@@ -3046,16 +3054,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 			query.append(_FINDER_COLUMN_N_T_NODEID_2);
 
+			boolean bindTitle = false;
+
 			if (title == null) {
 				query.append(_FINDER_COLUMN_N_T_TITLE_1);
 			}
+			else if (title.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_N_T_TITLE_3);
+			}
 			else {
-				if (title.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_N_T_TITLE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_N_T_TITLE_2);
-				}
+				bindTitle = true;
+
+				query.append(_FINDER_COLUMN_N_T_TITLE_2);
 			}
 
 			if (orderByComparator != null) {
@@ -3080,8 +3090,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 				qPos.add(nodeId);
 
-				if (title != null) {
-					qPos.add(title);
+				if (bindTitle) {
+					qPos.add(title.toLowerCase());
 				}
 
 				if (!pagination) {
@@ -3283,16 +3293,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 		query.append(_FINDER_COLUMN_N_T_NODEID_2);
 
+		boolean bindTitle = false;
+
 		if (title == null) {
 			query.append(_FINDER_COLUMN_N_T_TITLE_1);
 		}
+		else if (title.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_N_T_TITLE_3);
+		}
 		else {
-			if (title.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_N_T_TITLE_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_N_T_TITLE_2);
-			}
+			bindTitle = true;
+
+			query.append(_FINDER_COLUMN_N_T_TITLE_2);
 		}
 
 		if (orderByComparator != null) {
@@ -3365,8 +3377,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 		qPos.add(nodeId);
 
-		if (title != null) {
-			qPos.add(title);
+		if (bindTitle) {
+			qPos.add(title.toLowerCase());
 		}
 
 		if (orderByComparator != null) {
@@ -3425,16 +3437,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 			query.append(_FINDER_COLUMN_N_T_NODEID_2);
 
+			boolean bindTitle = false;
+
 			if (title == null) {
 				query.append(_FINDER_COLUMN_N_T_TITLE_1);
 			}
+			else if (title.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_N_T_TITLE_3);
+			}
 			else {
-				if (title.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_N_T_TITLE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_N_T_TITLE_2);
-				}
+				bindTitle = true;
+
+				query.append(_FINDER_COLUMN_N_T_TITLE_2);
 			}
 
 			String sql = query.toString();
@@ -3450,8 +3464,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 				qPos.add(nodeId);
 
-				if (title != null) {
-					qPos.add(title);
+				if (bindTitle) {
+					qPos.add(title.toLowerCase());
 				}
 
 				count = (Long)q.uniqueResult();
@@ -3473,8 +3487,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 	private static final String _FINDER_COLUMN_N_T_NODEID_2 = "wikiPage.nodeId = ? AND ";
 	private static final String _FINDER_COLUMN_N_T_TITLE_1 = "wikiPage.title IS NULL";
-	private static final String _FINDER_COLUMN_N_T_TITLE_2 = "lower(wikiPage.title) = lower(CAST_TEXT(?))";
-	private static final String _FINDER_COLUMN_N_T_TITLE_3 = "(wikiPage.title IS NULL OR lower(wikiPage.title) = lower(CAST_TEXT(?)))";
+	private static final String _FINDER_COLUMN_N_T_TITLE_2 = "lower(wikiPage.title) = ?";
+	private static final String _FINDER_COLUMN_N_T_TITLE_3 = "(wikiPage.title IS NULL OR wikiPage.title = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_N_H = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
 			WikiPageModelImpl.FINDER_CACHE_ENABLED, WikiPageImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByN_H",
@@ -4106,16 +4120,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 			query.append(_FINDER_COLUMN_N_P_NODEID_2);
 
+			boolean bindParentTitle = false;
+
 			if (parentTitle == null) {
 				query.append(_FINDER_COLUMN_N_P_PARENTTITLE_1);
 			}
+			else if (parentTitle.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_N_P_PARENTTITLE_3);
+			}
 			else {
-				if (parentTitle.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_N_P_PARENTTITLE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_N_P_PARENTTITLE_2);
-				}
+				bindParentTitle = true;
+
+				query.append(_FINDER_COLUMN_N_P_PARENTTITLE_2);
 			}
 
 			if (orderByComparator != null) {
@@ -4140,8 +4156,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 				qPos.add(nodeId);
 
-				if (parentTitle != null) {
-					qPos.add(parentTitle);
+				if (bindParentTitle) {
+					qPos.add(parentTitle.toLowerCase());
 				}
 
 				if (!pagination) {
@@ -4346,16 +4362,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 		query.append(_FINDER_COLUMN_N_P_NODEID_2);
 
+		boolean bindParentTitle = false;
+
 		if (parentTitle == null) {
 			query.append(_FINDER_COLUMN_N_P_PARENTTITLE_1);
 		}
+		else if (parentTitle.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_N_P_PARENTTITLE_3);
+		}
 		else {
-			if (parentTitle.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_N_P_PARENTTITLE_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_N_P_PARENTTITLE_2);
-			}
+			bindParentTitle = true;
+
+			query.append(_FINDER_COLUMN_N_P_PARENTTITLE_2);
 		}
 
 		if (orderByComparator != null) {
@@ -4428,8 +4446,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 		qPos.add(nodeId);
 
-		if (parentTitle != null) {
-			qPos.add(parentTitle);
+		if (bindParentTitle) {
+			qPos.add(parentTitle.toLowerCase());
 		}
 
 		if (orderByComparator != null) {
@@ -4489,16 +4507,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 			query.append(_FINDER_COLUMN_N_P_NODEID_2);
 
+			boolean bindParentTitle = false;
+
 			if (parentTitle == null) {
 				query.append(_FINDER_COLUMN_N_P_PARENTTITLE_1);
 			}
+			else if (parentTitle.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_N_P_PARENTTITLE_3);
+			}
 			else {
-				if (parentTitle.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_N_P_PARENTTITLE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_N_P_PARENTTITLE_2);
-				}
+				bindParentTitle = true;
+
+				query.append(_FINDER_COLUMN_N_P_PARENTTITLE_2);
 			}
 
 			String sql = query.toString();
@@ -4514,8 +4534,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 				qPos.add(nodeId);
 
-				if (parentTitle != null) {
-					qPos.add(parentTitle);
+				if (bindParentTitle) {
+					qPos.add(parentTitle.toLowerCase());
 				}
 
 				count = (Long)q.uniqueResult();
@@ -4537,8 +4557,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 	private static final String _FINDER_COLUMN_N_P_NODEID_2 = "wikiPage.nodeId = ? AND ";
 	private static final String _FINDER_COLUMN_N_P_PARENTTITLE_1 = "wikiPage.parentTitle IS NULL";
-	private static final String _FINDER_COLUMN_N_P_PARENTTITLE_2 = "lower(wikiPage.parentTitle) = lower(CAST_TEXT(?))";
-	private static final String _FINDER_COLUMN_N_P_PARENTTITLE_3 = "(wikiPage.parentTitle IS NULL OR lower(wikiPage.parentTitle) = lower(CAST_TEXT(?)))";
+	private static final String _FINDER_COLUMN_N_P_PARENTTITLE_2 = "lower(wikiPage.parentTitle) = ?";
+	private static final String _FINDER_COLUMN_N_P_PARENTTITLE_3 = "(wikiPage.parentTitle IS NULL OR wikiPage.parentTitle = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_N_R = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
 			WikiPageModelImpl.FINDER_CACHE_ENABLED, WikiPageImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByN_R",
@@ -4661,16 +4681,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 			query.append(_FINDER_COLUMN_N_R_NODEID_2);
 
+			boolean bindRedirectTitle = false;
+
 			if (redirectTitle == null) {
 				query.append(_FINDER_COLUMN_N_R_REDIRECTTITLE_1);
 			}
+			else if (redirectTitle.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_N_R_REDIRECTTITLE_3);
+			}
 			else {
-				if (redirectTitle.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_N_R_REDIRECTTITLE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_N_R_REDIRECTTITLE_2);
-				}
+				bindRedirectTitle = true;
+
+				query.append(_FINDER_COLUMN_N_R_REDIRECTTITLE_2);
 			}
 
 			if (orderByComparator != null) {
@@ -4695,8 +4717,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 				qPos.add(nodeId);
 
-				if (redirectTitle != null) {
-					qPos.add(redirectTitle);
+				if (bindRedirectTitle) {
+					qPos.add(redirectTitle.toLowerCase());
 				}
 
 				if (!pagination) {
@@ -4901,16 +4923,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 		query.append(_FINDER_COLUMN_N_R_NODEID_2);
 
+		boolean bindRedirectTitle = false;
+
 		if (redirectTitle == null) {
 			query.append(_FINDER_COLUMN_N_R_REDIRECTTITLE_1);
 		}
+		else if (redirectTitle.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_N_R_REDIRECTTITLE_3);
+		}
 		else {
-			if (redirectTitle.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_N_R_REDIRECTTITLE_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_N_R_REDIRECTTITLE_2);
-			}
+			bindRedirectTitle = true;
+
+			query.append(_FINDER_COLUMN_N_R_REDIRECTTITLE_2);
 		}
 
 		if (orderByComparator != null) {
@@ -4983,8 +5007,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 		qPos.add(nodeId);
 
-		if (redirectTitle != null) {
-			qPos.add(redirectTitle);
+		if (bindRedirectTitle) {
+			qPos.add(redirectTitle.toLowerCase());
 		}
 
 		if (orderByComparator != null) {
@@ -5044,16 +5068,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 			query.append(_FINDER_COLUMN_N_R_NODEID_2);
 
+			boolean bindRedirectTitle = false;
+
 			if (redirectTitle == null) {
 				query.append(_FINDER_COLUMN_N_R_REDIRECTTITLE_1);
 			}
+			else if (redirectTitle.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_N_R_REDIRECTTITLE_3);
+			}
 			else {
-				if (redirectTitle.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_N_R_REDIRECTTITLE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_N_R_REDIRECTTITLE_2);
-				}
+				bindRedirectTitle = true;
+
+				query.append(_FINDER_COLUMN_N_R_REDIRECTTITLE_2);
 			}
 
 			String sql = query.toString();
@@ -5069,8 +5095,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 				qPos.add(nodeId);
 
-				if (redirectTitle != null) {
-					qPos.add(redirectTitle);
+				if (bindRedirectTitle) {
+					qPos.add(redirectTitle.toLowerCase());
 				}
 
 				count = (Long)q.uniqueResult();
@@ -5092,8 +5118,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 	private static final String _FINDER_COLUMN_N_R_NODEID_2 = "wikiPage.nodeId = ? AND ";
 	private static final String _FINDER_COLUMN_N_R_REDIRECTTITLE_1 = "wikiPage.redirectTitle IS NULL";
-	private static final String _FINDER_COLUMN_N_R_REDIRECTTITLE_2 = "lower(wikiPage.redirectTitle) = lower(CAST_TEXT(?))";
-	private static final String _FINDER_COLUMN_N_R_REDIRECTTITLE_3 = "(wikiPage.redirectTitle IS NULL OR lower(wikiPage.redirectTitle) = lower(CAST_TEXT(?)))";
+	private static final String _FINDER_COLUMN_N_R_REDIRECTTITLE_2 = "lower(wikiPage.redirectTitle) = ?";
+	private static final String _FINDER_COLUMN_N_R_REDIRECTTITLE_3 = "(wikiPage.redirectTitle IS NULL OR wikiPage.redirectTitle = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_N_S = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
 			WikiPageModelImpl.FINDER_CACHE_ENABLED, WikiPageImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByN_S",
@@ -6971,6 +6997,1904 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 	private static final String _FINDER_COLUMN_R_N_S_RESOURCEPRIMKEY_2 = "wikiPage.resourcePrimKey = ? AND ";
 	private static final String _FINDER_COLUMN_R_N_S_NODEID_2 = "wikiPage.nodeId = ? AND ";
 	private static final String _FINDER_COLUMN_R_N_S_STATUS_2 = "wikiPage.status = ?";
+	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_G_N_H = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
+			WikiPageModelImpl.FINDER_CACHE_ENABLED, WikiPageImpl.class,
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByG_N_H",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				Boolean.class.getName(),
+				
+			Integer.class.getName(), Integer.class.getName(),
+				OrderByComparator.class.getName()
+			});
+	public static final FinderPath FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_H = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
+			WikiPageModelImpl.FINDER_CACHE_ENABLED, WikiPageImpl.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByG_N_H",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				Boolean.class.getName()
+			},
+			WikiPageModelImpl.GROUPID_COLUMN_BITMASK |
+			WikiPageModelImpl.NODEID_COLUMN_BITMASK |
+			WikiPageModelImpl.HEAD_COLUMN_BITMASK |
+			WikiPageModelImpl.TITLE_COLUMN_BITMASK |
+			WikiPageModelImpl.VERSION_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_G_N_H = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
+			WikiPageModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByG_N_H",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				Boolean.class.getName()
+			});
+
+	/**
+	 * Returns all the wiki pages where groupId = &#63; and nodeId = &#63; and head = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @return the matching wiki pages
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> findByG_N_H(long groupId, long nodeId, boolean head)
+		throws SystemException {
+		return findByG_N_H(groupId, nodeId, head, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the wiki pages where groupId = &#63; and nodeId = &#63; and head = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.wiki.model.impl.WikiPageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param start the lower bound of the range of wiki pages
+	 * @param end the upper bound of the range of wiki pages (not inclusive)
+	 * @return the range of matching wiki pages
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> findByG_N_H(long groupId, long nodeId, boolean head,
+		int start, int end) throws SystemException {
+		return findByG_N_H(groupId, nodeId, head, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the wiki pages where groupId = &#63; and nodeId = &#63; and head = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.wiki.model.impl.WikiPageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param start the lower bound of the range of wiki pages
+	 * @param end the upper bound of the range of wiki pages (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching wiki pages
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> findByG_N_H(long groupId, long nodeId, boolean head,
+		int start, int end, OrderByComparator orderByComparator)
+		throws SystemException {
+		boolean pagination = true;
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+				(orderByComparator == null)) {
+			pagination = false;
+			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_H;
+			finderArgs = new Object[] { groupId, nodeId, head };
+		}
+		else {
+			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_N_H;
+			finderArgs = new Object[] {
+					groupId, nodeId, head,
+					
+					start, end, orderByComparator
+				};
+		}
+
+		List<WikiPage> list = (List<WikiPage>)FinderCacheUtil.getResult(finderPath,
+				finderArgs, this);
+
+		if ((list != null) && !list.isEmpty()) {
+			for (WikiPage wikiPage : list) {
+				if ((groupId != wikiPage.getGroupId()) ||
+						(nodeId != wikiPage.getNodeId()) ||
+						(head != wikiPage.getHead())) {
+					list = null;
+
+					break;
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler query = null;
+
+			if (orderByComparator != null) {
+				query = new StringBundler(5 +
+						(orderByComparator.getOrderByFields().length * 3));
+			}
+			else {
+				query = new StringBundler(5);
+			}
+
+			query.append(_SQL_SELECT_WIKIPAGE_WHERE);
+
+			query.append(_FINDER_COLUMN_G_N_H_GROUPID_2);
+
+			query.append(_FINDER_COLUMN_G_N_H_NODEID_2);
+
+			query.append(_FINDER_COLUMN_G_N_H_HEAD_2);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+			else
+			 if (pagination) {
+				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(groupId);
+
+				qPos.add(nodeId);
+
+				qPos.add(head);
+
+				if (!pagination) {
+					list = (List<WikiPage>)QueryUtil.list(q, getDialect(),
+							start, end, false);
+
+					Collections.sort(list);
+
+					list = new UnmodifiableList<WikiPage>(list);
+				}
+				else {
+					list = (List<WikiPage>)QueryUtil.list(q, getDialect(),
+							start, end);
+				}
+
+				cacheResult(list);
+
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
+			}
+			catch (Exception e) {
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first wiki page in the ordered set where groupId = &#63; and nodeId = &#63; and head = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching wiki page
+	 * @throws com.liferay.portlet.wiki.NoSuchPageException if a matching wiki page could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage findByG_N_H_First(long groupId, long nodeId, boolean head,
+		OrderByComparator orderByComparator)
+		throws NoSuchPageException, SystemException {
+		WikiPage wikiPage = fetchByG_N_H_First(groupId, nodeId, head,
+				orderByComparator);
+
+		if (wikiPage != null) {
+			return wikiPage;
+		}
+
+		StringBundler msg = new StringBundler(8);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("groupId=");
+		msg.append(groupId);
+
+		msg.append(", nodeId=");
+		msg.append(nodeId);
+
+		msg.append(", head=");
+		msg.append(head);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchPageException(msg.toString());
+	}
+
+	/**
+	 * Returns the first wiki page in the ordered set where groupId = &#63; and nodeId = &#63; and head = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching wiki page, or <code>null</code> if a matching wiki page could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage fetchByG_N_H_First(long groupId, long nodeId, boolean head,
+		OrderByComparator orderByComparator) throws SystemException {
+		List<WikiPage> list = findByG_N_H(groupId, nodeId, head, 0, 1,
+				orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last wiki page in the ordered set where groupId = &#63; and nodeId = &#63; and head = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching wiki page
+	 * @throws com.liferay.portlet.wiki.NoSuchPageException if a matching wiki page could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage findByG_N_H_Last(long groupId, long nodeId, boolean head,
+		OrderByComparator orderByComparator)
+		throws NoSuchPageException, SystemException {
+		WikiPage wikiPage = fetchByG_N_H_Last(groupId, nodeId, head,
+				orderByComparator);
+
+		if (wikiPage != null) {
+			return wikiPage;
+		}
+
+		StringBundler msg = new StringBundler(8);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("groupId=");
+		msg.append(groupId);
+
+		msg.append(", nodeId=");
+		msg.append(nodeId);
+
+		msg.append(", head=");
+		msg.append(head);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchPageException(msg.toString());
+	}
+
+	/**
+	 * Returns the last wiki page in the ordered set where groupId = &#63; and nodeId = &#63; and head = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching wiki page, or <code>null</code> if a matching wiki page could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage fetchByG_N_H_Last(long groupId, long nodeId, boolean head,
+		OrderByComparator orderByComparator) throws SystemException {
+		int count = countByG_N_H(groupId, nodeId, head);
+
+		List<WikiPage> list = findByG_N_H(groupId, nodeId, head, count - 1,
+				count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the wiki pages before and after the current wiki page in the ordered set where groupId = &#63; and nodeId = &#63; and head = &#63;.
+	 *
+	 * @param pageId the primary key of the current wiki page
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next wiki page
+	 * @throws com.liferay.portlet.wiki.NoSuchPageException if a wiki page with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage[] findByG_N_H_PrevAndNext(long pageId, long groupId,
+		long nodeId, boolean head, OrderByComparator orderByComparator)
+		throws NoSuchPageException, SystemException {
+		WikiPage wikiPage = findByPrimaryKey(pageId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			WikiPage[] array = new WikiPageImpl[3];
+
+			array[0] = getByG_N_H_PrevAndNext(session, wikiPage, groupId,
+					nodeId, head, orderByComparator, true);
+
+			array[1] = wikiPage;
+
+			array[2] = getByG_N_H_PrevAndNext(session, wikiPage, groupId,
+					nodeId, head, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected WikiPage getByG_N_H_PrevAndNext(Session session,
+		WikiPage wikiPage, long groupId, long nodeId, boolean head,
+		OrderByComparator orderByComparator, boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(6 +
+					(orderByComparator.getOrderByFields().length * 6));
+		}
+		else {
+			query = new StringBundler(3);
+		}
+
+		query.append(_SQL_SELECT_WIKIPAGE_WHERE);
+
+		query.append(_FINDER_COLUMN_G_N_H_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_N_H_NODEID_2);
+
+		query.append(_FINDER_COLUMN_G_N_H_HEAD_2);
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = query.toString();
+
+		Query q = session.createQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(groupId);
+
+		qPos.add(nodeId);
+
+		qPos.add(head);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(wikiPage);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<WikiPage> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Returns all the wiki pages that the user has permission to view where groupId = &#63; and nodeId = &#63; and head = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @return the matching wiki pages that the user has permission to view
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> filterFindByG_N_H(long groupId, long nodeId,
+		boolean head) throws SystemException {
+		return filterFindByG_N_H(groupId, nodeId, head, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the wiki pages that the user has permission to view where groupId = &#63; and nodeId = &#63; and head = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.wiki.model.impl.WikiPageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param start the lower bound of the range of wiki pages
+	 * @param end the upper bound of the range of wiki pages (not inclusive)
+	 * @return the range of matching wiki pages that the user has permission to view
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> filterFindByG_N_H(long groupId, long nodeId,
+		boolean head, int start, int end) throws SystemException {
+		return filterFindByG_N_H(groupId, nodeId, head, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the wiki pages that the user has permissions to view where groupId = &#63; and nodeId = &#63; and head = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.wiki.model.impl.WikiPageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param start the lower bound of the range of wiki pages
+	 * @param end the upper bound of the range of wiki pages (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching wiki pages that the user has permission to view
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> filterFindByG_N_H(long groupId, long nodeId,
+		boolean head, int start, int end, OrderByComparator orderByComparator)
+		throws SystemException {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByG_N_H(groupId, nodeId, head, start, end,
+				orderByComparator);
+		}
+
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(5 +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			query = new StringBundler(5);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_G_N_H_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_N_H_NODEID_2);
+
+		query.append(_FINDER_COLUMN_G_N_H_HEAD_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			if (getDB().isSupportsInlineDistinct()) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+			else {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_TABLE,
+					orderByComparator);
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(WikiPageModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				WikiPage.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSQLQuery(sql);
+
+			if (getDB().isSupportsInlineDistinct()) {
+				q.addEntity(_FILTER_ENTITY_ALIAS, WikiPageImpl.class);
+			}
+			else {
+				q.addEntity(_FILTER_ENTITY_TABLE, WikiPageImpl.class);
+			}
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			qPos.add(nodeId);
+
+			qPos.add(head);
+
+			return (List<WikiPage>)QueryUtil.list(q, getDialect(), start, end);
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	/**
+	 * Returns the wiki pages before and after the current wiki page in the ordered set of wiki pages that the user has permission to view where groupId = &#63; and nodeId = &#63; and head = &#63;.
+	 *
+	 * @param pageId the primary key of the current wiki page
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next wiki page
+	 * @throws com.liferay.portlet.wiki.NoSuchPageException if a wiki page with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage[] filterFindByG_N_H_PrevAndNext(long pageId, long groupId,
+		long nodeId, boolean head, OrderByComparator orderByComparator)
+		throws NoSuchPageException, SystemException {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByG_N_H_PrevAndNext(pageId, groupId, nodeId, head,
+				orderByComparator);
+		}
+
+		WikiPage wikiPage = findByPrimaryKey(pageId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			WikiPage[] array = new WikiPageImpl[3];
+
+			array[0] = filterGetByG_N_H_PrevAndNext(session, wikiPage, groupId,
+					nodeId, head, orderByComparator, true);
+
+			array[1] = wikiPage;
+
+			array[2] = filterGetByG_N_H_PrevAndNext(session, wikiPage, groupId,
+					nodeId, head, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected WikiPage filterGetByG_N_H_PrevAndNext(Session session,
+		WikiPage wikiPage, long groupId, long nodeId, boolean head,
+		OrderByComparator orderByComparator, boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(6 +
+					(orderByComparator.getOrderByFields().length * 6));
+		}
+		else {
+			query = new StringBundler(3);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_G_N_H_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_N_H_NODEID_2);
+
+		query.append(_FINDER_COLUMN_G_N_H_HEAD_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					query.append(_ORDER_BY_ENTITY_ALIAS);
+				}
+				else {
+					query.append(_ORDER_BY_ENTITY_TABLE);
+				}
+
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					query.append(_ORDER_BY_ENTITY_ALIAS);
+				}
+				else {
+					query.append(_ORDER_BY_ENTITY_TABLE);
+				}
+
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(WikiPageModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				WikiPage.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		if (getDB().isSupportsInlineDistinct()) {
+			q.addEntity(_FILTER_ENTITY_ALIAS, WikiPageImpl.class);
+		}
+		else {
+			q.addEntity(_FILTER_ENTITY_TABLE, WikiPageImpl.class);
+		}
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(groupId);
+
+		qPos.add(nodeId);
+
+		qPos.add(head);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(wikiPage);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<WikiPage> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Removes all the wiki pages where groupId = &#63; and nodeId = &#63; and head = &#63; from the database.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void removeByG_N_H(long groupId, long nodeId, boolean head)
+		throws SystemException {
+		for (WikiPage wikiPage : findByG_N_H(groupId, nodeId, head,
+				QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
+			remove(wikiPage);
+		}
+	}
+
+	/**
+	 * Returns the number of wiki pages where groupId = &#63; and nodeId = &#63; and head = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @return the number of matching wiki pages
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int countByG_N_H(long groupId, long nodeId, boolean head)
+		throws SystemException {
+		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_N_H;
+
+		Object[] finderArgs = new Object[] { groupId, nodeId, head };
+
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(4);
+
+			query.append(_SQL_COUNT_WIKIPAGE_WHERE);
+
+			query.append(_FINDER_COLUMN_G_N_H_GROUPID_2);
+
+			query.append(_FINDER_COLUMN_G_N_H_NODEID_2);
+
+			query.append(_FINDER_COLUMN_G_N_H_HEAD_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(groupId);
+
+				qPos.add(nodeId);
+
+				qPos.add(head);
+
+				count = (Long)q.uniqueResult();
+
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception e) {
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	/**
+	 * Returns the number of wiki pages that the user has permission to view where groupId = &#63; and nodeId = &#63; and head = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @return the number of matching wiki pages that the user has permission to view
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int filterCountByG_N_H(long groupId, long nodeId, boolean head)
+		throws SystemException {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return countByG_N_H(groupId, nodeId, head);
+		}
+
+		StringBundler query = new StringBundler(4);
+
+		query.append(_FILTER_SQL_COUNT_WIKIPAGE_WHERE);
+
+		query.append(_FINDER_COLUMN_G_N_H_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_N_H_NODEID_2);
+
+		query.append(_FINDER_COLUMN_G_N_H_HEAD_2);
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				WikiPage.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSQLQuery(sql);
+
+			q.addScalar(COUNT_COLUMN_NAME,
+				com.liferay.portal.kernel.dao.orm.Type.LONG);
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			qPos.add(nodeId);
+
+			qPos.add(head);
+
+			Long count = (Long)q.uniqueResult();
+
+			return count.intValue();
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	private static final String _FINDER_COLUMN_G_N_H_GROUPID_2 = "wikiPage.groupId = ? AND ";
+	private static final String _FINDER_COLUMN_G_N_H_NODEID_2 = "wikiPage.nodeId = ? AND ";
+	private static final String _FINDER_COLUMN_G_N_H_HEAD_2 = "wikiPage.head = ?";
+	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_G_N_S = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
+			WikiPageModelImpl.FINDER_CACHE_ENABLED, WikiPageImpl.class,
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByG_N_S",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				Integer.class.getName(),
+				
+			Integer.class.getName(), Integer.class.getName(),
+				OrderByComparator.class.getName()
+			});
+	public static final FinderPath FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_S = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
+			WikiPageModelImpl.FINDER_CACHE_ENABLED, WikiPageImpl.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByG_N_S",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				Integer.class.getName()
+			},
+			WikiPageModelImpl.GROUPID_COLUMN_BITMASK |
+			WikiPageModelImpl.NODEID_COLUMN_BITMASK |
+			WikiPageModelImpl.STATUS_COLUMN_BITMASK |
+			WikiPageModelImpl.TITLE_COLUMN_BITMASK |
+			WikiPageModelImpl.VERSION_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_G_N_S = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
+			WikiPageModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByG_N_S",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				Integer.class.getName()
+			});
+
+	/**
+	 * Returns all the wiki pages where groupId = &#63; and nodeId = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @return the matching wiki pages
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> findByG_N_S(long groupId, long nodeId, int status)
+		throws SystemException {
+		return findByG_N_S(groupId, nodeId, status, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the wiki pages where groupId = &#63; and nodeId = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.wiki.model.impl.WikiPageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @param start the lower bound of the range of wiki pages
+	 * @param end the upper bound of the range of wiki pages (not inclusive)
+	 * @return the range of matching wiki pages
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> findByG_N_S(long groupId, long nodeId, int status,
+		int start, int end) throws SystemException {
+		return findByG_N_S(groupId, nodeId, status, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the wiki pages where groupId = &#63; and nodeId = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.wiki.model.impl.WikiPageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @param start the lower bound of the range of wiki pages
+	 * @param end the upper bound of the range of wiki pages (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching wiki pages
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> findByG_N_S(long groupId, long nodeId, int status,
+		int start, int end, OrderByComparator orderByComparator)
+		throws SystemException {
+		boolean pagination = true;
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+				(orderByComparator == null)) {
+			pagination = false;
+			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_S;
+			finderArgs = new Object[] { groupId, nodeId, status };
+		}
+		else {
+			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_N_S;
+			finderArgs = new Object[] {
+					groupId, nodeId, status,
+					
+					start, end, orderByComparator
+				};
+		}
+
+		List<WikiPage> list = (List<WikiPage>)FinderCacheUtil.getResult(finderPath,
+				finderArgs, this);
+
+		if ((list != null) && !list.isEmpty()) {
+			for (WikiPage wikiPage : list) {
+				if ((groupId != wikiPage.getGroupId()) ||
+						(nodeId != wikiPage.getNodeId()) ||
+						(status != wikiPage.getStatus())) {
+					list = null;
+
+					break;
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler query = null;
+
+			if (orderByComparator != null) {
+				query = new StringBundler(5 +
+						(orderByComparator.getOrderByFields().length * 3));
+			}
+			else {
+				query = new StringBundler(5);
+			}
+
+			query.append(_SQL_SELECT_WIKIPAGE_WHERE);
+
+			query.append(_FINDER_COLUMN_G_N_S_GROUPID_2);
+
+			query.append(_FINDER_COLUMN_G_N_S_NODEID_2);
+
+			query.append(_FINDER_COLUMN_G_N_S_STATUS_2);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+			else
+			 if (pagination) {
+				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(groupId);
+
+				qPos.add(nodeId);
+
+				qPos.add(status);
+
+				if (!pagination) {
+					list = (List<WikiPage>)QueryUtil.list(q, getDialect(),
+							start, end, false);
+
+					Collections.sort(list);
+
+					list = new UnmodifiableList<WikiPage>(list);
+				}
+				else {
+					list = (List<WikiPage>)QueryUtil.list(q, getDialect(),
+							start, end);
+				}
+
+				cacheResult(list);
+
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
+			}
+			catch (Exception e) {
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first wiki page in the ordered set where groupId = &#63; and nodeId = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching wiki page
+	 * @throws com.liferay.portlet.wiki.NoSuchPageException if a matching wiki page could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage findByG_N_S_First(long groupId, long nodeId, int status,
+		OrderByComparator orderByComparator)
+		throws NoSuchPageException, SystemException {
+		WikiPage wikiPage = fetchByG_N_S_First(groupId, nodeId, status,
+				orderByComparator);
+
+		if (wikiPage != null) {
+			return wikiPage;
+		}
+
+		StringBundler msg = new StringBundler(8);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("groupId=");
+		msg.append(groupId);
+
+		msg.append(", nodeId=");
+		msg.append(nodeId);
+
+		msg.append(", status=");
+		msg.append(status);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchPageException(msg.toString());
+	}
+
+	/**
+	 * Returns the first wiki page in the ordered set where groupId = &#63; and nodeId = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching wiki page, or <code>null</code> if a matching wiki page could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage fetchByG_N_S_First(long groupId, long nodeId, int status,
+		OrderByComparator orderByComparator) throws SystemException {
+		List<WikiPage> list = findByG_N_S(groupId, nodeId, status, 0, 1,
+				orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last wiki page in the ordered set where groupId = &#63; and nodeId = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching wiki page
+	 * @throws com.liferay.portlet.wiki.NoSuchPageException if a matching wiki page could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage findByG_N_S_Last(long groupId, long nodeId, int status,
+		OrderByComparator orderByComparator)
+		throws NoSuchPageException, SystemException {
+		WikiPage wikiPage = fetchByG_N_S_Last(groupId, nodeId, status,
+				orderByComparator);
+
+		if (wikiPage != null) {
+			return wikiPage;
+		}
+
+		StringBundler msg = new StringBundler(8);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("groupId=");
+		msg.append(groupId);
+
+		msg.append(", nodeId=");
+		msg.append(nodeId);
+
+		msg.append(", status=");
+		msg.append(status);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchPageException(msg.toString());
+	}
+
+	/**
+	 * Returns the last wiki page in the ordered set where groupId = &#63; and nodeId = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching wiki page, or <code>null</code> if a matching wiki page could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage fetchByG_N_S_Last(long groupId, long nodeId, int status,
+		OrderByComparator orderByComparator) throws SystemException {
+		int count = countByG_N_S(groupId, nodeId, status);
+
+		List<WikiPage> list = findByG_N_S(groupId, nodeId, status, count - 1,
+				count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the wiki pages before and after the current wiki page in the ordered set where groupId = &#63; and nodeId = &#63; and status = &#63;.
+	 *
+	 * @param pageId the primary key of the current wiki page
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next wiki page
+	 * @throws com.liferay.portlet.wiki.NoSuchPageException if a wiki page with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage[] findByG_N_S_PrevAndNext(long pageId, long groupId,
+		long nodeId, int status, OrderByComparator orderByComparator)
+		throws NoSuchPageException, SystemException {
+		WikiPage wikiPage = findByPrimaryKey(pageId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			WikiPage[] array = new WikiPageImpl[3];
+
+			array[0] = getByG_N_S_PrevAndNext(session, wikiPage, groupId,
+					nodeId, status, orderByComparator, true);
+
+			array[1] = wikiPage;
+
+			array[2] = getByG_N_S_PrevAndNext(session, wikiPage, groupId,
+					nodeId, status, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected WikiPage getByG_N_S_PrevAndNext(Session session,
+		WikiPage wikiPage, long groupId, long nodeId, int status,
+		OrderByComparator orderByComparator, boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(6 +
+					(orderByComparator.getOrderByFields().length * 6));
+		}
+		else {
+			query = new StringBundler(3);
+		}
+
+		query.append(_SQL_SELECT_WIKIPAGE_WHERE);
+
+		query.append(_FINDER_COLUMN_G_N_S_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_N_S_NODEID_2);
+
+		query.append(_FINDER_COLUMN_G_N_S_STATUS_2);
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = query.toString();
+
+		Query q = session.createQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(groupId);
+
+		qPos.add(nodeId);
+
+		qPos.add(status);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(wikiPage);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<WikiPage> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Returns all the wiki pages that the user has permission to view where groupId = &#63; and nodeId = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @return the matching wiki pages that the user has permission to view
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> filterFindByG_N_S(long groupId, long nodeId,
+		int status) throws SystemException {
+		return filterFindByG_N_S(groupId, nodeId, status, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the wiki pages that the user has permission to view where groupId = &#63; and nodeId = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.wiki.model.impl.WikiPageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @param start the lower bound of the range of wiki pages
+	 * @param end the upper bound of the range of wiki pages (not inclusive)
+	 * @return the range of matching wiki pages that the user has permission to view
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> filterFindByG_N_S(long groupId, long nodeId,
+		int status, int start, int end) throws SystemException {
+		return filterFindByG_N_S(groupId, nodeId, status, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the wiki pages that the user has permissions to view where groupId = &#63; and nodeId = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.wiki.model.impl.WikiPageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @param start the lower bound of the range of wiki pages
+	 * @param end the upper bound of the range of wiki pages (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching wiki pages that the user has permission to view
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> filterFindByG_N_S(long groupId, long nodeId,
+		int status, int start, int end, OrderByComparator orderByComparator)
+		throws SystemException {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByG_N_S(groupId, nodeId, status, start, end,
+				orderByComparator);
+		}
+
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(5 +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			query = new StringBundler(5);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_G_N_S_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_N_S_NODEID_2);
+
+		query.append(_FINDER_COLUMN_G_N_S_STATUS_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			if (getDB().isSupportsInlineDistinct()) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+			else {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_TABLE,
+					orderByComparator);
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(WikiPageModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				WikiPage.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSQLQuery(sql);
+
+			if (getDB().isSupportsInlineDistinct()) {
+				q.addEntity(_FILTER_ENTITY_ALIAS, WikiPageImpl.class);
+			}
+			else {
+				q.addEntity(_FILTER_ENTITY_TABLE, WikiPageImpl.class);
+			}
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			qPos.add(nodeId);
+
+			qPos.add(status);
+
+			return (List<WikiPage>)QueryUtil.list(q, getDialect(), start, end);
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	/**
+	 * Returns the wiki pages before and after the current wiki page in the ordered set of wiki pages that the user has permission to view where groupId = &#63; and nodeId = &#63; and status = &#63;.
+	 *
+	 * @param pageId the primary key of the current wiki page
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next wiki page
+	 * @throws com.liferay.portlet.wiki.NoSuchPageException if a wiki page with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage[] filterFindByG_N_S_PrevAndNext(long pageId, long groupId,
+		long nodeId, int status, OrderByComparator orderByComparator)
+		throws NoSuchPageException, SystemException {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByG_N_S_PrevAndNext(pageId, groupId, nodeId, status,
+				orderByComparator);
+		}
+
+		WikiPage wikiPage = findByPrimaryKey(pageId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			WikiPage[] array = new WikiPageImpl[3];
+
+			array[0] = filterGetByG_N_S_PrevAndNext(session, wikiPage, groupId,
+					nodeId, status, orderByComparator, true);
+
+			array[1] = wikiPage;
+
+			array[2] = filterGetByG_N_S_PrevAndNext(session, wikiPage, groupId,
+					nodeId, status, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected WikiPage filterGetByG_N_S_PrevAndNext(Session session,
+		WikiPage wikiPage, long groupId, long nodeId, int status,
+		OrderByComparator orderByComparator, boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(6 +
+					(orderByComparator.getOrderByFields().length * 6));
+		}
+		else {
+			query = new StringBundler(3);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_G_N_S_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_N_S_NODEID_2);
+
+		query.append(_FINDER_COLUMN_G_N_S_STATUS_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					query.append(_ORDER_BY_ENTITY_ALIAS);
+				}
+				else {
+					query.append(_ORDER_BY_ENTITY_TABLE);
+				}
+
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					query.append(_ORDER_BY_ENTITY_ALIAS);
+				}
+				else {
+					query.append(_ORDER_BY_ENTITY_TABLE);
+				}
+
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(WikiPageModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				WikiPage.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		if (getDB().isSupportsInlineDistinct()) {
+			q.addEntity(_FILTER_ENTITY_ALIAS, WikiPageImpl.class);
+		}
+		else {
+			q.addEntity(_FILTER_ENTITY_TABLE, WikiPageImpl.class);
+		}
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(groupId);
+
+		qPos.add(nodeId);
+
+		qPos.add(status);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(wikiPage);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<WikiPage> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Removes all the wiki pages where groupId = &#63; and nodeId = &#63; and status = &#63; from the database.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void removeByG_N_S(long groupId, long nodeId, int status)
+		throws SystemException {
+		for (WikiPage wikiPage : findByG_N_S(groupId, nodeId, status,
+				QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
+			remove(wikiPage);
+		}
+	}
+
+	/**
+	 * Returns the number of wiki pages where groupId = &#63; and nodeId = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @return the number of matching wiki pages
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int countByG_N_S(long groupId, long nodeId, int status)
+		throws SystemException {
+		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_N_S;
+
+		Object[] finderArgs = new Object[] { groupId, nodeId, status };
+
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(4);
+
+			query.append(_SQL_COUNT_WIKIPAGE_WHERE);
+
+			query.append(_FINDER_COLUMN_G_N_S_GROUPID_2);
+
+			query.append(_FINDER_COLUMN_G_N_S_NODEID_2);
+
+			query.append(_FINDER_COLUMN_G_N_S_STATUS_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(groupId);
+
+				qPos.add(nodeId);
+
+				qPos.add(status);
+
+				count = (Long)q.uniqueResult();
+
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception e) {
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	/**
+	 * Returns the number of wiki pages that the user has permission to view where groupId = &#63; and nodeId = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @return the number of matching wiki pages that the user has permission to view
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int filterCountByG_N_S(long groupId, long nodeId, int status)
+		throws SystemException {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return countByG_N_S(groupId, nodeId, status);
+		}
+
+		StringBundler query = new StringBundler(4);
+
+		query.append(_FILTER_SQL_COUNT_WIKIPAGE_WHERE);
+
+		query.append(_FINDER_COLUMN_G_N_S_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_N_S_NODEID_2);
+
+		query.append(_FINDER_COLUMN_G_N_S_STATUS_2);
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				WikiPage.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSQLQuery(sql);
+
+			q.addScalar(COUNT_COLUMN_NAME,
+				com.liferay.portal.kernel.dao.orm.Type.LONG);
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			qPos.add(nodeId);
+
+			qPos.add(status);
+
+			Long count = (Long)q.uniqueResult();
+
+			return count.intValue();
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	private static final String _FINDER_COLUMN_G_N_S_GROUPID_2 = "wikiPage.groupId = ? AND ";
+	private static final String _FINDER_COLUMN_G_N_S_NODEID_2 = "wikiPage.nodeId = ? AND ";
+	private static final String _FINDER_COLUMN_G_N_S_STATUS_2 = "wikiPage.status = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_U_N_S = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
 			WikiPageModelImpl.FINDER_CACHE_ENABLED, WikiPageImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByU_N_S",
@@ -7635,16 +9559,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 			query.append(_FINDER_COLUMN_N_T_V_NODEID_2);
 
+			boolean bindTitle = false;
+
 			if (title == null) {
 				query.append(_FINDER_COLUMN_N_T_V_TITLE_1);
 			}
+			else if (title.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_N_T_V_TITLE_3);
+			}
 			else {
-				if (title.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_N_T_V_TITLE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_N_T_V_TITLE_2);
-				}
+				bindTitle = true;
+
+				query.append(_FINDER_COLUMN_N_T_V_TITLE_2);
 			}
 
 			query.append(_FINDER_COLUMN_N_T_V_VERSION_2);
@@ -7662,8 +9588,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 				qPos.add(nodeId);
 
-				if (title != null) {
-					qPos.add(title);
+				if (bindTitle) {
+					qPos.add(title.toLowerCase());
 				}
 
 				qPos.add(version);
@@ -7750,16 +9676,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 			query.append(_FINDER_COLUMN_N_T_V_NODEID_2);
 
+			boolean bindTitle = false;
+
 			if (title == null) {
 				query.append(_FINDER_COLUMN_N_T_V_TITLE_1);
 			}
+			else if (title.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_N_T_V_TITLE_3);
+			}
 			else {
-				if (title.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_N_T_V_TITLE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_N_T_V_TITLE_2);
-				}
+				bindTitle = true;
+
+				query.append(_FINDER_COLUMN_N_T_V_TITLE_2);
 			}
 
 			query.append(_FINDER_COLUMN_N_T_V_VERSION_2);
@@ -7777,8 +9705,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 				qPos.add(nodeId);
 
-				if (title != null) {
-					qPos.add(title);
+				if (bindTitle) {
+					qPos.add(title.toLowerCase());
 				}
 
 				qPos.add(version);
@@ -7802,8 +9730,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 	private static final String _FINDER_COLUMN_N_T_V_NODEID_2 = "wikiPage.nodeId = ? AND ";
 	private static final String _FINDER_COLUMN_N_T_V_TITLE_1 = "wikiPage.title IS NULL AND ";
-	private static final String _FINDER_COLUMN_N_T_V_TITLE_2 = "lower(wikiPage.title) = lower(CAST_TEXT(?)) AND ";
-	private static final String _FINDER_COLUMN_N_T_V_TITLE_3 = "(wikiPage.title IS NULL OR lower(wikiPage.title) = lower(CAST_TEXT(?))) AND ";
+	private static final String _FINDER_COLUMN_N_T_V_TITLE_2 = "lower(wikiPage.title) = ? AND ";
+	private static final String _FINDER_COLUMN_N_T_V_TITLE_3 = "(wikiPage.title IS NULL OR wikiPage.title = '') AND ";
 	private static final String _FINDER_COLUMN_N_T_V_VERSION_2 = "wikiPage.version = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_N_T_H = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
 			WikiPageModelImpl.FINDER_CACHE_ENABLED, WikiPageImpl.class,
@@ -7937,16 +9865,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 			query.append(_FINDER_COLUMN_N_T_H_NODEID_2);
 
+			boolean bindTitle = false;
+
 			if (title == null) {
 				query.append(_FINDER_COLUMN_N_T_H_TITLE_1);
 			}
+			else if (title.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_N_T_H_TITLE_3);
+			}
 			else {
-				if (title.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_N_T_H_TITLE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_N_T_H_TITLE_2);
-				}
+				bindTitle = true;
+
+				query.append(_FINDER_COLUMN_N_T_H_TITLE_2);
 			}
 
 			query.append(_FINDER_COLUMN_N_T_H_HEAD_2);
@@ -7973,8 +9903,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 				qPos.add(nodeId);
 
-				if (title != null) {
-					qPos.add(title);
+				if (bindTitle) {
+					qPos.add(title.toLowerCase());
 				}
 
 				qPos.add(head);
@@ -8192,16 +10122,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 		query.append(_FINDER_COLUMN_N_T_H_NODEID_2);
 
+		boolean bindTitle = false;
+
 		if (title == null) {
 			query.append(_FINDER_COLUMN_N_T_H_TITLE_1);
 		}
+		else if (title.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_N_T_H_TITLE_3);
+		}
 		else {
-			if (title.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_N_T_H_TITLE_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_N_T_H_TITLE_2);
-			}
+			bindTitle = true;
+
+			query.append(_FINDER_COLUMN_N_T_H_TITLE_2);
 		}
 
 		query.append(_FINDER_COLUMN_N_T_H_HEAD_2);
@@ -8276,8 +10208,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 		qPos.add(nodeId);
 
-		if (title != null) {
-			qPos.add(title);
+		if (bindTitle) {
+			qPos.add(title.toLowerCase());
 		}
 
 		qPos.add(head);
@@ -8341,16 +10273,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 			query.append(_FINDER_COLUMN_N_T_H_NODEID_2);
 
+			boolean bindTitle = false;
+
 			if (title == null) {
 				query.append(_FINDER_COLUMN_N_T_H_TITLE_1);
 			}
+			else if (title.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_N_T_H_TITLE_3);
+			}
 			else {
-				if (title.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_N_T_H_TITLE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_N_T_H_TITLE_2);
-				}
+				bindTitle = true;
+
+				query.append(_FINDER_COLUMN_N_T_H_TITLE_2);
 			}
 
 			query.append(_FINDER_COLUMN_N_T_H_HEAD_2);
@@ -8368,8 +10302,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 				qPos.add(nodeId);
 
-				if (title != null) {
-					qPos.add(title);
+				if (bindTitle) {
+					qPos.add(title.toLowerCase());
 				}
 
 				qPos.add(head);
@@ -8393,8 +10327,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 	private static final String _FINDER_COLUMN_N_T_H_NODEID_2 = "wikiPage.nodeId = ? AND ";
 	private static final String _FINDER_COLUMN_N_T_H_TITLE_1 = "wikiPage.title IS NULL AND ";
-	private static final String _FINDER_COLUMN_N_T_H_TITLE_2 = "lower(wikiPage.title) = lower(CAST_TEXT(?)) AND ";
-	private static final String _FINDER_COLUMN_N_T_H_TITLE_3 = "(wikiPage.title IS NULL OR lower(wikiPage.title) = lower(CAST_TEXT(?))) AND ";
+	private static final String _FINDER_COLUMN_N_T_H_TITLE_2 = "lower(wikiPage.title) = ? AND ";
+	private static final String _FINDER_COLUMN_N_T_H_TITLE_3 = "(wikiPage.title IS NULL OR wikiPage.title = '') AND ";
 	private static final String _FINDER_COLUMN_N_T_H_HEAD_2 = "wikiPage.head = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_N_T_S = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
 			WikiPageModelImpl.FINDER_CACHE_ENABLED, WikiPageImpl.class,
@@ -8528,16 +10462,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 			query.append(_FINDER_COLUMN_N_T_S_NODEID_2);
 
+			boolean bindTitle = false;
+
 			if (title == null) {
 				query.append(_FINDER_COLUMN_N_T_S_TITLE_1);
 			}
+			else if (title.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_N_T_S_TITLE_3);
+			}
 			else {
-				if (title.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_N_T_S_TITLE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_N_T_S_TITLE_2);
-				}
+				bindTitle = true;
+
+				query.append(_FINDER_COLUMN_N_T_S_TITLE_2);
 			}
 
 			query.append(_FINDER_COLUMN_N_T_S_STATUS_2);
@@ -8564,8 +10500,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 				qPos.add(nodeId);
 
-				if (title != null) {
-					qPos.add(title);
+				if (bindTitle) {
+					qPos.add(title.toLowerCase());
 				}
 
 				qPos.add(status);
@@ -8783,16 +10719,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 		query.append(_FINDER_COLUMN_N_T_S_NODEID_2);
 
+		boolean bindTitle = false;
+
 		if (title == null) {
 			query.append(_FINDER_COLUMN_N_T_S_TITLE_1);
 		}
+		else if (title.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_N_T_S_TITLE_3);
+		}
 		else {
-			if (title.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_N_T_S_TITLE_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_N_T_S_TITLE_2);
-			}
+			bindTitle = true;
+
+			query.append(_FINDER_COLUMN_N_T_S_TITLE_2);
 		}
 
 		query.append(_FINDER_COLUMN_N_T_S_STATUS_2);
@@ -8867,8 +10805,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 		qPos.add(nodeId);
 
-		if (title != null) {
-			qPos.add(title);
+		if (bindTitle) {
+			qPos.add(title.toLowerCase());
 		}
 
 		qPos.add(status);
@@ -8932,16 +10870,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 			query.append(_FINDER_COLUMN_N_T_S_NODEID_2);
 
+			boolean bindTitle = false;
+
 			if (title == null) {
 				query.append(_FINDER_COLUMN_N_T_S_TITLE_1);
 			}
+			else if (title.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_N_T_S_TITLE_3);
+			}
 			else {
-				if (title.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_N_T_S_TITLE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_N_T_S_TITLE_2);
-				}
+				bindTitle = true;
+
+				query.append(_FINDER_COLUMN_N_T_S_TITLE_2);
 			}
 
 			query.append(_FINDER_COLUMN_N_T_S_STATUS_2);
@@ -8959,8 +10899,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 				qPos.add(nodeId);
 
-				if (title != null) {
-					qPos.add(title);
+				if (bindTitle) {
+					qPos.add(title.toLowerCase());
 				}
 
 				qPos.add(status);
@@ -8984,8 +10924,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 	private static final String _FINDER_COLUMN_N_T_S_NODEID_2 = "wikiPage.nodeId = ? AND ";
 	private static final String _FINDER_COLUMN_N_T_S_TITLE_1 = "wikiPage.title IS NULL AND ";
-	private static final String _FINDER_COLUMN_N_T_S_TITLE_2 = "lower(wikiPage.title) = lower(CAST_TEXT(?)) AND ";
-	private static final String _FINDER_COLUMN_N_T_S_TITLE_3 = "(wikiPage.title IS NULL OR lower(wikiPage.title) = lower(CAST_TEXT(?))) AND ";
+	private static final String _FINDER_COLUMN_N_T_S_TITLE_2 = "lower(wikiPage.title) = ? AND ";
+	private static final String _FINDER_COLUMN_N_T_S_TITLE_3 = "(wikiPage.title IS NULL OR wikiPage.title = '') AND ";
 	private static final String _FINDER_COLUMN_N_T_S_STATUS_2 = "wikiPage.status = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_N_H_P = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
 			WikiPageModelImpl.FINDER_CACHE_ENABLED, WikiPageImpl.class,
@@ -9122,16 +11062,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 			query.append(_FINDER_COLUMN_N_H_P_HEAD_2);
 
+			boolean bindParentTitle = false;
+
 			if (parentTitle == null) {
 				query.append(_FINDER_COLUMN_N_H_P_PARENTTITLE_1);
 			}
+			else if (parentTitle.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_N_H_P_PARENTTITLE_3);
+			}
 			else {
-				if (parentTitle.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_N_H_P_PARENTTITLE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_N_H_P_PARENTTITLE_2);
-				}
+				bindParentTitle = true;
+
+				query.append(_FINDER_COLUMN_N_H_P_PARENTTITLE_2);
 			}
 
 			if (orderByComparator != null) {
@@ -9158,8 +11100,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 				qPos.add(head);
 
-				if (parentTitle != null) {
-					qPos.add(parentTitle);
+				if (bindParentTitle) {
+					qPos.add(parentTitle.toLowerCase());
 				}
 
 				if (!pagination) {
@@ -9379,16 +11321,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 		query.append(_FINDER_COLUMN_N_H_P_HEAD_2);
 
+		boolean bindParentTitle = false;
+
 		if (parentTitle == null) {
 			query.append(_FINDER_COLUMN_N_H_P_PARENTTITLE_1);
 		}
+		else if (parentTitle.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_N_H_P_PARENTTITLE_3);
+		}
 		else {
-			if (parentTitle.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_N_H_P_PARENTTITLE_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_N_H_P_PARENTTITLE_2);
-			}
+			bindParentTitle = true;
+
+			query.append(_FINDER_COLUMN_N_H_P_PARENTTITLE_2);
 		}
 
 		if (orderByComparator != null) {
@@ -9463,8 +11407,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 		qPos.add(head);
 
-		if (parentTitle != null) {
-			qPos.add(parentTitle);
+		if (bindParentTitle) {
+			qPos.add(parentTitle.toLowerCase());
 		}
 
 		if (orderByComparator != null) {
@@ -9528,16 +11472,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 			query.append(_FINDER_COLUMN_N_H_P_HEAD_2);
 
+			boolean bindParentTitle = false;
+
 			if (parentTitle == null) {
 				query.append(_FINDER_COLUMN_N_H_P_PARENTTITLE_1);
 			}
+			else if (parentTitle.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_N_H_P_PARENTTITLE_3);
+			}
 			else {
-				if (parentTitle.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_N_H_P_PARENTTITLE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_N_H_P_PARENTTITLE_2);
-				}
+				bindParentTitle = true;
+
+				query.append(_FINDER_COLUMN_N_H_P_PARENTTITLE_2);
 			}
 
 			String sql = query.toString();
@@ -9555,8 +11501,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 				qPos.add(head);
 
-				if (parentTitle != null) {
-					qPos.add(parentTitle);
+				if (bindParentTitle) {
+					qPos.add(parentTitle.toLowerCase());
 				}
 
 				count = (Long)q.uniqueResult();
@@ -9579,8 +11525,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 	private static final String _FINDER_COLUMN_N_H_P_NODEID_2 = "wikiPage.nodeId = ? AND ";
 	private static final String _FINDER_COLUMN_N_H_P_HEAD_2 = "wikiPage.head = ? AND ";
 	private static final String _FINDER_COLUMN_N_H_P_PARENTTITLE_1 = "wikiPage.parentTitle IS NULL";
-	private static final String _FINDER_COLUMN_N_H_P_PARENTTITLE_2 = "lower(wikiPage.parentTitle) = lower(CAST_TEXT(?))";
-	private static final String _FINDER_COLUMN_N_H_P_PARENTTITLE_3 = "(wikiPage.parentTitle IS NULL OR lower(wikiPage.parentTitle) = lower(CAST_TEXT(?)))";
+	private static final String _FINDER_COLUMN_N_H_P_PARENTTITLE_2 = "lower(wikiPage.parentTitle) = ?";
+	private static final String _FINDER_COLUMN_N_H_P_PARENTTITLE_3 = "(wikiPage.parentTitle IS NULL OR wikiPage.parentTitle = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_N_H_S = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
 			WikiPageModelImpl.FINDER_CACHE_ENABLED, WikiPageImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByN_H_S",
@@ -10135,6 +12081,3102 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 	private static final String _FINDER_COLUMN_N_H_S_NODEID_2 = "wikiPage.nodeId = ? AND ";
 	private static final String _FINDER_COLUMN_N_H_S_HEAD_2 = "wikiPage.head = ? AND ";
 	private static final String _FINDER_COLUMN_N_H_S_STATUS_2 = "wikiPage.status = ?";
+	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_G_U_N_S = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
+			WikiPageModelImpl.FINDER_CACHE_ENABLED, WikiPageImpl.class,
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByG_U_N_S",
+			new String[] {
+				Long.class.getName(), Long.class.getName(), Long.class.getName(),
+				Integer.class.getName(),
+				
+			Integer.class.getName(), Integer.class.getName(),
+				OrderByComparator.class.getName()
+			});
+	public static final FinderPath FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_U_N_S =
+		new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
+			WikiPageModelImpl.FINDER_CACHE_ENABLED, WikiPageImpl.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByG_U_N_S",
+			new String[] {
+				Long.class.getName(), Long.class.getName(), Long.class.getName(),
+				Integer.class.getName()
+			},
+			WikiPageModelImpl.GROUPID_COLUMN_BITMASK |
+			WikiPageModelImpl.USERID_COLUMN_BITMASK |
+			WikiPageModelImpl.NODEID_COLUMN_BITMASK |
+			WikiPageModelImpl.STATUS_COLUMN_BITMASK |
+			WikiPageModelImpl.TITLE_COLUMN_BITMASK |
+			WikiPageModelImpl.VERSION_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_G_U_N_S = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
+			WikiPageModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByG_U_N_S",
+			new String[] {
+				Long.class.getName(), Long.class.getName(), Long.class.getName(),
+				Integer.class.getName()
+			});
+
+	/**
+	 * Returns all the wiki pages where groupId = &#63; and userId = &#63; and nodeId = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @return the matching wiki pages
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> findByG_U_N_S(long groupId, long userId, long nodeId,
+		int status) throws SystemException {
+		return findByG_U_N_S(groupId, userId, nodeId, status,
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the wiki pages where groupId = &#63; and userId = &#63; and nodeId = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.wiki.model.impl.WikiPageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @param start the lower bound of the range of wiki pages
+	 * @param end the upper bound of the range of wiki pages (not inclusive)
+	 * @return the range of matching wiki pages
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> findByG_U_N_S(long groupId, long userId, long nodeId,
+		int status, int start, int end) throws SystemException {
+		return findByG_U_N_S(groupId, userId, nodeId, status, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the wiki pages where groupId = &#63; and userId = &#63; and nodeId = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.wiki.model.impl.WikiPageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @param start the lower bound of the range of wiki pages
+	 * @param end the upper bound of the range of wiki pages (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching wiki pages
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> findByG_U_N_S(long groupId, long userId, long nodeId,
+		int status, int start, int end, OrderByComparator orderByComparator)
+		throws SystemException {
+		boolean pagination = true;
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+				(orderByComparator == null)) {
+			pagination = false;
+			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_U_N_S;
+			finderArgs = new Object[] { groupId, userId, nodeId, status };
+		}
+		else {
+			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_U_N_S;
+			finderArgs = new Object[] {
+					groupId, userId, nodeId, status,
+					
+					start, end, orderByComparator
+				};
+		}
+
+		List<WikiPage> list = (List<WikiPage>)FinderCacheUtil.getResult(finderPath,
+				finderArgs, this);
+
+		if ((list != null) && !list.isEmpty()) {
+			for (WikiPage wikiPage : list) {
+				if ((groupId != wikiPage.getGroupId()) ||
+						(userId != wikiPage.getUserId()) ||
+						(nodeId != wikiPage.getNodeId()) ||
+						(status != wikiPage.getStatus())) {
+					list = null;
+
+					break;
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler query = null;
+
+			if (orderByComparator != null) {
+				query = new StringBundler(6 +
+						(orderByComparator.getOrderByFields().length * 3));
+			}
+			else {
+				query = new StringBundler(6);
+			}
+
+			query.append(_SQL_SELECT_WIKIPAGE_WHERE);
+
+			query.append(_FINDER_COLUMN_G_U_N_S_GROUPID_2);
+
+			query.append(_FINDER_COLUMN_G_U_N_S_USERID_2);
+
+			query.append(_FINDER_COLUMN_G_U_N_S_NODEID_2);
+
+			query.append(_FINDER_COLUMN_G_U_N_S_STATUS_2);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+			else
+			 if (pagination) {
+				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(groupId);
+
+				qPos.add(userId);
+
+				qPos.add(nodeId);
+
+				qPos.add(status);
+
+				if (!pagination) {
+					list = (List<WikiPage>)QueryUtil.list(q, getDialect(),
+							start, end, false);
+
+					Collections.sort(list);
+
+					list = new UnmodifiableList<WikiPage>(list);
+				}
+				else {
+					list = (List<WikiPage>)QueryUtil.list(q, getDialect(),
+							start, end);
+				}
+
+				cacheResult(list);
+
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
+			}
+			catch (Exception e) {
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first wiki page in the ordered set where groupId = &#63; and userId = &#63; and nodeId = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching wiki page
+	 * @throws com.liferay.portlet.wiki.NoSuchPageException if a matching wiki page could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage findByG_U_N_S_First(long groupId, long userId, long nodeId,
+		int status, OrderByComparator orderByComparator)
+		throws NoSuchPageException, SystemException {
+		WikiPage wikiPage = fetchByG_U_N_S_First(groupId, userId, nodeId,
+				status, orderByComparator);
+
+		if (wikiPage != null) {
+			return wikiPage;
+		}
+
+		StringBundler msg = new StringBundler(10);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("groupId=");
+		msg.append(groupId);
+
+		msg.append(", userId=");
+		msg.append(userId);
+
+		msg.append(", nodeId=");
+		msg.append(nodeId);
+
+		msg.append(", status=");
+		msg.append(status);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchPageException(msg.toString());
+	}
+
+	/**
+	 * Returns the first wiki page in the ordered set where groupId = &#63; and userId = &#63; and nodeId = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching wiki page, or <code>null</code> if a matching wiki page could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage fetchByG_U_N_S_First(long groupId, long userId,
+		long nodeId, int status, OrderByComparator orderByComparator)
+		throws SystemException {
+		List<WikiPage> list = findByG_U_N_S(groupId, userId, nodeId, status, 0,
+				1, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last wiki page in the ordered set where groupId = &#63; and userId = &#63; and nodeId = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching wiki page
+	 * @throws com.liferay.portlet.wiki.NoSuchPageException if a matching wiki page could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage findByG_U_N_S_Last(long groupId, long userId, long nodeId,
+		int status, OrderByComparator orderByComparator)
+		throws NoSuchPageException, SystemException {
+		WikiPage wikiPage = fetchByG_U_N_S_Last(groupId, userId, nodeId,
+				status, orderByComparator);
+
+		if (wikiPage != null) {
+			return wikiPage;
+		}
+
+		StringBundler msg = new StringBundler(10);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("groupId=");
+		msg.append(groupId);
+
+		msg.append(", userId=");
+		msg.append(userId);
+
+		msg.append(", nodeId=");
+		msg.append(nodeId);
+
+		msg.append(", status=");
+		msg.append(status);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchPageException(msg.toString());
+	}
+
+	/**
+	 * Returns the last wiki page in the ordered set where groupId = &#63; and userId = &#63; and nodeId = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching wiki page, or <code>null</code> if a matching wiki page could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage fetchByG_U_N_S_Last(long groupId, long userId, long nodeId,
+		int status, OrderByComparator orderByComparator)
+		throws SystemException {
+		int count = countByG_U_N_S(groupId, userId, nodeId, status);
+
+		List<WikiPage> list = findByG_U_N_S(groupId, userId, nodeId, status,
+				count - 1, count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the wiki pages before and after the current wiki page in the ordered set where groupId = &#63; and userId = &#63; and nodeId = &#63; and status = &#63;.
+	 *
+	 * @param pageId the primary key of the current wiki page
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next wiki page
+	 * @throws com.liferay.portlet.wiki.NoSuchPageException if a wiki page with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage[] findByG_U_N_S_PrevAndNext(long pageId, long groupId,
+		long userId, long nodeId, int status,
+		OrderByComparator orderByComparator)
+		throws NoSuchPageException, SystemException {
+		WikiPage wikiPage = findByPrimaryKey(pageId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			WikiPage[] array = new WikiPageImpl[3];
+
+			array[0] = getByG_U_N_S_PrevAndNext(session, wikiPage, groupId,
+					userId, nodeId, status, orderByComparator, true);
+
+			array[1] = wikiPage;
+
+			array[2] = getByG_U_N_S_PrevAndNext(session, wikiPage, groupId,
+					userId, nodeId, status, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected WikiPage getByG_U_N_S_PrevAndNext(Session session,
+		WikiPage wikiPage, long groupId, long userId, long nodeId, int status,
+		OrderByComparator orderByComparator, boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(6 +
+					(orderByComparator.getOrderByFields().length * 6));
+		}
+		else {
+			query = new StringBundler(3);
+		}
+
+		query.append(_SQL_SELECT_WIKIPAGE_WHERE);
+
+		query.append(_FINDER_COLUMN_G_U_N_S_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_U_N_S_USERID_2);
+
+		query.append(_FINDER_COLUMN_G_U_N_S_NODEID_2);
+
+		query.append(_FINDER_COLUMN_G_U_N_S_STATUS_2);
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = query.toString();
+
+		Query q = session.createQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(groupId);
+
+		qPos.add(userId);
+
+		qPos.add(nodeId);
+
+		qPos.add(status);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(wikiPage);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<WikiPage> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Returns all the wiki pages that the user has permission to view where groupId = &#63; and userId = &#63; and nodeId = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @return the matching wiki pages that the user has permission to view
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> filterFindByG_U_N_S(long groupId, long userId,
+		long nodeId, int status) throws SystemException {
+		return filterFindByG_U_N_S(groupId, userId, nodeId, status,
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the wiki pages that the user has permission to view where groupId = &#63; and userId = &#63; and nodeId = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.wiki.model.impl.WikiPageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @param start the lower bound of the range of wiki pages
+	 * @param end the upper bound of the range of wiki pages (not inclusive)
+	 * @return the range of matching wiki pages that the user has permission to view
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> filterFindByG_U_N_S(long groupId, long userId,
+		long nodeId, int status, int start, int end) throws SystemException {
+		return filterFindByG_U_N_S(groupId, userId, nodeId, status, start, end,
+			null);
+	}
+
+	/**
+	 * Returns an ordered range of all the wiki pages that the user has permissions to view where groupId = &#63; and userId = &#63; and nodeId = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.wiki.model.impl.WikiPageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @param start the lower bound of the range of wiki pages
+	 * @param end the upper bound of the range of wiki pages (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching wiki pages that the user has permission to view
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> filterFindByG_U_N_S(long groupId, long userId,
+		long nodeId, int status, int start, int end,
+		OrderByComparator orderByComparator) throws SystemException {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByG_U_N_S(groupId, userId, nodeId, status, start, end,
+				orderByComparator);
+		}
+
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(6 +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			query = new StringBundler(6);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_G_U_N_S_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_U_N_S_USERID_2);
+
+		query.append(_FINDER_COLUMN_G_U_N_S_NODEID_2);
+
+		query.append(_FINDER_COLUMN_G_U_N_S_STATUS_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			if (getDB().isSupportsInlineDistinct()) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+			else {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_TABLE,
+					orderByComparator);
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(WikiPageModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				WikiPage.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSQLQuery(sql);
+
+			if (getDB().isSupportsInlineDistinct()) {
+				q.addEntity(_FILTER_ENTITY_ALIAS, WikiPageImpl.class);
+			}
+			else {
+				q.addEntity(_FILTER_ENTITY_TABLE, WikiPageImpl.class);
+			}
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			qPos.add(userId);
+
+			qPos.add(nodeId);
+
+			qPos.add(status);
+
+			return (List<WikiPage>)QueryUtil.list(q, getDialect(), start, end);
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	/**
+	 * Returns the wiki pages before and after the current wiki page in the ordered set of wiki pages that the user has permission to view where groupId = &#63; and userId = &#63; and nodeId = &#63; and status = &#63;.
+	 *
+	 * @param pageId the primary key of the current wiki page
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next wiki page
+	 * @throws com.liferay.portlet.wiki.NoSuchPageException if a wiki page with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage[] filterFindByG_U_N_S_PrevAndNext(long pageId,
+		long groupId, long userId, long nodeId, int status,
+		OrderByComparator orderByComparator)
+		throws NoSuchPageException, SystemException {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByG_U_N_S_PrevAndNext(pageId, groupId, userId, nodeId,
+				status, orderByComparator);
+		}
+
+		WikiPage wikiPage = findByPrimaryKey(pageId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			WikiPage[] array = new WikiPageImpl[3];
+
+			array[0] = filterGetByG_U_N_S_PrevAndNext(session, wikiPage,
+					groupId, userId, nodeId, status, orderByComparator, true);
+
+			array[1] = wikiPage;
+
+			array[2] = filterGetByG_U_N_S_PrevAndNext(session, wikiPage,
+					groupId, userId, nodeId, status, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected WikiPage filterGetByG_U_N_S_PrevAndNext(Session session,
+		WikiPage wikiPage, long groupId, long userId, long nodeId, int status,
+		OrderByComparator orderByComparator, boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(6 +
+					(orderByComparator.getOrderByFields().length * 6));
+		}
+		else {
+			query = new StringBundler(3);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_G_U_N_S_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_U_N_S_USERID_2);
+
+		query.append(_FINDER_COLUMN_G_U_N_S_NODEID_2);
+
+		query.append(_FINDER_COLUMN_G_U_N_S_STATUS_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					query.append(_ORDER_BY_ENTITY_ALIAS);
+				}
+				else {
+					query.append(_ORDER_BY_ENTITY_TABLE);
+				}
+
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					query.append(_ORDER_BY_ENTITY_ALIAS);
+				}
+				else {
+					query.append(_ORDER_BY_ENTITY_TABLE);
+				}
+
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(WikiPageModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				WikiPage.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		if (getDB().isSupportsInlineDistinct()) {
+			q.addEntity(_FILTER_ENTITY_ALIAS, WikiPageImpl.class);
+		}
+		else {
+			q.addEntity(_FILTER_ENTITY_TABLE, WikiPageImpl.class);
+		}
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(groupId);
+
+		qPos.add(userId);
+
+		qPos.add(nodeId);
+
+		qPos.add(status);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(wikiPage);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<WikiPage> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Removes all the wiki pages where groupId = &#63; and userId = &#63; and nodeId = &#63; and status = &#63; from the database.
+	 *
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void removeByG_U_N_S(long groupId, long userId, long nodeId,
+		int status) throws SystemException {
+		for (WikiPage wikiPage : findByG_U_N_S(groupId, userId, nodeId, status,
+				QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
+			remove(wikiPage);
+		}
+	}
+
+	/**
+	 * Returns the number of wiki pages where groupId = &#63; and userId = &#63; and nodeId = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @return the number of matching wiki pages
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int countByG_U_N_S(long groupId, long userId, long nodeId, int status)
+		throws SystemException {
+		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_U_N_S;
+
+		Object[] finderArgs = new Object[] { groupId, userId, nodeId, status };
+
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(5);
+
+			query.append(_SQL_COUNT_WIKIPAGE_WHERE);
+
+			query.append(_FINDER_COLUMN_G_U_N_S_GROUPID_2);
+
+			query.append(_FINDER_COLUMN_G_U_N_S_USERID_2);
+
+			query.append(_FINDER_COLUMN_G_U_N_S_NODEID_2);
+
+			query.append(_FINDER_COLUMN_G_U_N_S_STATUS_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(groupId);
+
+				qPos.add(userId);
+
+				qPos.add(nodeId);
+
+				qPos.add(status);
+
+				count = (Long)q.uniqueResult();
+
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception e) {
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	/**
+	 * Returns the number of wiki pages that the user has permission to view where groupId = &#63; and userId = &#63; and nodeId = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param nodeId the node ID
+	 * @param status the status
+	 * @return the number of matching wiki pages that the user has permission to view
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int filterCountByG_U_N_S(long groupId, long userId, long nodeId,
+		int status) throws SystemException {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return countByG_U_N_S(groupId, userId, nodeId, status);
+		}
+
+		StringBundler query = new StringBundler(5);
+
+		query.append(_FILTER_SQL_COUNT_WIKIPAGE_WHERE);
+
+		query.append(_FINDER_COLUMN_G_U_N_S_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_U_N_S_USERID_2);
+
+		query.append(_FINDER_COLUMN_G_U_N_S_NODEID_2);
+
+		query.append(_FINDER_COLUMN_G_U_N_S_STATUS_2);
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				WikiPage.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSQLQuery(sql);
+
+			q.addScalar(COUNT_COLUMN_NAME,
+				com.liferay.portal.kernel.dao.orm.Type.LONG);
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			qPos.add(userId);
+
+			qPos.add(nodeId);
+
+			qPos.add(status);
+
+			Long count = (Long)q.uniqueResult();
+
+			return count.intValue();
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	private static final String _FINDER_COLUMN_G_U_N_S_GROUPID_2 = "wikiPage.groupId = ? AND ";
+	private static final String _FINDER_COLUMN_G_U_N_S_USERID_2 = "wikiPage.userId = ? AND ";
+	private static final String _FINDER_COLUMN_G_U_N_S_NODEID_2 = "wikiPage.nodeId = ? AND ";
+	private static final String _FINDER_COLUMN_G_U_N_S_STATUS_2 = "wikiPage.status = ?";
+	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_G_N_T_H = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
+			WikiPageModelImpl.FINDER_CACHE_ENABLED, WikiPageImpl.class,
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByG_N_T_H",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				String.class.getName(), Boolean.class.getName(),
+				
+			Integer.class.getName(), Integer.class.getName(),
+				OrderByComparator.class.getName()
+			});
+	public static final FinderPath FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_T_H =
+		new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
+			WikiPageModelImpl.FINDER_CACHE_ENABLED, WikiPageImpl.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByG_N_T_H",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				String.class.getName(), Boolean.class.getName()
+			},
+			WikiPageModelImpl.GROUPID_COLUMN_BITMASK |
+			WikiPageModelImpl.NODEID_COLUMN_BITMASK |
+			WikiPageModelImpl.TITLE_COLUMN_BITMASK |
+			WikiPageModelImpl.HEAD_COLUMN_BITMASK |
+			WikiPageModelImpl.VERSION_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_G_N_T_H = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
+			WikiPageModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByG_N_T_H",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				String.class.getName(), Boolean.class.getName()
+			});
+
+	/**
+	 * Returns all the wiki pages where groupId = &#63; and nodeId = &#63; and title = &#63; and head = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param title the title
+	 * @param head the head
+	 * @return the matching wiki pages
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> findByG_N_T_H(long groupId, long nodeId,
+		String title, boolean head) throws SystemException {
+		return findByG_N_T_H(groupId, nodeId, title, head, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the wiki pages where groupId = &#63; and nodeId = &#63; and title = &#63; and head = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.wiki.model.impl.WikiPageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param title the title
+	 * @param head the head
+	 * @param start the lower bound of the range of wiki pages
+	 * @param end the upper bound of the range of wiki pages (not inclusive)
+	 * @return the range of matching wiki pages
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> findByG_N_T_H(long groupId, long nodeId,
+		String title, boolean head, int start, int end)
+		throws SystemException {
+		return findByG_N_T_H(groupId, nodeId, title, head, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the wiki pages where groupId = &#63; and nodeId = &#63; and title = &#63; and head = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.wiki.model.impl.WikiPageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param title the title
+	 * @param head the head
+	 * @param start the lower bound of the range of wiki pages
+	 * @param end the upper bound of the range of wiki pages (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching wiki pages
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> findByG_N_T_H(long groupId, long nodeId,
+		String title, boolean head, int start, int end,
+		OrderByComparator orderByComparator) throws SystemException {
+		boolean pagination = true;
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+				(orderByComparator == null)) {
+			pagination = false;
+			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_T_H;
+			finderArgs = new Object[] { groupId, nodeId, title, head };
+		}
+		else {
+			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_N_T_H;
+			finderArgs = new Object[] {
+					groupId, nodeId, title, head,
+					
+					start, end, orderByComparator
+				};
+		}
+
+		List<WikiPage> list = (List<WikiPage>)FinderCacheUtil.getResult(finderPath,
+				finderArgs, this);
+
+		if ((list != null) && !list.isEmpty()) {
+			for (WikiPage wikiPage : list) {
+				if ((groupId != wikiPage.getGroupId()) ||
+						(nodeId != wikiPage.getNodeId()) ||
+						!Validator.equals(title, wikiPage.getTitle()) ||
+						(head != wikiPage.getHead())) {
+					list = null;
+
+					break;
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler query = null;
+
+			if (orderByComparator != null) {
+				query = new StringBundler(6 +
+						(orderByComparator.getOrderByFields().length * 3));
+			}
+			else {
+				query = new StringBundler(6);
+			}
+
+			query.append(_SQL_SELECT_WIKIPAGE_WHERE);
+
+			query.append(_FINDER_COLUMN_G_N_T_H_GROUPID_2);
+
+			query.append(_FINDER_COLUMN_G_N_T_H_NODEID_2);
+
+			boolean bindTitle = false;
+
+			if (title == null) {
+				query.append(_FINDER_COLUMN_G_N_T_H_TITLE_1);
+			}
+			else if (title.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_N_T_H_TITLE_3);
+			}
+			else {
+				bindTitle = true;
+
+				query.append(_FINDER_COLUMN_G_N_T_H_TITLE_2);
+			}
+
+			query.append(_FINDER_COLUMN_G_N_T_H_HEAD_2);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+			else
+			 if (pagination) {
+				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(groupId);
+
+				qPos.add(nodeId);
+
+				if (bindTitle) {
+					qPos.add(title.toLowerCase());
+				}
+
+				qPos.add(head);
+
+				if (!pagination) {
+					list = (List<WikiPage>)QueryUtil.list(q, getDialect(),
+							start, end, false);
+
+					Collections.sort(list);
+
+					list = new UnmodifiableList<WikiPage>(list);
+				}
+				else {
+					list = (List<WikiPage>)QueryUtil.list(q, getDialect(),
+							start, end);
+				}
+
+				cacheResult(list);
+
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
+			}
+			catch (Exception e) {
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first wiki page in the ordered set where groupId = &#63; and nodeId = &#63; and title = &#63; and head = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param title the title
+	 * @param head the head
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching wiki page
+	 * @throws com.liferay.portlet.wiki.NoSuchPageException if a matching wiki page could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage findByG_N_T_H_First(long groupId, long nodeId,
+		String title, boolean head, OrderByComparator orderByComparator)
+		throws NoSuchPageException, SystemException {
+		WikiPage wikiPage = fetchByG_N_T_H_First(groupId, nodeId, title, head,
+				orderByComparator);
+
+		if (wikiPage != null) {
+			return wikiPage;
+		}
+
+		StringBundler msg = new StringBundler(10);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("groupId=");
+		msg.append(groupId);
+
+		msg.append(", nodeId=");
+		msg.append(nodeId);
+
+		msg.append(", title=");
+		msg.append(title);
+
+		msg.append(", head=");
+		msg.append(head);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchPageException(msg.toString());
+	}
+
+	/**
+	 * Returns the first wiki page in the ordered set where groupId = &#63; and nodeId = &#63; and title = &#63; and head = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param title the title
+	 * @param head the head
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching wiki page, or <code>null</code> if a matching wiki page could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage fetchByG_N_T_H_First(long groupId, long nodeId,
+		String title, boolean head, OrderByComparator orderByComparator)
+		throws SystemException {
+		List<WikiPage> list = findByG_N_T_H(groupId, nodeId, title, head, 0, 1,
+				orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last wiki page in the ordered set where groupId = &#63; and nodeId = &#63; and title = &#63; and head = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param title the title
+	 * @param head the head
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching wiki page
+	 * @throws com.liferay.portlet.wiki.NoSuchPageException if a matching wiki page could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage findByG_N_T_H_Last(long groupId, long nodeId, String title,
+		boolean head, OrderByComparator orderByComparator)
+		throws NoSuchPageException, SystemException {
+		WikiPage wikiPage = fetchByG_N_T_H_Last(groupId, nodeId, title, head,
+				orderByComparator);
+
+		if (wikiPage != null) {
+			return wikiPage;
+		}
+
+		StringBundler msg = new StringBundler(10);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("groupId=");
+		msg.append(groupId);
+
+		msg.append(", nodeId=");
+		msg.append(nodeId);
+
+		msg.append(", title=");
+		msg.append(title);
+
+		msg.append(", head=");
+		msg.append(head);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchPageException(msg.toString());
+	}
+
+	/**
+	 * Returns the last wiki page in the ordered set where groupId = &#63; and nodeId = &#63; and title = &#63; and head = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param title the title
+	 * @param head the head
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching wiki page, or <code>null</code> if a matching wiki page could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage fetchByG_N_T_H_Last(long groupId, long nodeId,
+		String title, boolean head, OrderByComparator orderByComparator)
+		throws SystemException {
+		int count = countByG_N_T_H(groupId, nodeId, title, head);
+
+		List<WikiPage> list = findByG_N_T_H(groupId, nodeId, title, head,
+				count - 1, count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the wiki pages before and after the current wiki page in the ordered set where groupId = &#63; and nodeId = &#63; and title = &#63; and head = &#63;.
+	 *
+	 * @param pageId the primary key of the current wiki page
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param title the title
+	 * @param head the head
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next wiki page
+	 * @throws com.liferay.portlet.wiki.NoSuchPageException if a wiki page with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage[] findByG_N_T_H_PrevAndNext(long pageId, long groupId,
+		long nodeId, String title, boolean head,
+		OrderByComparator orderByComparator)
+		throws NoSuchPageException, SystemException {
+		WikiPage wikiPage = findByPrimaryKey(pageId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			WikiPage[] array = new WikiPageImpl[3];
+
+			array[0] = getByG_N_T_H_PrevAndNext(session, wikiPage, groupId,
+					nodeId, title, head, orderByComparator, true);
+
+			array[1] = wikiPage;
+
+			array[2] = getByG_N_T_H_PrevAndNext(session, wikiPage, groupId,
+					nodeId, title, head, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected WikiPage getByG_N_T_H_PrevAndNext(Session session,
+		WikiPage wikiPage, long groupId, long nodeId, String title,
+		boolean head, OrderByComparator orderByComparator, boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(6 +
+					(orderByComparator.getOrderByFields().length * 6));
+		}
+		else {
+			query = new StringBundler(3);
+		}
+
+		query.append(_SQL_SELECT_WIKIPAGE_WHERE);
+
+		query.append(_FINDER_COLUMN_G_N_T_H_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_N_T_H_NODEID_2);
+
+		boolean bindTitle = false;
+
+		if (title == null) {
+			query.append(_FINDER_COLUMN_G_N_T_H_TITLE_1);
+		}
+		else if (title.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_N_T_H_TITLE_3);
+		}
+		else {
+			bindTitle = true;
+
+			query.append(_FINDER_COLUMN_G_N_T_H_TITLE_2);
+		}
+
+		query.append(_FINDER_COLUMN_G_N_T_H_HEAD_2);
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = query.toString();
+
+		Query q = session.createQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(groupId);
+
+		qPos.add(nodeId);
+
+		if (bindTitle) {
+			qPos.add(title.toLowerCase());
+		}
+
+		qPos.add(head);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(wikiPage);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<WikiPage> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Returns all the wiki pages that the user has permission to view where groupId = &#63; and nodeId = &#63; and title = &#63; and head = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param title the title
+	 * @param head the head
+	 * @return the matching wiki pages that the user has permission to view
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> filterFindByG_N_T_H(long groupId, long nodeId,
+		String title, boolean head) throws SystemException {
+		return filterFindByG_N_T_H(groupId, nodeId, title, head,
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the wiki pages that the user has permission to view where groupId = &#63; and nodeId = &#63; and title = &#63; and head = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.wiki.model.impl.WikiPageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param title the title
+	 * @param head the head
+	 * @param start the lower bound of the range of wiki pages
+	 * @param end the upper bound of the range of wiki pages (not inclusive)
+	 * @return the range of matching wiki pages that the user has permission to view
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> filterFindByG_N_T_H(long groupId, long nodeId,
+		String title, boolean head, int start, int end)
+		throws SystemException {
+		return filterFindByG_N_T_H(groupId, nodeId, title, head, start, end,
+			null);
+	}
+
+	/**
+	 * Returns an ordered range of all the wiki pages that the user has permissions to view where groupId = &#63; and nodeId = &#63; and title = &#63; and head = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.wiki.model.impl.WikiPageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param title the title
+	 * @param head the head
+	 * @param start the lower bound of the range of wiki pages
+	 * @param end the upper bound of the range of wiki pages (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching wiki pages that the user has permission to view
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> filterFindByG_N_T_H(long groupId, long nodeId,
+		String title, boolean head, int start, int end,
+		OrderByComparator orderByComparator) throws SystemException {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByG_N_T_H(groupId, nodeId, title, head, start, end,
+				orderByComparator);
+		}
+
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(6 +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			query = new StringBundler(6);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_G_N_T_H_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_N_T_H_NODEID_2);
+
+		boolean bindTitle = false;
+
+		if (title == null) {
+			query.append(_FINDER_COLUMN_G_N_T_H_TITLE_1);
+		}
+		else if (title.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_N_T_H_TITLE_3);
+		}
+		else {
+			bindTitle = true;
+
+			query.append(_FINDER_COLUMN_G_N_T_H_TITLE_2);
+		}
+
+		query.append(_FINDER_COLUMN_G_N_T_H_HEAD_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			if (getDB().isSupportsInlineDistinct()) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+			else {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_TABLE,
+					orderByComparator);
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(WikiPageModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				WikiPage.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSQLQuery(sql);
+
+			if (getDB().isSupportsInlineDistinct()) {
+				q.addEntity(_FILTER_ENTITY_ALIAS, WikiPageImpl.class);
+			}
+			else {
+				q.addEntity(_FILTER_ENTITY_TABLE, WikiPageImpl.class);
+			}
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			qPos.add(nodeId);
+
+			if (bindTitle) {
+				qPos.add(title.toLowerCase());
+			}
+
+			qPos.add(head);
+
+			return (List<WikiPage>)QueryUtil.list(q, getDialect(), start, end);
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	/**
+	 * Returns the wiki pages before and after the current wiki page in the ordered set of wiki pages that the user has permission to view where groupId = &#63; and nodeId = &#63; and title = &#63; and head = &#63;.
+	 *
+	 * @param pageId the primary key of the current wiki page
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param title the title
+	 * @param head the head
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next wiki page
+	 * @throws com.liferay.portlet.wiki.NoSuchPageException if a wiki page with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage[] filterFindByG_N_T_H_PrevAndNext(long pageId,
+		long groupId, long nodeId, String title, boolean head,
+		OrderByComparator orderByComparator)
+		throws NoSuchPageException, SystemException {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByG_N_T_H_PrevAndNext(pageId, groupId, nodeId, title,
+				head, orderByComparator);
+		}
+
+		WikiPage wikiPage = findByPrimaryKey(pageId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			WikiPage[] array = new WikiPageImpl[3];
+
+			array[0] = filterGetByG_N_T_H_PrevAndNext(session, wikiPage,
+					groupId, nodeId, title, head, orderByComparator, true);
+
+			array[1] = wikiPage;
+
+			array[2] = filterGetByG_N_T_H_PrevAndNext(session, wikiPage,
+					groupId, nodeId, title, head, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected WikiPage filterGetByG_N_T_H_PrevAndNext(Session session,
+		WikiPage wikiPage, long groupId, long nodeId, String title,
+		boolean head, OrderByComparator orderByComparator, boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(6 +
+					(orderByComparator.getOrderByFields().length * 6));
+		}
+		else {
+			query = new StringBundler(3);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_G_N_T_H_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_N_T_H_NODEID_2);
+
+		boolean bindTitle = false;
+
+		if (title == null) {
+			query.append(_FINDER_COLUMN_G_N_T_H_TITLE_1);
+		}
+		else if (title.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_N_T_H_TITLE_3);
+		}
+		else {
+			bindTitle = true;
+
+			query.append(_FINDER_COLUMN_G_N_T_H_TITLE_2);
+		}
+
+		query.append(_FINDER_COLUMN_G_N_T_H_HEAD_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					query.append(_ORDER_BY_ENTITY_ALIAS);
+				}
+				else {
+					query.append(_ORDER_BY_ENTITY_TABLE);
+				}
+
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					query.append(_ORDER_BY_ENTITY_ALIAS);
+				}
+				else {
+					query.append(_ORDER_BY_ENTITY_TABLE);
+				}
+
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(WikiPageModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				WikiPage.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		if (getDB().isSupportsInlineDistinct()) {
+			q.addEntity(_FILTER_ENTITY_ALIAS, WikiPageImpl.class);
+		}
+		else {
+			q.addEntity(_FILTER_ENTITY_TABLE, WikiPageImpl.class);
+		}
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(groupId);
+
+		qPos.add(nodeId);
+
+		if (bindTitle) {
+			qPos.add(title.toLowerCase());
+		}
+
+		qPos.add(head);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(wikiPage);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<WikiPage> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Removes all the wiki pages where groupId = &#63; and nodeId = &#63; and title = &#63; and head = &#63; from the database.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param title the title
+	 * @param head the head
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void removeByG_N_T_H(long groupId, long nodeId, String title,
+		boolean head) throws SystemException {
+		for (WikiPage wikiPage : findByG_N_T_H(groupId, nodeId, title, head,
+				QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
+			remove(wikiPage);
+		}
+	}
+
+	/**
+	 * Returns the number of wiki pages where groupId = &#63; and nodeId = &#63; and title = &#63; and head = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param title the title
+	 * @param head the head
+	 * @return the number of matching wiki pages
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int countByG_N_T_H(long groupId, long nodeId, String title,
+		boolean head) throws SystemException {
+		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_N_T_H;
+
+		Object[] finderArgs = new Object[] { groupId, nodeId, title, head };
+
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(5);
+
+			query.append(_SQL_COUNT_WIKIPAGE_WHERE);
+
+			query.append(_FINDER_COLUMN_G_N_T_H_GROUPID_2);
+
+			query.append(_FINDER_COLUMN_G_N_T_H_NODEID_2);
+
+			boolean bindTitle = false;
+
+			if (title == null) {
+				query.append(_FINDER_COLUMN_G_N_T_H_TITLE_1);
+			}
+			else if (title.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_N_T_H_TITLE_3);
+			}
+			else {
+				bindTitle = true;
+
+				query.append(_FINDER_COLUMN_G_N_T_H_TITLE_2);
+			}
+
+			query.append(_FINDER_COLUMN_G_N_T_H_HEAD_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(groupId);
+
+				qPos.add(nodeId);
+
+				if (bindTitle) {
+					qPos.add(title.toLowerCase());
+				}
+
+				qPos.add(head);
+
+				count = (Long)q.uniqueResult();
+
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception e) {
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	/**
+	 * Returns the number of wiki pages that the user has permission to view where groupId = &#63; and nodeId = &#63; and title = &#63; and head = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param title the title
+	 * @param head the head
+	 * @return the number of matching wiki pages that the user has permission to view
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int filterCountByG_N_T_H(long groupId, long nodeId, String title,
+		boolean head) throws SystemException {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return countByG_N_T_H(groupId, nodeId, title, head);
+		}
+
+		StringBundler query = new StringBundler(5);
+
+		query.append(_FILTER_SQL_COUNT_WIKIPAGE_WHERE);
+
+		query.append(_FINDER_COLUMN_G_N_T_H_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_N_T_H_NODEID_2);
+
+		boolean bindTitle = false;
+
+		if (title == null) {
+			query.append(_FINDER_COLUMN_G_N_T_H_TITLE_1);
+		}
+		else if (title.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_N_T_H_TITLE_3);
+		}
+		else {
+			bindTitle = true;
+
+			query.append(_FINDER_COLUMN_G_N_T_H_TITLE_2);
+		}
+
+		query.append(_FINDER_COLUMN_G_N_T_H_HEAD_2);
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				WikiPage.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSQLQuery(sql);
+
+			q.addScalar(COUNT_COLUMN_NAME,
+				com.liferay.portal.kernel.dao.orm.Type.LONG);
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			qPos.add(nodeId);
+
+			if (bindTitle) {
+				qPos.add(title.toLowerCase());
+			}
+
+			qPos.add(head);
+
+			Long count = (Long)q.uniqueResult();
+
+			return count.intValue();
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	private static final String _FINDER_COLUMN_G_N_T_H_GROUPID_2 = "wikiPage.groupId = ? AND ";
+	private static final String _FINDER_COLUMN_G_N_T_H_NODEID_2 = "wikiPage.nodeId = ? AND ";
+	private static final String _FINDER_COLUMN_G_N_T_H_TITLE_1 = "wikiPage.title IS NULL AND ";
+	private static final String _FINDER_COLUMN_G_N_T_H_TITLE_2 = "lower(wikiPage.title) = ? AND ";
+	private static final String _FINDER_COLUMN_G_N_T_H_TITLE_3 = "(wikiPage.title IS NULL OR wikiPage.title = '') AND ";
+	private static final String _FINDER_COLUMN_G_N_T_H_HEAD_2 = "wikiPage.head = ?";
+	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_G_N_H_S = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
+			WikiPageModelImpl.FINDER_CACHE_ENABLED, WikiPageImpl.class,
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByG_N_H_S",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				Boolean.class.getName(), Integer.class.getName(),
+				
+			Integer.class.getName(), Integer.class.getName(),
+				OrderByComparator.class.getName()
+			});
+	public static final FinderPath FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_H_S =
+		new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
+			WikiPageModelImpl.FINDER_CACHE_ENABLED, WikiPageImpl.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByG_N_H_S",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				Boolean.class.getName(), Integer.class.getName()
+			},
+			WikiPageModelImpl.GROUPID_COLUMN_BITMASK |
+			WikiPageModelImpl.NODEID_COLUMN_BITMASK |
+			WikiPageModelImpl.HEAD_COLUMN_BITMASK |
+			WikiPageModelImpl.STATUS_COLUMN_BITMASK |
+			WikiPageModelImpl.TITLE_COLUMN_BITMASK |
+			WikiPageModelImpl.VERSION_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_G_N_H_S = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
+			WikiPageModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByG_N_H_S",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				Boolean.class.getName(), Integer.class.getName()
+			});
+
+	/**
+	 * Returns all the wiki pages where groupId = &#63; and nodeId = &#63; and head = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param status the status
+	 * @return the matching wiki pages
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> findByG_N_H_S(long groupId, long nodeId,
+		boolean head, int status) throws SystemException {
+		return findByG_N_H_S(groupId, nodeId, head, status, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the wiki pages where groupId = &#63; and nodeId = &#63; and head = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.wiki.model.impl.WikiPageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param status the status
+	 * @param start the lower bound of the range of wiki pages
+	 * @param end the upper bound of the range of wiki pages (not inclusive)
+	 * @return the range of matching wiki pages
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> findByG_N_H_S(long groupId, long nodeId,
+		boolean head, int status, int start, int end) throws SystemException {
+		return findByG_N_H_S(groupId, nodeId, head, status, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the wiki pages where groupId = &#63; and nodeId = &#63; and head = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.wiki.model.impl.WikiPageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param status the status
+	 * @param start the lower bound of the range of wiki pages
+	 * @param end the upper bound of the range of wiki pages (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching wiki pages
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> findByG_N_H_S(long groupId, long nodeId,
+		boolean head, int status, int start, int end,
+		OrderByComparator orderByComparator) throws SystemException {
+		boolean pagination = true;
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+				(orderByComparator == null)) {
+			pagination = false;
+			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_H_S;
+			finderArgs = new Object[] { groupId, nodeId, head, status };
+		}
+		else {
+			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_N_H_S;
+			finderArgs = new Object[] {
+					groupId, nodeId, head, status,
+					
+					start, end, orderByComparator
+				};
+		}
+
+		List<WikiPage> list = (List<WikiPage>)FinderCacheUtil.getResult(finderPath,
+				finderArgs, this);
+
+		if ((list != null) && !list.isEmpty()) {
+			for (WikiPage wikiPage : list) {
+				if ((groupId != wikiPage.getGroupId()) ||
+						(nodeId != wikiPage.getNodeId()) ||
+						(head != wikiPage.getHead()) ||
+						(status != wikiPage.getStatus())) {
+					list = null;
+
+					break;
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler query = null;
+
+			if (orderByComparator != null) {
+				query = new StringBundler(6 +
+						(orderByComparator.getOrderByFields().length * 3));
+			}
+			else {
+				query = new StringBundler(6);
+			}
+
+			query.append(_SQL_SELECT_WIKIPAGE_WHERE);
+
+			query.append(_FINDER_COLUMN_G_N_H_S_GROUPID_2);
+
+			query.append(_FINDER_COLUMN_G_N_H_S_NODEID_2);
+
+			query.append(_FINDER_COLUMN_G_N_H_S_HEAD_2);
+
+			query.append(_FINDER_COLUMN_G_N_H_S_STATUS_2);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+			else
+			 if (pagination) {
+				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(groupId);
+
+				qPos.add(nodeId);
+
+				qPos.add(head);
+
+				qPos.add(status);
+
+				if (!pagination) {
+					list = (List<WikiPage>)QueryUtil.list(q, getDialect(),
+							start, end, false);
+
+					Collections.sort(list);
+
+					list = new UnmodifiableList<WikiPage>(list);
+				}
+				else {
+					list = (List<WikiPage>)QueryUtil.list(q, getDialect(),
+							start, end);
+				}
+
+				cacheResult(list);
+
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
+			}
+			catch (Exception e) {
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first wiki page in the ordered set where groupId = &#63; and nodeId = &#63; and head = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching wiki page
+	 * @throws com.liferay.portlet.wiki.NoSuchPageException if a matching wiki page could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage findByG_N_H_S_First(long groupId, long nodeId,
+		boolean head, int status, OrderByComparator orderByComparator)
+		throws NoSuchPageException, SystemException {
+		WikiPage wikiPage = fetchByG_N_H_S_First(groupId, nodeId, head, status,
+				orderByComparator);
+
+		if (wikiPage != null) {
+			return wikiPage;
+		}
+
+		StringBundler msg = new StringBundler(10);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("groupId=");
+		msg.append(groupId);
+
+		msg.append(", nodeId=");
+		msg.append(nodeId);
+
+		msg.append(", head=");
+		msg.append(head);
+
+		msg.append(", status=");
+		msg.append(status);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchPageException(msg.toString());
+	}
+
+	/**
+	 * Returns the first wiki page in the ordered set where groupId = &#63; and nodeId = &#63; and head = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching wiki page, or <code>null</code> if a matching wiki page could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage fetchByG_N_H_S_First(long groupId, long nodeId,
+		boolean head, int status, OrderByComparator orderByComparator)
+		throws SystemException {
+		List<WikiPage> list = findByG_N_H_S(groupId, nodeId, head, status, 0,
+				1, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last wiki page in the ordered set where groupId = &#63; and nodeId = &#63; and head = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching wiki page
+	 * @throws com.liferay.portlet.wiki.NoSuchPageException if a matching wiki page could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage findByG_N_H_S_Last(long groupId, long nodeId, boolean head,
+		int status, OrderByComparator orderByComparator)
+		throws NoSuchPageException, SystemException {
+		WikiPage wikiPage = fetchByG_N_H_S_Last(groupId, nodeId, head, status,
+				orderByComparator);
+
+		if (wikiPage != null) {
+			return wikiPage;
+		}
+
+		StringBundler msg = new StringBundler(10);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("groupId=");
+		msg.append(groupId);
+
+		msg.append(", nodeId=");
+		msg.append(nodeId);
+
+		msg.append(", head=");
+		msg.append(head);
+
+		msg.append(", status=");
+		msg.append(status);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchPageException(msg.toString());
+	}
+
+	/**
+	 * Returns the last wiki page in the ordered set where groupId = &#63; and nodeId = &#63; and head = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching wiki page, or <code>null</code> if a matching wiki page could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage fetchByG_N_H_S_Last(long groupId, long nodeId,
+		boolean head, int status, OrderByComparator orderByComparator)
+		throws SystemException {
+		int count = countByG_N_H_S(groupId, nodeId, head, status);
+
+		List<WikiPage> list = findByG_N_H_S(groupId, nodeId, head, status,
+				count - 1, count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the wiki pages before and after the current wiki page in the ordered set where groupId = &#63; and nodeId = &#63; and head = &#63; and status = &#63;.
+	 *
+	 * @param pageId the primary key of the current wiki page
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next wiki page
+	 * @throws com.liferay.portlet.wiki.NoSuchPageException if a wiki page with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage[] findByG_N_H_S_PrevAndNext(long pageId, long groupId,
+		long nodeId, boolean head, int status,
+		OrderByComparator orderByComparator)
+		throws NoSuchPageException, SystemException {
+		WikiPage wikiPage = findByPrimaryKey(pageId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			WikiPage[] array = new WikiPageImpl[3];
+
+			array[0] = getByG_N_H_S_PrevAndNext(session, wikiPage, groupId,
+					nodeId, head, status, orderByComparator, true);
+
+			array[1] = wikiPage;
+
+			array[2] = getByG_N_H_S_PrevAndNext(session, wikiPage, groupId,
+					nodeId, head, status, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected WikiPage getByG_N_H_S_PrevAndNext(Session session,
+		WikiPage wikiPage, long groupId, long nodeId, boolean head, int status,
+		OrderByComparator orderByComparator, boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(6 +
+					(orderByComparator.getOrderByFields().length * 6));
+		}
+		else {
+			query = new StringBundler(3);
+		}
+
+		query.append(_SQL_SELECT_WIKIPAGE_WHERE);
+
+		query.append(_FINDER_COLUMN_G_N_H_S_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_N_H_S_NODEID_2);
+
+		query.append(_FINDER_COLUMN_G_N_H_S_HEAD_2);
+
+		query.append(_FINDER_COLUMN_G_N_H_S_STATUS_2);
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = query.toString();
+
+		Query q = session.createQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(groupId);
+
+		qPos.add(nodeId);
+
+		qPos.add(head);
+
+		qPos.add(status);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(wikiPage);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<WikiPage> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Returns all the wiki pages that the user has permission to view where groupId = &#63; and nodeId = &#63; and head = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param status the status
+	 * @return the matching wiki pages that the user has permission to view
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> filterFindByG_N_H_S(long groupId, long nodeId,
+		boolean head, int status) throws SystemException {
+		return filterFindByG_N_H_S(groupId, nodeId, head, status,
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the wiki pages that the user has permission to view where groupId = &#63; and nodeId = &#63; and head = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.wiki.model.impl.WikiPageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param status the status
+	 * @param start the lower bound of the range of wiki pages
+	 * @param end the upper bound of the range of wiki pages (not inclusive)
+	 * @return the range of matching wiki pages that the user has permission to view
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> filterFindByG_N_H_S(long groupId, long nodeId,
+		boolean head, int status, int start, int end) throws SystemException {
+		return filterFindByG_N_H_S(groupId, nodeId, head, status, start, end,
+			null);
+	}
+
+	/**
+	 * Returns an ordered range of all the wiki pages that the user has permissions to view where groupId = &#63; and nodeId = &#63; and head = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.wiki.model.impl.WikiPageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param status the status
+	 * @param start the lower bound of the range of wiki pages
+	 * @param end the upper bound of the range of wiki pages (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching wiki pages that the user has permission to view
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> filterFindByG_N_H_S(long groupId, long nodeId,
+		boolean head, int status, int start, int end,
+		OrderByComparator orderByComparator) throws SystemException {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByG_N_H_S(groupId, nodeId, head, status, start, end,
+				orderByComparator);
+		}
+
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(6 +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			query = new StringBundler(6);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_G_N_H_S_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_N_H_S_NODEID_2);
+
+		query.append(_FINDER_COLUMN_G_N_H_S_HEAD_2);
+
+		query.append(_FINDER_COLUMN_G_N_H_S_STATUS_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			if (getDB().isSupportsInlineDistinct()) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+			else {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_TABLE,
+					orderByComparator);
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(WikiPageModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				WikiPage.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSQLQuery(sql);
+
+			if (getDB().isSupportsInlineDistinct()) {
+				q.addEntity(_FILTER_ENTITY_ALIAS, WikiPageImpl.class);
+			}
+			else {
+				q.addEntity(_FILTER_ENTITY_TABLE, WikiPageImpl.class);
+			}
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			qPos.add(nodeId);
+
+			qPos.add(head);
+
+			qPos.add(status);
+
+			return (List<WikiPage>)QueryUtil.list(q, getDialect(), start, end);
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	/**
+	 * Returns the wiki pages before and after the current wiki page in the ordered set of wiki pages that the user has permission to view where groupId = &#63; and nodeId = &#63; and head = &#63; and status = &#63;.
+	 *
+	 * @param pageId the primary key of the current wiki page
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next wiki page
+	 * @throws com.liferay.portlet.wiki.NoSuchPageException if a wiki page with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage[] filterFindByG_N_H_S_PrevAndNext(long pageId,
+		long groupId, long nodeId, boolean head, int status,
+		OrderByComparator orderByComparator)
+		throws NoSuchPageException, SystemException {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByG_N_H_S_PrevAndNext(pageId, groupId, nodeId, head,
+				status, orderByComparator);
+		}
+
+		WikiPage wikiPage = findByPrimaryKey(pageId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			WikiPage[] array = new WikiPageImpl[3];
+
+			array[0] = filterGetByG_N_H_S_PrevAndNext(session, wikiPage,
+					groupId, nodeId, head, status, orderByComparator, true);
+
+			array[1] = wikiPage;
+
+			array[2] = filterGetByG_N_H_S_PrevAndNext(session, wikiPage,
+					groupId, nodeId, head, status, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected WikiPage filterGetByG_N_H_S_PrevAndNext(Session session,
+		WikiPage wikiPage, long groupId, long nodeId, boolean head, int status,
+		OrderByComparator orderByComparator, boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(6 +
+					(orderByComparator.getOrderByFields().length * 6));
+		}
+		else {
+			query = new StringBundler(3);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_G_N_H_S_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_N_H_S_NODEID_2);
+
+		query.append(_FINDER_COLUMN_G_N_H_S_HEAD_2);
+
+		query.append(_FINDER_COLUMN_G_N_H_S_STATUS_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					query.append(_ORDER_BY_ENTITY_ALIAS);
+				}
+				else {
+					query.append(_ORDER_BY_ENTITY_TABLE);
+				}
+
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					query.append(_ORDER_BY_ENTITY_ALIAS);
+				}
+				else {
+					query.append(_ORDER_BY_ENTITY_TABLE);
+				}
+
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(WikiPageModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				WikiPage.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		if (getDB().isSupportsInlineDistinct()) {
+			q.addEntity(_FILTER_ENTITY_ALIAS, WikiPageImpl.class);
+		}
+		else {
+			q.addEntity(_FILTER_ENTITY_TABLE, WikiPageImpl.class);
+		}
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(groupId);
+
+		qPos.add(nodeId);
+
+		qPos.add(head);
+
+		qPos.add(status);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(wikiPage);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<WikiPage> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Removes all the wiki pages where groupId = &#63; and nodeId = &#63; and head = &#63; and status = &#63; from the database.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param status the status
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void removeByG_N_H_S(long groupId, long nodeId, boolean head,
+		int status) throws SystemException {
+		for (WikiPage wikiPage : findByG_N_H_S(groupId, nodeId, head, status,
+				QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
+			remove(wikiPage);
+		}
+	}
+
+	/**
+	 * Returns the number of wiki pages where groupId = &#63; and nodeId = &#63; and head = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param status the status
+	 * @return the number of matching wiki pages
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int countByG_N_H_S(long groupId, long nodeId, boolean head,
+		int status) throws SystemException {
+		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_N_H_S;
+
+		Object[] finderArgs = new Object[] { groupId, nodeId, head, status };
+
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(5);
+
+			query.append(_SQL_COUNT_WIKIPAGE_WHERE);
+
+			query.append(_FINDER_COLUMN_G_N_H_S_GROUPID_2);
+
+			query.append(_FINDER_COLUMN_G_N_H_S_NODEID_2);
+
+			query.append(_FINDER_COLUMN_G_N_H_S_HEAD_2);
+
+			query.append(_FINDER_COLUMN_G_N_H_S_STATUS_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(groupId);
+
+				qPos.add(nodeId);
+
+				qPos.add(head);
+
+				qPos.add(status);
+
+				count = (Long)q.uniqueResult();
+
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception e) {
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	/**
+	 * Returns the number of wiki pages that the user has permission to view where groupId = &#63; and nodeId = &#63; and head = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param status the status
+	 * @return the number of matching wiki pages that the user has permission to view
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int filterCountByG_N_H_S(long groupId, long nodeId, boolean head,
+		int status) throws SystemException {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return countByG_N_H_S(groupId, nodeId, head, status);
+		}
+
+		StringBundler query = new StringBundler(5);
+
+		query.append(_FILTER_SQL_COUNT_WIKIPAGE_WHERE);
+
+		query.append(_FINDER_COLUMN_G_N_H_S_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_N_H_S_NODEID_2);
+
+		query.append(_FINDER_COLUMN_G_N_H_S_HEAD_2);
+
+		query.append(_FINDER_COLUMN_G_N_H_S_STATUS_2);
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				WikiPage.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSQLQuery(sql);
+
+			q.addScalar(COUNT_COLUMN_NAME,
+				com.liferay.portal.kernel.dao.orm.Type.LONG);
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			qPos.add(nodeId);
+
+			qPos.add(head);
+
+			qPos.add(status);
+
+			Long count = (Long)q.uniqueResult();
+
+			return count.intValue();
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	private static final String _FINDER_COLUMN_G_N_H_S_GROUPID_2 = "wikiPage.groupId = ? AND ";
+	private static final String _FINDER_COLUMN_G_N_H_S_NODEID_2 = "wikiPage.nodeId = ? AND ";
+	private static final String _FINDER_COLUMN_G_N_H_S_HEAD_2 = "wikiPage.head = ? AND ";
+	private static final String _FINDER_COLUMN_G_N_H_S_STATUS_2 = "wikiPage.status = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_N_H_P_S = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
 			WikiPageModelImpl.FINDER_CACHE_ENABLED, WikiPageImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByN_H_P_S",
@@ -10277,16 +15319,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 			query.append(_FINDER_COLUMN_N_H_P_S_HEAD_2);
 
+			boolean bindParentTitle = false;
+
 			if (parentTitle == null) {
 				query.append(_FINDER_COLUMN_N_H_P_S_PARENTTITLE_1);
 			}
+			else if (parentTitle.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_N_H_P_S_PARENTTITLE_3);
+			}
 			else {
-				if (parentTitle.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_N_H_P_S_PARENTTITLE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_N_H_P_S_PARENTTITLE_2);
-				}
+				bindParentTitle = true;
+
+				query.append(_FINDER_COLUMN_N_H_P_S_PARENTTITLE_2);
 			}
 
 			query.append(_FINDER_COLUMN_N_H_P_S_STATUS_2);
@@ -10315,8 +15359,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 				qPos.add(head);
 
-				if (parentTitle != null) {
-					qPos.add(parentTitle);
+				if (bindParentTitle) {
+					qPos.add(parentTitle.toLowerCase());
 				}
 
 				qPos.add(status);
@@ -10550,16 +15594,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 		query.append(_FINDER_COLUMN_N_H_P_S_HEAD_2);
 
+		boolean bindParentTitle = false;
+
 		if (parentTitle == null) {
 			query.append(_FINDER_COLUMN_N_H_P_S_PARENTTITLE_1);
 		}
+		else if (parentTitle.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_N_H_P_S_PARENTTITLE_3);
+		}
 		else {
-			if (parentTitle.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_N_H_P_S_PARENTTITLE_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_N_H_P_S_PARENTTITLE_2);
-			}
+			bindParentTitle = true;
+
+			query.append(_FINDER_COLUMN_N_H_P_S_PARENTTITLE_2);
 		}
 
 		query.append(_FINDER_COLUMN_N_H_P_S_STATUS_2);
@@ -10636,8 +15682,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 		qPos.add(head);
 
-		if (parentTitle != null) {
-			qPos.add(parentTitle);
+		if (bindParentTitle) {
+			qPos.add(parentTitle.toLowerCase());
 		}
 
 		qPos.add(status);
@@ -10705,16 +15751,18 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 			query.append(_FINDER_COLUMN_N_H_P_S_HEAD_2);
 
+			boolean bindParentTitle = false;
+
 			if (parentTitle == null) {
 				query.append(_FINDER_COLUMN_N_H_P_S_PARENTTITLE_1);
 			}
+			else if (parentTitle.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_N_H_P_S_PARENTTITLE_3);
+			}
 			else {
-				if (parentTitle.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_N_H_P_S_PARENTTITLE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_N_H_P_S_PARENTTITLE_2);
-				}
+				bindParentTitle = true;
+
+				query.append(_FINDER_COLUMN_N_H_P_S_PARENTTITLE_2);
 			}
 
 			query.append(_FINDER_COLUMN_N_H_P_S_STATUS_2);
@@ -10734,8 +15782,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 				qPos.add(head);
 
-				if (parentTitle != null) {
-					qPos.add(parentTitle);
+				if (bindParentTitle) {
+					qPos.add(parentTitle.toLowerCase());
 				}
 
 				qPos.add(status);
@@ -10760,9 +15808,1161 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 	private static final String _FINDER_COLUMN_N_H_P_S_NODEID_2 = "wikiPage.nodeId = ? AND ";
 	private static final String _FINDER_COLUMN_N_H_P_S_HEAD_2 = "wikiPage.head = ? AND ";
 	private static final String _FINDER_COLUMN_N_H_P_S_PARENTTITLE_1 = "wikiPage.parentTitle IS NULL AND ";
-	private static final String _FINDER_COLUMN_N_H_P_S_PARENTTITLE_2 = "lower(wikiPage.parentTitle) = lower(CAST_TEXT(?)) AND ";
-	private static final String _FINDER_COLUMN_N_H_P_S_PARENTTITLE_3 = "(wikiPage.parentTitle IS NULL OR lower(wikiPage.parentTitle) = lower(CAST_TEXT(?))) AND ";
+	private static final String _FINDER_COLUMN_N_H_P_S_PARENTTITLE_2 = "lower(wikiPage.parentTitle) = ? AND ";
+	private static final String _FINDER_COLUMN_N_H_P_S_PARENTTITLE_3 = "(wikiPage.parentTitle IS NULL OR wikiPage.parentTitle = '') AND ";
 	private static final String _FINDER_COLUMN_N_H_P_S_STATUS_2 = "wikiPage.status = ?";
+	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_G_N_H_P_S =
+		new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
+			WikiPageModelImpl.FINDER_CACHE_ENABLED, WikiPageImpl.class,
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByG_N_H_P_S",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				Boolean.class.getName(), String.class.getName(),
+				Integer.class.getName(),
+				
+			Integer.class.getName(), Integer.class.getName(),
+				OrderByComparator.class.getName()
+			});
+	public static final FinderPath FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_H_P_S =
+		new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
+			WikiPageModelImpl.FINDER_CACHE_ENABLED, WikiPageImpl.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByG_N_H_P_S",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				Boolean.class.getName(), String.class.getName(),
+				Integer.class.getName()
+			},
+			WikiPageModelImpl.GROUPID_COLUMN_BITMASK |
+			WikiPageModelImpl.NODEID_COLUMN_BITMASK |
+			WikiPageModelImpl.HEAD_COLUMN_BITMASK |
+			WikiPageModelImpl.PARENTTITLE_COLUMN_BITMASK |
+			WikiPageModelImpl.STATUS_COLUMN_BITMASK |
+			WikiPageModelImpl.TITLE_COLUMN_BITMASK |
+			WikiPageModelImpl.VERSION_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_G_N_H_P_S = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
+			WikiPageModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByG_N_H_P_S",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				Boolean.class.getName(), String.class.getName(),
+				Integer.class.getName()
+			});
+
+	/**
+	 * Returns all the wiki pages where groupId = &#63; and nodeId = &#63; and head = &#63; and parentTitle = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param parentTitle the parent title
+	 * @param status the status
+	 * @return the matching wiki pages
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> findByG_N_H_P_S(long groupId, long nodeId,
+		boolean head, String parentTitle, int status) throws SystemException {
+		return findByG_N_H_P_S(groupId, nodeId, head, parentTitle, status,
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the wiki pages where groupId = &#63; and nodeId = &#63; and head = &#63; and parentTitle = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.wiki.model.impl.WikiPageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param parentTitle the parent title
+	 * @param status the status
+	 * @param start the lower bound of the range of wiki pages
+	 * @param end the upper bound of the range of wiki pages (not inclusive)
+	 * @return the range of matching wiki pages
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> findByG_N_H_P_S(long groupId, long nodeId,
+		boolean head, String parentTitle, int status, int start, int end)
+		throws SystemException {
+		return findByG_N_H_P_S(groupId, nodeId, head, parentTitle, status,
+			start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the wiki pages where groupId = &#63; and nodeId = &#63; and head = &#63; and parentTitle = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.wiki.model.impl.WikiPageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param parentTitle the parent title
+	 * @param status the status
+	 * @param start the lower bound of the range of wiki pages
+	 * @param end the upper bound of the range of wiki pages (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching wiki pages
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> findByG_N_H_P_S(long groupId, long nodeId,
+		boolean head, String parentTitle, int status, int start, int end,
+		OrderByComparator orderByComparator) throws SystemException {
+		boolean pagination = true;
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+				(orderByComparator == null)) {
+			pagination = false;
+			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_H_P_S;
+			finderArgs = new Object[] { groupId, nodeId, head, parentTitle, status };
+		}
+		else {
+			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_N_H_P_S;
+			finderArgs = new Object[] {
+					groupId, nodeId, head, parentTitle, status,
+					
+					start, end, orderByComparator
+				};
+		}
+
+		List<WikiPage> list = (List<WikiPage>)FinderCacheUtil.getResult(finderPath,
+				finderArgs, this);
+
+		if ((list != null) && !list.isEmpty()) {
+			for (WikiPage wikiPage : list) {
+				if ((groupId != wikiPage.getGroupId()) ||
+						(nodeId != wikiPage.getNodeId()) ||
+						(head != wikiPage.getHead()) ||
+						!Validator.equals(parentTitle, wikiPage.getParentTitle()) ||
+						(status != wikiPage.getStatus())) {
+					list = null;
+
+					break;
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler query = null;
+
+			if (orderByComparator != null) {
+				query = new StringBundler(7 +
+						(orderByComparator.getOrderByFields().length * 3));
+			}
+			else {
+				query = new StringBundler(7);
+			}
+
+			query.append(_SQL_SELECT_WIKIPAGE_WHERE);
+
+			query.append(_FINDER_COLUMN_G_N_H_P_S_GROUPID_2);
+
+			query.append(_FINDER_COLUMN_G_N_H_P_S_NODEID_2);
+
+			query.append(_FINDER_COLUMN_G_N_H_P_S_HEAD_2);
+
+			boolean bindParentTitle = false;
+
+			if (parentTitle == null) {
+				query.append(_FINDER_COLUMN_G_N_H_P_S_PARENTTITLE_1);
+			}
+			else if (parentTitle.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_N_H_P_S_PARENTTITLE_3);
+			}
+			else {
+				bindParentTitle = true;
+
+				query.append(_FINDER_COLUMN_G_N_H_P_S_PARENTTITLE_2);
+			}
+
+			query.append(_FINDER_COLUMN_G_N_H_P_S_STATUS_2);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+			else
+			 if (pagination) {
+				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(groupId);
+
+				qPos.add(nodeId);
+
+				qPos.add(head);
+
+				if (bindParentTitle) {
+					qPos.add(parentTitle.toLowerCase());
+				}
+
+				qPos.add(status);
+
+				if (!pagination) {
+					list = (List<WikiPage>)QueryUtil.list(q, getDialect(),
+							start, end, false);
+
+					Collections.sort(list);
+
+					list = new UnmodifiableList<WikiPage>(list);
+				}
+				else {
+					list = (List<WikiPage>)QueryUtil.list(q, getDialect(),
+							start, end);
+				}
+
+				cacheResult(list);
+
+				FinderCacheUtil.putResult(finderPath, finderArgs, list);
+			}
+			catch (Exception e) {
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first wiki page in the ordered set where groupId = &#63; and nodeId = &#63; and head = &#63; and parentTitle = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param parentTitle the parent title
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching wiki page
+	 * @throws com.liferay.portlet.wiki.NoSuchPageException if a matching wiki page could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage findByG_N_H_P_S_First(long groupId, long nodeId,
+		boolean head, String parentTitle, int status,
+		OrderByComparator orderByComparator)
+		throws NoSuchPageException, SystemException {
+		WikiPage wikiPage = fetchByG_N_H_P_S_First(groupId, nodeId, head,
+				parentTitle, status, orderByComparator);
+
+		if (wikiPage != null) {
+			return wikiPage;
+		}
+
+		StringBundler msg = new StringBundler(12);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("groupId=");
+		msg.append(groupId);
+
+		msg.append(", nodeId=");
+		msg.append(nodeId);
+
+		msg.append(", head=");
+		msg.append(head);
+
+		msg.append(", parentTitle=");
+		msg.append(parentTitle);
+
+		msg.append(", status=");
+		msg.append(status);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchPageException(msg.toString());
+	}
+
+	/**
+	 * Returns the first wiki page in the ordered set where groupId = &#63; and nodeId = &#63; and head = &#63; and parentTitle = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param parentTitle the parent title
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching wiki page, or <code>null</code> if a matching wiki page could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage fetchByG_N_H_P_S_First(long groupId, long nodeId,
+		boolean head, String parentTitle, int status,
+		OrderByComparator orderByComparator) throws SystemException {
+		List<WikiPage> list = findByG_N_H_P_S(groupId, nodeId, head,
+				parentTitle, status, 0, 1, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last wiki page in the ordered set where groupId = &#63; and nodeId = &#63; and head = &#63; and parentTitle = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param parentTitle the parent title
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching wiki page
+	 * @throws com.liferay.portlet.wiki.NoSuchPageException if a matching wiki page could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage findByG_N_H_P_S_Last(long groupId, long nodeId,
+		boolean head, String parentTitle, int status,
+		OrderByComparator orderByComparator)
+		throws NoSuchPageException, SystemException {
+		WikiPage wikiPage = fetchByG_N_H_P_S_Last(groupId, nodeId, head,
+				parentTitle, status, orderByComparator);
+
+		if (wikiPage != null) {
+			return wikiPage;
+		}
+
+		StringBundler msg = new StringBundler(12);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("groupId=");
+		msg.append(groupId);
+
+		msg.append(", nodeId=");
+		msg.append(nodeId);
+
+		msg.append(", head=");
+		msg.append(head);
+
+		msg.append(", parentTitle=");
+		msg.append(parentTitle);
+
+		msg.append(", status=");
+		msg.append(status);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchPageException(msg.toString());
+	}
+
+	/**
+	 * Returns the last wiki page in the ordered set where groupId = &#63; and nodeId = &#63; and head = &#63; and parentTitle = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param parentTitle the parent title
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching wiki page, or <code>null</code> if a matching wiki page could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage fetchByG_N_H_P_S_Last(long groupId, long nodeId,
+		boolean head, String parentTitle, int status,
+		OrderByComparator orderByComparator) throws SystemException {
+		int count = countByG_N_H_P_S(groupId, nodeId, head, parentTitle, status);
+
+		List<WikiPage> list = findByG_N_H_P_S(groupId, nodeId, head,
+				parentTitle, status, count - 1, count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the wiki pages before and after the current wiki page in the ordered set where groupId = &#63; and nodeId = &#63; and head = &#63; and parentTitle = &#63; and status = &#63;.
+	 *
+	 * @param pageId the primary key of the current wiki page
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param parentTitle the parent title
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next wiki page
+	 * @throws com.liferay.portlet.wiki.NoSuchPageException if a wiki page with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage[] findByG_N_H_P_S_PrevAndNext(long pageId, long groupId,
+		long nodeId, boolean head, String parentTitle, int status,
+		OrderByComparator orderByComparator)
+		throws NoSuchPageException, SystemException {
+		WikiPage wikiPage = findByPrimaryKey(pageId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			WikiPage[] array = new WikiPageImpl[3];
+
+			array[0] = getByG_N_H_P_S_PrevAndNext(session, wikiPage, groupId,
+					nodeId, head, parentTitle, status, orderByComparator, true);
+
+			array[1] = wikiPage;
+
+			array[2] = getByG_N_H_P_S_PrevAndNext(session, wikiPage, groupId,
+					nodeId, head, parentTitle, status, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected WikiPage getByG_N_H_P_S_PrevAndNext(Session session,
+		WikiPage wikiPage, long groupId, long nodeId, boolean head,
+		String parentTitle, int status, OrderByComparator orderByComparator,
+		boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(6 +
+					(orderByComparator.getOrderByFields().length * 6));
+		}
+		else {
+			query = new StringBundler(3);
+		}
+
+		query.append(_SQL_SELECT_WIKIPAGE_WHERE);
+
+		query.append(_FINDER_COLUMN_G_N_H_P_S_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_N_H_P_S_NODEID_2);
+
+		query.append(_FINDER_COLUMN_G_N_H_P_S_HEAD_2);
+
+		boolean bindParentTitle = false;
+
+		if (parentTitle == null) {
+			query.append(_FINDER_COLUMN_G_N_H_P_S_PARENTTITLE_1);
+		}
+		else if (parentTitle.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_N_H_P_S_PARENTTITLE_3);
+		}
+		else {
+			bindParentTitle = true;
+
+			query.append(_FINDER_COLUMN_G_N_H_P_S_PARENTTITLE_2);
+		}
+
+		query.append(_FINDER_COLUMN_G_N_H_P_S_STATUS_2);
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = query.toString();
+
+		Query q = session.createQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(groupId);
+
+		qPos.add(nodeId);
+
+		qPos.add(head);
+
+		if (bindParentTitle) {
+			qPos.add(parentTitle.toLowerCase());
+		}
+
+		qPos.add(status);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(wikiPage);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<WikiPage> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Returns all the wiki pages that the user has permission to view where groupId = &#63; and nodeId = &#63; and head = &#63; and parentTitle = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param parentTitle the parent title
+	 * @param status the status
+	 * @return the matching wiki pages that the user has permission to view
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> filterFindByG_N_H_P_S(long groupId, long nodeId,
+		boolean head, String parentTitle, int status) throws SystemException {
+		return filterFindByG_N_H_P_S(groupId, nodeId, head, parentTitle,
+			status, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the wiki pages that the user has permission to view where groupId = &#63; and nodeId = &#63; and head = &#63; and parentTitle = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.wiki.model.impl.WikiPageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param parentTitle the parent title
+	 * @param status the status
+	 * @param start the lower bound of the range of wiki pages
+	 * @param end the upper bound of the range of wiki pages (not inclusive)
+	 * @return the range of matching wiki pages that the user has permission to view
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> filterFindByG_N_H_P_S(long groupId, long nodeId,
+		boolean head, String parentTitle, int status, int start, int end)
+		throws SystemException {
+		return filterFindByG_N_H_P_S(groupId, nodeId, head, parentTitle,
+			status, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the wiki pages that the user has permissions to view where groupId = &#63; and nodeId = &#63; and head = &#63; and parentTitle = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.wiki.model.impl.WikiPageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param parentTitle the parent title
+	 * @param status the status
+	 * @param start the lower bound of the range of wiki pages
+	 * @param end the upper bound of the range of wiki pages (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching wiki pages that the user has permission to view
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<WikiPage> filterFindByG_N_H_P_S(long groupId, long nodeId,
+		boolean head, String parentTitle, int status, int start, int end,
+		OrderByComparator orderByComparator) throws SystemException {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByG_N_H_P_S(groupId, nodeId, head, parentTitle, status,
+				start, end, orderByComparator);
+		}
+
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(7 +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			query = new StringBundler(7);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_G_N_H_P_S_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_N_H_P_S_NODEID_2);
+
+		query.append(_FINDER_COLUMN_G_N_H_P_S_HEAD_2);
+
+		boolean bindParentTitle = false;
+
+		if (parentTitle == null) {
+			query.append(_FINDER_COLUMN_G_N_H_P_S_PARENTTITLE_1);
+		}
+		else if (parentTitle.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_N_H_P_S_PARENTTITLE_3);
+		}
+		else {
+			bindParentTitle = true;
+
+			query.append(_FINDER_COLUMN_G_N_H_P_S_PARENTTITLE_2);
+		}
+
+		query.append(_FINDER_COLUMN_G_N_H_P_S_STATUS_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			if (getDB().isSupportsInlineDistinct()) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+			else {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_TABLE,
+					orderByComparator);
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(WikiPageModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				WikiPage.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSQLQuery(sql);
+
+			if (getDB().isSupportsInlineDistinct()) {
+				q.addEntity(_FILTER_ENTITY_ALIAS, WikiPageImpl.class);
+			}
+			else {
+				q.addEntity(_FILTER_ENTITY_TABLE, WikiPageImpl.class);
+			}
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			qPos.add(nodeId);
+
+			qPos.add(head);
+
+			if (bindParentTitle) {
+				qPos.add(parentTitle.toLowerCase());
+			}
+
+			qPos.add(status);
+
+			return (List<WikiPage>)QueryUtil.list(q, getDialect(), start, end);
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	/**
+	 * Returns the wiki pages before and after the current wiki page in the ordered set of wiki pages that the user has permission to view where groupId = &#63; and nodeId = &#63; and head = &#63; and parentTitle = &#63; and status = &#63;.
+	 *
+	 * @param pageId the primary key of the current wiki page
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param parentTitle the parent title
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next wiki page
+	 * @throws com.liferay.portlet.wiki.NoSuchPageException if a wiki page with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage[] filterFindByG_N_H_P_S_PrevAndNext(long pageId,
+		long groupId, long nodeId, boolean head, String parentTitle,
+		int status, OrderByComparator orderByComparator)
+		throws NoSuchPageException, SystemException {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByG_N_H_P_S_PrevAndNext(pageId, groupId, nodeId, head,
+				parentTitle, status, orderByComparator);
+		}
+
+		WikiPage wikiPage = findByPrimaryKey(pageId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			WikiPage[] array = new WikiPageImpl[3];
+
+			array[0] = filterGetByG_N_H_P_S_PrevAndNext(session, wikiPage,
+					groupId, nodeId, head, parentTitle, status,
+					orderByComparator, true);
+
+			array[1] = wikiPage;
+
+			array[2] = filterGetByG_N_H_P_S_PrevAndNext(session, wikiPage,
+					groupId, nodeId, head, parentTitle, status,
+					orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected WikiPage filterGetByG_N_H_P_S_PrevAndNext(Session session,
+		WikiPage wikiPage, long groupId, long nodeId, boolean head,
+		String parentTitle, int status, OrderByComparator orderByComparator,
+		boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(6 +
+					(orderByComparator.getOrderByFields().length * 6));
+		}
+		else {
+			query = new StringBundler(3);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_G_N_H_P_S_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_N_H_P_S_NODEID_2);
+
+		query.append(_FINDER_COLUMN_G_N_H_P_S_HEAD_2);
+
+		boolean bindParentTitle = false;
+
+		if (parentTitle == null) {
+			query.append(_FINDER_COLUMN_G_N_H_P_S_PARENTTITLE_1);
+		}
+		else if (parentTitle.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_N_H_P_S_PARENTTITLE_3);
+		}
+		else {
+			bindParentTitle = true;
+
+			query.append(_FINDER_COLUMN_G_N_H_P_S_PARENTTITLE_2);
+		}
+
+		query.append(_FINDER_COLUMN_G_N_H_P_S_STATUS_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_WIKIPAGE_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					query.append(_ORDER_BY_ENTITY_ALIAS);
+				}
+				else {
+					query.append(_ORDER_BY_ENTITY_TABLE);
+				}
+
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					query.append(_ORDER_BY_ENTITY_ALIAS);
+				}
+				else {
+					query.append(_ORDER_BY_ENTITY_TABLE);
+				}
+
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(WikiPageModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				WikiPage.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		if (getDB().isSupportsInlineDistinct()) {
+			q.addEntity(_FILTER_ENTITY_ALIAS, WikiPageImpl.class);
+		}
+		else {
+			q.addEntity(_FILTER_ENTITY_TABLE, WikiPageImpl.class);
+		}
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(groupId);
+
+		qPos.add(nodeId);
+
+		qPos.add(head);
+
+		if (bindParentTitle) {
+			qPos.add(parentTitle.toLowerCase());
+		}
+
+		qPos.add(status);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(wikiPage);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<WikiPage> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Removes all the wiki pages where groupId = &#63; and nodeId = &#63; and head = &#63; and parentTitle = &#63; and status = &#63; from the database.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param parentTitle the parent title
+	 * @param status the status
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void removeByG_N_H_P_S(long groupId, long nodeId, boolean head,
+		String parentTitle, int status) throws SystemException {
+		for (WikiPage wikiPage : findByG_N_H_P_S(groupId, nodeId, head,
+				parentTitle, status, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
+			remove(wikiPage);
+		}
+	}
+
+	/**
+	 * Returns the number of wiki pages where groupId = &#63; and nodeId = &#63; and head = &#63; and parentTitle = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param parentTitle the parent title
+	 * @param status the status
+	 * @return the number of matching wiki pages
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int countByG_N_H_P_S(long groupId, long nodeId, boolean head,
+		String parentTitle, int status) throws SystemException {
+		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_N_H_P_S;
+
+		Object[] finderArgs = new Object[] {
+				groupId, nodeId, head, parentTitle, status
+			};
+
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(6);
+
+			query.append(_SQL_COUNT_WIKIPAGE_WHERE);
+
+			query.append(_FINDER_COLUMN_G_N_H_P_S_GROUPID_2);
+
+			query.append(_FINDER_COLUMN_G_N_H_P_S_NODEID_2);
+
+			query.append(_FINDER_COLUMN_G_N_H_P_S_HEAD_2);
+
+			boolean bindParentTitle = false;
+
+			if (parentTitle == null) {
+				query.append(_FINDER_COLUMN_G_N_H_P_S_PARENTTITLE_1);
+			}
+			else if (parentTitle.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_N_H_P_S_PARENTTITLE_3);
+			}
+			else {
+				bindParentTitle = true;
+
+				query.append(_FINDER_COLUMN_G_N_H_P_S_PARENTTITLE_2);
+			}
+
+			query.append(_FINDER_COLUMN_G_N_H_P_S_STATUS_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(groupId);
+
+				qPos.add(nodeId);
+
+				qPos.add(head);
+
+				if (bindParentTitle) {
+					qPos.add(parentTitle.toLowerCase());
+				}
+
+				qPos.add(status);
+
+				count = (Long)q.uniqueResult();
+
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception e) {
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	/**
+	 * Returns the number of wiki pages that the user has permission to view where groupId = &#63; and nodeId = &#63; and head = &#63; and parentTitle = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param nodeId the node ID
+	 * @param head the head
+	 * @param parentTitle the parent title
+	 * @param status the status
+	 * @return the number of matching wiki pages that the user has permission to view
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int filterCountByG_N_H_P_S(long groupId, long nodeId, boolean head,
+		String parentTitle, int status) throws SystemException {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return countByG_N_H_P_S(groupId, nodeId, head, parentTitle, status);
+		}
+
+		StringBundler query = new StringBundler(6);
+
+		query.append(_FILTER_SQL_COUNT_WIKIPAGE_WHERE);
+
+		query.append(_FINDER_COLUMN_G_N_H_P_S_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_N_H_P_S_NODEID_2);
+
+		query.append(_FINDER_COLUMN_G_N_H_P_S_HEAD_2);
+
+		boolean bindParentTitle = false;
+
+		if (parentTitle == null) {
+			query.append(_FINDER_COLUMN_G_N_H_P_S_PARENTTITLE_1);
+		}
+		else if (parentTitle.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_N_H_P_S_PARENTTITLE_3);
+		}
+		else {
+			bindParentTitle = true;
+
+			query.append(_FINDER_COLUMN_G_N_H_P_S_PARENTTITLE_2);
+		}
+
+		query.append(_FINDER_COLUMN_G_N_H_P_S_STATUS_2);
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				WikiPage.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSQLQuery(sql);
+
+			q.addScalar(COUNT_COLUMN_NAME,
+				com.liferay.portal.kernel.dao.orm.Type.LONG);
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			qPos.add(nodeId);
+
+			qPos.add(head);
+
+			if (bindParentTitle) {
+				qPos.add(parentTitle.toLowerCase());
+			}
+
+			qPos.add(status);
+
+			Long count = (Long)q.uniqueResult();
+
+			return count.intValue();
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	private static final String _FINDER_COLUMN_G_N_H_P_S_GROUPID_2 = "wikiPage.groupId = ? AND ";
+	private static final String _FINDER_COLUMN_G_N_H_P_S_NODEID_2 = "wikiPage.nodeId = ? AND ";
+	private static final String _FINDER_COLUMN_G_N_H_P_S_HEAD_2 = "wikiPage.head = ? AND ";
+	private static final String _FINDER_COLUMN_G_N_H_P_S_PARENTTITLE_1 = "wikiPage.parentTitle IS NULL AND ";
+	private static final String _FINDER_COLUMN_G_N_H_P_S_PARENTTITLE_2 = "lower(wikiPage.parentTitle) = ? AND ";
+	private static final String _FINDER_COLUMN_G_N_H_P_S_PARENTTITLE_3 = "(wikiPage.parentTitle IS NULL OR wikiPage.parentTitle = '') AND ";
+	private static final String _FINDER_COLUMN_G_N_H_P_S_STATUS_2 = "wikiPage.status = ?";
 
 	/**
 	 * Caches the wiki page in the entity cache if it is enabled.
@@ -10774,21 +16974,17 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			WikiPageImpl.class, wikiPage.getPrimaryKey(), wikiPage);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
-			new Object[] { wikiPage.getUuid(), Long.valueOf(
-					wikiPage.getGroupId()) }, wikiPage);
+			new Object[] { wikiPage.getUuid(), wikiPage.getGroupId() }, wikiPage);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_R_N_V,
 			new Object[] {
-				Long.valueOf(wikiPage.getResourcePrimKey()),
-				Long.valueOf(wikiPage.getNodeId()),
-				Double.valueOf(wikiPage.getVersion())
+				wikiPage.getResourcePrimKey(), wikiPage.getNodeId(),
+				wikiPage.getVersion()
 			}, wikiPage);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_N_T_V,
 			new Object[] {
-				Long.valueOf(wikiPage.getNodeId()),
-				
-			wikiPage.getTitle(), Double.valueOf(wikiPage.getVersion())
+				wikiPage.getNodeId(), wikiPage.getTitle(), wikiPage.getVersion()
 			}, wikiPage);
 
 		wikiPage.resetOriginalValues();
@@ -10863,24 +17059,135 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 		}
 	}
 
+	protected void cacheUniqueFindersCache(WikiPage wikiPage) {
+		if (wikiPage.isNew()) {
+			Object[] args = new Object[] {
+					wikiPage.getUuid(), wikiPage.getGroupId()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+				wikiPage);
+
+			args = new Object[] {
+					wikiPage.getResourcePrimKey(), wikiPage.getNodeId(),
+					wikiPage.getVersion()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_R_N_V, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_R_N_V, args, wikiPage);
+
+			args = new Object[] {
+					wikiPage.getNodeId(), wikiPage.getTitle(),
+					wikiPage.getVersion()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_N_T_V, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_N_T_V, args, wikiPage);
+		}
+		else {
+			WikiPageModelImpl wikiPageModelImpl = (WikiPageModelImpl)wikiPage;
+
+			if ((wikiPageModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						wikiPage.getUuid(), wikiPage.getGroupId()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+					wikiPage);
+			}
+
+			if ((wikiPageModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_R_N_V.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						wikiPage.getResourcePrimKey(), wikiPage.getNodeId(),
+						wikiPage.getVersion()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_R_N_V, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_R_N_V, args,
+					wikiPage);
+			}
+
+			if ((wikiPageModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_N_T_V.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						wikiPage.getNodeId(), wikiPage.getTitle(),
+						wikiPage.getVersion()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_N_T_V, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_N_T_V, args,
+					wikiPage);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(WikiPage wikiPage) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
-			new Object[] { wikiPage.getUuid(), Long.valueOf(
-					wikiPage.getGroupId()) });
+		WikiPageModelImpl wikiPageModelImpl = (WikiPageModelImpl)wikiPage;
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_R_N_V,
-			new Object[] {
-				Long.valueOf(wikiPage.getResourcePrimKey()),
-				Long.valueOf(wikiPage.getNodeId()),
-				Double.valueOf(wikiPage.getVersion())
-			});
+		Object[] args = new Object[] { wikiPage.getUuid(), wikiPage.getGroupId() };
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_N_T_V,
-			new Object[] {
-				Long.valueOf(wikiPage.getNodeId()),
-				
-			wikiPage.getTitle(), Double.valueOf(wikiPage.getVersion())
-			});
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+
+		if ((wikiPageModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					wikiPageModelImpl.getOriginalUuid(),
+					wikiPageModelImpl.getOriginalGroupId()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		}
+
+		args = new Object[] {
+				wikiPage.getResourcePrimKey(), wikiPage.getNodeId(),
+				wikiPage.getVersion()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_R_N_V, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_R_N_V, args);
+
+		if ((wikiPageModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_R_N_V.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					wikiPageModelImpl.getOriginalResourcePrimKey(),
+					wikiPageModelImpl.getOriginalNodeId(),
+					wikiPageModelImpl.getOriginalVersion()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_R_N_V, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_R_N_V, args);
+		}
+
+		args = new Object[] {
+				wikiPage.getNodeId(), wikiPage.getTitle(), wikiPage.getVersion()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_N_T_V, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_N_T_V, args);
+
+		if ((wikiPageModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_N_T_V.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					wikiPageModelImpl.getOriginalNodeId(),
+					wikiPageModelImpl.getOriginalTitle(),
+					wikiPageModelImpl.getOriginalVersion()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_N_T_V, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_N_T_V, args);
+		}
 	}
 
 	/**
@@ -10912,7 +17219,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 	 */
 	public WikiPage remove(long pageId)
 		throws NoSuchPageException, SystemException {
-		return remove(Long.valueOf(pageId));
+		return remove((Serializable)pageId);
 	}
 
 	/**
@@ -11075,7 +17382,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
 						wikiPageModelImpl.getOriginalUuid(),
-						Long.valueOf(wikiPageModelImpl.getOriginalCompanyId())
+						wikiPageModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
@@ -11084,7 +17391,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 				args = new Object[] {
 						wikiPageModelImpl.getUuid(),
-						Long.valueOf(wikiPageModelImpl.getCompanyId())
+						wikiPageModelImpl.getCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
@@ -11095,14 +17402,14 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			if ((wikiPageModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_NODEID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getOriginalNodeId())
+						wikiPageModelImpl.getOriginalNodeId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_NODEID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_NODEID,
 					args);
 
-				args = new Object[] { Long.valueOf(wikiPageModelImpl.getNodeId()) };
+				args = new Object[] { wikiPageModelImpl.getNodeId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_NODEID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_NODEID,
@@ -11129,8 +17436,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			if ((wikiPageModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_R_N.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getOriginalResourcePrimKey()),
-						Long.valueOf(wikiPageModelImpl.getOriginalNodeId())
+						wikiPageModelImpl.getOriginalResourcePrimKey(),
+						wikiPageModelImpl.getOriginalNodeId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_R_N, args);
@@ -11138,8 +17445,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getResourcePrimKey()),
-						Long.valueOf(wikiPageModelImpl.getNodeId())
+						wikiPageModelImpl.getResourcePrimKey(),
+						wikiPageModelImpl.getNodeId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_R_N, args);
@@ -11150,8 +17457,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			if ((wikiPageModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_N_T.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getOriginalNodeId()),
-						
+						wikiPageModelImpl.getOriginalNodeId(),
 						wikiPageModelImpl.getOriginalTitle()
 					};
 
@@ -11160,8 +17466,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getNodeId()),
-						
+						wikiPageModelImpl.getNodeId(),
 						wikiPageModelImpl.getTitle()
 					};
 
@@ -11173,8 +17478,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			if ((wikiPageModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_N_H.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getOriginalNodeId()),
-						Boolean.valueOf(wikiPageModelImpl.getOriginalHead())
+						wikiPageModelImpl.getOriginalNodeId(),
+						wikiPageModelImpl.getOriginalHead()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_N_H, args);
@@ -11182,8 +17487,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getNodeId()),
-						Boolean.valueOf(wikiPageModelImpl.getHead())
+						wikiPageModelImpl.getNodeId(),
+						wikiPageModelImpl.getHead()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_N_H, args);
@@ -11194,8 +17499,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			if ((wikiPageModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_N_P.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getOriginalNodeId()),
-						
+						wikiPageModelImpl.getOriginalNodeId(),
 						wikiPageModelImpl.getOriginalParentTitle()
 					};
 
@@ -11204,8 +17508,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getNodeId()),
-						
+						wikiPageModelImpl.getNodeId(),
 						wikiPageModelImpl.getParentTitle()
 					};
 
@@ -11217,8 +17520,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			if ((wikiPageModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_N_R.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getOriginalNodeId()),
-						
+						wikiPageModelImpl.getOriginalNodeId(),
 						wikiPageModelImpl.getOriginalRedirectTitle()
 					};
 
@@ -11227,8 +17529,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getNodeId()),
-						
+						wikiPageModelImpl.getNodeId(),
 						wikiPageModelImpl.getRedirectTitle()
 					};
 
@@ -11240,8 +17541,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			if ((wikiPageModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_N_S.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getOriginalNodeId()),
-						Integer.valueOf(wikiPageModelImpl.getOriginalStatus())
+						wikiPageModelImpl.getOriginalNodeId(),
+						wikiPageModelImpl.getOriginalStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_N_S, args);
@@ -11249,8 +17550,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getNodeId()),
-						Integer.valueOf(wikiPageModelImpl.getStatus())
+						wikiPageModelImpl.getNodeId(),
+						wikiPageModelImpl.getStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_N_S, args);
@@ -11261,9 +17562,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			if ((wikiPageModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_R_N_H.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getOriginalResourcePrimKey()),
-						Long.valueOf(wikiPageModelImpl.getOriginalNodeId()),
-						Boolean.valueOf(wikiPageModelImpl.getOriginalHead())
+						wikiPageModelImpl.getOriginalResourcePrimKey(),
+						wikiPageModelImpl.getOriginalNodeId(),
+						wikiPageModelImpl.getOriginalHead()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_R_N_H, args);
@@ -11271,9 +17572,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getResourcePrimKey()),
-						Long.valueOf(wikiPageModelImpl.getNodeId()),
-						Boolean.valueOf(wikiPageModelImpl.getHead())
+						wikiPageModelImpl.getResourcePrimKey(),
+						wikiPageModelImpl.getNodeId(),
+						wikiPageModelImpl.getHead()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_R_N_H, args);
@@ -11284,9 +17585,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			if ((wikiPageModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_R_N_S.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getOriginalResourcePrimKey()),
-						Long.valueOf(wikiPageModelImpl.getOriginalNodeId()),
-						Integer.valueOf(wikiPageModelImpl.getOriginalStatus())
+						wikiPageModelImpl.getOriginalResourcePrimKey(),
+						wikiPageModelImpl.getOriginalNodeId(),
+						wikiPageModelImpl.getOriginalStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_R_N_S, args);
@@ -11294,9 +17595,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getResourcePrimKey()),
-						Long.valueOf(wikiPageModelImpl.getNodeId()),
-						Integer.valueOf(wikiPageModelImpl.getStatus())
+						wikiPageModelImpl.getResourcePrimKey(),
+						wikiPageModelImpl.getNodeId(),
+						wikiPageModelImpl.getStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_R_N_S, args);
@@ -11305,11 +17606,57 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 
 			if ((wikiPageModelImpl.getColumnBitmask() &
+					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_H.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						wikiPageModelImpl.getOriginalGroupId(),
+						wikiPageModelImpl.getOriginalNodeId(),
+						wikiPageModelImpl.getOriginalHead()
+					};
+
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_N_H, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_H,
+					args);
+
+				args = new Object[] {
+						wikiPageModelImpl.getGroupId(),
+						wikiPageModelImpl.getNodeId(),
+						wikiPageModelImpl.getHead()
+					};
+
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_N_H, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_H,
+					args);
+			}
+
+			if ((wikiPageModelImpl.getColumnBitmask() &
+					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_S.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						wikiPageModelImpl.getOriginalGroupId(),
+						wikiPageModelImpl.getOriginalNodeId(),
+						wikiPageModelImpl.getOriginalStatus()
+					};
+
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_N_S, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_S,
+					args);
+
+				args = new Object[] {
+						wikiPageModelImpl.getGroupId(),
+						wikiPageModelImpl.getNodeId(),
+						wikiPageModelImpl.getStatus()
+					};
+
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_N_S, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_S,
+					args);
+			}
+
+			if ((wikiPageModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_N_S.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getOriginalUserId()),
-						Long.valueOf(wikiPageModelImpl.getOriginalNodeId()),
-						Integer.valueOf(wikiPageModelImpl.getOriginalStatus())
+						wikiPageModelImpl.getOriginalUserId(),
+						wikiPageModelImpl.getOriginalNodeId(),
+						wikiPageModelImpl.getOriginalStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_N_S, args);
@@ -11317,9 +17664,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getUserId()),
-						Long.valueOf(wikiPageModelImpl.getNodeId()),
-						Integer.valueOf(wikiPageModelImpl.getStatus())
+						wikiPageModelImpl.getUserId(),
+						wikiPageModelImpl.getNodeId(),
+						wikiPageModelImpl.getStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_N_S, args);
@@ -11330,10 +17677,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			if ((wikiPageModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_N_T_H.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getOriginalNodeId()),
-						
+						wikiPageModelImpl.getOriginalNodeId(),
 						wikiPageModelImpl.getOriginalTitle(),
-						Boolean.valueOf(wikiPageModelImpl.getOriginalHead())
+						wikiPageModelImpl.getOriginalHead()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_N_T_H, args);
@@ -11341,10 +17687,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getNodeId()),
-						
+						wikiPageModelImpl.getNodeId(),
 						wikiPageModelImpl.getTitle(),
-						Boolean.valueOf(wikiPageModelImpl.getHead())
+						wikiPageModelImpl.getHead()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_N_T_H, args);
@@ -11355,10 +17700,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			if ((wikiPageModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_N_T_S.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getOriginalNodeId()),
-						
+						wikiPageModelImpl.getOriginalNodeId(),
 						wikiPageModelImpl.getOriginalTitle(),
-						Integer.valueOf(wikiPageModelImpl.getOriginalStatus())
+						wikiPageModelImpl.getOriginalStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_N_T_S, args);
@@ -11366,10 +17710,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getNodeId()),
-						
+						wikiPageModelImpl.getNodeId(),
 						wikiPageModelImpl.getTitle(),
-						Integer.valueOf(wikiPageModelImpl.getStatus())
+						wikiPageModelImpl.getStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_N_T_S, args);
@@ -11380,9 +17723,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			if ((wikiPageModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_N_H_P.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getOriginalNodeId()),
-						Boolean.valueOf(wikiPageModelImpl.getOriginalHead()),
-						
+						wikiPageModelImpl.getOriginalNodeId(),
+						wikiPageModelImpl.getOriginalHead(),
 						wikiPageModelImpl.getOriginalParentTitle()
 					};
 
@@ -11391,9 +17733,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getNodeId()),
-						Boolean.valueOf(wikiPageModelImpl.getHead()),
-						
+						wikiPageModelImpl.getNodeId(),
+						wikiPageModelImpl.getHead(),
 						wikiPageModelImpl.getParentTitle()
 					};
 
@@ -11405,9 +17746,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			if ((wikiPageModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_N_H_S.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getOriginalNodeId()),
-						Boolean.valueOf(wikiPageModelImpl.getOriginalHead()),
-						Integer.valueOf(wikiPageModelImpl.getOriginalStatus())
+						wikiPageModelImpl.getOriginalNodeId(),
+						wikiPageModelImpl.getOriginalHead(),
+						wikiPageModelImpl.getOriginalStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_N_H_S, args);
@@ -11415,9 +17756,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getNodeId()),
-						Boolean.valueOf(wikiPageModelImpl.getHead()),
-						Integer.valueOf(wikiPageModelImpl.getStatus())
+						wikiPageModelImpl.getNodeId(),
+						wikiPageModelImpl.getHead(),
+						wikiPageModelImpl.getStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_N_H_S, args);
@@ -11426,13 +17767,87 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 
 			if ((wikiPageModelImpl.getColumnBitmask() &
+					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_U_N_S.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						wikiPageModelImpl.getOriginalGroupId(),
+						wikiPageModelImpl.getOriginalUserId(),
+						wikiPageModelImpl.getOriginalNodeId(),
+						wikiPageModelImpl.getOriginalStatus()
+					};
+
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_U_N_S, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_U_N_S,
+					args);
+
+				args = new Object[] {
+						wikiPageModelImpl.getGroupId(),
+						wikiPageModelImpl.getUserId(),
+						wikiPageModelImpl.getNodeId(),
+						wikiPageModelImpl.getStatus()
+					};
+
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_U_N_S, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_U_N_S,
+					args);
+			}
+
+			if ((wikiPageModelImpl.getColumnBitmask() &
+					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_T_H.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						wikiPageModelImpl.getOriginalGroupId(),
+						wikiPageModelImpl.getOriginalNodeId(),
+						wikiPageModelImpl.getOriginalTitle(),
+						wikiPageModelImpl.getOriginalHead()
+					};
+
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_N_T_H, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_T_H,
+					args);
+
+				args = new Object[] {
+						wikiPageModelImpl.getGroupId(),
+						wikiPageModelImpl.getNodeId(),
+						wikiPageModelImpl.getTitle(),
+						wikiPageModelImpl.getHead()
+					};
+
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_N_T_H, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_T_H,
+					args);
+			}
+
+			if ((wikiPageModelImpl.getColumnBitmask() &
+					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_H_S.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						wikiPageModelImpl.getOriginalGroupId(),
+						wikiPageModelImpl.getOriginalNodeId(),
+						wikiPageModelImpl.getOriginalHead(),
+						wikiPageModelImpl.getOriginalStatus()
+					};
+
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_N_H_S, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_H_S,
+					args);
+
+				args = new Object[] {
+						wikiPageModelImpl.getGroupId(),
+						wikiPageModelImpl.getNodeId(),
+						wikiPageModelImpl.getHead(),
+						wikiPageModelImpl.getStatus()
+					};
+
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_N_H_S, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_H_S,
+					args);
+			}
+
+			if ((wikiPageModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_N_H_P_S.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getOriginalNodeId()),
-						Boolean.valueOf(wikiPageModelImpl.getOriginalHead()),
-						
+						wikiPageModelImpl.getOriginalNodeId(),
+						wikiPageModelImpl.getOriginalHead(),
 						wikiPageModelImpl.getOriginalParentTitle(),
-						Integer.valueOf(wikiPageModelImpl.getOriginalStatus())
+						wikiPageModelImpl.getOriginalStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_N_H_P_S, args);
@@ -11440,15 +17855,43 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getNodeId()),
-						Boolean.valueOf(wikiPageModelImpl.getHead()),
-						
+						wikiPageModelImpl.getNodeId(),
+						wikiPageModelImpl.getHead(),
 						wikiPageModelImpl.getParentTitle(),
-						Integer.valueOf(wikiPageModelImpl.getStatus())
+						wikiPageModelImpl.getStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_N_H_P_S, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_N_H_P_S,
+					args);
+			}
+
+			if ((wikiPageModelImpl.getColumnBitmask() &
+					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_H_P_S.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						wikiPageModelImpl.getOriginalGroupId(),
+						wikiPageModelImpl.getOriginalNodeId(),
+						wikiPageModelImpl.getOriginalHead(),
+						wikiPageModelImpl.getOriginalParentTitle(),
+						wikiPageModelImpl.getOriginalStatus()
+					};
+
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_N_H_P_S,
+					args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_H_P_S,
+					args);
+
+				args = new Object[] {
+						wikiPageModelImpl.getGroupId(),
+						wikiPageModelImpl.getNodeId(),
+						wikiPageModelImpl.getHead(),
+						wikiPageModelImpl.getParentTitle(),
+						wikiPageModelImpl.getStatus()
+					};
+
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_N_H_P_S,
+					args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_H_P_S,
 					args);
 			}
 		}
@@ -11456,85 +17899,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 		EntityCacheUtil.putResult(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
 			WikiPageImpl.class, wikiPage.getPrimaryKey(), wikiPage);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
-				new Object[] {
-					wikiPage.getUuid(), Long.valueOf(wikiPage.getGroupId())
-				}, wikiPage);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_R_N_V,
-				new Object[] {
-					Long.valueOf(wikiPage.getResourcePrimKey()),
-					Long.valueOf(wikiPage.getNodeId()),
-					Double.valueOf(wikiPage.getVersion())
-				}, wikiPage);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_N_T_V,
-				new Object[] {
-					Long.valueOf(wikiPage.getNodeId()),
-					
-				wikiPage.getTitle(), Double.valueOf(wikiPage.getVersion())
-				}, wikiPage);
-		}
-		else {
-			if ((wikiPageModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						wikiPageModelImpl.getOriginalUuid(),
-						Long.valueOf(wikiPageModelImpl.getOriginalGroupId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
-					new Object[] {
-						wikiPage.getUuid(), Long.valueOf(wikiPage.getGroupId())
-					}, wikiPage);
-			}
-
-			if ((wikiPageModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_R_N_V.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getOriginalResourcePrimKey()),
-						Long.valueOf(wikiPageModelImpl.getOriginalNodeId()),
-						Double.valueOf(wikiPageModelImpl.getOriginalVersion())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_R_N_V, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_R_N_V, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_R_N_V,
-					new Object[] {
-						Long.valueOf(wikiPage.getResourcePrimKey()),
-						Long.valueOf(wikiPage.getNodeId()),
-						Double.valueOf(wikiPage.getVersion())
-					}, wikiPage);
-			}
-
-			if ((wikiPageModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_N_T_V.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(wikiPageModelImpl.getOriginalNodeId()),
-						
-						wikiPageModelImpl.getOriginalTitle(),
-						Double.valueOf(wikiPageModelImpl.getOriginalVersion())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_N_T_V, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_N_T_V, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_N_T_V,
-					new Object[] {
-						Long.valueOf(wikiPage.getNodeId()),
-						
-					wikiPage.getTitle(), Double.valueOf(wikiPage.getVersion())
-					}, wikiPage);
-			}
-		}
+		clearUniqueFindersCache(wikiPage);
+		cacheUniqueFindersCache(wikiPage);
 
 		return wikiPage;
 	}
@@ -11581,13 +17947,24 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 	 *
 	 * @param primaryKey the primary key of the wiki page
 	 * @return the wiki page
-	 * @throws com.liferay.portal.NoSuchModelException if a wiki page with the primary key could not be found
+	 * @throws com.liferay.portlet.wiki.NoSuchPageException if a wiki page with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public WikiPage findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchPageException, SystemException {
+		WikiPage wikiPage = fetchByPrimaryKey(primaryKey);
+
+		if (wikiPage == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchPageException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return wikiPage;
 	}
 
 	/**
@@ -11600,18 +17977,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 	 */
 	public WikiPage findByPrimaryKey(long pageId)
 		throws NoSuchPageException, SystemException {
-		WikiPage wikiPage = fetchByPrimaryKey(pageId);
-
-		if (wikiPage == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + pageId);
-			}
-
-			throw new NoSuchPageException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				pageId);
-		}
-
-		return wikiPage;
+		return findByPrimaryKey((Serializable)pageId);
 	}
 
 	/**
@@ -11624,19 +17990,8 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 	@Override
 	public WikiPage fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the wiki page with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param pageId the primary key of the wiki page
-	 * @return the wiki page, or <code>null</code> if a wiki page with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public WikiPage fetchByPrimaryKey(long pageId) throws SystemException {
 		WikiPage wikiPage = (WikiPage)EntityCacheUtil.getResult(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
-				WikiPageImpl.class, pageId);
+				WikiPageImpl.class, primaryKey);
 
 		if (wikiPage == _nullWikiPage) {
 			return null;
@@ -11648,20 +18003,19 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				wikiPage = (WikiPage)session.get(WikiPageImpl.class,
-						Long.valueOf(pageId));
+				wikiPage = (WikiPage)session.get(WikiPageImpl.class, primaryKey);
 
 				if (wikiPage != null) {
 					cacheResult(wikiPage);
 				}
 				else {
 					EntityCacheUtil.putResult(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
-						WikiPageImpl.class, pageId, _nullWikiPage);
+						WikiPageImpl.class, primaryKey, _nullWikiPage);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
-					WikiPageImpl.class, pageId);
+					WikiPageImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -11671,6 +18025,17 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 		}
 
 		return wikiPage;
+	}
+
+	/**
+	 * Returns the wiki page with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param pageId the primary key of the wiki page
+	 * @return the wiki page, or <code>null</code> if a wiki page with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WikiPage fetchByPrimaryKey(long pageId) throws SystemException {
+		return fetchByPrimaryKey((Serializable)pageId);
 	}
 
 	/**
@@ -11872,45 +18237,21 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = WikiNodePersistence.class)
-	protected WikiNodePersistence wikiNodePersistence;
-	@BeanReference(type = WikiPagePersistence.class)
-	protected WikiPagePersistence wikiPagePersistence;
-	@BeanReference(type = WikiPageResourcePersistence.class)
-	protected WikiPageResourcePersistence wikiPageResourcePersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
-	@BeanReference(type = AssetCategoryPersistence.class)
-	protected AssetCategoryPersistence assetCategoryPersistence;
-	@BeanReference(type = AssetEntryPersistence.class)
-	protected AssetEntryPersistence assetEntryPersistence;
-	@BeanReference(type = AssetLinkPersistence.class)
-	protected AssetLinkPersistence assetLinkPersistence;
-	@BeanReference(type = AssetTagPersistence.class)
-	protected AssetTagPersistence assetTagPersistence;
-	@BeanReference(type = ExpandoValuePersistence.class)
-	protected ExpandoValuePersistence expandoValuePersistence;
-	@BeanReference(type = MBMessagePersistence.class)
-	protected MBMessagePersistence mbMessagePersistence;
-	@BeanReference(type = SocialActivityPersistence.class)
-	protected SocialActivityPersistence socialActivityPersistence;
-	@BeanReference(type = TrashEntryPersistence.class)
-	protected TrashEntryPersistence trashEntryPersistence;
 	private static final String _SQL_SELECT_WIKIPAGE = "SELECT wikiPage FROM WikiPage wikiPage";
 	private static final String _SQL_SELECT_WIKIPAGE_WHERE = "SELECT wikiPage FROM WikiPage wikiPage WHERE ";
 	private static final String _SQL_COUNT_WIKIPAGE = "SELECT COUNT(wikiPage) FROM WikiPage wikiPage";
 	private static final String _SQL_COUNT_WIKIPAGE_WHERE = "SELECT COUNT(wikiPage) FROM WikiPage wikiPage WHERE ";
+	private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN = "wikiPage.resourcePrimKey";
+	private static final String _FILTER_SQL_SELECT_WIKIPAGE_WHERE = "SELECT DISTINCT {wikiPage.*} FROM WikiPage wikiPage WHERE ";
+	private static final String _FILTER_SQL_SELECT_WIKIPAGE_NO_INLINE_DISTINCT_WHERE_1 =
+		"SELECT {WikiPage.*} FROM (SELECT DISTINCT wikiPage.pageId FROM WikiPage wikiPage WHERE ";
+	private static final String _FILTER_SQL_SELECT_WIKIPAGE_NO_INLINE_DISTINCT_WHERE_2 =
+		") TEMP_TABLE INNER JOIN WikiPage ON TEMP_TABLE.pageId = WikiPage.pageId";
+	private static final String _FILTER_SQL_COUNT_WIKIPAGE_WHERE = "SELECT COUNT(DISTINCT wikiPage.pageId) AS COUNT_VALUE FROM WikiPage wikiPage WHERE ";
+	private static final String _FILTER_ENTITY_ALIAS = "wikiPage";
+	private static final String _FILTER_ENTITY_TABLE = "WikiPage";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "wikiPage.";
+	private static final String _ORDER_BY_ENTITY_TABLE = "WikiPage.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No WikiPage exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No WikiPage exists with the key {";
 	private static final boolean _HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE = com.liferay.portal.util.PropsValues.HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE;

@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
+import com.liferay.portal.kernel.util.OSDetector;
 import com.liferay.portal.kernel.util.PropertiesUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.ServerDetector;
@@ -141,7 +142,7 @@ public class BaseDeployer implements AutoDeployer, Deployer {
 			deploy(context);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			_log.error(e, e);
 		}
 	}
 
@@ -340,13 +341,8 @@ public class BaseDeployer implements AutoDeployer, Deployer {
 			String jarName = jarFullName.substring(
 				jarFullName.lastIndexOf("/") + 1);
 
-			if (!appServerType.equals(ServerDetector.TOMCAT_ID) ||
-				(appServerType.equals(ServerDetector.TOMCAT_ID) &&
-				 !jarFullName.equals("util-java.jar"))) {
-
-				FileUtil.copyFile(
-					jarFullName, srcFile + "/WEB-INF/lib/" + jarName, true);
-			}
+			FileUtil.copyFile(
+				jarFullName, srcFile + "/WEB-INF/lib/" + jarName, false);
 		}
 
 		FileUtil.delete(srcFile + "/WEB-INF/lib/util-jsf.jar");
@@ -622,7 +618,7 @@ public class BaseDeployer implements AutoDeployer, Deployer {
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			_log.error(e, e);
 		}
 	}
 
@@ -1668,14 +1664,23 @@ public class BaseDeployer implements AutoDeployer, Deployer {
 
 		String webSphereHome = System.getenv("WAS_HOME");
 
+		String wsadminBatchFileName = null;
+
+		if (OSDetector.isWindows()) {
+			wsadminBatchFileName = webSphereHome + "\\bin\\wsadmin.bat";
+		}
+		else {
+			wsadminBatchFileName = webSphereHome + "/bin/wsadmin.sh";
+		}
+
 		if (_log.isInfoEnabled()) {
 			_log.info(
-				"Installing plugin by executing " + webSphereHome +
-					"\\bin\\wsadmin.bat -f " + wsadminFileName);
+				"Installing plugin by executing " + wsadminBatchFileName +
+					" -f " + wsadminFileName);
 		}
 
 		ProcessBuilder processBuilder = new ProcessBuilder(
-			webSphereHome + "\\bin\\wsadmin.bat", "-f", wsadminFileName);
+			wsadminBatchFileName, "-f", wsadminFileName);
 
 		processBuilder.redirectErrorStream(true);
 
@@ -1689,8 +1694,6 @@ public class BaseDeployer implements AutoDeployer, Deployer {
 			for (String line : StringUtil.split(output, CharPool.NEW_LINE)) {
 				_log.info("Process output: " + line);
 			}
-
-			inputStream.close();
 
 			int exitValue = process.exitValue();
 

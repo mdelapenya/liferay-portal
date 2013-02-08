@@ -14,9 +14,7 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchPasswordPolicyRelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -697,13 +695,6 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 						finderArgs, list);
 				}
 				else {
-					if ((list.size() > 1) && _log.isWarnEnabled()) {
-						_log.warn(
-							"PasswordPolicyRelPersistenceImpl.fetchByC_C(long, long, boolean) with parameters (" +
-							StringUtil.merge(finderArgs) +
-							") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
-					}
-
 					PasswordPolicyRel passwordPolicyRel = list.get(0);
 
 					result = passwordPolicyRel;
@@ -811,274 +802,6 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 
 	private static final String _FINDER_COLUMN_C_C_CLASSNAMEID_2 = "passwordPolicyRel.classNameId = ? AND ";
 	private static final String _FINDER_COLUMN_C_C_CLASSPK_2 = "passwordPolicyRel.classPK = ?";
-	public static final FinderPath FINDER_PATH_FETCH_BY_P_C_C = new FinderPath(PasswordPolicyRelModelImpl.ENTITY_CACHE_ENABLED,
-			PasswordPolicyRelModelImpl.FINDER_CACHE_ENABLED,
-			PasswordPolicyRelImpl.class, FINDER_CLASS_NAME_ENTITY,
-			"fetchByP_C_C",
-			new String[] {
-				Long.class.getName(), Long.class.getName(), Long.class.getName()
-			},
-			PasswordPolicyRelModelImpl.PASSWORDPOLICYID_COLUMN_BITMASK |
-			PasswordPolicyRelModelImpl.CLASSNAMEID_COLUMN_BITMASK |
-			PasswordPolicyRelModelImpl.CLASSPK_COLUMN_BITMASK);
-	public static final FinderPath FINDER_PATH_COUNT_BY_P_C_C = new FinderPath(PasswordPolicyRelModelImpl.ENTITY_CACHE_ENABLED,
-			PasswordPolicyRelModelImpl.FINDER_CACHE_ENABLED, Long.class,
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByP_C_C",
-			new String[] {
-				Long.class.getName(), Long.class.getName(), Long.class.getName()
-			});
-
-	/**
-	 * Returns the password policy rel where passwordPolicyId = &#63; and classNameId = &#63; and classPK = &#63; or throws a {@link com.liferay.portal.NoSuchPasswordPolicyRelException} if it could not be found.
-	 *
-	 * @param passwordPolicyId the password policy ID
-	 * @param classNameId the class name ID
-	 * @param classPK the class p k
-	 * @return the matching password policy rel
-	 * @throws com.liferay.portal.NoSuchPasswordPolicyRelException if a matching password policy rel could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public PasswordPolicyRel findByP_C_C(long passwordPolicyId,
-		long classNameId, long classPK)
-		throws NoSuchPasswordPolicyRelException, SystemException {
-		PasswordPolicyRel passwordPolicyRel = fetchByP_C_C(passwordPolicyId,
-				classNameId, classPK);
-
-		if (passwordPolicyRel == null) {
-			StringBundler msg = new StringBundler(8);
-
-			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-
-			msg.append("passwordPolicyId=");
-			msg.append(passwordPolicyId);
-
-			msg.append(", classNameId=");
-			msg.append(classNameId);
-
-			msg.append(", classPK=");
-			msg.append(classPK);
-
-			msg.append(StringPool.CLOSE_CURLY_BRACE);
-
-			if (_log.isWarnEnabled()) {
-				_log.warn(msg.toString());
-			}
-
-			throw new NoSuchPasswordPolicyRelException(msg.toString());
-		}
-
-		return passwordPolicyRel;
-	}
-
-	/**
-	 * Returns the password policy rel where passwordPolicyId = &#63; and classNameId = &#63; and classPK = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
-	 *
-	 * @param passwordPolicyId the password policy ID
-	 * @param classNameId the class name ID
-	 * @param classPK the class p k
-	 * @return the matching password policy rel, or <code>null</code> if a matching password policy rel could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public PasswordPolicyRel fetchByP_C_C(long passwordPolicyId,
-		long classNameId, long classPK) throws SystemException {
-		return fetchByP_C_C(passwordPolicyId, classNameId, classPK, true);
-	}
-
-	/**
-	 * Returns the password policy rel where passwordPolicyId = &#63; and classNameId = &#63; and classPK = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
-	 *
-	 * @param passwordPolicyId the password policy ID
-	 * @param classNameId the class name ID
-	 * @param classPK the class p k
-	 * @param retrieveFromCache whether to use the finder cache
-	 * @return the matching password policy rel, or <code>null</code> if a matching password policy rel could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public PasswordPolicyRel fetchByP_C_C(long passwordPolicyId,
-		long classNameId, long classPK, boolean retrieveFromCache)
-		throws SystemException {
-		Object[] finderArgs = new Object[] {
-				passwordPolicyId, classNameId, classPK
-			};
-
-		Object result = null;
-
-		if (retrieveFromCache) {
-			result = FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_P_C_C,
-					finderArgs, this);
-		}
-
-		if (result instanceof PasswordPolicyRel) {
-			PasswordPolicyRel passwordPolicyRel = (PasswordPolicyRel)result;
-
-			if ((passwordPolicyId != passwordPolicyRel.getPasswordPolicyId()) ||
-					(classNameId != passwordPolicyRel.getClassNameId()) ||
-					(classPK != passwordPolicyRel.getClassPK())) {
-				result = null;
-			}
-		}
-
-		if (result == null) {
-			StringBundler query = new StringBundler(5);
-
-			query.append(_SQL_SELECT_PASSWORDPOLICYREL_WHERE);
-
-			query.append(_FINDER_COLUMN_P_C_C_PASSWORDPOLICYID_2);
-
-			query.append(_FINDER_COLUMN_P_C_C_CLASSNAMEID_2);
-
-			query.append(_FINDER_COLUMN_P_C_C_CLASSPK_2);
-
-			String sql = query.toString();
-
-			Session session = null;
-
-			try {
-				session = openSession();
-
-				Query q = session.createQuery(sql);
-
-				QueryPos qPos = QueryPos.getInstance(q);
-
-				qPos.add(passwordPolicyId);
-
-				qPos.add(classNameId);
-
-				qPos.add(classPK);
-
-				List<PasswordPolicyRel> list = q.list();
-
-				if (list.isEmpty()) {
-					FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_P_C_C,
-						finderArgs, list);
-				}
-				else {
-					if ((list.size() > 1) && _log.isWarnEnabled()) {
-						_log.warn(
-							"PasswordPolicyRelPersistenceImpl.fetchByP_C_C(long, long, long, boolean) with parameters (" +
-							StringUtil.merge(finderArgs) +
-							") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
-					}
-
-					PasswordPolicyRel passwordPolicyRel = list.get(0);
-
-					result = passwordPolicyRel;
-
-					cacheResult(passwordPolicyRel);
-
-					if ((passwordPolicyRel.getPasswordPolicyId() != passwordPolicyId) ||
-							(passwordPolicyRel.getClassNameId() != classNameId) ||
-							(passwordPolicyRel.getClassPK() != classPK)) {
-						FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_P_C_C,
-							finderArgs, passwordPolicyRel);
-					}
-				}
-			}
-			catch (Exception e) {
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_P_C_C,
-					finderArgs);
-
-				throw processException(e);
-			}
-			finally {
-				closeSession(session);
-			}
-		}
-
-		if (result instanceof List<?>) {
-			return null;
-		}
-		else {
-			return (PasswordPolicyRel)result;
-		}
-	}
-
-	/**
-	 * Removes the password policy rel where passwordPolicyId = &#63; and classNameId = &#63; and classPK = &#63; from the database.
-	 *
-	 * @param passwordPolicyId the password policy ID
-	 * @param classNameId the class name ID
-	 * @param classPK the class p k
-	 * @return the password policy rel that was removed
-	 * @throws SystemException if a system exception occurred
-	 */
-	public PasswordPolicyRel removeByP_C_C(long passwordPolicyId,
-		long classNameId, long classPK)
-		throws NoSuchPasswordPolicyRelException, SystemException {
-		PasswordPolicyRel passwordPolicyRel = findByP_C_C(passwordPolicyId,
-				classNameId, classPK);
-
-		return remove(passwordPolicyRel);
-	}
-
-	/**
-	 * Returns the number of password policy rels where passwordPolicyId = &#63; and classNameId = &#63; and classPK = &#63;.
-	 *
-	 * @param passwordPolicyId the password policy ID
-	 * @param classNameId the class name ID
-	 * @param classPK the class p k
-	 * @return the number of matching password policy rels
-	 * @throws SystemException if a system exception occurred
-	 */
-	public int countByP_C_C(long passwordPolicyId, long classNameId,
-		long classPK) throws SystemException {
-		FinderPath finderPath = FINDER_PATH_COUNT_BY_P_C_C;
-
-		Object[] finderArgs = new Object[] {
-				passwordPolicyId, classNameId, classPK
-			};
-
-		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
-				this);
-
-		if (count == null) {
-			StringBundler query = new StringBundler(4);
-
-			query.append(_SQL_COUNT_PASSWORDPOLICYREL_WHERE);
-
-			query.append(_FINDER_COLUMN_P_C_C_PASSWORDPOLICYID_2);
-
-			query.append(_FINDER_COLUMN_P_C_C_CLASSNAMEID_2);
-
-			query.append(_FINDER_COLUMN_P_C_C_CLASSPK_2);
-
-			String sql = query.toString();
-
-			Session session = null;
-
-			try {
-				session = openSession();
-
-				Query q = session.createQuery(sql);
-
-				QueryPos qPos = QueryPos.getInstance(q);
-
-				qPos.add(passwordPolicyId);
-
-				qPos.add(classNameId);
-
-				qPos.add(classPK);
-
-				count = (Long)q.uniqueResult();
-
-				FinderCacheUtil.putResult(finderPath, finderArgs, count);
-			}
-			catch (Exception e) {
-				FinderCacheUtil.removeResult(finderPath, finderArgs);
-
-				throw processException(e);
-			}
-			finally {
-				closeSession(session);
-			}
-		}
-
-		return count.intValue();
-	}
-
-	private static final String _FINDER_COLUMN_P_C_C_PASSWORDPOLICYID_2 = "passwordPolicyRel.passwordPolicyId = ? AND ";
-	private static final String _FINDER_COLUMN_P_C_C_CLASSNAMEID_2 = "passwordPolicyRel.classNameId = ? AND ";
-	private static final String _FINDER_COLUMN_P_C_C_CLASSPK_2 = "passwordPolicyRel.classPK = ?";
 
 	/**
 	 * Caches the password policy rel in the entity cache if it is enabled.
@@ -1092,15 +815,8 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C,
 			new Object[] {
-				Long.valueOf(passwordPolicyRel.getClassNameId()),
-				Long.valueOf(passwordPolicyRel.getClassPK())
-			}, passwordPolicyRel);
-
-		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_P_C_C,
-			new Object[] {
-				Long.valueOf(passwordPolicyRel.getPasswordPolicyId()),
-				Long.valueOf(passwordPolicyRel.getClassNameId()),
-				Long.valueOf(passwordPolicyRel.getClassPK())
+				passwordPolicyRel.getClassNameId(),
+				passwordPolicyRel.getClassPK()
 			}, passwordPolicyRel);
 
 		passwordPolicyRel.resetOriginalValues();
@@ -1176,19 +892,57 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 		}
 	}
 
-	protected void clearUniqueFindersCache(PasswordPolicyRel passwordPolicyRel) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C,
-			new Object[] {
-				Long.valueOf(passwordPolicyRel.getClassNameId()),
-				Long.valueOf(passwordPolicyRel.getClassPK())
-			});
+	protected void cacheUniqueFindersCache(PasswordPolicyRel passwordPolicyRel) {
+		if (passwordPolicyRel.isNew()) {
+			Object[] args = new Object[] {
+					passwordPolicyRel.getClassNameId(),
+					passwordPolicyRel.getClassPK()
+				};
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_P_C_C,
-			new Object[] {
-				Long.valueOf(passwordPolicyRel.getPasswordPolicyId()),
-				Long.valueOf(passwordPolicyRel.getClassNameId()),
-				Long.valueOf(passwordPolicyRel.getClassPK())
-			});
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_C, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C, args,
+				passwordPolicyRel);
+		}
+		else {
+			PasswordPolicyRelModelImpl passwordPolicyRelModelImpl = (PasswordPolicyRelModelImpl)passwordPolicyRel;
+
+			if ((passwordPolicyRelModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_C_C.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						passwordPolicyRel.getClassNameId(),
+						passwordPolicyRel.getClassPK()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_C, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C, args,
+					passwordPolicyRel);
+			}
+		}
+	}
+
+	protected void clearUniqueFindersCache(PasswordPolicyRel passwordPolicyRel) {
+		PasswordPolicyRelModelImpl passwordPolicyRelModelImpl = (PasswordPolicyRelModelImpl)passwordPolicyRel;
+
+		Object[] args = new Object[] {
+				passwordPolicyRel.getClassNameId(),
+				passwordPolicyRel.getClassPK()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C, args);
+
+		if ((passwordPolicyRelModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_C_C.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					passwordPolicyRelModelImpl.getOriginalClassNameId(),
+					passwordPolicyRelModelImpl.getOriginalClassPK()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C, args);
+		}
 	}
 
 	/**
@@ -1216,7 +970,7 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 	 */
 	public PasswordPolicyRel remove(long passwordPolicyRelId)
 		throws NoSuchPasswordPolicyRelException, SystemException {
-		return remove(Long.valueOf(passwordPolicyRelId));
+		return remove((Serializable)passwordPolicyRelId);
 	}
 
 	/**
@@ -1334,7 +1088,7 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 			if ((passwordPolicyRelModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_PASSWORDPOLICYID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(passwordPolicyRelModelImpl.getOriginalPasswordPolicyId())
+						passwordPolicyRelModelImpl.getOriginalPasswordPolicyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_PASSWORDPOLICYID,
@@ -1343,7 +1097,7 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 					args);
 
 				args = new Object[] {
-						Long.valueOf(passwordPolicyRelModelImpl.getPasswordPolicyId())
+						passwordPolicyRelModelImpl.getPasswordPolicyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_PASSWORDPOLICYID,
@@ -1357,59 +1111,8 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 			PasswordPolicyRelImpl.class, passwordPolicyRel.getPrimaryKey(),
 			passwordPolicyRel);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C,
-				new Object[] {
-					Long.valueOf(passwordPolicyRel.getClassNameId()),
-					Long.valueOf(passwordPolicyRel.getClassPK())
-				}, passwordPolicyRel);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_P_C_C,
-				new Object[] {
-					Long.valueOf(passwordPolicyRel.getPasswordPolicyId()),
-					Long.valueOf(passwordPolicyRel.getClassNameId()),
-					Long.valueOf(passwordPolicyRel.getClassPK())
-				}, passwordPolicyRel);
-		}
-		else {
-			if ((passwordPolicyRelModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_C.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(passwordPolicyRelModelImpl.getOriginalClassNameId()),
-						Long.valueOf(passwordPolicyRelModelImpl.getOriginalClassPK())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C,
-					new Object[] {
-						Long.valueOf(passwordPolicyRel.getClassNameId()),
-						Long.valueOf(passwordPolicyRel.getClassPK())
-					}, passwordPolicyRel);
-			}
-
-			if ((passwordPolicyRelModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_P_C_C.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(passwordPolicyRelModelImpl.getOriginalPasswordPolicyId()),
-						Long.valueOf(passwordPolicyRelModelImpl.getOriginalClassNameId()),
-						Long.valueOf(passwordPolicyRelModelImpl.getOriginalClassPK())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_P_C_C, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_P_C_C, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_P_C_C,
-					new Object[] {
-						Long.valueOf(passwordPolicyRel.getPasswordPolicyId()),
-						Long.valueOf(passwordPolicyRel.getClassNameId()),
-						Long.valueOf(passwordPolicyRel.getClassPK())
-					}, passwordPolicyRel);
-			}
-		}
+		clearUniqueFindersCache(passwordPolicyRel);
+		cacheUniqueFindersCache(passwordPolicyRel);
 
 		return passwordPolicyRel;
 	}
@@ -1438,13 +1141,24 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 	 *
 	 * @param primaryKey the primary key of the password policy rel
 	 * @return the password policy rel
-	 * @throws com.liferay.portal.NoSuchModelException if a password policy rel with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchPasswordPolicyRelException if a password policy rel with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public PasswordPolicyRel findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchPasswordPolicyRelException, SystemException {
+		PasswordPolicyRel passwordPolicyRel = fetchByPrimaryKey(primaryKey);
+
+		if (passwordPolicyRel == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchPasswordPolicyRelException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return passwordPolicyRel;
 	}
 
 	/**
@@ -1457,19 +1171,7 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 	 */
 	public PasswordPolicyRel findByPrimaryKey(long passwordPolicyRelId)
 		throws NoSuchPasswordPolicyRelException, SystemException {
-		PasswordPolicyRel passwordPolicyRel = fetchByPrimaryKey(passwordPolicyRelId);
-
-		if (passwordPolicyRel == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-					passwordPolicyRelId);
-			}
-
-			throw new NoSuchPasswordPolicyRelException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				passwordPolicyRelId);
-		}
-
-		return passwordPolicyRel;
+		return findByPrimaryKey((Serializable)passwordPolicyRelId);
 	}
 
 	/**
@@ -1482,20 +1184,8 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 	@Override
 	public PasswordPolicyRel fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the password policy rel with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param passwordPolicyRelId the primary key of the password policy rel
-	 * @return the password policy rel, or <code>null</code> if a password policy rel with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public PasswordPolicyRel fetchByPrimaryKey(long passwordPolicyRelId)
-		throws SystemException {
 		PasswordPolicyRel passwordPolicyRel = (PasswordPolicyRel)EntityCacheUtil.getResult(PasswordPolicyRelModelImpl.ENTITY_CACHE_ENABLED,
-				PasswordPolicyRelImpl.class, passwordPolicyRelId);
+				PasswordPolicyRelImpl.class, primaryKey);
 
 		if (passwordPolicyRel == _nullPasswordPolicyRel) {
 			return null;
@@ -1508,20 +1198,20 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 				session = openSession();
 
 				passwordPolicyRel = (PasswordPolicyRel)session.get(PasswordPolicyRelImpl.class,
-						Long.valueOf(passwordPolicyRelId));
+						primaryKey);
 
 				if (passwordPolicyRel != null) {
 					cacheResult(passwordPolicyRel);
 				}
 				else {
 					EntityCacheUtil.putResult(PasswordPolicyRelModelImpl.ENTITY_CACHE_ENABLED,
-						PasswordPolicyRelImpl.class, passwordPolicyRelId,
+						PasswordPolicyRelImpl.class, primaryKey,
 						_nullPasswordPolicyRel);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(PasswordPolicyRelModelImpl.ENTITY_CACHE_ENABLED,
-					PasswordPolicyRelImpl.class, passwordPolicyRelId);
+					PasswordPolicyRelImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -1531,6 +1221,18 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 		}
 
 		return passwordPolicyRel;
+	}
+
+	/**
+	 * Returns the password policy rel with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param passwordPolicyRelId the primary key of the password policy rel
+	 * @return the password policy rel, or <code>null</code> if a password policy rel with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public PasswordPolicyRel fetchByPrimaryKey(long passwordPolicyRelId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)passwordPolicyRelId);
 	}
 
 	/**
@@ -1733,128 +1435,6 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
 	private static final String _SQL_SELECT_PASSWORDPOLICYREL = "SELECT passwordPolicyRel FROM PasswordPolicyRel passwordPolicyRel";
 	private static final String _SQL_SELECT_PASSWORDPOLICYREL_WHERE = "SELECT passwordPolicyRel FROM PasswordPolicyRel passwordPolicyRel WHERE ";
 	private static final String _SQL_COUNT_PASSWORDPOLICYREL = "SELECT COUNT(passwordPolicyRel) FROM PasswordPolicyRel passwordPolicyRel";

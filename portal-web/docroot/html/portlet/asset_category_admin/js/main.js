@@ -244,11 +244,17 @@ AUI.add(
 
 						var addCategoryButton = A.one(idPrefix + 'addCategoryButton');
 
-						addCategoryButton.on(EVENT_CLICK, instance._onShowCategoryPanel, instance, ACTION_ADD);
+						if (addCategoryButton) {
+							addCategoryButton.on(EVENT_CLICK, instance._onShowCategoryPanel, instance, ACTION_ADD);
+						}
 
 						instance._addCategoryButton = addCategoryButton;
 
-						A.one(idPrefix + 'addVocabularyButton').on(EVENT_CLICK, instance._onShowVocabularyPanel, instance, ACTION_ADD);
+						var addVocabularyButton = A.one(idPrefix + 'addVocabularyButton');
+
+						if (addVocabularyButton) {
+							addVocabularyButton.on(EVENT_CLICK, instance._onShowVocabularyPanel, instance, ACTION_ADD);
+						}
 
 						var permissionButton = A.one(idPrefix + 'categoryPermissionsButton');
 
@@ -1665,13 +1671,19 @@ AUI.add(
 						else {
 							var errorKey = STR_EMPTY;
 
-							if (exception.indexOf('DuplicateCategoryException') > -1) {
-								errorKey = Liferay.Language.get('that-category-already-exists');
-							}
-							else if ((exception.indexOf('CategoryNameException') > -1) ||
-									(exception.indexOf('AssetCategoryException') > -1)) {
-
+							if	(exception.indexOf('AssetCategoryException') > -1) {
 								errorKey = Liferay.Language.get('one-of-your-fields-contains-invalid-characters');
+							}
+							else if (exception.indexOf('CategoryNameException') > -1) {
+								errorKey = Liferay.Language.get('please-enter-a-valid-category-name');
+							}
+							else if ((exception.indexOf('CategoryPropertyKeyException') > -1) ||
+									 (exception.indexOf('CategoryPropertyValueException') > -1)) {
+
+								errorKey = Liferay.Language.get('one-of-your-property-fields-contains-invalid-characters');
+							}
+							else if (exception.indexOf('DuplicateCategoryException') > -1) {
+								errorKey = Liferay.Language.get('that-category-already-exists');
 							}
 							else if (exception.indexOf(EXCEPTION_NO_SUCH_VOCABULARY) > -1) {
 								errorKey = Liferay.Language.get('that-vocabulary-does-not-exist');

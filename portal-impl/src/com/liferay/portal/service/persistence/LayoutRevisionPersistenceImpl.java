@@ -15,8 +15,6 @@
 package com.liferay.portal.service.persistence;
 
 import com.liferay.portal.NoSuchLayoutRevisionException;
-import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -5569,9 +5567,8 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_L_H_P,
 			new Object[] {
-				Long.valueOf(layoutRevision.getLayoutSetBranchId()),
-				Boolean.valueOf(layoutRevision.getHead()),
-				Long.valueOf(layoutRevision.getPlid())
+				layoutRevision.getLayoutSetBranchId(), layoutRevision.getHead(),
+				layoutRevision.getPlid()
 			}, layoutRevision);
 
 		layoutRevision.resetOriginalValues();
@@ -5646,13 +5643,58 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 		}
 	}
 
+	protected void cacheUniqueFindersCache(LayoutRevision layoutRevision) {
+		if (layoutRevision.isNew()) {
+			Object[] args = new Object[] {
+					layoutRevision.getLayoutSetBranchId(),
+					layoutRevision.getHead(), layoutRevision.getPlid()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_L_H_P, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_L_H_P, args,
+				layoutRevision);
+		}
+		else {
+			LayoutRevisionModelImpl layoutRevisionModelImpl = (LayoutRevisionModelImpl)layoutRevision;
+
+			if ((layoutRevisionModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_L_H_P.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						layoutRevision.getLayoutSetBranchId(),
+						layoutRevision.getHead(), layoutRevision.getPlid()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_L_H_P, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_L_H_P, args,
+					layoutRevision);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(LayoutRevision layoutRevision) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_L_H_P,
-			new Object[] {
-				Long.valueOf(layoutRevision.getLayoutSetBranchId()),
-				Boolean.valueOf(layoutRevision.getHead()),
-				Long.valueOf(layoutRevision.getPlid())
-			});
+		LayoutRevisionModelImpl layoutRevisionModelImpl = (LayoutRevisionModelImpl)layoutRevision;
+
+		Object[] args = new Object[] {
+				layoutRevision.getLayoutSetBranchId(), layoutRevision.getHead(),
+				layoutRevision.getPlid()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_L_H_P, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_L_H_P, args);
+
+		if ((layoutRevisionModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_L_H_P.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					layoutRevisionModelImpl.getOriginalLayoutSetBranchId(),
+					layoutRevisionModelImpl.getOriginalHead(),
+					layoutRevisionModelImpl.getOriginalPlid()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_L_H_P, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_L_H_P, args);
+		}
 	}
 
 	/**
@@ -5680,7 +5722,7 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 	 */
 	public LayoutRevision remove(long layoutRevisionId)
 		throws NoSuchLayoutRevisionException, SystemException {
-		return remove(Long.valueOf(layoutRevisionId));
+		return remove((Serializable)layoutRevisionId);
 	}
 
 	/**
@@ -5798,7 +5840,7 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 			if ((layoutRevisionModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_LAYOUTSETBRANCHID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(layoutRevisionModelImpl.getOriginalLayoutSetBranchId())
+						layoutRevisionModelImpl.getOriginalLayoutSetBranchId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_LAYOUTSETBRANCHID,
@@ -5807,7 +5849,7 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 					args);
 
 				args = new Object[] {
-						Long.valueOf(layoutRevisionModelImpl.getLayoutSetBranchId())
+						layoutRevisionModelImpl.getLayoutSetBranchId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_LAYOUTSETBRANCHID,
@@ -5819,16 +5861,14 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 			if ((layoutRevisionModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_PLID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(layoutRevisionModelImpl.getOriginalPlid())
+						layoutRevisionModelImpl.getOriginalPlid()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_PLID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_PLID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(layoutRevisionModelImpl.getPlid())
-					};
+				args = new Object[] { layoutRevisionModelImpl.getPlid() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_PLID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_PLID,
@@ -5838,8 +5878,8 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 			if ((layoutRevisionModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_L_H.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(layoutRevisionModelImpl.getOriginalLayoutSetBranchId()),
-						Boolean.valueOf(layoutRevisionModelImpl.getOriginalHead())
+						layoutRevisionModelImpl.getOriginalLayoutSetBranchId(),
+						layoutRevisionModelImpl.getOriginalHead()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_L_H, args);
@@ -5847,8 +5887,8 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 					args);
 
 				args = new Object[] {
-						Long.valueOf(layoutRevisionModelImpl.getLayoutSetBranchId()),
-						Boolean.valueOf(layoutRevisionModelImpl.getHead())
+						layoutRevisionModelImpl.getLayoutSetBranchId(),
+						layoutRevisionModelImpl.getHead()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_L_H, args);
@@ -5859,8 +5899,8 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 			if ((layoutRevisionModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_L_P.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(layoutRevisionModelImpl.getOriginalLayoutSetBranchId()),
-						Long.valueOf(layoutRevisionModelImpl.getOriginalPlid())
+						layoutRevisionModelImpl.getOriginalLayoutSetBranchId(),
+						layoutRevisionModelImpl.getOriginalPlid()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_L_P, args);
@@ -5868,8 +5908,8 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 					args);
 
 				args = new Object[] {
-						Long.valueOf(layoutRevisionModelImpl.getLayoutSetBranchId()),
-						Long.valueOf(layoutRevisionModelImpl.getPlid())
+						layoutRevisionModelImpl.getLayoutSetBranchId(),
+						layoutRevisionModelImpl.getPlid()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_L_P, args);
@@ -5880,8 +5920,8 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 			if ((layoutRevisionModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_L_S.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(layoutRevisionModelImpl.getOriginalLayoutSetBranchId()),
-						Integer.valueOf(layoutRevisionModelImpl.getOriginalStatus())
+						layoutRevisionModelImpl.getOriginalLayoutSetBranchId(),
+						layoutRevisionModelImpl.getOriginalStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_L_S, args);
@@ -5889,8 +5929,8 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 					args);
 
 				args = new Object[] {
-						Long.valueOf(layoutRevisionModelImpl.getLayoutSetBranchId()),
-						Integer.valueOf(layoutRevisionModelImpl.getStatus())
+						layoutRevisionModelImpl.getLayoutSetBranchId(),
+						layoutRevisionModelImpl.getStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_L_S, args);
@@ -5901,8 +5941,8 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 			if ((layoutRevisionModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_H_P.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Boolean.valueOf(layoutRevisionModelImpl.getOriginalHead()),
-						Long.valueOf(layoutRevisionModelImpl.getOriginalPlid())
+						layoutRevisionModelImpl.getOriginalHead(),
+						layoutRevisionModelImpl.getOriginalPlid()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_H_P, args);
@@ -5910,8 +5950,8 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 					args);
 
 				args = new Object[] {
-						Boolean.valueOf(layoutRevisionModelImpl.getHead()),
-						Long.valueOf(layoutRevisionModelImpl.getPlid())
+						layoutRevisionModelImpl.getHead(),
+						layoutRevisionModelImpl.getPlid()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_H_P, args);
@@ -5922,9 +5962,9 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 			if ((layoutRevisionModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_L_L_P.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(layoutRevisionModelImpl.getOriginalLayoutSetBranchId()),
-						Long.valueOf(layoutRevisionModelImpl.getOriginalLayoutBranchId()),
-						Long.valueOf(layoutRevisionModelImpl.getOriginalPlid())
+						layoutRevisionModelImpl.getOriginalLayoutSetBranchId(),
+						layoutRevisionModelImpl.getOriginalLayoutBranchId(),
+						layoutRevisionModelImpl.getOriginalPlid()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_L_L_P, args);
@@ -5932,9 +5972,9 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 					args);
 
 				args = new Object[] {
-						Long.valueOf(layoutRevisionModelImpl.getLayoutSetBranchId()),
-						Long.valueOf(layoutRevisionModelImpl.getLayoutBranchId()),
-						Long.valueOf(layoutRevisionModelImpl.getPlid())
+						layoutRevisionModelImpl.getLayoutSetBranchId(),
+						layoutRevisionModelImpl.getLayoutBranchId(),
+						layoutRevisionModelImpl.getPlid()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_L_L_P, args);
@@ -5945,9 +5985,9 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 			if ((layoutRevisionModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_L_P_P.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(layoutRevisionModelImpl.getOriginalLayoutSetBranchId()),
-						Long.valueOf(layoutRevisionModelImpl.getOriginalParentLayoutRevisionId()),
-						Long.valueOf(layoutRevisionModelImpl.getOriginalPlid())
+						layoutRevisionModelImpl.getOriginalLayoutSetBranchId(),
+						layoutRevisionModelImpl.getOriginalParentLayoutRevisionId(),
+						layoutRevisionModelImpl.getOriginalPlid()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_L_P_P, args);
@@ -5955,9 +5995,9 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 					args);
 
 				args = new Object[] {
-						Long.valueOf(layoutRevisionModelImpl.getLayoutSetBranchId()),
-						Long.valueOf(layoutRevisionModelImpl.getParentLayoutRevisionId()),
-						Long.valueOf(layoutRevisionModelImpl.getPlid())
+						layoutRevisionModelImpl.getLayoutSetBranchId(),
+						layoutRevisionModelImpl.getParentLayoutRevisionId(),
+						layoutRevisionModelImpl.getPlid()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_L_P_P, args);
@@ -5968,9 +6008,9 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 			if ((layoutRevisionModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_L_P_S.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(layoutRevisionModelImpl.getOriginalLayoutSetBranchId()),
-						Long.valueOf(layoutRevisionModelImpl.getOriginalPlid()),
-						Integer.valueOf(layoutRevisionModelImpl.getOriginalStatus())
+						layoutRevisionModelImpl.getOriginalLayoutSetBranchId(),
+						layoutRevisionModelImpl.getOriginalPlid(),
+						layoutRevisionModelImpl.getOriginalStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_L_P_S, args);
@@ -5978,9 +6018,9 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 					args);
 
 				args = new Object[] {
-						Long.valueOf(layoutRevisionModelImpl.getLayoutSetBranchId()),
-						Long.valueOf(layoutRevisionModelImpl.getPlid()),
-						Integer.valueOf(layoutRevisionModelImpl.getStatus())
+						layoutRevisionModelImpl.getLayoutSetBranchId(),
+						layoutRevisionModelImpl.getPlid(),
+						layoutRevisionModelImpl.getStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_L_P_S, args);
@@ -5993,35 +6033,8 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 			LayoutRevisionImpl.class, layoutRevision.getPrimaryKey(),
 			layoutRevision);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_L_H_P,
-				new Object[] {
-					Long.valueOf(layoutRevision.getLayoutSetBranchId()),
-					Boolean.valueOf(layoutRevision.getHead()),
-					Long.valueOf(layoutRevision.getPlid())
-				}, layoutRevision);
-		}
-		else {
-			if ((layoutRevisionModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_L_H_P.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(layoutRevisionModelImpl.getOriginalLayoutSetBranchId()),
-						Boolean.valueOf(layoutRevisionModelImpl.getOriginalHead()),
-						Long.valueOf(layoutRevisionModelImpl.getOriginalPlid())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_L_H_P, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_L_H_P, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_L_H_P,
-					new Object[] {
-						Long.valueOf(layoutRevision.getLayoutSetBranchId()),
-						Boolean.valueOf(layoutRevision.getHead()),
-						Long.valueOf(layoutRevision.getPlid())
-					}, layoutRevision);
-			}
-		}
+		clearUniqueFindersCache(layoutRevision);
+		cacheUniqueFindersCache(layoutRevision);
 
 		return layoutRevision;
 	}
@@ -6076,13 +6089,24 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 	 *
 	 * @param primaryKey the primary key of the layout revision
 	 * @return the layout revision
-	 * @throws com.liferay.portal.NoSuchModelException if a layout revision with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchLayoutRevisionException if a layout revision with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public LayoutRevision findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchLayoutRevisionException, SystemException {
+		LayoutRevision layoutRevision = fetchByPrimaryKey(primaryKey);
+
+		if (layoutRevision == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchLayoutRevisionException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return layoutRevision;
 	}
 
 	/**
@@ -6095,18 +6119,7 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 	 */
 	public LayoutRevision findByPrimaryKey(long layoutRevisionId)
 		throws NoSuchLayoutRevisionException, SystemException {
-		LayoutRevision layoutRevision = fetchByPrimaryKey(layoutRevisionId);
-
-		if (layoutRevision == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + layoutRevisionId);
-			}
-
-			throw new NoSuchLayoutRevisionException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				layoutRevisionId);
-		}
-
-		return layoutRevision;
+		return findByPrimaryKey((Serializable)layoutRevisionId);
 	}
 
 	/**
@@ -6119,20 +6132,8 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 	@Override
 	public LayoutRevision fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the layout revision with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param layoutRevisionId the primary key of the layout revision
-	 * @return the layout revision, or <code>null</code> if a layout revision with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public LayoutRevision fetchByPrimaryKey(long layoutRevisionId)
-		throws SystemException {
 		LayoutRevision layoutRevision = (LayoutRevision)EntityCacheUtil.getResult(LayoutRevisionModelImpl.ENTITY_CACHE_ENABLED,
-				LayoutRevisionImpl.class, layoutRevisionId);
+				LayoutRevisionImpl.class, primaryKey);
 
 		if (layoutRevision == _nullLayoutRevision) {
 			return null;
@@ -6145,20 +6146,20 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 				session = openSession();
 
 				layoutRevision = (LayoutRevision)session.get(LayoutRevisionImpl.class,
-						Long.valueOf(layoutRevisionId));
+						primaryKey);
 
 				if (layoutRevision != null) {
 					cacheResult(layoutRevision);
 				}
 				else {
 					EntityCacheUtil.putResult(LayoutRevisionModelImpl.ENTITY_CACHE_ENABLED,
-						LayoutRevisionImpl.class, layoutRevisionId,
+						LayoutRevisionImpl.class, primaryKey,
 						_nullLayoutRevision);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(LayoutRevisionModelImpl.ENTITY_CACHE_ENABLED,
-					LayoutRevisionImpl.class, layoutRevisionId);
+					LayoutRevisionImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -6168,6 +6169,18 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 		}
 
 		return layoutRevision;
+	}
+
+	/**
+	 * Returns the layout revision with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param layoutRevisionId the primary key of the layout revision
+	 * @return the layout revision, or <code>null</code> if a layout revision with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public LayoutRevision fetchByPrimaryKey(long layoutRevisionId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)layoutRevisionId);
 	}
 
 	/**
@@ -6370,128 +6383,6 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
 	private static final String _SQL_SELECT_LAYOUTREVISION = "SELECT layoutRevision FROM LayoutRevision layoutRevision";
 	private static final String _SQL_SELECT_LAYOUTREVISION_WHERE = "SELECT layoutRevision FROM LayoutRevision layoutRevision WHERE ";
 	private static final String _SQL_COUNT_LAYOUTREVISION = "SELECT COUNT(layoutRevision) FROM LayoutRevision layoutRevision";

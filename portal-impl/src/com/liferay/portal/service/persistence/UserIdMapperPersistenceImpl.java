@@ -14,9 +14,7 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchUserIdMapperException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -652,16 +650,18 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 
 			query.append(_FINDER_COLUMN_U_T_USERID_2);
 
+			boolean bindType = false;
+
 			if (type == null) {
 				query.append(_FINDER_COLUMN_U_T_TYPE_1);
 			}
+			else if (type.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_U_T_TYPE_3);
+			}
 			else {
-				if (type.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_U_T_TYPE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_U_T_TYPE_2);
-				}
+				bindType = true;
+
+				query.append(_FINDER_COLUMN_U_T_TYPE_2);
 			}
 
 			String sql = query.toString();
@@ -677,7 +677,7 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 
 				qPos.add(userId);
 
-				if (type != null) {
+				if (bindType) {
 					qPos.add(type);
 				}
 
@@ -759,16 +759,18 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 
 			query.append(_FINDER_COLUMN_U_T_USERID_2);
 
+			boolean bindType = false;
+
 			if (type == null) {
 				query.append(_FINDER_COLUMN_U_T_TYPE_1);
 			}
+			else if (type.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_U_T_TYPE_3);
+			}
 			else {
-				if (type.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_U_T_TYPE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_U_T_TYPE_2);
-				}
+				bindType = true;
+
+				query.append(_FINDER_COLUMN_U_T_TYPE_2);
 			}
 
 			String sql = query.toString();
@@ -784,7 +786,7 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 
 				qPos.add(userId);
 
-				if (type != null) {
+				if (bindType) {
 					qPos.add(type);
 				}
 
@@ -808,7 +810,7 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 	private static final String _FINDER_COLUMN_U_T_USERID_2 = "userIdMapper.userId = ? AND ";
 	private static final String _FINDER_COLUMN_U_T_TYPE_1 = "userIdMapper.type IS NULL";
 	private static final String _FINDER_COLUMN_U_T_TYPE_2 = "userIdMapper.type = ?";
-	private static final String _FINDER_COLUMN_U_T_TYPE_3 = "(userIdMapper.type IS NULL OR userIdMapper.type = ?)";
+	private static final String _FINDER_COLUMN_U_T_TYPE_3 = "(userIdMapper.type IS NULL OR userIdMapper.type = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_T_E = new FinderPath(UserIdMapperModelImpl.ENTITY_CACHE_ENABLED,
 			UserIdMapperModelImpl.FINDER_CACHE_ENABLED, UserIdMapperImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByT_E",
@@ -904,28 +906,32 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 
 			query.append(_SQL_SELECT_USERIDMAPPER_WHERE);
 
+			boolean bindType = false;
+
 			if (type == null) {
 				query.append(_FINDER_COLUMN_T_E_TYPE_1);
 			}
-			else {
-				if (type.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_T_E_TYPE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_T_E_TYPE_2);
-				}
+			else if (type.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_T_E_TYPE_3);
 			}
+			else {
+				bindType = true;
+
+				query.append(_FINDER_COLUMN_T_E_TYPE_2);
+			}
+
+			boolean bindExternalUserId = false;
 
 			if (externalUserId == null) {
 				query.append(_FINDER_COLUMN_T_E_EXTERNALUSERID_1);
 			}
+			else if (externalUserId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_T_E_EXTERNALUSERID_3);
+			}
 			else {
-				if (externalUserId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_T_E_EXTERNALUSERID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_T_E_EXTERNALUSERID_2);
-				}
+				bindExternalUserId = true;
+
+				query.append(_FINDER_COLUMN_T_E_EXTERNALUSERID_2);
 			}
 
 			String sql = query.toString();
@@ -939,11 +945,11 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (type != null) {
+				if (bindType) {
 					qPos.add(type);
 				}
 
-				if (externalUserId != null) {
+				if (bindExternalUserId) {
 					qPos.add(externalUserId);
 				}
 
@@ -1026,28 +1032,32 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 
 			query.append(_SQL_COUNT_USERIDMAPPER_WHERE);
 
+			boolean bindType = false;
+
 			if (type == null) {
 				query.append(_FINDER_COLUMN_T_E_TYPE_1);
 			}
-			else {
-				if (type.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_T_E_TYPE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_T_E_TYPE_2);
-				}
+			else if (type.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_T_E_TYPE_3);
 			}
+			else {
+				bindType = true;
+
+				query.append(_FINDER_COLUMN_T_E_TYPE_2);
+			}
+
+			boolean bindExternalUserId = false;
 
 			if (externalUserId == null) {
 				query.append(_FINDER_COLUMN_T_E_EXTERNALUSERID_1);
 			}
+			else if (externalUserId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_T_E_EXTERNALUSERID_3);
+			}
 			else {
-				if (externalUserId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_T_E_EXTERNALUSERID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_T_E_EXTERNALUSERID_2);
-				}
+				bindExternalUserId = true;
+
+				query.append(_FINDER_COLUMN_T_E_EXTERNALUSERID_2);
 			}
 
 			String sql = query.toString();
@@ -1061,11 +1071,11 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (type != null) {
+				if (bindType) {
 					qPos.add(type);
 				}
 
-				if (externalUserId != null) {
+				if (bindExternalUserId) {
 					qPos.add(externalUserId);
 				}
 
@@ -1088,10 +1098,10 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 
 	private static final String _FINDER_COLUMN_T_E_TYPE_1 = "userIdMapper.type IS NULL AND ";
 	private static final String _FINDER_COLUMN_T_E_TYPE_2 = "userIdMapper.type = ? AND ";
-	private static final String _FINDER_COLUMN_T_E_TYPE_3 = "(userIdMapper.type IS NULL OR userIdMapper.type = ?) AND ";
+	private static final String _FINDER_COLUMN_T_E_TYPE_3 = "(userIdMapper.type IS NULL OR userIdMapper.type = '') AND ";
 	private static final String _FINDER_COLUMN_T_E_EXTERNALUSERID_1 = "userIdMapper.externalUserId IS NULL";
 	private static final String _FINDER_COLUMN_T_E_EXTERNALUSERID_2 = "userIdMapper.externalUserId = ?";
-	private static final String _FINDER_COLUMN_T_E_EXTERNALUSERID_3 = "(userIdMapper.externalUserId IS NULL OR userIdMapper.externalUserId = ?)";
+	private static final String _FINDER_COLUMN_T_E_EXTERNALUSERID_3 = "(userIdMapper.externalUserId IS NULL OR userIdMapper.externalUserId = '')";
 
 	/**
 	 * Caches the user ID mapper in the entity cache if it is enabled.
@@ -1103,17 +1113,12 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 			UserIdMapperImpl.class, userIdMapper.getPrimaryKey(), userIdMapper);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_T,
-			new Object[] {
-				Long.valueOf(userIdMapper.getUserId()),
-				
-			userIdMapper.getType()
-			}, userIdMapper);
+			new Object[] { userIdMapper.getUserId(), userIdMapper.getType() },
+			userIdMapper);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_T_E,
 			new Object[] {
-				userIdMapper.getType(),
-				
-			userIdMapper.getExternalUserId()
+				userIdMapper.getType(), userIdMapper.getExternalUserId()
 			}, userIdMapper);
 
 		userIdMapper.resetOriginalValues();
@@ -1188,20 +1193,93 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 		}
 	}
 
-	protected void clearUniqueFindersCache(UserIdMapper userIdMapper) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_T,
-			new Object[] {
-				Long.valueOf(userIdMapper.getUserId()),
-				
-			userIdMapper.getType()
-			});
+	protected void cacheUniqueFindersCache(UserIdMapper userIdMapper) {
+		if (userIdMapper.isNew()) {
+			Object[] args = new Object[] {
+					userIdMapper.getUserId(), userIdMapper.getType()
+				};
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_T_E,
-			new Object[] {
-				userIdMapper.getType(),
-				
-			userIdMapper.getExternalUserId()
-			});
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_U_T, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_T, args,
+				userIdMapper);
+
+			args = new Object[] {
+					userIdMapper.getType(), userIdMapper.getExternalUserId()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_T_E, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_T_E, args,
+				userIdMapper);
+		}
+		else {
+			UserIdMapperModelImpl userIdMapperModelImpl = (UserIdMapperModelImpl)userIdMapper;
+
+			if ((userIdMapperModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_U_T.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						userIdMapper.getUserId(), userIdMapper.getType()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_U_T, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_T, args,
+					userIdMapper);
+			}
+
+			if ((userIdMapperModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_T_E.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						userIdMapper.getType(), userIdMapper.getExternalUserId()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_T_E, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_T_E, args,
+					userIdMapper);
+			}
+		}
+	}
+
+	protected void clearUniqueFindersCache(UserIdMapper userIdMapper) {
+		UserIdMapperModelImpl userIdMapperModelImpl = (UserIdMapperModelImpl)userIdMapper;
+
+		Object[] args = new Object[] {
+				userIdMapper.getUserId(), userIdMapper.getType()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_T, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_T, args);
+
+		if ((userIdMapperModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_U_T.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					userIdMapperModelImpl.getOriginalUserId(),
+					userIdMapperModelImpl.getOriginalType()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_T, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_T, args);
+		}
+
+		args = new Object[] {
+				userIdMapper.getType(), userIdMapper.getExternalUserId()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_T_E, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_T_E, args);
+
+		if ((userIdMapperModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_T_E.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					userIdMapperModelImpl.getOriginalType(),
+					userIdMapperModelImpl.getOriginalExternalUserId()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_T_E, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_T_E, args);
+		}
 	}
 
 	/**
@@ -1229,7 +1307,7 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 	 */
 	public UserIdMapper remove(long userIdMapperId)
 		throws NoSuchUserIdMapperException, SystemException {
-		return remove(Long.valueOf(userIdMapperId));
+		return remove((Serializable)userIdMapperId);
 	}
 
 	/**
@@ -1347,16 +1425,14 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 			if ((userIdMapperModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(userIdMapperModelImpl.getOriginalUserId())
+						userIdMapperModelImpl.getOriginalUserId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(userIdMapperModelImpl.getUserId())
-					};
+				args = new Object[] { userIdMapperModelImpl.getUserId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
@@ -1367,62 +1443,8 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 		EntityCacheUtil.putResult(UserIdMapperModelImpl.ENTITY_CACHE_ENABLED,
 			UserIdMapperImpl.class, userIdMapper.getPrimaryKey(), userIdMapper);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_T,
-				new Object[] {
-					Long.valueOf(userIdMapper.getUserId()),
-					
-				userIdMapper.getType()
-				}, userIdMapper);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_T_E,
-				new Object[] {
-					userIdMapper.getType(),
-					
-				userIdMapper.getExternalUserId()
-				}, userIdMapper);
-		}
-		else {
-			if ((userIdMapperModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_U_T.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(userIdMapperModelImpl.getOriginalUserId()),
-						
-						userIdMapperModelImpl.getOriginalType()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_T, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_T, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_T,
-					new Object[] {
-						Long.valueOf(userIdMapper.getUserId()),
-						
-					userIdMapper.getType()
-					}, userIdMapper);
-			}
-
-			if ((userIdMapperModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_T_E.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						userIdMapperModelImpl.getOriginalType(),
-						
-						userIdMapperModelImpl.getOriginalExternalUserId()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_T_E, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_T_E, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_T_E,
-					new Object[] {
-						userIdMapper.getType(),
-						
-					userIdMapper.getExternalUserId()
-					}, userIdMapper);
-			}
-		}
+		clearUniqueFindersCache(userIdMapper);
+		cacheUniqueFindersCache(userIdMapper);
 
 		return userIdMapper;
 	}
@@ -1451,13 +1473,24 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 	 *
 	 * @param primaryKey the primary key of the user ID mapper
 	 * @return the user ID mapper
-	 * @throws com.liferay.portal.NoSuchModelException if a user ID mapper with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchUserIdMapperException if a user ID mapper with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public UserIdMapper findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchUserIdMapperException, SystemException {
+		UserIdMapper userIdMapper = fetchByPrimaryKey(primaryKey);
+
+		if (userIdMapper == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchUserIdMapperException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return userIdMapper;
 	}
 
 	/**
@@ -1470,18 +1503,7 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 	 */
 	public UserIdMapper findByPrimaryKey(long userIdMapperId)
 		throws NoSuchUserIdMapperException, SystemException {
-		UserIdMapper userIdMapper = fetchByPrimaryKey(userIdMapperId);
-
-		if (userIdMapper == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + userIdMapperId);
-			}
-
-			throw new NoSuchUserIdMapperException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				userIdMapperId);
-		}
-
-		return userIdMapper;
+		return findByPrimaryKey((Serializable)userIdMapperId);
 	}
 
 	/**
@@ -1494,20 +1516,8 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 	@Override
 	public UserIdMapper fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the user ID mapper with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param userIdMapperId the primary key of the user ID mapper
-	 * @return the user ID mapper, or <code>null</code> if a user ID mapper with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public UserIdMapper fetchByPrimaryKey(long userIdMapperId)
-		throws SystemException {
 		UserIdMapper userIdMapper = (UserIdMapper)EntityCacheUtil.getResult(UserIdMapperModelImpl.ENTITY_CACHE_ENABLED,
-				UserIdMapperImpl.class, userIdMapperId);
+				UserIdMapperImpl.class, primaryKey);
 
 		if (userIdMapper == _nullUserIdMapper) {
 			return null;
@@ -1520,20 +1530,19 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 				session = openSession();
 
 				userIdMapper = (UserIdMapper)session.get(UserIdMapperImpl.class,
-						Long.valueOf(userIdMapperId));
+						primaryKey);
 
 				if (userIdMapper != null) {
 					cacheResult(userIdMapper);
 				}
 				else {
 					EntityCacheUtil.putResult(UserIdMapperModelImpl.ENTITY_CACHE_ENABLED,
-						UserIdMapperImpl.class, userIdMapperId,
-						_nullUserIdMapper);
+						UserIdMapperImpl.class, primaryKey, _nullUserIdMapper);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(UserIdMapperModelImpl.ENTITY_CACHE_ENABLED,
-					UserIdMapperImpl.class, userIdMapperId);
+					UserIdMapperImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -1543,6 +1552,18 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 		}
 
 		return userIdMapper;
+	}
+
+	/**
+	 * Returns the user ID mapper with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param userIdMapperId the primary key of the user ID mapper
+	 * @return the user ID mapper, or <code>null</code> if a user ID mapper with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public UserIdMapper fetchByPrimaryKey(long userIdMapperId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)userIdMapperId);
 	}
 
 	/**
@@ -1745,128 +1766,6 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
 	private static final String _SQL_SELECT_USERIDMAPPER = "SELECT userIdMapper FROM UserIdMapper userIdMapper";
 	private static final String _SQL_SELECT_USERIDMAPPER_WHERE = "SELECT userIdMapper FROM UserIdMapper userIdMapper WHERE ";
 	private static final String _SQL_COUNT_USERIDMAPPER = "SELECT COUNT(userIdMapper) FROM UserIdMapper userIdMapper";

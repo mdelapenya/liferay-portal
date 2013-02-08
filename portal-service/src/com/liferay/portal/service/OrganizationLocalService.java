@@ -363,6 +363,13 @@ public interface OrganizationLocalService extends BaseLocalService,
 	public long getOrganizationId(long companyId, java.lang.String name)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.List<com.liferay.portal.model.Organization> getOrganizations(
+		long userId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator obc)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
 	/**
 	* Returns all the organizations belonging to the parent organization.
 	*
@@ -599,8 +606,6 @@ public interface OrganizationLocalService extends BaseLocalService,
 	* This method is usually called to determine if the user has view access to
 	* a resource belonging to the organization.
 	*
-	* <p>
-	*
 	* <ol>
 	* <li>
 	* If <code>inheritSuborganizations=<code>false</code></code>:
@@ -629,8 +634,6 @@ public interface OrganizationLocalService extends BaseLocalService,
 	* its child organizations.
 	* </li>
 	* </ol>
-	*
-	* <p>
 	*
 	* @param userId the primary key of the organization's user
 	* @param organizationId the primary key of the organization

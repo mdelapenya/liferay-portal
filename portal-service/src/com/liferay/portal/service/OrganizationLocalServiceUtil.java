@@ -405,6 +405,14 @@ public class OrganizationLocalServiceUtil {
 		return getService().getOrganizationId(companyId, name);
 	}
 
+	public static java.util.List<com.liferay.portal.model.Organization> getOrganizations(
+		long userId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator obc)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService().getOrganizations(userId, start, end, obc);
+	}
+
 	/**
 	* Returns all the organizations belonging to the parent organization.
 	*
@@ -662,8 +670,6 @@ public class OrganizationLocalServiceUtil {
 	* This method is usually called to determine if the user has view access to
 	* a resource belonging to the organization.
 	*
-	* <p>
-	*
 	* <ol>
 	* <li>
 	* If <code>inheritSuborganizations=<code>false</code></code>:
@@ -692,8 +698,6 @@ public class OrganizationLocalServiceUtil {
 	* its child organizations.
 	* </li>
 	* </ol>
-	*
-	* <p>
 	*
 	* @param userId the primary key of the organization's user
 	* @param organizationId the primary key of the organization

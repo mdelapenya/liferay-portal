@@ -15,8 +15,6 @@
 package com.liferay.portal.service.persistence;
 
 import com.liferay.portal.NoSuchClassNameException;
-import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -167,16 +165,18 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 
 			query.append(_SQL_SELECT_CLASSNAME_WHERE);
 
+			boolean bindValue = false;
+
 			if (value == null) {
 				query.append(_FINDER_COLUMN_VALUE_VALUE_1);
 			}
+			else if (value.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_VALUE_VALUE_3);
+			}
 			else {
-				if (value.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_VALUE_VALUE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_VALUE_VALUE_2);
-				}
+				bindValue = true;
+
+				query.append(_FINDER_COLUMN_VALUE_VALUE_2);
 			}
 
 			String sql = query.toString();
@@ -190,7 +190,7 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (value != null) {
+				if (bindValue) {
 					qPos.add(value);
 				}
 
@@ -267,16 +267,18 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 
 			query.append(_SQL_COUNT_CLASSNAME_WHERE);
 
+			boolean bindValue = false;
+
 			if (value == null) {
 				query.append(_FINDER_COLUMN_VALUE_VALUE_1);
 			}
+			else if (value.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_VALUE_VALUE_3);
+			}
 			else {
-				if (value.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_VALUE_VALUE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_VALUE_VALUE_2);
-				}
+				bindValue = true;
+
+				query.append(_FINDER_COLUMN_VALUE_VALUE_2);
 			}
 
 			String sql = query.toString();
@@ -290,7 +292,7 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (value != null) {
+				if (bindValue) {
 					qPos.add(value);
 				}
 
@@ -313,7 +315,7 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 
 	private static final String _FINDER_COLUMN_VALUE_VALUE_1 = "className.value IS NULL";
 	private static final String _FINDER_COLUMN_VALUE_VALUE_2 = "className.value = ?";
-	private static final String _FINDER_COLUMN_VALUE_VALUE_3 = "(className.value IS NULL OR className.value = ?)";
+	private static final String _FINDER_COLUMN_VALUE_VALUE_3 = "(className.value IS NULL OR className.value = '')";
 
 	/**
 	 * Caches the class name in the entity cache if it is enabled.
@@ -399,9 +401,45 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 		}
 	}
 
+	protected void cacheUniqueFindersCache(ClassName className) {
+		if (className.isNew()) {
+			Object[] args = new Object[] { className.getValue() };
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_VALUE, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_VALUE, args,
+				className);
+		}
+		else {
+			ClassNameModelImpl classNameModelImpl = (ClassNameModelImpl)className;
+
+			if ((classNameModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_VALUE.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] { className.getValue() };
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_VALUE, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_VALUE, args,
+					className);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(ClassName className) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_VALUE,
-			new Object[] { className.getValue() });
+		ClassNameModelImpl classNameModelImpl = (ClassNameModelImpl)className;
+
+		Object[] args = new Object[] { className.getValue() };
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_VALUE, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_VALUE, args);
+
+		if ((classNameModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_VALUE.getColumnBitmask()) != 0) {
+			args = new Object[] { classNameModelImpl.getOriginalValue() };
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_VALUE, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_VALUE, args);
+		}
 	}
 
 	/**
@@ -429,7 +467,7 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 	 */
 	public ClassName remove(long classNameId)
 		throws NoSuchClassNameException, SystemException {
-		return remove(Long.valueOf(classNameId));
+		return remove((Serializable)classNameId);
 	}
 
 	/**
@@ -513,8 +551,6 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 
 		boolean isNew = className.isNew();
 
-		ClassNameModelImpl classNameModelImpl = (ClassNameModelImpl)className;
-
 		Session session = null;
 
 		try {
@@ -545,25 +581,8 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 		EntityCacheUtil.putResult(ClassNameModelImpl.ENTITY_CACHE_ENABLED,
 			ClassNameImpl.class, className.getPrimaryKey(), className);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_VALUE,
-				new Object[] { className.getValue() }, className);
-		}
-		else {
-			if ((classNameModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_VALUE.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						classNameModelImpl.getOriginalValue()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_VALUE, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_VALUE, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_VALUE,
-					new Object[] { className.getValue() }, className);
-			}
-		}
+		clearUniqueFindersCache(className);
+		cacheUniqueFindersCache(className);
 
 		return className;
 	}
@@ -589,13 +608,24 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 	 *
 	 * @param primaryKey the primary key of the class name
 	 * @return the class name
-	 * @throws com.liferay.portal.NoSuchModelException if a class name with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchClassNameException if a class name with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public ClassName findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchClassNameException, SystemException {
+		ClassName className = fetchByPrimaryKey(primaryKey);
+
+		if (className == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchClassNameException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return className;
 	}
 
 	/**
@@ -608,18 +638,7 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 	 */
 	public ClassName findByPrimaryKey(long classNameId)
 		throws NoSuchClassNameException, SystemException {
-		ClassName className = fetchByPrimaryKey(classNameId);
-
-		if (className == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + classNameId);
-			}
-
-			throw new NoSuchClassNameException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				classNameId);
-		}
-
-		return className;
+		return findByPrimaryKey((Serializable)classNameId);
 	}
 
 	/**
@@ -632,20 +651,8 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 	@Override
 	public ClassName fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the class name with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param classNameId the primary key of the class name
-	 * @return the class name, or <code>null</code> if a class name with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public ClassName fetchByPrimaryKey(long classNameId)
-		throws SystemException {
 		ClassName className = (ClassName)EntityCacheUtil.getResult(ClassNameModelImpl.ENTITY_CACHE_ENABLED,
-				ClassNameImpl.class, classNameId);
+				ClassNameImpl.class, primaryKey);
 
 		if (className == _nullClassName) {
 			return null;
@@ -658,19 +665,19 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 				session = openSession();
 
 				className = (ClassName)session.get(ClassNameImpl.class,
-						Long.valueOf(classNameId));
+						primaryKey);
 
 				if (className != null) {
 					cacheResult(className);
 				}
 				else {
 					EntityCacheUtil.putResult(ClassNameModelImpl.ENTITY_CACHE_ENABLED,
-						ClassNameImpl.class, classNameId, _nullClassName);
+						ClassNameImpl.class, primaryKey, _nullClassName);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(ClassNameModelImpl.ENTITY_CACHE_ENABLED,
-					ClassNameImpl.class, classNameId);
+					ClassNameImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -680,6 +687,18 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 		}
 
 		return className;
+	}
+
+	/**
+	 * Returns the class name with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param classNameId the primary key of the class name
+	 * @return the class name, or <code>null</code> if a class name with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public ClassName fetchByPrimaryKey(long classNameId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)classNameId);
 	}
 
 	/**
@@ -882,128 +901,6 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
 	private static final String _SQL_SELECT_CLASSNAME = "SELECT className FROM ClassName className";
 	private static final String _SQL_SELECT_CLASSNAME_WHERE = "SELECT className FROM ClassName className WHERE ";
 	private static final String _SQL_COUNT_CLASSNAME = "SELECT COUNT(className) FROM ClassName className";

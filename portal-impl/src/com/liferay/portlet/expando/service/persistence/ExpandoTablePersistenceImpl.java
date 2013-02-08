@@ -14,8 +14,6 @@
 
 package com.liferay.portlet.expando.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -37,7 +35,6 @@ import com.liferay.portal.kernel.util.UnmodifiableList;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.expando.NoSuchTableException;
@@ -710,16 +707,18 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 
 			query.append(_FINDER_COLUMN_C_C_N_CLASSNAMEID_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_C_C_N_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_C_N_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_C_N_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_C_N_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_C_C_N_NAME_2);
 			}
 
 			String sql = query.toString();
@@ -737,7 +736,7 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 
 				qPos.add(classNameId);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -825,16 +824,18 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 
 			query.append(_FINDER_COLUMN_C_C_N_CLASSNAMEID_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_C_C_N_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_C_N_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_C_N_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_C_N_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_C_C_N_NAME_2);
 			}
 
 			String sql = query.toString();
@@ -852,7 +853,7 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 
 				qPos.add(classNameId);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -877,7 +878,7 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 	private static final String _FINDER_COLUMN_C_C_N_CLASSNAMEID_2 = "expandoTable.classNameId = ? AND ";
 	private static final String _FINDER_COLUMN_C_C_N_NAME_1 = "expandoTable.name IS NULL";
 	private static final String _FINDER_COLUMN_C_C_N_NAME_2 = "expandoTable.name = ?";
-	private static final String _FINDER_COLUMN_C_C_N_NAME_3 = "(expandoTable.name IS NULL OR expandoTable.name = ?)";
+	private static final String _FINDER_COLUMN_C_C_N_NAME_3 = "(expandoTable.name IS NULL OR expandoTable.name = '')";
 
 	/**
 	 * Caches the expando table in the entity cache if it is enabled.
@@ -890,10 +891,8 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C_N,
 			new Object[] {
-				Long.valueOf(expandoTable.getCompanyId()),
-				Long.valueOf(expandoTable.getClassNameId()),
-				
-			expandoTable.getName()
+				expandoTable.getCompanyId(), expandoTable.getClassNameId(),
+				expandoTable.getName()
 			}, expandoTable);
 
 		expandoTable.resetOriginalValues();
@@ -968,14 +967,58 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 		}
 	}
 
+	protected void cacheUniqueFindersCache(ExpandoTable expandoTable) {
+		if (expandoTable.isNew()) {
+			Object[] args = new Object[] {
+					expandoTable.getCompanyId(), expandoTable.getClassNameId(),
+					expandoTable.getName()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_C_N, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C_N, args,
+				expandoTable);
+		}
+		else {
+			ExpandoTableModelImpl expandoTableModelImpl = (ExpandoTableModelImpl)expandoTable;
+
+			if ((expandoTableModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_C_C_N.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						expandoTable.getCompanyId(),
+						expandoTable.getClassNameId(), expandoTable.getName()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_C_N, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C_N, args,
+					expandoTable);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(ExpandoTable expandoTable) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C_N,
-			new Object[] {
-				Long.valueOf(expandoTable.getCompanyId()),
-				Long.valueOf(expandoTable.getClassNameId()),
-				
-			expandoTable.getName()
-			});
+		ExpandoTableModelImpl expandoTableModelImpl = (ExpandoTableModelImpl)expandoTable;
+
+		Object[] args = new Object[] {
+				expandoTable.getCompanyId(), expandoTable.getClassNameId(),
+				expandoTable.getName()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_N, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C_N, args);
+
+		if ((expandoTableModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_C_C_N.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					expandoTableModelImpl.getOriginalCompanyId(),
+					expandoTableModelImpl.getOriginalClassNameId(),
+					expandoTableModelImpl.getOriginalName()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_N, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C_N, args);
+		}
 	}
 
 	/**
@@ -1003,7 +1046,7 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 	 */
 	public ExpandoTable remove(long tableId)
 		throws NoSuchTableException, SystemException {
-		return remove(Long.valueOf(tableId));
+		return remove((Serializable)tableId);
 	}
 
 	/**
@@ -1121,8 +1164,8 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 			if ((expandoTableModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(expandoTableModelImpl.getOriginalCompanyId()),
-						Long.valueOf(expandoTableModelImpl.getOriginalClassNameId())
+						expandoTableModelImpl.getOriginalCompanyId(),
+						expandoTableModelImpl.getOriginalClassNameId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -1130,8 +1173,8 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 					args);
 
 				args = new Object[] {
-						Long.valueOf(expandoTableModelImpl.getCompanyId()),
-						Long.valueOf(expandoTableModelImpl.getClassNameId())
+						expandoTableModelImpl.getCompanyId(),
+						expandoTableModelImpl.getClassNameId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -1143,38 +1186,8 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 		EntityCacheUtil.putResult(ExpandoTableModelImpl.ENTITY_CACHE_ENABLED,
 			ExpandoTableImpl.class, expandoTable.getPrimaryKey(), expandoTable);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C_N,
-				new Object[] {
-					Long.valueOf(expandoTable.getCompanyId()),
-					Long.valueOf(expandoTable.getClassNameId()),
-					
-				expandoTable.getName()
-				}, expandoTable);
-		}
-		else {
-			if ((expandoTableModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_C_N.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(expandoTableModelImpl.getOriginalCompanyId()),
-						Long.valueOf(expandoTableModelImpl.getOriginalClassNameId()),
-						
-						expandoTableModelImpl.getOriginalName()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_N, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C_N, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C_N,
-					new Object[] {
-						Long.valueOf(expandoTable.getCompanyId()),
-						Long.valueOf(expandoTable.getClassNameId()),
-						
-					expandoTable.getName()
-					}, expandoTable);
-			}
-		}
+		clearUniqueFindersCache(expandoTable);
+		cacheUniqueFindersCache(expandoTable);
 
 		return expandoTable;
 	}
@@ -1202,13 +1215,24 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 	 *
 	 * @param primaryKey the primary key of the expando table
 	 * @return the expando table
-	 * @throws com.liferay.portal.NoSuchModelException if a expando table with the primary key could not be found
+	 * @throws com.liferay.portlet.expando.NoSuchTableException if a expando table with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public ExpandoTable findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchTableException, SystemException {
+		ExpandoTable expandoTable = fetchByPrimaryKey(primaryKey);
+
+		if (expandoTable == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchTableException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return expandoTable;
 	}
 
 	/**
@@ -1221,18 +1245,7 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 	 */
 	public ExpandoTable findByPrimaryKey(long tableId)
 		throws NoSuchTableException, SystemException {
-		ExpandoTable expandoTable = fetchByPrimaryKey(tableId);
-
-		if (expandoTable == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + tableId);
-			}
-
-			throw new NoSuchTableException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				tableId);
-		}
-
-		return expandoTable;
+		return findByPrimaryKey((Serializable)tableId);
 	}
 
 	/**
@@ -1245,20 +1258,8 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 	@Override
 	public ExpandoTable fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the expando table with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param tableId the primary key of the expando table
-	 * @return the expando table, or <code>null</code> if a expando table with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public ExpandoTable fetchByPrimaryKey(long tableId)
-		throws SystemException {
 		ExpandoTable expandoTable = (ExpandoTable)EntityCacheUtil.getResult(ExpandoTableModelImpl.ENTITY_CACHE_ENABLED,
-				ExpandoTableImpl.class, tableId);
+				ExpandoTableImpl.class, primaryKey);
 
 		if (expandoTable == _nullExpandoTable) {
 			return null;
@@ -1271,19 +1272,19 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 				session = openSession();
 
 				expandoTable = (ExpandoTable)session.get(ExpandoTableImpl.class,
-						Long.valueOf(tableId));
+						primaryKey);
 
 				if (expandoTable != null) {
 					cacheResult(expandoTable);
 				}
 				else {
 					EntityCacheUtil.putResult(ExpandoTableModelImpl.ENTITY_CACHE_ENABLED,
-						ExpandoTableImpl.class, tableId, _nullExpandoTable);
+						ExpandoTableImpl.class, primaryKey, _nullExpandoTable);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(ExpandoTableModelImpl.ENTITY_CACHE_ENABLED,
-					ExpandoTableImpl.class, tableId);
+					ExpandoTableImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -1293,6 +1294,18 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 		}
 
 		return expandoTable;
+	}
+
+	/**
+	 * Returns the expando table with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param tableId the primary key of the expando table
+	 * @return the expando table, or <code>null</code> if a expando table with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public ExpandoTable fetchByPrimaryKey(long tableId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)tableId);
 	}
 
 	/**
@@ -1495,16 +1508,6 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = ExpandoColumnPersistence.class)
-	protected ExpandoColumnPersistence expandoColumnPersistence;
-	@BeanReference(type = ExpandoRowPersistence.class)
-	protected ExpandoRowPersistence expandoRowPersistence;
-	@BeanReference(type = ExpandoTablePersistence.class)
-	protected ExpandoTablePersistence expandoTablePersistence;
-	@BeanReference(type = ExpandoValuePersistence.class)
-	protected ExpandoValuePersistence expandoValuePersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
 	private static final String _SQL_SELECT_EXPANDOTABLE = "SELECT expandoTable FROM ExpandoTable expandoTable";
 	private static final String _SQL_SELECT_EXPANDOTABLE_WHERE = "SELECT expandoTable FROM ExpandoTable expandoTable WHERE ";
 	private static final String _SQL_COUNT_EXPANDOTABLE = "SELECT COUNT(expandoTable) FROM ExpandoTable expandoTable";

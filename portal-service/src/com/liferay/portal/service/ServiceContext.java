@@ -126,12 +126,12 @@ public class ServiceContext implements Cloneable, Serializable {
 	public void deriveDefaultPermissions(long repositoryId, String modelName)
 		throws PortalException, SystemException {
 
-		long parentGroupId = PortalUtil.getParentGroupId(repositoryId);
+		long siteGroupId = PortalUtil.getSiteGroupId(repositoryId);
 
-		Group parentGroup = GroupLocalServiceUtil.getGroup(parentGroupId);
+		Group siteGroup = GroupLocalServiceUtil.getGroup(siteGroupId);
 
 		Role defaultGroupRole = RoleLocalServiceUtil.getDefaultGroupRole(
-			parentGroupId);
+			siteGroupId);
 
 		List<String> groupPermissions = new ArrayList<String>();
 		List<String> guestPermissions = new ArrayList<String>();
@@ -153,7 +153,7 @@ public class ServiceContext implements Cloneable, Serializable {
 				if (roleName.equals(RoleConstants.GUEST) &&
 					!guestUnsupportedActions.contains(action) &&
 					guestDefaultActions.contains(action) &&
-					parentGroup.hasPublicLayouts()) {
+					siteGroup.hasPublicLayouts()) {
 
 					guestPermissions.add(action);
 				}
@@ -627,11 +627,9 @@ public class ServiceContext implements Cloneable, Serializable {
 	}
 
 	/**
-	 * Returns the UUID (universally unique identifier) of this service
-	 * context's current entity.
+	 * Returns the UUID of this service context's current entity.
 	 *
-	 * @return the UUID (universally unique identifier) of this service
-	 *         context's current entity
+	 * @return the UUID of this service context's current entity
 	 */
 	public String getUuid() {
 		String uuid = _uuid;
@@ -690,7 +688,9 @@ public class ServiceContext implements Cloneable, Serializable {
 	 *         command; <code>false</code> otherwise
 	 */
 	public boolean isCommandAdd() {
-		if (Validator.equals(_command, Constants.ADD)) {
+		if (Validator.equals(_command, Constants.ADD) ||
+			Validator.equals(_command, Constants.ADD_MULTIPLE)) {
+
 			return true;
 		}
 		else {
@@ -1168,11 +1168,9 @@ public class ServiceContext implements Cloneable, Serializable {
 	}
 
 	/**
-	 * Sets the UUID (universally unique identifier) of this service context's
-	 * current entity.
+	 * Sets the UUID of this service context's current entity.
 	 *
-	 * @param uuid the UUID (universally unique identifier) of the current
-	 *        entity
+	 * @param uuid the UUID of the current entity
 	 */
 	public void setUuid(String uuid) {
 		_uuid = uuid;

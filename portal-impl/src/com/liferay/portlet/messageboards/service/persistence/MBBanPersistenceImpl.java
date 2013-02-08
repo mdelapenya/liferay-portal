@@ -14,8 +14,6 @@
 
 package com.liferay.portlet.messageboards.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -36,7 +34,6 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnmodifiableList;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.messageboards.NoSuchBanException;
@@ -1737,10 +1734,7 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			MBBanImpl.class, mbBan.getPrimaryKey(), mbBan);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_B,
-			new Object[] {
-				Long.valueOf(mbBan.getGroupId()),
-				Long.valueOf(mbBan.getBanUserId())
-			}, mbBan);
+			new Object[] { mbBan.getGroupId(), mbBan.getBanUserId() }, mbBan);
 
 		mbBan.resetOriginalValues();
 	}
@@ -1813,12 +1807,50 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 		}
 	}
 
+	protected void cacheUniqueFindersCache(MBBan mbBan) {
+		if (mbBan.isNew()) {
+			Object[] args = new Object[] {
+					mbBan.getGroupId(), mbBan.getBanUserId()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_B, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_B, args, mbBan);
+		}
+		else {
+			MBBanModelImpl mbBanModelImpl = (MBBanModelImpl)mbBan;
+
+			if ((mbBanModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_G_B.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						mbBan.getGroupId(), mbBan.getBanUserId()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_B, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_B, args, mbBan);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(MBBan mbBan) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_B,
-			new Object[] {
-				Long.valueOf(mbBan.getGroupId()),
-				Long.valueOf(mbBan.getBanUserId())
-			});
+		MBBanModelImpl mbBanModelImpl = (MBBanModelImpl)mbBan;
+
+		Object[] args = new Object[] { mbBan.getGroupId(), mbBan.getBanUserId() };
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_B, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_B, args);
+
+		if ((mbBanModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_G_B.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					mbBanModelImpl.getOriginalGroupId(),
+					mbBanModelImpl.getOriginalBanUserId()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_B, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_B, args);
+		}
 	}
 
 	/**
@@ -1845,7 +1877,7 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 	 * @throws SystemException if a system exception occurred
 	 */
 	public MBBan remove(long banId) throws NoSuchBanException, SystemException {
-		return remove(Long.valueOf(banId));
+		return remove((Serializable)banId);
 	}
 
 	/**
@@ -1959,15 +1991,13 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 		else {
 			if ((mbBanModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(mbBanModelImpl.getOriginalGroupId())
-					};
+				Object[] args = new Object[] { mbBanModelImpl.getOriginalGroupId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
 					args);
 
-				args = new Object[] { Long.valueOf(mbBanModelImpl.getGroupId()) };
+				args = new Object[] { mbBanModelImpl.getGroupId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
@@ -1976,15 +2006,13 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 
 			if ((mbBanModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(mbBanModelImpl.getOriginalUserId())
-					};
+				Object[] args = new Object[] { mbBanModelImpl.getOriginalUserId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
 					args);
 
-				args = new Object[] { Long.valueOf(mbBanModelImpl.getUserId()) };
+				args = new Object[] { mbBanModelImpl.getUserId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
@@ -1994,7 +2022,7 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			if ((mbBanModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_BANUSERID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(mbBanModelImpl.getOriginalBanUserId())
+						mbBanModelImpl.getOriginalBanUserId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_BANUSERID,
@@ -2002,7 +2030,7 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_BANUSERID,
 					args);
 
-				args = new Object[] { Long.valueOf(mbBanModelImpl.getBanUserId()) };
+				args = new Object[] { mbBanModelImpl.getBanUserId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_BANUSERID,
 					args);
@@ -2014,32 +2042,8 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 		EntityCacheUtil.putResult(MBBanModelImpl.ENTITY_CACHE_ENABLED,
 			MBBanImpl.class, mbBan.getPrimaryKey(), mbBan);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_B,
-				new Object[] {
-					Long.valueOf(mbBan.getGroupId()),
-					Long.valueOf(mbBan.getBanUserId())
-				}, mbBan);
-		}
-		else {
-			if ((mbBanModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_G_B.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(mbBanModelImpl.getOriginalGroupId()),
-						Long.valueOf(mbBanModelImpl.getOriginalBanUserId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_B, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_B, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_B,
-					new Object[] {
-						Long.valueOf(mbBan.getGroupId()),
-						Long.valueOf(mbBan.getBanUserId())
-					}, mbBan);
-			}
-		}
+		clearUniqueFindersCache(mbBan);
+		cacheUniqueFindersCache(mbBan);
 
 		return mbBan;
 	}
@@ -2071,13 +2075,24 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 	 *
 	 * @param primaryKey the primary key of the message boards ban
 	 * @return the message boards ban
-	 * @throws com.liferay.portal.NoSuchModelException if a message boards ban with the primary key could not be found
+	 * @throws com.liferay.portlet.messageboards.NoSuchBanException if a message boards ban with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public MBBan findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchBanException, SystemException {
+		MBBan mbBan = fetchByPrimaryKey(primaryKey);
+
+		if (mbBan == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchBanException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return mbBan;
 	}
 
 	/**
@@ -2090,18 +2105,7 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 	 */
 	public MBBan findByPrimaryKey(long banId)
 		throws NoSuchBanException, SystemException {
-		MBBan mbBan = fetchByPrimaryKey(banId);
-
-		if (mbBan == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + banId);
-			}
-
-			throw new NoSuchBanException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				banId);
-		}
-
-		return mbBan;
+		return findByPrimaryKey((Serializable)banId);
 	}
 
 	/**
@@ -2114,19 +2118,8 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 	@Override
 	public MBBan fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the message boards ban with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param banId the primary key of the message boards ban
-	 * @return the message boards ban, or <code>null</code> if a message boards ban with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public MBBan fetchByPrimaryKey(long banId) throws SystemException {
 		MBBan mbBan = (MBBan)EntityCacheUtil.getResult(MBBanModelImpl.ENTITY_CACHE_ENABLED,
-				MBBanImpl.class, banId);
+				MBBanImpl.class, primaryKey);
 
 		if (mbBan == _nullMBBan) {
 			return null;
@@ -2138,19 +2131,19 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			try {
 				session = openSession();
 
-				mbBan = (MBBan)session.get(MBBanImpl.class, Long.valueOf(banId));
+				mbBan = (MBBan)session.get(MBBanImpl.class, primaryKey);
 
 				if (mbBan != null) {
 					cacheResult(mbBan);
 				}
 				else {
 					EntityCacheUtil.putResult(MBBanModelImpl.ENTITY_CACHE_ENABLED,
-						MBBanImpl.class, banId, _nullMBBan);
+						MBBanImpl.class, primaryKey, _nullMBBan);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(MBBanModelImpl.ENTITY_CACHE_ENABLED,
-					MBBanImpl.class, banId);
+					MBBanImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -2160,6 +2153,17 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 		}
 
 		return mbBan;
+	}
+
+	/**
+	 * Returns the message boards ban with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param banId the primary key of the message boards ban
+	 * @return the message boards ban, or <code>null</code> if a message boards ban with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public MBBan fetchByPrimaryKey(long banId) throws SystemException {
+		return fetchByPrimaryKey((Serializable)banId);
 	}
 
 	/**
@@ -2361,24 +2365,6 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = MBBanPersistence.class)
-	protected MBBanPersistence mbBanPersistence;
-	@BeanReference(type = MBCategoryPersistence.class)
-	protected MBCategoryPersistence mbCategoryPersistence;
-	@BeanReference(type = MBDiscussionPersistence.class)
-	protected MBDiscussionPersistence mbDiscussionPersistence;
-	@BeanReference(type = MBMailingListPersistence.class)
-	protected MBMailingListPersistence mbMailingListPersistence;
-	@BeanReference(type = MBMessagePersistence.class)
-	protected MBMessagePersistence mbMessagePersistence;
-	@BeanReference(type = MBStatsUserPersistence.class)
-	protected MBStatsUserPersistence mbStatsUserPersistence;
-	@BeanReference(type = MBThreadPersistence.class)
-	protected MBThreadPersistence mbThreadPersistence;
-	@BeanReference(type = MBThreadFlagPersistence.class)
-	protected MBThreadFlagPersistence mbThreadFlagPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
 	private static final String _SQL_SELECT_MBBAN = "SELECT mbBan FROM MBBan mbBan";
 	private static final String _SQL_SELECT_MBBAN_WHERE = "SELECT mbBan FROM MBBan mbBan WHERE ";
 	private static final String _SQL_COUNT_MBBAN = "SELECT COUNT(mbBan) FROM MBBan mbBan";
