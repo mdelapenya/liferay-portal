@@ -14,9 +14,7 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchReleaseException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -169,16 +167,18 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 
 			query.append(_SQL_SELECT_RELEASE_WHERE);
 
+			boolean bindServletContextName = false;
+
 			if (servletContextName == null) {
 				query.append(_FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_1);
 			}
+			else if (servletContextName.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_3);
+			}
 			else {
-				if (servletContextName.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_2);
-				}
+				bindServletContextName = true;
+
+				query.append(_FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_2);
 			}
 
 			String sql = query.toString();
@@ -192,8 +192,8 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (servletContextName != null) {
-					qPos.add(servletContextName);
+				if (bindServletContextName) {
+					qPos.add(servletContextName.toLowerCase());
 				}
 
 				List<Release> list = q.list();
@@ -271,16 +271,18 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 
 			query.append(_SQL_COUNT_RELEASE_WHERE);
 
+			boolean bindServletContextName = false;
+
 			if (servletContextName == null) {
 				query.append(_FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_1);
 			}
+			else if (servletContextName.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_3);
+			}
 			else {
-				if (servletContextName.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_2);
-				}
+				bindServletContextName = true;
+
+				query.append(_FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_2);
 			}
 
 			String sql = query.toString();
@@ -294,8 +296,8 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (servletContextName != null) {
-					qPos.add(servletContextName);
+				if (bindServletContextName) {
+					qPos.add(servletContextName.toLowerCase());
 				}
 
 				count = (Long)q.uniqueResult();
@@ -318,9 +320,9 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 	private static final String _FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_1 =
 		"release.servletContextName IS NULL";
 	private static final String _FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_2 =
-		"lower(release.servletContextName) = lower(CAST_TEXT(?))";
+		"lower(release.servletContextName) = ?";
 	private static final String _FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_3 =
-		"(release.servletContextName IS NULL OR lower(release.servletContextName) = lower(CAST_TEXT(?)))";
+		"(release.servletContextName IS NULL OR release.servletContextName = '')";
 
 	/**
 	 * Caches the release in the entity cache if it is enabled.
@@ -406,9 +408,49 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 		}
 	}
 
+	protected void cacheUniqueFindersCache(Release release) {
+		if (release.isNew()) {
+			Object[] args = new Object[] { release.getServletContextName() };
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_SERVLETCONTEXTNAME,
+				args, Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_SERVLETCONTEXTNAME,
+				args, release);
+		}
+		else {
+			ReleaseModelImpl releaseModelImpl = (ReleaseModelImpl)release;
+
+			if ((releaseModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_SERVLETCONTEXTNAME.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] { release.getServletContextName() };
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_SERVLETCONTEXTNAME,
+					args, Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_SERVLETCONTEXTNAME,
+					args, release);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(Release release) {
+		ReleaseModelImpl releaseModelImpl = (ReleaseModelImpl)release;
+
+		Object[] args = new Object[] { release.getServletContextName() };
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_SERVLETCONTEXTNAME,
+			args);
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_SERVLETCONTEXTNAME,
-			new Object[] { release.getServletContextName() });
+			args);
+
+		if ((releaseModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_SERVLETCONTEXTNAME.getColumnBitmask()) != 0) {
+			args = new Object[] { releaseModelImpl.getOriginalServletContextName() };
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_SERVLETCONTEXTNAME,
+				args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_SERVLETCONTEXTNAME,
+				args);
+		}
 	}
 
 	/**
@@ -436,7 +478,7 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 	 */
 	public Release remove(long releaseId)
 		throws NoSuchReleaseException, SystemException {
-		return remove(Long.valueOf(releaseId));
+		return remove((Serializable)releaseId);
 	}
 
 	/**
@@ -518,8 +560,6 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 
 		boolean isNew = release.isNew();
 
-		ReleaseModelImpl releaseModelImpl = (ReleaseModelImpl)release;
-
 		Session session = null;
 
 		try {
@@ -550,27 +590,8 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 		EntityCacheUtil.putResult(ReleaseModelImpl.ENTITY_CACHE_ENABLED,
 			ReleaseImpl.class, release.getPrimaryKey(), release);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_SERVLETCONTEXTNAME,
-				new Object[] { release.getServletContextName() }, release);
-		}
-		else {
-			if ((releaseModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_SERVLETCONTEXTNAME.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						releaseModelImpl.getOriginalServletContextName()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_SERVLETCONTEXTNAME,
-					args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_SERVLETCONTEXTNAME,
-					args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_SERVLETCONTEXTNAME,
-					new Object[] { release.getServletContextName() }, release);
-			}
-		}
+		clearUniqueFindersCache(release);
+		cacheUniqueFindersCache(release);
 
 		return release;
 	}
@@ -603,13 +624,24 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 	 *
 	 * @param primaryKey the primary key of the release
 	 * @return the release
-	 * @throws com.liferay.portal.NoSuchModelException if a release with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchReleaseException if a release with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public Release findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchReleaseException, SystemException {
+		Release release = fetchByPrimaryKey(primaryKey);
+
+		if (release == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchReleaseException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return release;
 	}
 
 	/**
@@ -622,18 +654,7 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 	 */
 	public Release findByPrimaryKey(long releaseId)
 		throws NoSuchReleaseException, SystemException {
-		Release release = fetchByPrimaryKey(releaseId);
-
-		if (release == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + releaseId);
-			}
-
-			throw new NoSuchReleaseException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				releaseId);
-		}
-
-		return release;
+		return findByPrimaryKey((Serializable)releaseId);
 	}
 
 	/**
@@ -646,19 +667,8 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 	@Override
 	public Release fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the release with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param releaseId the primary key of the release
-	 * @return the release, or <code>null</code> if a release with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public Release fetchByPrimaryKey(long releaseId) throws SystemException {
 		Release release = (Release)EntityCacheUtil.getResult(ReleaseModelImpl.ENTITY_CACHE_ENABLED,
-				ReleaseImpl.class, releaseId);
+				ReleaseImpl.class, primaryKey);
 
 		if (release == _nullRelease) {
 			return null;
@@ -670,20 +680,19 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 			try {
 				session = openSession();
 
-				release = (Release)session.get(ReleaseImpl.class,
-						Long.valueOf(releaseId));
+				release = (Release)session.get(ReleaseImpl.class, primaryKey);
 
 				if (release != null) {
 					cacheResult(release);
 				}
 				else {
 					EntityCacheUtil.putResult(ReleaseModelImpl.ENTITY_CACHE_ENABLED,
-						ReleaseImpl.class, releaseId, _nullRelease);
+						ReleaseImpl.class, primaryKey, _nullRelease);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(ReleaseModelImpl.ENTITY_CACHE_ENABLED,
-					ReleaseImpl.class, releaseId);
+					ReleaseImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -693,6 +702,17 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 		}
 
 		return release;
+	}
+
+	/**
+	 * Returns the release with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param releaseId the primary key of the release
+	 * @return the release, or <code>null</code> if a release with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Release fetchByPrimaryKey(long releaseId) throws SystemException {
+		return fetchByPrimaryKey((Serializable)releaseId);
 	}
 
 	/**
@@ -894,128 +914,6 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
 	private static final String _SQL_SELECT_RELEASE = "SELECT release FROM Release release";
 	private static final String _SQL_SELECT_RELEASE_WHERE = "SELECT release FROM Release release WHERE ";
 	private static final String _SQL_COUNT_RELEASE = "SELECT COUNT(release) FROM Release release";

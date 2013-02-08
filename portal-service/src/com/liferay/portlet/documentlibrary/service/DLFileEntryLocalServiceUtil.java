@@ -521,12 +521,6 @@ public class DLFileEntryLocalServiceUtil {
 		return getService().getFileEntries(folderId, name);
 	}
 
-	public static java.util.List<com.liferay.portlet.documentlibrary.model.DLFileEntry> getFileEntriesByMimeType(
-		java.lang.String mimeType)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().getFileEntriesByMimeType(mimeType);
-	}
-
 	public static int getFileEntriesCount()
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return getService().getFileEntriesCount();
@@ -634,16 +628,22 @@ public class DLFileEntryLocalServiceUtil {
 
 	public static void incrementViewCounter(
 		com.liferay.portlet.documentlibrary.model.DLFileEntry dlFileEntry,
-		boolean incrementCounter, int increment)
+		int increment)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		getService()
-			.incrementViewCounter(dlFileEntry, incrementCounter, increment);
+		getService().incrementViewCounter(dlFileEntry, increment);
 	}
 
 	public static boolean isFileEntryCheckedOut(long fileEntryId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return getService().isFileEntryCheckedOut(fileEntryId);
+	}
+
+	public static com.liferay.portal.model.Lock lockFileEntry(long userId,
+		long fileEntryId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService().lockFileEntry(userId, fileEntryId);
 	}
 
 	public static com.liferay.portlet.documentlibrary.model.DLFileEntry moveFileEntry(
@@ -663,6 +663,11 @@ public class DLFileEntryLocalServiceUtil {
 			com.liferay.portal.kernel.exception.SystemException {
 		getService()
 			.revertFileEntry(userId, fileEntryId, version, serviceContext);
+	}
+
+	public static void unlockFileEntry(long fileEntryId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		getService().unlockFileEntry(fileEntryId);
 	}
 
 	public static com.liferay.portlet.documentlibrary.model.DLFileEntry updateFileEntry(

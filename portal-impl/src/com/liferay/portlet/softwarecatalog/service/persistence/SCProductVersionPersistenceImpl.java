@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.softwarecatalog.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.jdbc.MappingSqlQuery;
@@ -44,7 +43,6 @@ import com.liferay.portal.kernel.util.UnmodifiableList;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.softwarecatalog.NoSuchProductVersionException;
@@ -672,16 +670,18 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 
 			query.append(_SQL_SELECT_SCPRODUCTVERSION_WHERE);
 
+			boolean bindDirectDownloadURL = false;
+
 			if (directDownloadURL == null) {
 				query.append(_FINDER_COLUMN_DIRECTDOWNLOADURL_DIRECTDOWNLOADURL_1);
 			}
+			else if (directDownloadURL.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_DIRECTDOWNLOADURL_DIRECTDOWNLOADURL_3);
+			}
 			else {
-				if (directDownloadURL.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_DIRECTDOWNLOADURL_DIRECTDOWNLOADURL_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_DIRECTDOWNLOADURL_DIRECTDOWNLOADURL_2);
-				}
+				bindDirectDownloadURL = true;
+
+				query.append(_FINDER_COLUMN_DIRECTDOWNLOADURL_DIRECTDOWNLOADURL_2);
 			}
 
 			String sql = query.toString();
@@ -695,8 +695,8 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (directDownloadURL != null) {
-					qPos.add(directDownloadURL);
+				if (bindDirectDownloadURL) {
+					qPos.add(directDownloadURL.toLowerCase());
 				}
 
 				List<SCProductVersion> list = q.list();
@@ -781,16 +781,18 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 
 			query.append(_SQL_COUNT_SCPRODUCTVERSION_WHERE);
 
+			boolean bindDirectDownloadURL = false;
+
 			if (directDownloadURL == null) {
 				query.append(_FINDER_COLUMN_DIRECTDOWNLOADURL_DIRECTDOWNLOADURL_1);
 			}
+			else if (directDownloadURL.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_DIRECTDOWNLOADURL_DIRECTDOWNLOADURL_3);
+			}
 			else {
-				if (directDownloadURL.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_DIRECTDOWNLOADURL_DIRECTDOWNLOADURL_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_DIRECTDOWNLOADURL_DIRECTDOWNLOADURL_2);
-				}
+				bindDirectDownloadURL = true;
+
+				query.append(_FINDER_COLUMN_DIRECTDOWNLOADURL_DIRECTDOWNLOADURL_2);
 			}
 
 			String sql = query.toString();
@@ -804,8 +806,8 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (directDownloadURL != null) {
-					qPos.add(directDownloadURL);
+				if (bindDirectDownloadURL) {
+					qPos.add(directDownloadURL.toLowerCase());
 				}
 
 				count = (Long)q.uniqueResult();
@@ -828,9 +830,9 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 	private static final String _FINDER_COLUMN_DIRECTDOWNLOADURL_DIRECTDOWNLOADURL_1 =
 		"scProductVersion.directDownloadURL IS NULL";
 	private static final String _FINDER_COLUMN_DIRECTDOWNLOADURL_DIRECTDOWNLOADURL_2 =
-		"lower(scProductVersion.directDownloadURL) = lower(CAST_TEXT(?))";
+		"lower(scProductVersion.directDownloadURL) = ?";
 	private static final String _FINDER_COLUMN_DIRECTDOWNLOADURL_DIRECTDOWNLOADURL_3 =
-		"(scProductVersion.directDownloadURL IS NULL OR lower(scProductVersion.directDownloadURL) = lower(CAST_TEXT(?)))";
+		"(scProductVersion.directDownloadURL IS NULL OR scProductVersion.directDownloadURL = '')";
 
 	/**
 	 * Caches the s c product version in the entity cache if it is enabled.
@@ -919,9 +921,53 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 		}
 	}
 
+	protected void cacheUniqueFindersCache(SCProductVersion scProductVersion) {
+		if (scProductVersion.isNew()) {
+			Object[] args = new Object[] { scProductVersion.getDirectDownloadURL() };
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_DIRECTDOWNLOADURL,
+				args, Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_DIRECTDOWNLOADURL,
+				args, scProductVersion);
+		}
+		else {
+			SCProductVersionModelImpl scProductVersionModelImpl = (SCProductVersionModelImpl)scProductVersion;
+
+			if ((scProductVersionModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_DIRECTDOWNLOADURL.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						scProductVersion.getDirectDownloadURL()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_DIRECTDOWNLOADURL,
+					args, Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_DIRECTDOWNLOADURL,
+					args, scProductVersion);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(SCProductVersion scProductVersion) {
+		SCProductVersionModelImpl scProductVersionModelImpl = (SCProductVersionModelImpl)scProductVersion;
+
+		Object[] args = new Object[] { scProductVersion.getDirectDownloadURL() };
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_DIRECTDOWNLOADURL,
+			args);
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_DIRECTDOWNLOADURL,
-			new Object[] { scProductVersion.getDirectDownloadURL() });
+			args);
+
+		if ((scProductVersionModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_DIRECTDOWNLOADURL.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					scProductVersionModelImpl.getOriginalDirectDownloadURL()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_DIRECTDOWNLOADURL,
+				args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_DIRECTDOWNLOADURL,
+				args);
+		}
 	}
 
 	/**
@@ -949,7 +995,7 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 	 */
 	public SCProductVersion remove(long productVersionId)
 		throws NoSuchProductVersionException, SystemException {
-		return remove(Long.valueOf(productVersionId));
+		return remove((Serializable)productVersionId);
 	}
 
 	/**
@@ -1077,7 +1123,7 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 			if ((scProductVersionModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_PRODUCTENTRYID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(scProductVersionModelImpl.getOriginalProductEntryId())
+						scProductVersionModelImpl.getOriginalProductEntryId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_PRODUCTENTRYID,
@@ -1086,7 +1132,7 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 					args);
 
 				args = new Object[] {
-						Long.valueOf(scProductVersionModelImpl.getProductEntryId())
+						scProductVersionModelImpl.getProductEntryId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_PRODUCTENTRYID,
@@ -1100,29 +1146,8 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 			SCProductVersionImpl.class, scProductVersion.getPrimaryKey(),
 			scProductVersion);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_DIRECTDOWNLOADURL,
-				new Object[] { scProductVersion.getDirectDownloadURL() },
-				scProductVersion);
-		}
-		else {
-			if ((scProductVersionModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_DIRECTDOWNLOADURL.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						scProductVersionModelImpl.getOriginalDirectDownloadURL()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_DIRECTDOWNLOADURL,
-					args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_DIRECTDOWNLOADURL,
-					args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_DIRECTDOWNLOADURL,
-					new Object[] { scProductVersion.getDirectDownloadURL() },
-					scProductVersion);
-			}
-		}
+		clearUniqueFindersCache(scProductVersion);
+		cacheUniqueFindersCache(scProductVersion);
 
 		return scProductVersion;
 	}
@@ -1159,13 +1184,24 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 	 *
 	 * @param primaryKey the primary key of the s c product version
 	 * @return the s c product version
-	 * @throws com.liferay.portal.NoSuchModelException if a s c product version with the primary key could not be found
+	 * @throws com.liferay.portlet.softwarecatalog.NoSuchProductVersionException if a s c product version with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public SCProductVersion findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchProductVersionException, SystemException {
+		SCProductVersion scProductVersion = fetchByPrimaryKey(primaryKey);
+
+		if (scProductVersion == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchProductVersionException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return scProductVersion;
 	}
 
 	/**
@@ -1178,18 +1214,7 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 	 */
 	public SCProductVersion findByPrimaryKey(long productVersionId)
 		throws NoSuchProductVersionException, SystemException {
-		SCProductVersion scProductVersion = fetchByPrimaryKey(productVersionId);
-
-		if (scProductVersion == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + productVersionId);
-			}
-
-			throw new NoSuchProductVersionException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				productVersionId);
-		}
-
-		return scProductVersion;
+		return findByPrimaryKey((Serializable)productVersionId);
 	}
 
 	/**
@@ -1202,20 +1227,8 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 	@Override
 	public SCProductVersion fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the s c product version with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param productVersionId the primary key of the s c product version
-	 * @return the s c product version, or <code>null</code> if a s c product version with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public SCProductVersion fetchByPrimaryKey(long productVersionId)
-		throws SystemException {
 		SCProductVersion scProductVersion = (SCProductVersion)EntityCacheUtil.getResult(SCProductVersionModelImpl.ENTITY_CACHE_ENABLED,
-				SCProductVersionImpl.class, productVersionId);
+				SCProductVersionImpl.class, primaryKey);
 
 		if (scProductVersion == _nullSCProductVersion) {
 			return null;
@@ -1228,20 +1241,20 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 				session = openSession();
 
 				scProductVersion = (SCProductVersion)session.get(SCProductVersionImpl.class,
-						Long.valueOf(productVersionId));
+						primaryKey);
 
 				if (scProductVersion != null) {
 					cacheResult(scProductVersion);
 				}
 				else {
 					EntityCacheUtil.putResult(SCProductVersionModelImpl.ENTITY_CACHE_ENABLED,
-						SCProductVersionImpl.class, productVersionId,
+						SCProductVersionImpl.class, primaryKey,
 						_nullSCProductVersion);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(SCProductVersionModelImpl.ENTITY_CACHE_ENABLED,
-					SCProductVersionImpl.class, productVersionId);
+					SCProductVersionImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -1251,6 +1264,18 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 		}
 
 		return scProductVersion;
+	}
+
+	/**
+	 * Returns the s c product version with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param productVersionId the primary key of the s c product version
+	 * @return the s c product version, or <code>null</code> if a s c product version with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public SCProductVersion fetchByPrimaryKey(long productVersionId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)productVersionId);
 	}
 
 	/**
@@ -1970,16 +1995,6 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 
 	@BeanReference(type = SCFrameworkVersionPersistence.class)
 	protected SCFrameworkVersionPersistence scFrameworkVersionPersistence;
-	@BeanReference(type = SCLicensePersistence.class)
-	protected SCLicensePersistence scLicensePersistence;
-	@BeanReference(type = SCProductEntryPersistence.class)
-	protected SCProductEntryPersistence scProductEntryPersistence;
-	@BeanReference(type = SCProductScreenshotPersistence.class)
-	protected SCProductScreenshotPersistence scProductScreenshotPersistence;
-	@BeanReference(type = SCProductVersionPersistence.class)
-	protected SCProductVersionPersistence scProductVersionPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
 	protected ContainsSCFrameworkVersion containsSCFrameworkVersion;
 	protected AddSCFrameworkVersion addSCFrameworkVersion;
 	protected ClearSCFrameworkVersions clearSCFrameworkVersions;

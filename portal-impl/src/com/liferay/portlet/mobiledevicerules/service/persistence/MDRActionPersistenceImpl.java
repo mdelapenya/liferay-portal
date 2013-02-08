@@ -14,8 +14,6 @@
 
 package com.liferay.portlet.mobiledevicerules.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -38,7 +36,6 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.mobiledevicerules.NoSuchActionException;
@@ -190,16 +187,18 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 
 			query.append(_SQL_SELECT_MDRACTION_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			if (orderByComparator != null) {
@@ -222,7 +221,7 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -412,16 +411,18 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 
 		query.append(_SQL_SELECT_MDRACTION_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_UUID_2);
 		}
 
 		if (orderByComparator != null) {
@@ -492,7 +493,7 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -547,16 +548,18 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 
 			query.append(_SQL_COUNT_MDRACTION_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			String sql = query.toString();
@@ -570,7 +573,7 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -593,7 +596,7 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 
 	private static final String _FINDER_COLUMN_UUID_UUID_1 = "mdrAction.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "mdrAction.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(mdrAction.uuid IS NULL OR mdrAction.uuid = ?)";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(mdrAction.uuid IS NULL OR mdrAction.uuid = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(MDRActionModelImpl.ENTITY_CACHE_ENABLED,
 			MDRActionModelImpl.FINDER_CACHE_ENABLED, MDRActionImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
@@ -688,16 +691,18 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 
 			query.append(_SQL_SELECT_MDRACTION_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_G_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_G_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_G_GROUPID_2);
@@ -713,7 +718,7 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -796,16 +801,18 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 
 			query.append(_SQL_COUNT_MDRACTION_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_G_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_G_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_G_GROUPID_2);
@@ -821,7 +828,7 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -846,7 +853,7 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 
 	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "mdrAction.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "mdrAction.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(mdrAction.uuid IS NULL OR mdrAction.uuid = ?) AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(mdrAction.uuid IS NULL OR mdrAction.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "mdrAction.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(MDRActionModelImpl.ENTITY_CACHE_ENABLED,
 			MDRActionModelImpl.FINDER_CACHE_ENABLED, MDRActionImpl.class,
@@ -965,16 +972,18 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 
 			query.append(_SQL_SELECT_MDRACTION_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -999,7 +1008,7 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -1205,16 +1214,18 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 
 		query.append(_SQL_SELECT_MDRACTION_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 		}
 
 		query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1287,7 +1298,7 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -1348,16 +1359,18 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 
 			query.append(_SQL_COUNT_MDRACTION_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1373,7 +1386,7 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -1398,7 +1411,7 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 
 	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "mdrAction.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "mdrAction.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(mdrAction.uuid IS NULL OR mdrAction.uuid = ?) AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(mdrAction.uuid IS NULL OR mdrAction.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "mdrAction.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_RULEGROUPINSTANCEID =
 		new FinderPath(MDRActionModelImpl.ENTITY_CACHE_ENABLED,
@@ -1899,9 +1912,8 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 			MDRActionImpl.class, mdrAction.getPrimaryKey(), mdrAction);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
-			new Object[] {
-				mdrAction.getUuid(), Long.valueOf(mdrAction.getGroupId())
-			}, mdrAction);
+			new Object[] { mdrAction.getUuid(), mdrAction.getGroupId() },
+			mdrAction);
 
 		mdrAction.resetOriginalValues();
 	}
@@ -1975,11 +1987,52 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 		}
 	}
 
+	protected void cacheUniqueFindersCache(MDRAction mdrAction) {
+		if (mdrAction.isNew()) {
+			Object[] args = new Object[] {
+					mdrAction.getUuid(), mdrAction.getGroupId()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+				mdrAction);
+		}
+		else {
+			MDRActionModelImpl mdrActionModelImpl = (MDRActionModelImpl)mdrAction;
+
+			if ((mdrActionModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						mdrAction.getUuid(), mdrAction.getGroupId()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+					mdrAction);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(MDRAction mdrAction) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
-			new Object[] {
-				mdrAction.getUuid(), Long.valueOf(mdrAction.getGroupId())
-			});
+		MDRActionModelImpl mdrActionModelImpl = (MDRActionModelImpl)mdrAction;
+
+		Object[] args = new Object[] { mdrAction.getUuid(), mdrAction.getGroupId() };
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+
+		if ((mdrActionModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					mdrActionModelImpl.getOriginalUuid(),
+					mdrActionModelImpl.getOriginalGroupId()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		}
 	}
 
 	/**
@@ -2011,7 +2064,7 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 	 */
 	public MDRAction remove(long actionId)
 		throws NoSuchActionException, SystemException {
-		return remove(Long.valueOf(actionId));
+		return remove((Serializable)actionId);
 	}
 
 	/**
@@ -2153,7 +2206,7 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
 						mdrActionModelImpl.getOriginalUuid(),
-						Long.valueOf(mdrActionModelImpl.getOriginalCompanyId())
+						mdrActionModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
@@ -2162,7 +2215,7 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 
 				args = new Object[] {
 						mdrActionModelImpl.getUuid(),
-						Long.valueOf(mdrActionModelImpl.getCompanyId())
+						mdrActionModelImpl.getCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
@@ -2173,7 +2226,7 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 			if ((mdrActionModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_RULEGROUPINSTANCEID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(mdrActionModelImpl.getOriginalRuleGroupInstanceId())
+						mdrActionModelImpl.getOriginalRuleGroupInstanceId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_RULEGROUPINSTANCEID,
@@ -2181,9 +2234,7 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_RULEGROUPINSTANCEID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(mdrActionModelImpl.getRuleGroupInstanceId())
-					};
+				args = new Object[] { mdrActionModelImpl.getRuleGroupInstanceId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_RULEGROUPINSTANCEID,
 					args);
@@ -2195,31 +2246,8 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 		EntityCacheUtil.putResult(MDRActionModelImpl.ENTITY_CACHE_ENABLED,
 			MDRActionImpl.class, mdrAction.getPrimaryKey(), mdrAction);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
-				new Object[] {
-					mdrAction.getUuid(), Long.valueOf(mdrAction.getGroupId())
-				}, mdrAction);
-		}
-		else {
-			if ((mdrActionModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						mdrActionModelImpl.getOriginalUuid(),
-						Long.valueOf(mdrActionModelImpl.getOriginalGroupId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
-					new Object[] {
-						mdrAction.getUuid(),
-						Long.valueOf(mdrAction.getGroupId())
-					}, mdrAction);
-			}
-		}
+		clearUniqueFindersCache(mdrAction);
+		cacheUniqueFindersCache(mdrAction);
 
 		return mdrAction;
 	}
@@ -2258,13 +2286,24 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 	 *
 	 * @param primaryKey the primary key of the m d r action
 	 * @return the m d r action
-	 * @throws com.liferay.portal.NoSuchModelException if a m d r action with the primary key could not be found
+	 * @throws com.liferay.portlet.mobiledevicerules.NoSuchActionException if a m d r action with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public MDRAction findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchActionException, SystemException {
+		MDRAction mdrAction = fetchByPrimaryKey(primaryKey);
+
+		if (mdrAction == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchActionException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return mdrAction;
 	}
 
 	/**
@@ -2277,18 +2316,7 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 	 */
 	public MDRAction findByPrimaryKey(long actionId)
 		throws NoSuchActionException, SystemException {
-		MDRAction mdrAction = fetchByPrimaryKey(actionId);
-
-		if (mdrAction == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + actionId);
-			}
-
-			throw new NoSuchActionException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				actionId);
-		}
-
-		return mdrAction;
+		return findByPrimaryKey((Serializable)actionId);
 	}
 
 	/**
@@ -2301,19 +2329,8 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 	@Override
 	public MDRAction fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the m d r action with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param actionId the primary key of the m d r action
-	 * @return the m d r action, or <code>null</code> if a m d r action with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public MDRAction fetchByPrimaryKey(long actionId) throws SystemException {
 		MDRAction mdrAction = (MDRAction)EntityCacheUtil.getResult(MDRActionModelImpl.ENTITY_CACHE_ENABLED,
-				MDRActionImpl.class, actionId);
+				MDRActionImpl.class, primaryKey);
 
 		if (mdrAction == _nullMDRAction) {
 			return null;
@@ -2326,19 +2343,19 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 				session = openSession();
 
 				mdrAction = (MDRAction)session.get(MDRActionImpl.class,
-						Long.valueOf(actionId));
+						primaryKey);
 
 				if (mdrAction != null) {
 					cacheResult(mdrAction);
 				}
 				else {
 					EntityCacheUtil.putResult(MDRActionModelImpl.ENTITY_CACHE_ENABLED,
-						MDRActionImpl.class, actionId, _nullMDRAction);
+						MDRActionImpl.class, primaryKey, _nullMDRAction);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(MDRActionModelImpl.ENTITY_CACHE_ENABLED,
-					MDRActionImpl.class, actionId);
+					MDRActionImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -2348,6 +2365,17 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 		}
 
 		return mdrAction;
+	}
+
+	/**
+	 * Returns the m d r action with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param actionId the primary key of the m d r action
+	 * @return the m d r action, or <code>null</code> if a m d r action with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public MDRAction fetchByPrimaryKey(long actionId) throws SystemException {
+		return fetchByPrimaryKey((Serializable)actionId);
 	}
 
 	/**
@@ -2550,16 +2578,6 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = MDRActionPersistence.class)
-	protected MDRActionPersistence mdrActionPersistence;
-	@BeanReference(type = MDRRulePersistence.class)
-	protected MDRRulePersistence mdrRulePersistence;
-	@BeanReference(type = MDRRuleGroupPersistence.class)
-	protected MDRRuleGroupPersistence mdrRuleGroupPersistence;
-	@BeanReference(type = MDRRuleGroupInstancePersistence.class)
-	protected MDRRuleGroupInstancePersistence mdrRuleGroupInstancePersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
 	private static final String _SQL_SELECT_MDRACTION = "SELECT mdrAction FROM MDRAction mdrAction";
 	private static final String _SQL_SELECT_MDRACTION_WHERE = "SELECT mdrAction FROM MDRAction mdrAction WHERE ";
 	private static final String _SQL_COUNT_MDRACTION = "SELECT COUNT(mdrAction) FROM MDRAction mdrAction";

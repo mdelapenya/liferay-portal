@@ -15,8 +15,6 @@
 package com.liferay.portal.service.persistence;
 
 import com.liferay.portal.NoSuchClusterGroupException;
-import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -182,7 +180,7 @@ public class ClusterGroupPersistenceImpl extends BasePersistenceImpl<ClusterGrou
 	 */
 	public ClusterGroup remove(long clusterGroupId)
 		throws NoSuchClusterGroupException, SystemException {
-		return remove(Long.valueOf(clusterGroupId));
+		return remove((Serializable)clusterGroupId);
 	}
 
 	/**
@@ -323,13 +321,24 @@ public class ClusterGroupPersistenceImpl extends BasePersistenceImpl<ClusterGrou
 	 *
 	 * @param primaryKey the primary key of the cluster group
 	 * @return the cluster group
-	 * @throws com.liferay.portal.NoSuchModelException if a cluster group with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchClusterGroupException if a cluster group with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public ClusterGroup findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchClusterGroupException, SystemException {
+		ClusterGroup clusterGroup = fetchByPrimaryKey(primaryKey);
+
+		if (clusterGroup == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchClusterGroupException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return clusterGroup;
 	}
 
 	/**
@@ -342,18 +351,7 @@ public class ClusterGroupPersistenceImpl extends BasePersistenceImpl<ClusterGrou
 	 */
 	public ClusterGroup findByPrimaryKey(long clusterGroupId)
 		throws NoSuchClusterGroupException, SystemException {
-		ClusterGroup clusterGroup = fetchByPrimaryKey(clusterGroupId);
-
-		if (clusterGroup == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + clusterGroupId);
-			}
-
-			throw new NoSuchClusterGroupException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				clusterGroupId);
-		}
-
-		return clusterGroup;
+		return findByPrimaryKey((Serializable)clusterGroupId);
 	}
 
 	/**
@@ -366,20 +364,8 @@ public class ClusterGroupPersistenceImpl extends BasePersistenceImpl<ClusterGrou
 	@Override
 	public ClusterGroup fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the cluster group with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param clusterGroupId the primary key of the cluster group
-	 * @return the cluster group, or <code>null</code> if a cluster group with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public ClusterGroup fetchByPrimaryKey(long clusterGroupId)
-		throws SystemException {
 		ClusterGroup clusterGroup = (ClusterGroup)EntityCacheUtil.getResult(ClusterGroupModelImpl.ENTITY_CACHE_ENABLED,
-				ClusterGroupImpl.class, clusterGroupId);
+				ClusterGroupImpl.class, primaryKey);
 
 		if (clusterGroup == _nullClusterGroup) {
 			return null;
@@ -392,20 +378,19 @@ public class ClusterGroupPersistenceImpl extends BasePersistenceImpl<ClusterGrou
 				session = openSession();
 
 				clusterGroup = (ClusterGroup)session.get(ClusterGroupImpl.class,
-						Long.valueOf(clusterGroupId));
+						primaryKey);
 
 				if (clusterGroup != null) {
 					cacheResult(clusterGroup);
 				}
 				else {
 					EntityCacheUtil.putResult(ClusterGroupModelImpl.ENTITY_CACHE_ENABLED,
-						ClusterGroupImpl.class, clusterGroupId,
-						_nullClusterGroup);
+						ClusterGroupImpl.class, primaryKey, _nullClusterGroup);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(ClusterGroupModelImpl.ENTITY_CACHE_ENABLED,
-					ClusterGroupImpl.class, clusterGroupId);
+					ClusterGroupImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -415,6 +400,18 @@ public class ClusterGroupPersistenceImpl extends BasePersistenceImpl<ClusterGrou
 		}
 
 		return clusterGroup;
+	}
+
+	/**
+	 * Returns the cluster group with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param clusterGroupId the primary key of the cluster group
+	 * @return the cluster group, or <code>null</code> if a cluster group with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public ClusterGroup fetchByPrimaryKey(long clusterGroupId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)clusterGroupId);
 	}
 
 	/**
@@ -617,128 +614,6 @@ public class ClusterGroupPersistenceImpl extends BasePersistenceImpl<ClusterGrou
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
 	private static final String _SQL_SELECT_CLUSTERGROUP = "SELECT clusterGroup FROM ClusterGroup clusterGroup";
 	private static final String _SQL_COUNT_CLUSTERGROUP = "SELECT COUNT(clusterGroup) FROM ClusterGroup clusterGroup";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "clusterGroup.";

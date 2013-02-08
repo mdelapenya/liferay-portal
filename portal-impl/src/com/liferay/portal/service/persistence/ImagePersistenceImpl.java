@@ -15,8 +15,6 @@
 package com.liferay.portal.service.persistence;
 
 import com.liferay.portal.NoSuchImageException;
-import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -41,8 +39,6 @@ import com.liferay.portal.model.ModelListener;
 import com.liferay.portal.model.impl.ImageImpl;
 import com.liferay.portal.model.impl.ImageModelImpl;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
-
-import com.liferay.portlet.documentlibrary.service.persistence.DLFileEntryPersistence;
 
 import java.io.Serializable;
 
@@ -641,7 +637,7 @@ public class ImagePersistenceImpl extends BasePersistenceImpl<Image>
 	 */
 	public Image remove(long imageId)
 		throws NoSuchImageException, SystemException {
-		return remove(Long.valueOf(imageId));
+		return remove((Serializable)imageId);
 	}
 
 	/**
@@ -768,7 +764,6 @@ public class ImagePersistenceImpl extends BasePersistenceImpl<Image>
 
 		imageImpl.setImageId(image.getImageId());
 		imageImpl.setModifiedDate(image.getModifiedDate());
-		imageImpl.setText(image.getText());
 		imageImpl.setType(image.getType());
 		imageImpl.setHeight(image.getHeight());
 		imageImpl.setWidth(image.getWidth());
@@ -782,13 +777,24 @@ public class ImagePersistenceImpl extends BasePersistenceImpl<Image>
 	 *
 	 * @param primaryKey the primary key of the image
 	 * @return the image
-	 * @throws com.liferay.portal.NoSuchModelException if a image with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchImageException if a image with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public Image findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchImageException, SystemException {
+		Image image = fetchByPrimaryKey(primaryKey);
+
+		if (image == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchImageException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return image;
 	}
 
 	/**
@@ -801,18 +807,7 @@ public class ImagePersistenceImpl extends BasePersistenceImpl<Image>
 	 */
 	public Image findByPrimaryKey(long imageId)
 		throws NoSuchImageException, SystemException {
-		Image image = fetchByPrimaryKey(imageId);
-
-		if (image == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + imageId);
-			}
-
-			throw new NoSuchImageException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				imageId);
-		}
-
-		return image;
+		return findByPrimaryKey((Serializable)imageId);
 	}
 
 	/**
@@ -825,19 +820,8 @@ public class ImagePersistenceImpl extends BasePersistenceImpl<Image>
 	@Override
 	public Image fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the image with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param imageId the primary key of the image
-	 * @return the image, or <code>null</code> if a image with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public Image fetchByPrimaryKey(long imageId) throws SystemException {
 		Image image = (Image)EntityCacheUtil.getResult(ImageModelImpl.ENTITY_CACHE_ENABLED,
-				ImageImpl.class, imageId);
+				ImageImpl.class, primaryKey);
 
 		if (image == _nullImage) {
 			return null;
@@ -849,20 +833,19 @@ public class ImagePersistenceImpl extends BasePersistenceImpl<Image>
 			try {
 				session = openSession();
 
-				image = (Image)session.get(ImageImpl.class,
-						Long.valueOf(imageId));
+				image = (Image)session.get(ImageImpl.class, primaryKey);
 
 				if (image != null) {
 					cacheResult(image);
 				}
 				else {
 					EntityCacheUtil.putResult(ImageModelImpl.ENTITY_CACHE_ENABLED,
-						ImageImpl.class, imageId, _nullImage);
+						ImageImpl.class, primaryKey, _nullImage);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(ImageModelImpl.ENTITY_CACHE_ENABLED,
-					ImageImpl.class, imageId);
+					ImageImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -872,6 +855,17 @@ public class ImagePersistenceImpl extends BasePersistenceImpl<Image>
 		}
 
 		return image;
+	}
+
+	/**
+	 * Returns the image with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param imageId the primary key of the image
+	 * @return the image, or <code>null</code> if a image with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Image fetchByPrimaryKey(long imageId) throws SystemException {
+		return fetchByPrimaryKey((Serializable)imageId);
 	}
 
 	/**
@@ -1073,130 +1067,6 @@ public class ImagePersistenceImpl extends BasePersistenceImpl<Image>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
-	@BeanReference(type = DLFileEntryPersistence.class)
-	protected DLFileEntryPersistence dlFileEntryPersistence;
 	private static final String _SQL_SELECT_IMAGE = "SELECT image FROM Image image";
 	private static final String _SQL_SELECT_IMAGE_WHERE = "SELECT image FROM Image image WHERE ";
 	private static final String _SQL_COUNT_IMAGE = "SELECT COUNT(image) FROM Image image";

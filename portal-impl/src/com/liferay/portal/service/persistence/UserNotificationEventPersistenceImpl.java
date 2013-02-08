@@ -14,9 +14,7 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchUserNotificationEventException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -194,16 +192,18 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 			query.append(_SQL_SELECT_USERNOTIFICATIONEVENT_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			if (orderByComparator != null) {
@@ -226,7 +226,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -420,16 +420,18 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 		query.append(_SQL_SELECT_USERNOTIFICATIONEVENT_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_UUID_2);
 		}
 
 		if (orderByComparator != null) {
@@ -500,7 +502,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -555,16 +557,18 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 			query.append(_SQL_COUNT_USERNOTIFICATIONEVENT_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			String sql = query.toString();
@@ -578,7 +582,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -601,7 +605,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 	private static final String _FINDER_COLUMN_UUID_UUID_1 = "userNotificationEvent.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "userNotificationEvent.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(userNotificationEvent.uuid IS NULL OR userNotificationEvent.uuid = ?)";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(userNotificationEvent.uuid IS NULL OR userNotificationEvent.uuid = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(UserNotificationEventModelImpl.ENTITY_CACHE_ENABLED,
 			UserNotificationEventModelImpl.FINDER_CACHE_ENABLED,
 			UserNotificationEventImpl.class,
@@ -723,16 +727,18 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 			query.append(_SQL_SELECT_USERNOTIFICATIONEVENT_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -757,7 +763,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -966,16 +972,18 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 		query.append(_SQL_SELECT_USERNOTIFICATIONEVENT_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 		}
 
 		query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1048,7 +1056,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -1109,16 +1117,18 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 			query.append(_SQL_COUNT_USERNOTIFICATIONEVENT_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1134,7 +1144,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -1159,7 +1169,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "userNotificationEvent.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "userNotificationEvent.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(userNotificationEvent.uuid IS NULL OR userNotificationEvent.uuid = ?) AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(userNotificationEvent.uuid IS NULL OR userNotificationEvent.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "userNotificationEvent.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_USERID = new FinderPath(UserNotificationEventModelImpl.ENTITY_CACHE_ENABLED,
 			UserNotificationEventModelImpl.FINDER_CACHE_ENABLED,
@@ -2271,7 +2281,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 	 */
 	public UserNotificationEvent remove(long userNotificationEventId)
 		throws NoSuchUserNotificationEventException, SystemException {
-		return remove(Long.valueOf(userNotificationEventId));
+		return remove((Serializable)userNotificationEventId);
 	}
 
 	/**
@@ -2413,7 +2423,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
 						userNotificationEventModelImpl.getOriginalUuid(),
-						Long.valueOf(userNotificationEventModelImpl.getOriginalCompanyId())
+						userNotificationEventModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
@@ -2422,7 +2432,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 				args = new Object[] {
 						userNotificationEventModelImpl.getUuid(),
-						Long.valueOf(userNotificationEventModelImpl.getCompanyId())
+						userNotificationEventModelImpl.getCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
@@ -2433,16 +2443,14 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 			if ((userNotificationEventModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(userNotificationEventModelImpl.getOriginalUserId())
+						userNotificationEventModelImpl.getOriginalUserId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(userNotificationEventModelImpl.getUserId())
-					};
+				args = new Object[] { userNotificationEventModelImpl.getUserId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
@@ -2452,8 +2460,8 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 			if ((userNotificationEventModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_A.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(userNotificationEventModelImpl.getOriginalUserId()),
-						Boolean.valueOf(userNotificationEventModelImpl.getOriginalArchived())
+						userNotificationEventModelImpl.getOriginalUserId(),
+						userNotificationEventModelImpl.getOriginalArchived()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_A, args);
@@ -2461,8 +2469,8 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 					args);
 
 				args = new Object[] {
-						Long.valueOf(userNotificationEventModelImpl.getUserId()),
-						Boolean.valueOf(userNotificationEventModelImpl.getArchived())
+						userNotificationEventModelImpl.getUserId(),
+						userNotificationEventModelImpl.getArchived()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_A, args);
@@ -2507,13 +2515,24 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 	 *
 	 * @param primaryKey the primary key of the user notification event
 	 * @return the user notification event
-	 * @throws com.liferay.portal.NoSuchModelException if a user notification event with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchUserNotificationEventException if a user notification event with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public UserNotificationEvent findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchUserNotificationEventException, SystemException {
+		UserNotificationEvent userNotificationEvent = fetchByPrimaryKey(primaryKey);
+
+		if (userNotificationEvent == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchUserNotificationEventException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return userNotificationEvent;
 	}
 
 	/**
@@ -2526,19 +2545,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 	 */
 	public UserNotificationEvent findByPrimaryKey(long userNotificationEventId)
 		throws NoSuchUserNotificationEventException, SystemException {
-		UserNotificationEvent userNotificationEvent = fetchByPrimaryKey(userNotificationEventId);
-
-		if (userNotificationEvent == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-					userNotificationEventId);
-			}
-
-			throw new NoSuchUserNotificationEventException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				userNotificationEventId);
-		}
-
-		return userNotificationEvent;
+		return findByPrimaryKey((Serializable)userNotificationEventId);
 	}
 
 	/**
@@ -2551,20 +2558,8 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 	@Override
 	public UserNotificationEvent fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the user notification event with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param userNotificationEventId the primary key of the user notification event
-	 * @return the user notification event, or <code>null</code> if a user notification event with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public UserNotificationEvent fetchByPrimaryKey(long userNotificationEventId)
-		throws SystemException {
 		UserNotificationEvent userNotificationEvent = (UserNotificationEvent)EntityCacheUtil.getResult(UserNotificationEventModelImpl.ENTITY_CACHE_ENABLED,
-				UserNotificationEventImpl.class, userNotificationEventId);
+				UserNotificationEventImpl.class, primaryKey);
 
 		if (userNotificationEvent == _nullUserNotificationEvent) {
 			return null;
@@ -2577,20 +2572,20 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 				session = openSession();
 
 				userNotificationEvent = (UserNotificationEvent)session.get(UserNotificationEventImpl.class,
-						Long.valueOf(userNotificationEventId));
+						primaryKey);
 
 				if (userNotificationEvent != null) {
 					cacheResult(userNotificationEvent);
 				}
 				else {
 					EntityCacheUtil.putResult(UserNotificationEventModelImpl.ENTITY_CACHE_ENABLED,
-						UserNotificationEventImpl.class,
-						userNotificationEventId, _nullUserNotificationEvent);
+						UserNotificationEventImpl.class, primaryKey,
+						_nullUserNotificationEvent);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(UserNotificationEventModelImpl.ENTITY_CACHE_ENABLED,
-					UserNotificationEventImpl.class, userNotificationEventId);
+					UserNotificationEventImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -2600,6 +2595,18 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 		}
 
 		return userNotificationEvent;
+	}
+
+	/**
+	 * Returns the user notification event with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param userNotificationEventId the primary key of the user notification event
+	 * @return the user notification event, or <code>null</code> if a user notification event with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public UserNotificationEvent fetchByPrimaryKey(long userNotificationEventId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)userNotificationEventId);
 	}
 
 	/**
@@ -2802,128 +2809,6 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
 	private static final String _SQL_SELECT_USERNOTIFICATIONEVENT = "SELECT userNotificationEvent FROM UserNotificationEvent userNotificationEvent";
 	private static final String _SQL_SELECT_USERNOTIFICATIONEVENT_WHERE = "SELECT userNotificationEvent FROM UserNotificationEvent userNotificationEvent WHERE ";
 	private static final String _SQL_COUNT_USERNOTIFICATIONEVENT = "SELECT COUNT(userNotificationEvent) FROM UserNotificationEvent userNotificationEvent";

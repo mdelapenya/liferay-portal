@@ -99,6 +99,111 @@ public class JSONWebServiceActionImpl implements JSONWebServiceAction {
 		return array;
 	}
 
+	private Object _convertValueToParameterValue(
+		Object value, Class<?> parameterType,
+		Class<?>[] genericParameterTypes) {
+
+		if (parameterType.isArray()) {
+			List<?> list = null;
+
+			if (value instanceof List) {
+				list = (List<?>)value;
+			}
+			else {
+				String stringValue = value.toString();
+
+				stringValue = stringValue.trim();
+
+				if (!stringValue.startsWith(StringPool.OPEN_BRACKET)) {
+					stringValue = StringPool.OPEN_BRACKET.concat(
+						stringValue).concat(StringPool.CLOSE_BRACKET);
+				}
+
+				list = JSONFactoryUtil.looseDeserializeSafe(
+					stringValue, ArrayList.class);
+			}
+
+			return _convertListToArray(list, parameterType.getComponentType());
+		}
+		else if (parameterType.equals(Calendar.class)) {
+			Calendar calendar = Calendar.getInstance();
+
+			calendar.setLenient(false);
+
+			String stringValue = value.toString();
+
+			stringValue = stringValue.trim();
+
+			long timeInMillis = GetterUtil.getLong(stringValue);
+
+			calendar.setTimeInMillis(timeInMillis);
+
+			return calendar;
+		}
+		else if (parameterType.equals(List.class)) {
+			List<?> list = null;
+
+			if (value instanceof List) {
+				list = (List<?>)value;
+			}
+			else {
+				String stringValue = value.toString();
+
+				stringValue = stringValue.trim();
+
+				if (!stringValue.startsWith(StringPool.OPEN_BRACKET)) {
+					stringValue = StringPool.OPEN_BRACKET.concat(
+						stringValue).concat(StringPool.CLOSE_BRACKET);
+				}
+
+				list = JSONFactoryUtil.looseDeserializeSafe(
+					stringValue, ArrayList.class);
+			}
+
+			return _generifyList(list, genericParameterTypes);
+		}
+		else if (parameterType.equals(Locale.class)) {
+			String stringValue = value.toString();
+
+			stringValue = stringValue.trim();
+
+			return LocaleUtil.fromLanguageId(stringValue);
+		}
+		else if (parameterType.equals(Map.class)) {
+			String stringValue = value.toString();
+
+			stringValue = stringValue.trim();
+
+			Map<?, ?> map = JSONFactoryUtil.looseDeserializeSafe(
+				stringValue, HashMap.class);
+
+			return _generifyMap(map, genericParameterTypes);
+		}
+		else {
+			Object parameterValue = null;
+
+			try {
+				parameterValue = TypeConverterManager.convertType(
+					value, parameterType);
+			}
+			catch (ClassCastException cce) {
+				String stringValue = value.toString();
+
+				stringValue = stringValue.trim();
+
+				if (!stringValue.startsWith(StringPool.OPEN_CURLY_BRACE)) {
+
+					throw cce;
+				}
+
+				parameterValue = JSONFactoryUtil.looseDeserializeSafe(
+					stringValue, parameterType);
+			}
+
+			return parameterValue;
+		}
+	}
+
 	private Object _createDefaultParameterValue(
 			String parameterName, Class<?> parameterType)
 		throws Exception {
@@ -252,82 +357,10 @@ public class JSONWebServiceActionImpl implements JSONWebServiceAction {
 					parameterValue = _createDefaultParameterValue(
 						parameterName, parameterType);
 				}
-				else if (parameterType.equals(Calendar.class)) {
-					Calendar calendar = Calendar.getInstance();
-
-					calendar.setLenient(false);
-					calendar.setTimeInMillis(
-						GetterUtil.getLong(value.toString()));
-
-					parameterValue = calendar;
-				}
-				else if (parameterType.equals(List.class)) {
-					String stringValue = value.toString();
-
-					stringValue = stringValue.trim();
-
-					if (!stringValue.startsWith(StringPool.OPEN_BRACKET)) {
-						stringValue = StringPool.OPEN_BRACKET.concat(
-							stringValue).concat(StringPool.CLOSE_BRACKET);
-					}
-
-					List<?> list = JSONFactoryUtil.looseDeserializeSafe(
-						stringValue, ArrayList.class);
-
-					list = _generifyList(
-						list, methodParameters[i].getGenericTypes());
-
-					parameterValue = list;
-				}
-				else if (parameterType.equals(Locale.class)) {
-					parameterValue = LocaleUtil.fromLanguageId(
-						value.toString());
-				}
-				else if (parameterType.equals(Map.class)) {
-					Map<?, ?> map = JSONFactoryUtil.looseDeserializeSafe(
-						value.toString(), HashMap.class);
-
-					map = _generifyMap(
-						map, methodParameters[i].getGenericTypes());
-
-					parameterValue = map;
-				}
-				else if (parameterType.isArray()) {
-					String stringValue = value.toString();
-
-					stringValue = stringValue.trim();
-
-					if (!stringValue.startsWith(StringPool.OPEN_BRACKET)) {
-						stringValue = StringPool.OPEN_BRACKET.concat(
-							stringValue).concat(StringPool.CLOSE_BRACKET);
-					}
-
-					List<?> list = JSONFactoryUtil.looseDeserializeSafe(
-						stringValue, ArrayList.class);
-
-					parameterValue = _convertListToArray(
-						list, parameterType.getComponentType());
-
-				}
 				else {
-					try {
-						parameterValue = TypeConverterManager.convertType(
-							value, parameterType);
-					}
-					catch (ClassCastException cce) {
-						String stringValue = value.toString();
-
-						stringValue = stringValue.trim();
-
-						if (!stringValue.startsWith(
-								StringPool.OPEN_CURLY_BRACE)) {
-
-							throw cce;
-						}
-
-						parameterValue = JSONFactoryUtil.looseDeserializeSafe(
-							stringValue, parameterType);
-					}
+					parameterValue = _convertValueToParameterValue(
+						value, parameterType,
+						methodParameters[i].getGenericTypes());
 				}
 			}
 

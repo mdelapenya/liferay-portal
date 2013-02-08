@@ -255,6 +255,15 @@
 		disableFormButtons: function(inputs, form) {
 			inputs.set('disabled', true);
 			inputs.setStyle('opacity', 0.5);
+
+			if (A.UA.gecko) {
+				A.getWin().on(
+					'unload',
+					function(event) {
+						inputs.set('disabled', false);
+					}
+				);
+			}
 		},
 
 		enableFormButtons: function(inputs, form) {
@@ -318,6 +327,52 @@
 			}
 
 			return str.replace(regex, A.bind('_escapeHTML', Util, !!preventDoubleEscape, entities, entitiesValues));
+		},
+
+		getAttributes: function(el, attributeGetter) {
+			var instance = this;
+
+			var result = null;
+
+			if (el) {
+				if (Lang.isFunction(el.getDOM)) {
+					el = el.getDOM();
+				}
+
+				result = {};
+
+				var isGetterString = Lang.isString(attributeGetter);
+				var isGetterFn = Lang.isFunction(attributeGetter);
+
+				var attrs = el.attributes;
+				var length = attrs.length;
+
+				while (length--) {
+					var attr = attrs[length];
+					var name = attr.nodeName;
+					var value = attr.nodeValue;
+
+					if (isGetterString) {
+						if (name.indexOf(attributeGetter) === 0) {
+							name = name.substr(attributeGetter.length);
+						}
+						else {
+							continue;
+						}
+					}
+					else if (isGetterFn) {
+						value = attributeGetter(value, name, attrs);
+
+						if (value === false) {
+							continue;
+						}
+					}
+
+					result[name] = value;
+				}
+			}
+
+			return result;
 		},
 
 		getColumnId: function(str) {
@@ -1155,37 +1210,6 @@
 		['aui-base']
 	);
 
-	/**
-	 * OPTIONS
-	 *
-	 * Required
-	 * button {string|object}: The button that opens the popup when clicked.
-	 * height {number}: The height to set the popup to.
-	 * textarea {string}: the name of the textarea to auto-resize.
-	 * url {string}: The url to open that sets the editor.
-	 * width {number}: The width to set the popup to.
-	 */
-
-	Liferay.provide(
-		Util,
-		'inlineEditor',
-		function(options, callback) {
-			var editorButton = A.one(options.button);
-
-			if (options.uri && editorButton) {
-				delete options.button;
-
-				editorButton.on(
-					EVENT_CLICK,
-					function(event) {
-						Util.openWindow(options, callback);
-					}
-				);
-			}
-		},
-		['aui-dialog', 'aui-io']
-	);
-
 	Liferay.provide(
 		Util,
 		'moveItem',
@@ -1250,6 +1274,7 @@
 			ddmURL.setParameter('scopeStructureType', config.structureType);
 			ddmURL.setParameter('scopeTemplateMode', config.templateMode);
 			ddmURL.setParameter('scopeTemplateType', config.templateType);
+			ddmURL.setParameter('scopeTitle', config.title);
 
 			if ('showGlobalScope' in config) {
 				ddmURL.setParameter('showGlobalScope', config.showGlobalScope);
@@ -1293,6 +1318,31 @@
 			Util.openWindow(config, callback);
 		},
 		['liferay-portlet-url']
+	);
+
+	Liferay.provide(
+		Util,
+		'openDocument',
+		function(webDavUrl, onSuccess, onError) {
+			if (A.UA.ie) {
+				try {
+					var executor = new A.config.win.ActiveXObject('SharePoint.OpenDocuments');
+
+					executor.EditDocument(webDavUrl);
+
+					if (Lang.isFunction(onSuccess)) {
+						onSuccess();
+					}
+
+				}
+				catch (exception) {
+					if (Lang.isFunction(onError)) {
+						onError(exception);
+					}
+				}
+			}
+		},
+		['aui-base']
 	);
 
 	Liferay.provide(
@@ -1542,6 +1592,19 @@
 			);
 		},
 		['aui-io']
+	);
+
+	Liferay.provide(
+		Util,
+		'selectEntity',
+		function(config, callback) {
+			this.openWindow(config);
+
+			var eventName = config.eventName || config.id;
+
+			Liferay.on(eventName, callback);
+		},
+		['aui-base']
 	);
 
 	Liferay.provide(

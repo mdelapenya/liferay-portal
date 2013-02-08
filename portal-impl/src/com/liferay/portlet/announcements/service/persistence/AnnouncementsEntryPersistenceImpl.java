@@ -14,8 +14,6 @@
 
 package com.liferay.portlet.announcements.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -40,12 +38,6 @@ import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
-import com.liferay.portal.service.persistence.CompanyPersistence;
-import com.liferay.portal.service.persistence.GroupPersistence;
-import com.liferay.portal.service.persistence.OrganizationPersistence;
-import com.liferay.portal.service.persistence.RolePersistence;
-import com.liferay.portal.service.persistence.UserGroupPersistence;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.announcements.NoSuchEntryException;
@@ -204,16 +196,18 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 
 			query.append(_SQL_SELECT_ANNOUNCEMENTSENTRY_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			if (orderByComparator != null) {
@@ -236,7 +230,7 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -428,16 +422,18 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 
 		query.append(_SQL_SELECT_ANNOUNCEMENTSENTRY_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_UUID_2);
 		}
 
 		if (orderByComparator != null) {
@@ -508,7 +504,7 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -597,16 +593,18 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			query.append(_FILTER_SQL_SELECT_ANNOUNCEMENTSENTRY_NO_INLINE_DISTINCT_WHERE_1);
 		}
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_UUID_2);
 		}
 
 		if (!getDB().isSupportsInlineDistinct()) {
@@ -652,7 +650,7 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
-			if (uuid != null) {
+			if (bindUuid) {
 				qPos.add(uuid);
 			}
 
@@ -731,16 +729,18 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			query.append(_FILTER_SQL_SELECT_ANNOUNCEMENTSENTRY_NO_INLINE_DISTINCT_WHERE_1);
 		}
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_UUID_2);
 		}
 
 		if (!getDB().isSupportsInlineDistinct()) {
@@ -841,7 +841,7 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -896,16 +896,18 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 
 			query.append(_SQL_COUNT_ANNOUNCEMENTSENTRY_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			String sql = query.toString();
@@ -919,7 +921,7 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -956,16 +958,18 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 
 		query.append(_FILTER_SQL_COUNT_ANNOUNCEMENTSENTRY_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_UUID_2);
 		}
 
 		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
@@ -984,7 +988,7 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
-			if (uuid != null) {
+			if (bindUuid) {
 				qPos.add(uuid);
 			}
 
@@ -1002,7 +1006,7 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 
 	private static final String _FINDER_COLUMN_UUID_UUID_1 = "announcementsEntry.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "announcementsEntry.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(announcementsEntry.uuid IS NULL OR announcementsEntry.uuid = ?)";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(announcementsEntry.uuid IS NULL OR announcementsEntry.uuid = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(AnnouncementsEntryModelImpl.ENTITY_CACHE_ENABLED,
 			AnnouncementsEntryModelImpl.FINDER_CACHE_ENABLED,
 			AnnouncementsEntryImpl.class,
@@ -1125,16 +1129,18 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 
 			query.append(_SQL_SELECT_ANNOUNCEMENTSENTRY_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1159,7 +1165,7 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -1365,16 +1371,18 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 
 		query.append(_SQL_SELECT_ANNOUNCEMENTSENTRY_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 		}
 
 		query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1447,7 +1455,7 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -1543,16 +1551,18 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			query.append(_FILTER_SQL_SELECT_ANNOUNCEMENTSENTRY_NO_INLINE_DISTINCT_WHERE_1);
 		}
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 		}
 
 		query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1600,7 +1610,7 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
-			if (uuid != null) {
+			if (bindUuid) {
 				qPos.add(uuid);
 			}
 
@@ -1684,16 +1694,18 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			query.append(_FILTER_SQL_SELECT_ANNOUNCEMENTSENTRY_NO_INLINE_DISTINCT_WHERE_1);
 		}
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 		}
 
 		query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1796,7 +1808,7 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -1857,16 +1869,18 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 
 			query.append(_SQL_COUNT_ANNOUNCEMENTSENTRY_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1882,7 +1896,7 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -1923,16 +1937,18 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 
 		query.append(_FILTER_SQL_COUNT_ANNOUNCEMENTSENTRY_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 		}
 
 		query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1953,7 +1969,7 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
-			if (uuid != null) {
+			if (bindUuid) {
 				qPos.add(uuid);
 			}
 
@@ -1973,7 +1989,7 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 
 	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "announcementsEntry.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "announcementsEntry.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(announcementsEntry.uuid IS NULL OR announcementsEntry.uuid = ?) AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(announcementsEntry.uuid IS NULL OR announcementsEntry.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "announcementsEntry.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_USERID = new FinderPath(AnnouncementsEntryModelImpl.ENTITY_CACHE_ENABLED,
 			AnnouncementsEntryModelImpl.FINDER_CACHE_ENABLED,
@@ -4777,7 +4793,7 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 	 */
 	public AnnouncementsEntry remove(long entryId)
 		throws NoSuchEntryException, SystemException {
-		return remove(Long.valueOf(entryId));
+		return remove((Serializable)entryId);
 	}
 
 	/**
@@ -4919,7 +4935,7 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
 						announcementsEntryModelImpl.getOriginalUuid(),
-						Long.valueOf(announcementsEntryModelImpl.getOriginalCompanyId())
+						announcementsEntryModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
@@ -4928,7 +4944,7 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 
 				args = new Object[] {
 						announcementsEntryModelImpl.getUuid(),
-						Long.valueOf(announcementsEntryModelImpl.getCompanyId())
+						announcementsEntryModelImpl.getCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
@@ -4939,16 +4955,14 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			if ((announcementsEntryModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(announcementsEntryModelImpl.getOriginalUserId())
+						announcementsEntryModelImpl.getOriginalUserId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(announcementsEntryModelImpl.getUserId())
-					};
+				args = new Object[] { announcementsEntryModelImpl.getUserId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
@@ -4958,8 +4972,8 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			if ((announcementsEntryModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(announcementsEntryModelImpl.getOriginalClassNameId()),
-						Long.valueOf(announcementsEntryModelImpl.getOriginalClassPK())
+						announcementsEntryModelImpl.getOriginalClassNameId(),
+						announcementsEntryModelImpl.getOriginalClassPK()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -4967,8 +4981,8 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 					args);
 
 				args = new Object[] {
-						Long.valueOf(announcementsEntryModelImpl.getClassNameId()),
-						Long.valueOf(announcementsEntryModelImpl.getClassPK())
+						announcementsEntryModelImpl.getClassNameId(),
+						announcementsEntryModelImpl.getClassPK()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -4979,9 +4993,9 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			if ((announcementsEntryModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C_A.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(announcementsEntryModelImpl.getOriginalClassNameId()),
-						Long.valueOf(announcementsEntryModelImpl.getOriginalClassPK()),
-						Boolean.valueOf(announcementsEntryModelImpl.getOriginalAlert())
+						announcementsEntryModelImpl.getOriginalClassNameId(),
+						announcementsEntryModelImpl.getOriginalClassPK(),
+						announcementsEntryModelImpl.getOriginalAlert()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_A, args);
@@ -4989,9 +5003,9 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 					args);
 
 				args = new Object[] {
-						Long.valueOf(announcementsEntryModelImpl.getClassNameId()),
-						Long.valueOf(announcementsEntryModelImpl.getClassPK()),
-						Boolean.valueOf(announcementsEntryModelImpl.getAlert())
+						announcementsEntryModelImpl.getClassNameId(),
+						announcementsEntryModelImpl.getClassPK(),
+						announcementsEntryModelImpl.getAlert()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_A, args);
@@ -5044,13 +5058,24 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 	 *
 	 * @param primaryKey the primary key of the announcements entry
 	 * @return the announcements entry
-	 * @throws com.liferay.portal.NoSuchModelException if a announcements entry with the primary key could not be found
+	 * @throws com.liferay.portlet.announcements.NoSuchEntryException if a announcements entry with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public AnnouncementsEntry findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchEntryException, SystemException {
+		AnnouncementsEntry announcementsEntry = fetchByPrimaryKey(primaryKey);
+
+		if (announcementsEntry == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchEntryException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return announcementsEntry;
 	}
 
 	/**
@@ -5063,18 +5088,7 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 	 */
 	public AnnouncementsEntry findByPrimaryKey(long entryId)
 		throws NoSuchEntryException, SystemException {
-		AnnouncementsEntry announcementsEntry = fetchByPrimaryKey(entryId);
-
-		if (announcementsEntry == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + entryId);
-			}
-
-			throw new NoSuchEntryException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				entryId);
-		}
-
-		return announcementsEntry;
+		return findByPrimaryKey((Serializable)entryId);
 	}
 
 	/**
@@ -5087,20 +5101,8 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 	@Override
 	public AnnouncementsEntry fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the announcements entry with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param entryId the primary key of the announcements entry
-	 * @return the announcements entry, or <code>null</code> if a announcements entry with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public AnnouncementsEntry fetchByPrimaryKey(long entryId)
-		throws SystemException {
 		AnnouncementsEntry announcementsEntry = (AnnouncementsEntry)EntityCacheUtil.getResult(AnnouncementsEntryModelImpl.ENTITY_CACHE_ENABLED,
-				AnnouncementsEntryImpl.class, entryId);
+				AnnouncementsEntryImpl.class, primaryKey);
 
 		if (announcementsEntry == _nullAnnouncementsEntry) {
 			return null;
@@ -5113,20 +5115,20 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 				session = openSession();
 
 				announcementsEntry = (AnnouncementsEntry)session.get(AnnouncementsEntryImpl.class,
-						Long.valueOf(entryId));
+						primaryKey);
 
 				if (announcementsEntry != null) {
 					cacheResult(announcementsEntry);
 				}
 				else {
 					EntityCacheUtil.putResult(AnnouncementsEntryModelImpl.ENTITY_CACHE_ENABLED,
-						AnnouncementsEntryImpl.class, entryId,
+						AnnouncementsEntryImpl.class, primaryKey,
 						_nullAnnouncementsEntry);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(AnnouncementsEntryModelImpl.ENTITY_CACHE_ENABLED,
-					AnnouncementsEntryImpl.class, entryId);
+					AnnouncementsEntryImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -5136,6 +5138,18 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 		}
 
 		return announcementsEntry;
+	}
+
+	/**
+	 * Returns the announcements entry with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param entryId the primary key of the announcements entry
+	 * @return the announcements entry, or <code>null</code> if a announcements entry with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public AnnouncementsEntry fetchByPrimaryKey(long entryId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)entryId);
 	}
 
 	/**
@@ -5338,24 +5352,6 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AnnouncementsDeliveryPersistence.class)
-	protected AnnouncementsDeliveryPersistence announcementsDeliveryPersistence;
-	@BeanReference(type = AnnouncementsEntryPersistence.class)
-	protected AnnouncementsEntryPersistence announcementsEntryPersistence;
-	@BeanReference(type = AnnouncementsFlagPersistence.class)
-	protected AnnouncementsFlagPersistence announcementsFlagPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
 	private static final String _SQL_SELECT_ANNOUNCEMENTSENTRY = "SELECT announcementsEntry FROM AnnouncementsEntry announcementsEntry";
 	private static final String _SQL_SELECT_ANNOUNCEMENTSENTRY_WHERE = "SELECT announcementsEntry FROM AnnouncementsEntry announcementsEntry WHERE ";
 	private static final String _SQL_COUNT_ANNOUNCEMENTSENTRY = "SELECT COUNT(announcementsEntry) FROM AnnouncementsEntry announcementsEntry";

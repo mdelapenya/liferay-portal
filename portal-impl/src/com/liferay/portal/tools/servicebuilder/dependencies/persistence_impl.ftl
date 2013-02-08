@@ -157,15 +157,7 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 				FINDER_PATH_FETCH_BY_${finder.name?upper_case},
 				new Object[] {
 					<#list finderColsList as finderCol>
-						<#if finderCol.isPrimitiveType()>
-							${serviceBuilder.getPrimitiveObj("${finderCol.type}")}.valueOf(
-						</#if>
-
 						${entity.varName}.get${finderCol.methodName}()
-
-						<#if finderCol.isPrimitiveType()>
-							)
-						</#if>
 
 						<#if finderCol_has_next>
 							,
@@ -248,29 +240,88 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 	}
 
 	<#if entity.getUniqueFinderList()?size &gt; 0>
-		protected void clearUniqueFindersCache(${entity.name} ${entity.varName}) {
-			<#list entity.getUniqueFinderList() as finder>
-				<#assign finderColsList = finder.getColumns()>
+		protected void cacheUniqueFindersCache(${entity.name} ${entity.varName}) {
+			if (${entity.varName}.isNew()) {
+				<#list entity.getUniqueFinderList() as finder>
+					<#assign finderColsList = finder.getColumns()>
 
-				FinderCacheUtil.removeResult(
-					FINDER_PATH_FETCH_BY_${finder.name?upper_case},
-					new Object[] {
+					<#if finder_index == 0>
+						Object[]
+					</#if>
+					args = new Object[] {
 						<#list finderColsList as finderCol>
-							<#if finderCol.isPrimitiveType()>
-								${serviceBuilder.getPrimitiveObj("${finderCol.type}")}.valueOf(
-							</#if>
-
 							${entity.varName}.get${finderCol.methodName}()
-
-							<#if finderCol.isPrimitiveType()>
-								)
-							</#if>
 
 							<#if finderCol_has_next>
 								,
 							</#if>
 						</#list>
-					});
+					};
+
+					FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_${finder.name?upper_case}, args, Long.valueOf(1));
+					FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_${finder.name?upper_case}, args, ${entity.varName});
+				</#list>
+			}
+			else {
+				${entity.name}ModelImpl ${entity.varName}ModelImpl = (${entity.name}ModelImpl)${entity.varName};
+
+				<#list entity.getUniqueFinderList() as finder>
+					<#assign finderColsList = finder.getColumns()>
+
+					if ((${entity.varName}ModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_${finder.name?upper_case}.getColumnBitmask()) != 0) {
+						Object[] args = new Object[] {
+							<#list finderColsList as finderCol>
+								${entity.varName}.get${finderCol.methodName}()
+
+								<#if finderCol_has_next>
+									,
+								</#if>
+							</#list>
+						};
+
+						FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_${finder.name?upper_case}, args, Long.valueOf(1));
+						FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_${finder.name?upper_case}, args, ${entity.varName});
+					}
+				</#list>
+			}
+		}
+
+		protected void clearUniqueFindersCache(${entity.name} ${entity.varName}) {
+			${entity.name}ModelImpl ${entity.varName}ModelImpl = (${entity.name}ModelImpl)${entity.varName};
+
+			<#list entity.getUniqueFinderList() as finder>
+				<#assign finderColsList = finder.getColumns()>
+
+				<#if finder_index == 0>
+					Object[]
+				</#if>
+				args = new Object[] {
+					<#list finderColsList as finderCol>
+						${entity.varName}.get${finderCol.methodName}()
+
+						<#if finderCol_has_next>
+							,
+						</#if>
+					</#list>
+				};
+
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_${finder.name?upper_case}, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_${finder.name?upper_case}, args);
+
+				if ((${entity.varName}ModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_${finder.name?upper_case}.getColumnBitmask()) != 0) {
+					args = new Object[] {
+						<#list finderColsList as finderCol>
+							${entity.varName}ModelImpl.getOriginal${finderCol.methodName}()
+
+							<#if finderCol_has_next>
+								,
+							</#if>
+						</#list>
+					};
+
+					FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_${finder.name?upper_case}, args);
+					FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_${finder.name?upper_case}, args);
+				}
 			</#list>
 		}
 	</#if>
@@ -305,11 +356,7 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 	 * @throws SystemException if a system exception occurred
 	 */
 	public ${entity.name} remove(${entity.PKClassName} ${entity.PKVarName}) throws ${noSuchEntity}Exception, SystemException {
-		<#if entity.hasPrimitivePK(false)>
-			return remove(${serviceBuilder.getPrimitiveObj("${entity.PKClassName}")}.valueOf(${entity.PKVarName}));
-		<#else>
-			return remove((Serializable)${entity.PKVarName});
-		</#if>
+		return remove((Serializable)${entity.PKVarName});
 	}
 
 	/**
@@ -424,12 +471,6 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 			</#list>
 		</#if>
 
-		<#assign uniqueFinderList = entity.getUniqueFinderList()>
-
-		<#if uniqueFinderList?size != 0>
-			<#assign castEntityModelImpl = true>
-		</#if>
-
 		<#if castEntityModelImpl>
 			${entity.name}ModelImpl ${entity.varName}ModelImpl = (${entity.name}ModelImpl)${entity.varName};
 		</#if>
@@ -526,7 +567,15 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 				${entity.varName}.setNew(false);
 			}
 			else {
-				session.merge(${entity.varName});
+				<#if entity.hasLazyBlobColumn()>
+
+					<#-- Workaround for HHH-2680 -->
+
+					session.evict(${entity.varName});
+					session.saveOrUpdate(${entity.varName});
+				<#else>
+					session.merge(${entity.varName});
+				</#if>
 			}
 
 			<#if entity.hasLazyBlobColumn()>
@@ -585,15 +634,7 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 
 						Object[] args = new Object[] {
 							<#list finderColsList as finderCol>
-								<#if finderCol.isPrimitiveType()>
-									${serviceBuilder.getPrimitiveObj("${finderCol.type}")}.valueOf(
-								</#if>
-
 								${entity.varName}ModelImpl.getOriginal${finderCol.methodName}()
-
-								<#if finderCol.isPrimitiveType()>
-									)
-								</#if>
 
 								<#if finderCol_has_next>
 									,
@@ -606,15 +647,7 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 
 						args = new Object[] {
 							<#list finderColsList as finderCol>
-								<#if finderCol.isPrimitiveType()>
-									${serviceBuilder.getPrimitiveObj("${finderCol.type}")}.valueOf(
-								</#if>
-
 								${entity.varName}ModelImpl.get${finderCol.methodName}()
-
-								<#if finderCol.isPrimitiveType()>
-									)
-								</#if>
 
 								<#if finderCol_has_next>
 									,
@@ -635,85 +668,11 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 
 		EntityCacheUtil.putResult(${entity.name}ModelImpl.ENTITY_CACHE_ENABLED, ${entity.name}Impl.class, ${entity.varName}.getPrimaryKey(), ${entity.varName});
 
+		<#assign uniqueFinderList = entity.getUniqueFinderList()>
+
 		<#if uniqueFinderList?size &gt; 0>
-			if (isNew) {
-				<#list uniqueFinderList as finder>
-					<#assign finderColsList = finder.getColumns()>
-
-					FinderCacheUtil.putResult(
-						FINDER_PATH_FETCH_BY_${finder.name?upper_case},
-						new Object[] {
-							<#list finderColsList as finderCol>
-								<#if finderCol.isPrimitiveType()>
-									${serviceBuilder.getPrimitiveObj("${finderCol.type}")}.valueOf(
-								</#if>
-
-								${entity.varName}.get${finderCol.methodName}()
-
-								<#if finderCol.isPrimitiveType()>
-									)
-								</#if>
-
-								<#if finderCol_has_next>
-									,
-								</#if>
-							</#list>
-						},
-						${entity.varName});
-				</#list>
-			}
-			else {
-				<#list uniqueFinderList as finder>
-					<#assign finderColsList = finder.getColumns()>
-
-					if ((${entity.varName}ModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_${finder.name?upper_case}.getColumnBitmask()) != 0) {
-						Object[] args = new Object[] {
-							<#list finderColsList as finderCol>
-								<#if finderCol.isPrimitiveType()>
-									${serviceBuilder.getPrimitiveObj("${finderCol.type}")}.valueOf(
-								</#if>
-
-								${entity.varName}ModelImpl.getOriginal${finderCol.methodName}()
-
-								<#if finderCol.isPrimitiveType()>
-									)
-								</#if>
-
-								<#if finderCol_has_next>
-									,
-								</#if>
-							</#list>
-						};
-
-						<#if !finder.hasCustomComparator()>
-							FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_${finder.name?upper_case}, args);
-						</#if>
-
-						FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_${finder.name?upper_case}, args);
-
-						FinderCacheUtil.putResult(
-							FINDER_PATH_FETCH_BY_${finder.name?upper_case},
-							new Object[] {
-								<#list finderColsList as finderCol>
-									<#if finderCol.isPrimitiveType()>
-										${serviceBuilder.getPrimitiveObj("${finderCol.type}")}.valueOf(
-									</#if>
-
-									${entity.varName}.get${finderCol.methodName}()
-
-									<#if finderCol.isPrimitiveType()>
-										)
-									</#if>
-
-									<#if finderCol_has_next>
-										,
-									</#if>
-								</#list>
-							},
-							${entity.varName});
-					}
-				</#list>
-			}
+			clearUniqueFindersCache(${entity.varName});
+			cacheUniqueFindersCache(${entity.varName});
 		</#if>
 
 		<#if entity.hasLazyBlobColumn()>
@@ -753,16 +712,22 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 	 *
 	 * @param primaryKey the primary key of the ${entity.humanName}
 	 * @return the ${entity.humanName}
-	 * @throws com.liferay.portal.NoSuchModelException if a ${entity.humanName} with the primary key could not be found
+	 * @throws ${packagePath}.${noSuchEntity}Exception if a ${entity.humanName} with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	public ${entity.name} findByPrimaryKey(Serializable primaryKey) throws NoSuchModelException, SystemException {
-		<#if entity.hasPrimitivePK(false)>
-			return findByPrimaryKey(((${serviceBuilder.getPrimitiveObj("${entity.PKClassName}")})primaryKey).${entity.PKClassName}Value());
-		<#else>
-			return findByPrimaryKey((${entity.PKClassName})primaryKey);
-		</#if>
+	public ${entity.name} findByPrimaryKey(Serializable primaryKey) throws ${noSuchEntity}Exception, SystemException {
+		${entity.name} ${entity.varName} = fetchByPrimaryKey(primaryKey);
+
+		if (${entity.varName} == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new ${noSuchEntity}Exception(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+		}
+
+		return ${entity.varName};
 	}
 
 	/**
@@ -774,17 +739,7 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 	 * @throws SystemException if a system exception occurred
 	 */
 	public ${entity.name} findByPrimaryKey(${entity.PKClassName} ${entity.PKVarName}) throws ${noSuchEntity}Exception, SystemException {
-		${entity.name} ${entity.varName} = fetchByPrimaryKey(${entity.PKVarName});
-
-		if (${entity.varName} == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + ${entity.PKVarName});
-			}
-
-			throw new ${noSuchEntity}Exception(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + ${entity.PKVarName});
-		}
-
-		return ${entity.varName};
+		return findByPrimaryKey((Serializable)${entity.PKVarName});
 	}
 
 	/**
@@ -796,22 +751,7 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 	 */
 	@Override
 	public ${entity.name} fetchByPrimaryKey(Serializable primaryKey) throws SystemException {
-		<#if entity.hasPrimitivePK(false)>
-			return fetchByPrimaryKey(((${serviceBuilder.getPrimitiveObj("${entity.PKClassName}")})primaryKey).${entity.PKClassName}Value());
-		<#else>
-			return fetchByPrimaryKey((${entity.PKClassName})primaryKey);
-		</#if>
-	}
-
-	/**
-	 * Returns the ${entity.humanName} with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param ${entity.PKVarName} the primary key of the ${entity.humanName}
-	 * @return the ${entity.humanName}, or <code>null</code> if a ${entity.humanName} with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public ${entity.name} fetchByPrimaryKey(${entity.PKClassName} ${entity.PKVarName}) throws SystemException {
-		${entity.name} ${entity.varName} = (${entity.name})EntityCacheUtil.getResult(${entity.name}ModelImpl.ENTITY_CACHE_ENABLED, ${entity.name}Impl.class, ${entity.PKVarName});
+		${entity.name} ${entity.varName} = (${entity.name})EntityCacheUtil.getResult(${entity.name}ModelImpl.ENTITY_CACHE_ENABLED, ${entity.name}Impl.class, primaryKey);
 
 		if (${entity.varName} == _null${entity.name}) {
 			return null;
@@ -823,29 +763,17 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 			try {
 				session = openSession();
 
-				${entity.varName} = (${entity.name})session.get(${entity.name}Impl.class,
-
-				<#if entity.hasPrimitivePK()>
-					${serviceBuilder.getPrimitiveObj("${entity.PKClassName}")}.valueOf(
-				</#if>
-
-				${entity.PKVarName}
-
-				<#if entity.hasPrimitivePK()>
-					)
-				</#if>
-
-				);
+				${entity.varName} = (${entity.name})session.get(${entity.name}Impl.class, primaryKey);
 
 				if (${entity.varName} != null) {
 					cacheResult(${entity.varName});
 				}
 				else {
-					EntityCacheUtil.putResult(${entity.name}ModelImpl.ENTITY_CACHE_ENABLED, ${entity.name}Impl.class, ${entity.PKVarName}, _null${entity.name});
+					EntityCacheUtil.putResult(${entity.name}ModelImpl.ENTITY_CACHE_ENABLED, ${entity.name}Impl.class, primaryKey, _null${entity.name});
 				}
 			}
 			catch (Exception e) {
-				EntityCacheUtil.removeResult(${entity.name}ModelImpl.ENTITY_CACHE_ENABLED, ${entity.name}Impl.class, ${entity.PKVarName});
+				EntityCacheUtil.removeResult(${entity.name}ModelImpl.ENTITY_CACHE_ENABLED, ${entity.name}Impl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -855,6 +783,17 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 		}
 
 		return ${entity.varName};
+	}
+
+	/**
+	 * Returns the ${entity.humanName} with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param ${entity.PKVarName} the primary key of the ${entity.humanName}
+	 * @return the ${entity.humanName}, or <code>null</code> if a ${entity.humanName} with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public ${entity.name} fetchByPrimaryKey(${entity.PKClassName} ${entity.PKVarName}) throws SystemException {
+		return fetchByPrimaryKey((Serializable)${entity.PKVarName});
 	}
 
 	/**
@@ -1015,7 +954,7 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 	}
 
 	<#list entity.columnList as column>
-		<#if column.isCollection() && (column.isMappingManyToMany() || column.isMappingOneToMany())>
+		<#if column.isCollection() && column.isMappingManyToMany()>
 			<#assign tempEntity = serviceBuilder.getEntity(column.getEJBName())>
 
 			/**
@@ -1061,13 +1000,7 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 
 				"get${tempEntity.names}",
 				new String[] {
-					<#if entity.hasPrimitivePK()>
-						${serviceBuilder.getPrimitiveObj(entity.getPKClassName())}
-					<#else>
-						${entity.PKClassName}
-					</#if>
-
-					.class.getName(), Integer.class.getName(), Integer.class.getName(), OrderByComparator.class.getName()
+					${serviceBuilder.getPrimitiveObj(entity.getPKClassName())}.class.getName(), Integer.class.getName(), Integer.class.getName(), OrderByComparator.class.getName()
 				});
 
 			static {
@@ -1174,13 +1107,7 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 
 				"get${tempEntity.names}Size",
 				new String[] {
-					<#if entity.hasPrimitivePK()>
-						${serviceBuilder.getPrimitiveObj(entity.getPKClassName())}
-					<#else>
-						${entity.PKClassName}
-					</#if>
-
-					.class.getName()
+					${serviceBuilder.getPrimitiveObj(entity.getPKClassName())}.class.getName()
 				});
 
 			static {
@@ -1245,21 +1172,7 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 
 				"contains${tempEntity.name}",
 				new String[] {
-					<#if entity.hasPrimitivePK()>
-						${serviceBuilder.getPrimitiveObj(entity.getPKClassName())}
-					<#else>
-						${entity.PKClassName}
-					</#if>
-
-					.class.getName(),
-
-					<#if tempEntity.hasPrimitivePK()>
-						${serviceBuilder.getPrimitiveObj(tempEntity.getPKClassName())}
-					<#else>
-						${tempEntity.PKClassName}
-					</#if>
-
-					.class.getName()
+					${serviceBuilder.getPrimitiveObj(entity.getPKClassName())}.class.getName(), ${serviceBuilder.getPrimitiveObj(tempEntity.getPKClassName())}.class.getName()
 				});
 
 			/**
@@ -1822,7 +1735,7 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 		}
 
 		<#list entity.columnList as column>
-			<#if column.isCollection() && (column.isMappingManyToMany() || column.isMappingOneToMany())>
+			<#if column.isCollection() && column.isMappingManyToMany()>
 				<#assign tempEntity = serviceBuilder.getEntity(column.getEJBName())>
 
 				contains${tempEntity.name} = new Contains${tempEntity.name}();
@@ -1851,16 +1764,12 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	<#list referenceList as tempEntity>
-		<#if tempEntity.hasColumns() && (entity.name == "Counter" || tempEntity.name != "Counter")>
+	<#list entity.columnList as column>
+		<#if column.isCollection() && column.isMappingManyToMany()>
+			<#assign tempEntity = serviceBuilder.getEntity(column.getEJBName())>
+
 			@BeanReference(type = ${tempEntity.name}Persistence.class)
 			protected ${tempEntity.name}Persistence ${tempEntity.varName}Persistence;
-		</#if>
-	</#list>
-
-	<#list entity.columnList as column>
-		<#if column.isCollection() && (column.isMappingManyToMany() || column.isMappingOneToMany())>
-			<#assign tempEntity = serviceBuilder.getEntity(column.getEJBName())>
 
 			protected Contains${tempEntity.name} contains${tempEntity.name};
 
@@ -1873,7 +1782,7 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 	</#list>
 
 	<#list entity.columnList as column>
-		<#if column.isCollection() && (column.isMappingManyToMany() || column.isMappingOneToMany())>
+		<#if column.isCollection() && column.isMappingManyToMany()>
 			<#assign tempEntity = serviceBuilder.getEntity(column.getEJBName())>
 			<#assign entitySqlType = serviceBuilder.getSqlType(packagePath + ".model." + entity.getName(), entity.getPKVarName(), entity.getPKClassName())>
 			<#assign tempEntitySqlType = serviceBuilder.getSqlType(tempEntity.getPackagePath() + ".model." + entity.getName(), tempEntity.getPKVarName(), tempEntity.getPKClassName())>
@@ -2131,27 +2040,9 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 				private static final String _SQL_GET${tempEntity.names?upper_case}SIZE = "SELECT COUNT(*) AS COUNT_VALUE FROM ${column.mappingTable} WHERE ${entity.PKDBName} = ?";
 
 				private static final String _SQL_CONTAINS${tempEntity.name?upper_case} = "SELECT COUNT(*) AS COUNT_VALUE FROM ${column.mappingTable} WHERE ${entity.PKDBName} = ? AND ${tempEntity.PKDBName} = ?";
-			<#elseif column.isMappingOneToMany()>
-				private static final String _SQL_GET${tempEntity.names?upper_case} = "SELECT {${tempEntity.table}.*} FROM ${tempEntity.table} INNER JOIN ${entity.table} ON (${entity.table}.${entity.PKDBName} = ${tempEntity.table}.${entity.PKDBName}) WHERE (${entity.table}.${entity.PKDBName} = ?)";
-
-				private static final String _SQL_GET${tempEntity.names?upper_case}SIZE = "SELECT COUNT(*) AS COUNT_VALUE FROM ${tempEntity.table} WHERE ${entity.PKDBName} = ?";
-
-				private static final String _SQL_CONTAINS${tempEntity.name?upper_case} = "SELECT COUNT(*) AS COUNT_VALUE FROM ${tempEntity.table} WHERE ${entity.PKDBName} = ? AND ${tempEntity.PKDBName} = ?";
 			</#if>
 		</#if>
 	</#list>
-
-	<#if entity.hasArrayableOperator()>
-		private static String _removeConjunction(String sql) {
-			int pos = sql.indexOf(" AND ");
-
-			if (pos != -1) {
-				sql = sql.substring(0, pos);
-			}
-
-			return sql;
-		}
-	</#if>
 
 	<#if entity.isPermissionCheckEnabled()>
 		private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN = "${entity.alias}.${entity.filterPKColumn.DBName}";

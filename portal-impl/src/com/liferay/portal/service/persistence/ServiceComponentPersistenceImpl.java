@@ -14,9 +14,7 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchServiceComponentException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -202,16 +200,18 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 			query.append(_SQL_SELECT_SERVICECOMPONENT_WHERE);
 
+			boolean bindBuildNamespace = false;
+
 			if (buildNamespace == null) {
 				query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_1);
 			}
+			else if (buildNamespace.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_3);
+			}
 			else {
-				if (buildNamespace.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_2);
-				}
+				bindBuildNamespace = true;
+
+				query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_2);
 			}
 
 			if (orderByComparator != null) {
@@ -234,7 +234,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (buildNamespace != null) {
+				if (bindBuildNamespace) {
 					qPos.add(buildNamespace);
 				}
 
@@ -429,16 +429,18 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 		query.append(_SQL_SELECT_SERVICECOMPONENT_WHERE);
 
+		boolean bindBuildNamespace = false;
+
 		if (buildNamespace == null) {
 			query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_1);
 		}
+		else if (buildNamespace.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_3);
+		}
 		else {
-			if (buildNamespace.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_2);
-			}
+			bindBuildNamespace = true;
+
+			query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_2);
 		}
 
 		if (orderByComparator != null) {
@@ -509,7 +511,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (buildNamespace != null) {
+		if (bindBuildNamespace) {
 			qPos.add(buildNamespace);
 		}
 
@@ -566,16 +568,18 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 			query.append(_SQL_COUNT_SERVICECOMPONENT_WHERE);
 
+			boolean bindBuildNamespace = false;
+
 			if (buildNamespace == null) {
 				query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_1);
 			}
+			else if (buildNamespace.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_3);
+			}
 			else {
-				if (buildNamespace.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_2);
-				}
+				bindBuildNamespace = true;
+
+				query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_2);
 			}
 
 			String sql = query.toString();
@@ -589,7 +593,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (buildNamespace != null) {
+				if (bindBuildNamespace) {
 					qPos.add(buildNamespace);
 				}
 
@@ -612,7 +616,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 	private static final String _FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_1 = "serviceComponent.buildNamespace IS NULL";
 	private static final String _FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_2 = "serviceComponent.buildNamespace = ?";
-	private static final String _FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_3 = "(serviceComponent.buildNamespace IS NULL OR serviceComponent.buildNamespace = ?)";
+	private static final String _FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_3 = "(serviceComponent.buildNamespace IS NULL OR serviceComponent.buildNamespace = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_BNS_BNU = new FinderPath(ServiceComponentModelImpl.ENTITY_CACHE_ENABLED,
 			ServiceComponentModelImpl.FINDER_CACHE_ENABLED,
 			ServiceComponentImpl.class, FINDER_CLASS_NAME_ENTITY,
@@ -711,16 +715,18 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 			query.append(_SQL_SELECT_SERVICECOMPONENT_WHERE);
 
+			boolean bindBuildNamespace = false;
+
 			if (buildNamespace == null) {
 				query.append(_FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_1);
 			}
+			else if (buildNamespace.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_3);
+			}
 			else {
-				if (buildNamespace.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_2);
-				}
+				bindBuildNamespace = true;
+
+				query.append(_FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_2);
 			}
 
 			query.append(_FINDER_COLUMN_BNS_BNU_BUILDNUMBER_2);
@@ -736,7 +742,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (buildNamespace != null) {
+				if (bindBuildNamespace) {
 					qPos.add(buildNamespace);
 				}
 
@@ -822,16 +828,18 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 			query.append(_SQL_COUNT_SERVICECOMPONENT_WHERE);
 
+			boolean bindBuildNamespace = false;
+
 			if (buildNamespace == null) {
 				query.append(_FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_1);
 			}
+			else if (buildNamespace.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_3);
+			}
 			else {
-				if (buildNamespace.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_2);
-				}
+				bindBuildNamespace = true;
+
+				query.append(_FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_2);
 			}
 
 			query.append(_FINDER_COLUMN_BNS_BNU_BUILDNUMBER_2);
@@ -847,7 +855,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (buildNamespace != null) {
+				if (bindBuildNamespace) {
 					qPos.add(buildNamespace);
 				}
 
@@ -872,7 +880,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 	private static final String _FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_1 = "serviceComponent.buildNamespace IS NULL AND ";
 	private static final String _FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_2 = "serviceComponent.buildNamespace = ? AND ";
-	private static final String _FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_3 = "(serviceComponent.buildNamespace IS NULL OR serviceComponent.buildNamespace = ?) AND ";
+	private static final String _FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_3 = "(serviceComponent.buildNamespace IS NULL OR serviceComponent.buildNamespace = '') AND ";
 	private static final String _FINDER_COLUMN_BNS_BNU_BUILDNUMBER_2 = "serviceComponent.buildNumber = ?";
 
 	/**
@@ -888,7 +896,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_BNS_BNU,
 			new Object[] {
 				serviceComponent.getBuildNamespace(),
-				Long.valueOf(serviceComponent.getBuildNumber())
+				serviceComponent.getBuildNumber()
 			}, serviceComponent);
 
 		serviceComponent.resetOriginalValues();
@@ -964,12 +972,57 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 		}
 	}
 
+	protected void cacheUniqueFindersCache(ServiceComponent serviceComponent) {
+		if (serviceComponent.isNew()) {
+			Object[] args = new Object[] {
+					serviceComponent.getBuildNamespace(),
+					serviceComponent.getBuildNumber()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_BNS_BNU, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_BNS_BNU, args,
+				serviceComponent);
+		}
+		else {
+			ServiceComponentModelImpl serviceComponentModelImpl = (ServiceComponentModelImpl)serviceComponent;
+
+			if ((serviceComponentModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_BNS_BNU.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						serviceComponent.getBuildNamespace(),
+						serviceComponent.getBuildNumber()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_BNS_BNU, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_BNS_BNU, args,
+					serviceComponent);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(ServiceComponent serviceComponent) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_BNS_BNU,
-			new Object[] {
+		ServiceComponentModelImpl serviceComponentModelImpl = (ServiceComponentModelImpl)serviceComponent;
+
+		Object[] args = new Object[] {
 				serviceComponent.getBuildNamespace(),
-				Long.valueOf(serviceComponent.getBuildNumber())
-			});
+				serviceComponent.getBuildNumber()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_BNS_BNU, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_BNS_BNU, args);
+
+		if ((serviceComponentModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_BNS_BNU.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					serviceComponentModelImpl.getOriginalBuildNamespace(),
+					serviceComponentModelImpl.getOriginalBuildNumber()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_BNS_BNU, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_BNS_BNU, args);
+		}
 	}
 
 	/**
@@ -997,7 +1050,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 	 */
 	public ServiceComponent remove(long serviceComponentId)
 		throws NoSuchServiceComponentException, SystemException {
-		return remove(Long.valueOf(serviceComponentId));
+		return remove((Serializable)serviceComponentId);
 	}
 
 	/**
@@ -1138,32 +1191,8 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 			ServiceComponentImpl.class, serviceComponent.getPrimaryKey(),
 			serviceComponent);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_BNS_BNU,
-				new Object[] {
-					serviceComponent.getBuildNamespace(),
-					Long.valueOf(serviceComponent.getBuildNumber())
-				}, serviceComponent);
-		}
-		else {
-			if ((serviceComponentModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_BNS_BNU.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						serviceComponentModelImpl.getOriginalBuildNamespace(),
-						Long.valueOf(serviceComponentModelImpl.getOriginalBuildNumber())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_BNS_BNU, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_BNS_BNU, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_BNS_BNU,
-					new Object[] {
-						serviceComponent.getBuildNamespace(),
-						Long.valueOf(serviceComponent.getBuildNumber())
-					}, serviceComponent);
-			}
-		}
+		clearUniqueFindersCache(serviceComponent);
+		cacheUniqueFindersCache(serviceComponent);
 
 		return serviceComponent;
 	}
@@ -1193,13 +1222,24 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 	 *
 	 * @param primaryKey the primary key of the service component
 	 * @return the service component
-	 * @throws com.liferay.portal.NoSuchModelException if a service component with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchServiceComponentException if a service component with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public ServiceComponent findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchServiceComponentException, SystemException {
+		ServiceComponent serviceComponent = fetchByPrimaryKey(primaryKey);
+
+		if (serviceComponent == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchServiceComponentException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return serviceComponent;
 	}
 
 	/**
@@ -1212,19 +1252,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 	 */
 	public ServiceComponent findByPrimaryKey(long serviceComponentId)
 		throws NoSuchServiceComponentException, SystemException {
-		ServiceComponent serviceComponent = fetchByPrimaryKey(serviceComponentId);
-
-		if (serviceComponent == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-					serviceComponentId);
-			}
-
-			throw new NoSuchServiceComponentException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				serviceComponentId);
-		}
-
-		return serviceComponent;
+		return findByPrimaryKey((Serializable)serviceComponentId);
 	}
 
 	/**
@@ -1237,20 +1265,8 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 	@Override
 	public ServiceComponent fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the service component with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param serviceComponentId the primary key of the service component
-	 * @return the service component, or <code>null</code> if a service component with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public ServiceComponent fetchByPrimaryKey(long serviceComponentId)
-		throws SystemException {
 		ServiceComponent serviceComponent = (ServiceComponent)EntityCacheUtil.getResult(ServiceComponentModelImpl.ENTITY_CACHE_ENABLED,
-				ServiceComponentImpl.class, serviceComponentId);
+				ServiceComponentImpl.class, primaryKey);
 
 		if (serviceComponent == _nullServiceComponent) {
 			return null;
@@ -1263,20 +1279,20 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 				session = openSession();
 
 				serviceComponent = (ServiceComponent)session.get(ServiceComponentImpl.class,
-						Long.valueOf(serviceComponentId));
+						primaryKey);
 
 				if (serviceComponent != null) {
 					cacheResult(serviceComponent);
 				}
 				else {
 					EntityCacheUtil.putResult(ServiceComponentModelImpl.ENTITY_CACHE_ENABLED,
-						ServiceComponentImpl.class, serviceComponentId,
+						ServiceComponentImpl.class, primaryKey,
 						_nullServiceComponent);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(ServiceComponentModelImpl.ENTITY_CACHE_ENABLED,
-					ServiceComponentImpl.class, serviceComponentId);
+					ServiceComponentImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -1286,6 +1302,18 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 		}
 
 		return serviceComponent;
+	}
+
+	/**
+	 * Returns the service component with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param serviceComponentId the primary key of the service component
+	 * @return the service component, or <code>null</code> if a service component with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public ServiceComponent fetchByPrimaryKey(long serviceComponentId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)serviceComponentId);
 	}
 
 	/**
@@ -1488,128 +1516,6 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
 	private static final String _SQL_SELECT_SERVICECOMPONENT = "SELECT serviceComponent FROM ServiceComponent serviceComponent";
 	private static final String _SQL_SELECT_SERVICECOMPONENT_WHERE = "SELECT serviceComponent FROM ServiceComponent serviceComponent WHERE ";
 	private static final String _SQL_COUNT_SERVICECOMPONENT = "SELECT COUNT(serviceComponent) FROM ServiceComponent serviceComponent";

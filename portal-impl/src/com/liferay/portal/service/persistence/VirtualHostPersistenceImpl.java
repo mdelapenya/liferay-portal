@@ -14,9 +14,7 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchVirtualHostException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -168,16 +166,18 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 
 			query.append(_SQL_SELECT_VIRTUALHOST_WHERE);
 
+			boolean bindHostname = false;
+
 			if (hostname == null) {
 				query.append(_FINDER_COLUMN_HOSTNAME_HOSTNAME_1);
 			}
+			else if (hostname.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_HOSTNAME_HOSTNAME_3);
+			}
 			else {
-				if (hostname.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_HOSTNAME_HOSTNAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_HOSTNAME_HOSTNAME_2);
-				}
+				bindHostname = true;
+
+				query.append(_FINDER_COLUMN_HOSTNAME_HOSTNAME_2);
 			}
 
 			String sql = query.toString();
@@ -191,7 +191,7 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (hostname != null) {
+				if (bindHostname) {
 					qPos.add(hostname);
 				}
 
@@ -268,16 +268,18 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 
 			query.append(_SQL_COUNT_VIRTUALHOST_WHERE);
 
+			boolean bindHostname = false;
+
 			if (hostname == null) {
 				query.append(_FINDER_COLUMN_HOSTNAME_HOSTNAME_1);
 			}
+			else if (hostname.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_HOSTNAME_HOSTNAME_3);
+			}
 			else {
-				if (hostname.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_HOSTNAME_HOSTNAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_HOSTNAME_HOSTNAME_2);
-				}
+				bindHostname = true;
+
+				query.append(_FINDER_COLUMN_HOSTNAME_HOSTNAME_2);
 			}
 
 			String sql = query.toString();
@@ -291,7 +293,7 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (hostname != null) {
+				if (bindHostname) {
 					qPos.add(hostname);
 				}
 
@@ -314,7 +316,7 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 
 	private static final String _FINDER_COLUMN_HOSTNAME_HOSTNAME_1 = "virtualHost.hostname IS NULL";
 	private static final String _FINDER_COLUMN_HOSTNAME_HOSTNAME_2 = "virtualHost.hostname = ?";
-	private static final String _FINDER_COLUMN_HOSTNAME_HOSTNAME_3 = "(virtualHost.hostname IS NULL OR virtualHost.hostname = ?)";
+	private static final String _FINDER_COLUMN_HOSTNAME_HOSTNAME_3 = "(virtualHost.hostname IS NULL OR virtualHost.hostname = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_L = new FinderPath(VirtualHostModelImpl.ENTITY_CACHE_ENABLED,
 			VirtualHostModelImpl.FINDER_CACHE_ENABLED, VirtualHostImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByC_L",
@@ -557,8 +559,7 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_L,
 			new Object[] {
-				Long.valueOf(virtualHost.getCompanyId()),
-				Long.valueOf(virtualHost.getLayoutSetId())
+				virtualHost.getCompanyId(), virtualHost.getLayoutSetId()
 			}, virtualHost);
 
 		virtualHost.resetOriginalValues();
@@ -633,15 +634,84 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 		}
 	}
 
-	protected void clearUniqueFindersCache(VirtualHost virtualHost) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_HOSTNAME,
-			new Object[] { virtualHost.getHostname() });
+	protected void cacheUniqueFindersCache(VirtualHost virtualHost) {
+		if (virtualHost.isNew()) {
+			Object[] args = new Object[] { virtualHost.getHostname() };
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_L,
-			new Object[] {
-				Long.valueOf(virtualHost.getCompanyId()),
-				Long.valueOf(virtualHost.getLayoutSetId())
-			});
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_HOSTNAME, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_HOSTNAME, args,
+				virtualHost);
+
+			args = new Object[] {
+					virtualHost.getCompanyId(), virtualHost.getLayoutSetId()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_L, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_L, args,
+				virtualHost);
+		}
+		else {
+			VirtualHostModelImpl virtualHostModelImpl = (VirtualHostModelImpl)virtualHost;
+
+			if ((virtualHostModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_HOSTNAME.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] { virtualHost.getHostname() };
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_HOSTNAME, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_HOSTNAME, args,
+					virtualHost);
+			}
+
+			if ((virtualHostModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_C_L.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						virtualHost.getCompanyId(), virtualHost.getLayoutSetId()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_L, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_L, args,
+					virtualHost);
+			}
+		}
+	}
+
+	protected void clearUniqueFindersCache(VirtualHost virtualHost) {
+		VirtualHostModelImpl virtualHostModelImpl = (VirtualHostModelImpl)virtualHost;
+
+		Object[] args = new Object[] { virtualHost.getHostname() };
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_HOSTNAME, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_HOSTNAME, args);
+
+		if ((virtualHostModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_HOSTNAME.getColumnBitmask()) != 0) {
+			args = new Object[] { virtualHostModelImpl.getOriginalHostname() };
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_HOSTNAME, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_HOSTNAME, args);
+		}
+
+		args = new Object[] {
+				virtualHost.getCompanyId(), virtualHost.getLayoutSetId()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_L, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_L, args);
+
+		if ((virtualHostModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_C_L.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					virtualHostModelImpl.getOriginalCompanyId(),
+					virtualHostModelImpl.getOriginalLayoutSetId()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_L, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_L, args);
+		}
 	}
 
 	/**
@@ -669,7 +739,7 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 	 */
 	public VirtualHost remove(long virtualHostId)
 		throws NoSuchVirtualHostException, SystemException {
-		return remove(Long.valueOf(virtualHostId));
+		return remove((Serializable)virtualHostId);
 	}
 
 	/**
@@ -754,8 +824,6 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 
 		boolean isNew = virtualHost.isNew();
 
-		VirtualHostModelImpl virtualHostModelImpl = (VirtualHostModelImpl)virtualHost;
-
 		Session session = null;
 
 		try {
@@ -786,49 +854,8 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 		EntityCacheUtil.putResult(VirtualHostModelImpl.ENTITY_CACHE_ENABLED,
 			VirtualHostImpl.class, virtualHost.getPrimaryKey(), virtualHost);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_HOSTNAME,
-				new Object[] { virtualHost.getHostname() }, virtualHost);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_L,
-				new Object[] {
-					Long.valueOf(virtualHost.getCompanyId()),
-					Long.valueOf(virtualHost.getLayoutSetId())
-				}, virtualHost);
-		}
-		else {
-			if ((virtualHostModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_HOSTNAME.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						virtualHostModelImpl.getOriginalHostname()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_HOSTNAME, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_HOSTNAME, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_HOSTNAME,
-					new Object[] { virtualHost.getHostname() }, virtualHost);
-			}
-
-			if ((virtualHostModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_L.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(virtualHostModelImpl.getOriginalCompanyId()),
-						Long.valueOf(virtualHostModelImpl.getOriginalLayoutSetId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_L, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_L, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_L,
-					new Object[] {
-						Long.valueOf(virtualHost.getCompanyId()),
-						Long.valueOf(virtualHost.getLayoutSetId())
-					}, virtualHost);
-			}
-		}
+		clearUniqueFindersCache(virtualHost);
+		cacheUniqueFindersCache(virtualHost);
 
 		return virtualHost;
 	}
@@ -856,13 +883,24 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 	 *
 	 * @param primaryKey the primary key of the virtual host
 	 * @return the virtual host
-	 * @throws com.liferay.portal.NoSuchModelException if a virtual host with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchVirtualHostException if a virtual host with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public VirtualHost findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchVirtualHostException, SystemException {
+		VirtualHost virtualHost = fetchByPrimaryKey(primaryKey);
+
+		if (virtualHost == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchVirtualHostException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return virtualHost;
 	}
 
 	/**
@@ -875,18 +913,7 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 	 */
 	public VirtualHost findByPrimaryKey(long virtualHostId)
 		throws NoSuchVirtualHostException, SystemException {
-		VirtualHost virtualHost = fetchByPrimaryKey(virtualHostId);
-
-		if (virtualHost == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + virtualHostId);
-			}
-
-			throw new NoSuchVirtualHostException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				virtualHostId);
-		}
-
-		return virtualHost;
+		return findByPrimaryKey((Serializable)virtualHostId);
 	}
 
 	/**
@@ -899,20 +926,8 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 	@Override
 	public VirtualHost fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the virtual host with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param virtualHostId the primary key of the virtual host
-	 * @return the virtual host, or <code>null</code> if a virtual host with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public VirtualHost fetchByPrimaryKey(long virtualHostId)
-		throws SystemException {
 		VirtualHost virtualHost = (VirtualHost)EntityCacheUtil.getResult(VirtualHostModelImpl.ENTITY_CACHE_ENABLED,
-				VirtualHostImpl.class, virtualHostId);
+				VirtualHostImpl.class, primaryKey);
 
 		if (virtualHost == _nullVirtualHost) {
 			return null;
@@ -925,19 +940,19 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 				session = openSession();
 
 				virtualHost = (VirtualHost)session.get(VirtualHostImpl.class,
-						Long.valueOf(virtualHostId));
+						primaryKey);
 
 				if (virtualHost != null) {
 					cacheResult(virtualHost);
 				}
 				else {
 					EntityCacheUtil.putResult(VirtualHostModelImpl.ENTITY_CACHE_ENABLED,
-						VirtualHostImpl.class, virtualHostId, _nullVirtualHost);
+						VirtualHostImpl.class, primaryKey, _nullVirtualHost);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(VirtualHostModelImpl.ENTITY_CACHE_ENABLED,
-					VirtualHostImpl.class, virtualHostId);
+					VirtualHostImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -947,6 +962,18 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 		}
 
 		return virtualHost;
+	}
+
+	/**
+	 * Returns the virtual host with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param virtualHostId the primary key of the virtual host
+	 * @return the virtual host, or <code>null</code> if a virtual host with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public VirtualHost fetchByPrimaryKey(long virtualHostId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)virtualHostId);
 	}
 
 	/**
@@ -1149,128 +1176,6 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
 	private static final String _SQL_SELECT_VIRTUALHOST = "SELECT virtualHost FROM VirtualHost virtualHost";
 	private static final String _SQL_SELECT_VIRTUALHOST_WHERE = "SELECT virtualHost FROM VirtualHost virtualHost WHERE ";
 	private static final String _SQL_COUNT_VIRTUALHOST = "SELECT COUNT(virtualHost) FROM VirtualHost virtualHost";

@@ -17,7 +17,7 @@
 <%@ include file="/html/portlet/dynamic_data_mapping/init.jsp" %>
 
 <%
-String redirect = ParamUtil.getString(request, "redirect");
+	String redirect = ParamUtil.getString(request, "redirect");
 String backURL = ParamUtil.getString(request, "backURL");
 
 String portletResource = ParamUtil.getString(request, "portletResource");
@@ -42,19 +42,25 @@ if ((structure == null) && (template != null)) {
 
 String type = BeanParamUtil.getString(template, request, "type", DDMTemplateConstants.TEMPLATE_TYPE_FORM);
 String mode = BeanParamUtil.getString(template, request, "mode", DDMTemplateConstants.TEMPLATE_MODE_CREATE);
-String language = BeanParamUtil.getString(template, request, "language", DDMTemplateConstants.LANG_TYPE_VM);
+String language = BeanParamUtil.getString(template, request, "language", TemplateConstants.LANG_TYPE_VM);
 String script = BeanParamUtil.getString(template, request, "script");
+Set<String> supportedLanguageTypes = TemplateManagerUtil.getTemplateManagerNames();
 
 if (Validator.isNull(script)) {
-	if (classNameId > 0) {
-		PortletDisplayTemplateHandler portletDisplayTemplateHandler = PortletDisplayTemplateHandlerRegistryUtil.getPortletDisplayTemplateHandler(classNameId);
+	PortletDisplayTemplateHandler portletDisplayTemplateHandler = PortletDisplayTemplateHandlerRegistryUtil.getPortletDisplayTemplateHandler(classNameId);
 
-		if (portletDisplayTemplateHandler != null) {
-			script = ContentUtil.get(portletDisplayTemplateHandler.getTemplatesHelpPath(language));
-		}
+	if (portletDisplayTemplateHandler != null) {
+		script = ContentUtil.get(portletDisplayTemplateHandler.getTemplatesHelpPath(language));
+
+		String propertyNamePrefix = portletDisplayTemplateHandler.getTemplatesHelpPropertyKey();
+
+		supportedLanguageTypes = TemplateManagerUtil.getSupportedLanguageTypes(propertyNamePrefix);
+	}
+	else if ((structure != null) && Validator.equals(structure.getClassName(), JournalArticle.class)) {
+		script = ContentUtil.get(PropsUtil.get(PropsKeys.JOURNAL_TEMPLATE_LANGUAGE_CONTENT, new Filter(TemplateConstants.LANG_TYPE_VM)));
 	}
 	else if (!type.equals(DDMTemplateConstants.TEMPLATE_TYPE_FORM)) {
-		script = ContentUtil.get(PropsUtil.get(PropsKeys.DYNAMIC_DATA_MAPPING_TEMPLATE_LANGUAGE_CONTENT, new Filter(DDMTemplateConstants.LANG_TYPE_VM)));
+		script = ContentUtil.get(PropsUtil.get(PropsKeys.DYNAMIC_DATA_MAPPING_TEMPLATE_LANGUAGE_CONTENT, new Filter(TemplateConstants.LANG_TYPE_VM)));
 	}
 }
 
@@ -179,15 +185,6 @@ if (Validator.isNotNull(structureAvailableFields)) {
 							<aui:option label="create" />
 							<aui:option label="edit" />
 						</aui:select>
-
-						<aui:script use="aui-base,event-valuechange">
-							A.one('#<portlet:namespace />mode').on(
-								'valueChange',
-								function(event) {
-									<portlet:namespace />toggleMode(event.newVal);
-								}
-							);
-						</aui:script>
 					</c:when>
 					<c:otherwise>
 						<div id="<portlet:namespace />smallImageContainer">
@@ -247,44 +244,67 @@ if (Validator.isNotNull(structureAvailableFields)) {
 		<%@ include file="/html/portlet/dynamic_data_mapping/form_builder.jspf" %>
 
 		<aui:script>
-			var <portlet:namespace />hiddenAttributesMap = window.<portlet:namespace />formBuilder.MAP_HIDDEN_FIELD_ATTRS;
+			Liferay.provide(
+				window,
+				'<portlet:namespace />attachValueChange',
+				function(mode) {
+					var A = AUI();
 
-			var <portlet:namespace />getFieldHiddenAttributes = function(mode, field) {
-				var hiddenAttributes = <portlet:namespace />hiddenAttributesMap[field.get('type')] || <portlet:namespace />hiddenAttributesMap.DEFAULT;
+					A.one('#<portlet:namespace />mode').on(
+						'valueChange',
+						function(event) {
+							<portlet:namespace />toggleMode(event.newVal);
+						}
+					);
+				},
+				['event-valuechange']
+			);
 
-				hiddenAttributes = A.Array(hiddenAttributes);
+			Liferay.on(
+				'<portlet:namespace />formBuilderLoaded',
+				function(event) {
+					<portlet:namespace />attachValueChange();
 
-				if (mode === '<%= DDMTemplateConstants.TEMPLATE_MODE_EDIT %>') {
-					A.Array.removeItem(hiddenAttributes, 'readOnly');
+					<portlet:namespace />toggleMode('<%= HtmlUtil.escape(mode) %>');
 				}
+			);
 
-				return hiddenAttributes;
-			};
+			Liferay.provide(
+				window,
+				'<portlet:namespace />setFieldsHiddenAttributes',
+				function(item, index, collection, mode) {
+					var A = AUI();
 
-			var <portlet:namespace />setFieldsHiddenAttributes = function(item, index, collection) {
-				var hiddenAttributes = <portlet:namespace />getFieldHiddenAttributes(mode, item);
+					var hiddenAttributesMap = window.<portlet:namespace />formBuilder.MAP_HIDDEN_FIELD_ATTRS;
+					var hiddenAttributes = hiddenAttributesMap[item.get('type')] || hiddenAttributesMap.DEFAULT;
 
-				item.set('hiddenAttributes', hiddenAttributes);
-			};
+					hiddenAttributes = A.Array(hiddenAttributes);
+
+					if (mode === '<%= DDMTemplateConstants.TEMPLATE_MODE_EDIT %>') {
+						A.Array.removeItem(hiddenAttributes, 'readOnly');
+					}
+
+					item.set('hiddenAttributes', hiddenAttributes);
+				},
+				['aui-base']
+			);
 
 			Liferay.provide(
 				window,
 				'<portlet:namespace />toggleMode',
 				function(mode) {
+					var A = AUI();
+
 					var modeEdit = (mode === '<%= DDMTemplateConstants.TEMPLATE_MODE_EDIT %>');
 
 					window.<portlet:namespace />formBuilder.set('allowRemoveRequiredFields', modeEdit);
 
-					window.<portlet:namespace />formBuilder.get('fields').each(<portlet:namespace />setFieldsHiddenAttributes);
+					window.<portlet:namespace />formBuilder.get('fields').each(A.rbind(<portlet:namespace />setFieldsHiddenAttributes, this, mode));
 
-					A.Array.each(window.<portlet:namespace />formBuilder.get('availableFields'), <portlet:namespace />setFieldsHiddenAttributes);
+					A.Array.each(window.<portlet:namespace />formBuilder.get('availableFields'), A.rbind(<portlet:namespace />setFieldsHiddenAttributes, this, mode));
 				},
 				['aui-base']
 			);
-		</aui:script>
-
-		<aui:script>
-			<portlet:namespace />toggleMode('<%= HtmlUtil.escape(mode) %>');
 		</aui:script>
 	</c:when>
 	<c:otherwise>
@@ -352,7 +372,20 @@ if (Validator.isNotNull(structureAvailableFields)) {
 </c:choose>
 
 <aui:button-row>
-	<aui:button onClick='<%= renderResponse.getNamespace() + "saveTemplate();" %>' value='<%= LanguageUtil.get(pageContext, "save") %>' />
+	<aui:script>
+		Liferay.after(
+			'<portlet:namespace />saveTemplate',
+			function(){
+				submitForm(document.<portlet:namespace />fm);
+			}
+		);
+	</aui:script>
+
+	<%
+	String taglibOnClick = "Liferay.fire('" + liferayPortletResponse.getNamespace() + "saveTemplate');";
+	%>
+
+	<aui:button onClick="<%= taglibOnClick %>" value='<%= LanguageUtil.get(pageContext, "save") %>' />
 
 	<aui:button href="<%= redirect %>" type="cancel" />
 </aui:button-row>

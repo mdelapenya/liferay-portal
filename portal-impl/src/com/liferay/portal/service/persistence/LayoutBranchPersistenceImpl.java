@@ -15,8 +15,6 @@
 package com.liferay.portal.service.persistence;
 
 import com.liferay.portal.NoSuchLayoutBranchException;
-import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -1195,16 +1193,18 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 
 			query.append(_FINDER_COLUMN_L_P_N_PLID_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_L_P_N_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_L_P_N_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_L_P_N_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_L_P_N_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_L_P_N_NAME_2);
 			}
 
 			String sql = query.toString();
@@ -1222,7 +1222,7 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 
 				qPos.add(plid);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -1310,16 +1310,18 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 
 			query.append(_FINDER_COLUMN_L_P_N_PLID_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_L_P_N_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_L_P_N_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_L_P_N_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_L_P_N_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_L_P_N_NAME_2);
 			}
 
 			String sql = query.toString();
@@ -1337,7 +1339,7 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 
 				qPos.add(plid);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -1362,7 +1364,7 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 	private static final String _FINDER_COLUMN_L_P_N_PLID_2 = "layoutBranch.plid = ? AND ";
 	private static final String _FINDER_COLUMN_L_P_N_NAME_1 = "layoutBranch.name IS NULL";
 	private static final String _FINDER_COLUMN_L_P_N_NAME_2 = "layoutBranch.name = ?";
-	private static final String _FINDER_COLUMN_L_P_N_NAME_3 = "(layoutBranch.name IS NULL OR layoutBranch.name = ?)";
+	private static final String _FINDER_COLUMN_L_P_N_NAME_3 = "(layoutBranch.name IS NULL OR layoutBranch.name = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_L_P_M = new FinderPath(LayoutBranchModelImpl.ENTITY_CACHE_ENABLED,
 			LayoutBranchModelImpl.FINDER_CACHE_ENABLED, LayoutBranchImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByL_P_M",
@@ -1635,17 +1637,14 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_L_P_N,
 			new Object[] {
-				Long.valueOf(layoutBranch.getLayoutSetBranchId()),
-				Long.valueOf(layoutBranch.getPlid()),
-				
-			layoutBranch.getName()
+				layoutBranch.getLayoutSetBranchId(), layoutBranch.getPlid(),
+				layoutBranch.getName()
 			}, layoutBranch);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_L_P_M,
 			new Object[] {
-				Long.valueOf(layoutBranch.getLayoutSetBranchId()),
-				Long.valueOf(layoutBranch.getPlid()),
-				Boolean.valueOf(layoutBranch.getMaster())
+				layoutBranch.getLayoutSetBranchId(), layoutBranch.getPlid(),
+				layoutBranch.getMaster()
 			}, layoutBranch);
 
 		layoutBranch.resetOriginalValues();
@@ -1720,21 +1719,101 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 		}
 	}
 
-	protected void clearUniqueFindersCache(LayoutBranch layoutBranch) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_L_P_N,
-			new Object[] {
-				Long.valueOf(layoutBranch.getLayoutSetBranchId()),
-				Long.valueOf(layoutBranch.getPlid()),
-				
-			layoutBranch.getName()
-			});
+	protected void cacheUniqueFindersCache(LayoutBranch layoutBranch) {
+		if (layoutBranch.isNew()) {
+			Object[] args = new Object[] {
+					layoutBranch.getLayoutSetBranchId(), layoutBranch.getPlid(),
+					layoutBranch.getName()
+				};
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_L_P_M,
-			new Object[] {
-				Long.valueOf(layoutBranch.getLayoutSetBranchId()),
-				Long.valueOf(layoutBranch.getPlid()),
-				Boolean.valueOf(layoutBranch.getMaster())
-			});
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_L_P_N, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_L_P_N, args,
+				layoutBranch);
+
+			args = new Object[] {
+					layoutBranch.getLayoutSetBranchId(), layoutBranch.getPlid(),
+					layoutBranch.getMaster()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_L_P_M, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_L_P_M, args,
+				layoutBranch);
+		}
+		else {
+			LayoutBranchModelImpl layoutBranchModelImpl = (LayoutBranchModelImpl)layoutBranch;
+
+			if ((layoutBranchModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_L_P_N.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						layoutBranch.getLayoutSetBranchId(),
+						layoutBranch.getPlid(), layoutBranch.getName()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_L_P_N, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_L_P_N, args,
+					layoutBranch);
+			}
+
+			if ((layoutBranchModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_L_P_M.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						layoutBranch.getLayoutSetBranchId(),
+						layoutBranch.getPlid(), layoutBranch.getMaster()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_L_P_M, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_L_P_M, args,
+					layoutBranch);
+			}
+		}
+	}
+
+	protected void clearUniqueFindersCache(LayoutBranch layoutBranch) {
+		LayoutBranchModelImpl layoutBranchModelImpl = (LayoutBranchModelImpl)layoutBranch;
+
+		Object[] args = new Object[] {
+				layoutBranch.getLayoutSetBranchId(), layoutBranch.getPlid(),
+				layoutBranch.getName()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_L_P_N, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_L_P_N, args);
+
+		if ((layoutBranchModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_L_P_N.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					layoutBranchModelImpl.getOriginalLayoutSetBranchId(),
+					layoutBranchModelImpl.getOriginalPlid(),
+					layoutBranchModelImpl.getOriginalName()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_L_P_N, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_L_P_N, args);
+		}
+
+		args = new Object[] {
+				layoutBranch.getLayoutSetBranchId(), layoutBranch.getPlid(),
+				layoutBranch.getMaster()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_L_P_M, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_L_P_M, args);
+
+		if ((layoutBranchModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_L_P_M.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					layoutBranchModelImpl.getOriginalLayoutSetBranchId(),
+					layoutBranchModelImpl.getOriginalPlid(),
+					layoutBranchModelImpl.getOriginalMaster()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_L_P_M, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_L_P_M, args);
+		}
 	}
 
 	/**
@@ -1762,7 +1841,7 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 	 */
 	public LayoutBranch remove(long LayoutBranchId)
 		throws NoSuchLayoutBranchException, SystemException {
-		return remove(Long.valueOf(LayoutBranchId));
+		return remove((Serializable)LayoutBranchId);
 	}
 
 	/**
@@ -1880,7 +1959,7 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 			if ((layoutBranchModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_LAYOUTSETBRANCHID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(layoutBranchModelImpl.getOriginalLayoutSetBranchId())
+						layoutBranchModelImpl.getOriginalLayoutSetBranchId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_LAYOUTSETBRANCHID,
@@ -1888,9 +1967,7 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_LAYOUTSETBRANCHID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(layoutBranchModelImpl.getLayoutSetBranchId())
-					};
+				args = new Object[] { layoutBranchModelImpl.getLayoutSetBranchId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_LAYOUTSETBRANCHID,
 					args);
@@ -1901,8 +1978,8 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 			if ((layoutBranchModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_L_P.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(layoutBranchModelImpl.getOriginalLayoutSetBranchId()),
-						Long.valueOf(layoutBranchModelImpl.getOriginalPlid())
+						layoutBranchModelImpl.getOriginalLayoutSetBranchId(),
+						layoutBranchModelImpl.getOriginalPlid()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_L_P, args);
@@ -1910,8 +1987,8 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 					args);
 
 				args = new Object[] {
-						Long.valueOf(layoutBranchModelImpl.getLayoutSetBranchId()),
-						Long.valueOf(layoutBranchModelImpl.getPlid())
+						layoutBranchModelImpl.getLayoutSetBranchId(),
+						layoutBranchModelImpl.getPlid()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_L_P, args);
@@ -1923,65 +2000,8 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 		EntityCacheUtil.putResult(LayoutBranchModelImpl.ENTITY_CACHE_ENABLED,
 			LayoutBranchImpl.class, layoutBranch.getPrimaryKey(), layoutBranch);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_L_P_N,
-				new Object[] {
-					Long.valueOf(layoutBranch.getLayoutSetBranchId()),
-					Long.valueOf(layoutBranch.getPlid()),
-					
-				layoutBranch.getName()
-				}, layoutBranch);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_L_P_M,
-				new Object[] {
-					Long.valueOf(layoutBranch.getLayoutSetBranchId()),
-					Long.valueOf(layoutBranch.getPlid()),
-					Boolean.valueOf(layoutBranch.getMaster())
-				}, layoutBranch);
-		}
-		else {
-			if ((layoutBranchModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_L_P_N.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(layoutBranchModelImpl.getOriginalLayoutSetBranchId()),
-						Long.valueOf(layoutBranchModelImpl.getOriginalPlid()),
-						
-						layoutBranchModelImpl.getOriginalName()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_L_P_N, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_L_P_N, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_L_P_N,
-					new Object[] {
-						Long.valueOf(layoutBranch.getLayoutSetBranchId()),
-						Long.valueOf(layoutBranch.getPlid()),
-						
-					layoutBranch.getName()
-					}, layoutBranch);
-			}
-
-			if ((layoutBranchModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_L_P_M.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(layoutBranchModelImpl.getOriginalLayoutSetBranchId()),
-						Long.valueOf(layoutBranchModelImpl.getOriginalPlid()),
-						Boolean.valueOf(layoutBranchModelImpl.getOriginalMaster())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_L_P_M, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_L_P_M, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_L_P_M,
-					new Object[] {
-						Long.valueOf(layoutBranch.getLayoutSetBranchId()),
-						Long.valueOf(layoutBranch.getPlid()),
-						Boolean.valueOf(layoutBranch.getMaster())
-					}, layoutBranch);
-			}
-		}
+		clearUniqueFindersCache(layoutBranch);
+		cacheUniqueFindersCache(layoutBranch);
 
 		return layoutBranch;
 	}
@@ -2015,13 +2035,24 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 	 *
 	 * @param primaryKey the primary key of the layout branch
 	 * @return the layout branch
-	 * @throws com.liferay.portal.NoSuchModelException if a layout branch with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchLayoutBranchException if a layout branch with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public LayoutBranch findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchLayoutBranchException, SystemException {
+		LayoutBranch layoutBranch = fetchByPrimaryKey(primaryKey);
+
+		if (layoutBranch == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchLayoutBranchException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return layoutBranch;
 	}
 
 	/**
@@ -2034,18 +2065,7 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 	 */
 	public LayoutBranch findByPrimaryKey(long LayoutBranchId)
 		throws NoSuchLayoutBranchException, SystemException {
-		LayoutBranch layoutBranch = fetchByPrimaryKey(LayoutBranchId);
-
-		if (layoutBranch == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + LayoutBranchId);
-			}
-
-			throw new NoSuchLayoutBranchException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				LayoutBranchId);
-		}
-
-		return layoutBranch;
+		return findByPrimaryKey((Serializable)LayoutBranchId);
 	}
 
 	/**
@@ -2058,20 +2078,8 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 	@Override
 	public LayoutBranch fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the layout branch with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param LayoutBranchId the primary key of the layout branch
-	 * @return the layout branch, or <code>null</code> if a layout branch with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public LayoutBranch fetchByPrimaryKey(long LayoutBranchId)
-		throws SystemException {
 		LayoutBranch layoutBranch = (LayoutBranch)EntityCacheUtil.getResult(LayoutBranchModelImpl.ENTITY_CACHE_ENABLED,
-				LayoutBranchImpl.class, LayoutBranchId);
+				LayoutBranchImpl.class, primaryKey);
 
 		if (layoutBranch == _nullLayoutBranch) {
 			return null;
@@ -2084,20 +2092,19 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 				session = openSession();
 
 				layoutBranch = (LayoutBranch)session.get(LayoutBranchImpl.class,
-						Long.valueOf(LayoutBranchId));
+						primaryKey);
 
 				if (layoutBranch != null) {
 					cacheResult(layoutBranch);
 				}
 				else {
 					EntityCacheUtil.putResult(LayoutBranchModelImpl.ENTITY_CACHE_ENABLED,
-						LayoutBranchImpl.class, LayoutBranchId,
-						_nullLayoutBranch);
+						LayoutBranchImpl.class, primaryKey, _nullLayoutBranch);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(LayoutBranchModelImpl.ENTITY_CACHE_ENABLED,
-					LayoutBranchImpl.class, LayoutBranchId);
+					LayoutBranchImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -2107,6 +2114,18 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 		}
 
 		return layoutBranch;
+	}
+
+	/**
+	 * Returns the layout branch with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param LayoutBranchId the primary key of the layout branch
+	 * @return the layout branch, or <code>null</code> if a layout branch with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public LayoutBranch fetchByPrimaryKey(long LayoutBranchId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)LayoutBranchId);
 	}
 
 	/**
@@ -2309,128 +2328,6 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
 	private static final String _SQL_SELECT_LAYOUTBRANCH = "SELECT layoutBranch FROM LayoutBranch layoutBranch";
 	private static final String _SQL_SELECT_LAYOUTBRANCH_WHERE = "SELECT layoutBranch FROM LayoutBranch layoutBranch WHERE ";
 	private static final String _SQL_COUNT_LAYOUTBRANCH = "SELECT COUNT(layoutBranch) FROM LayoutBranch layoutBranch";

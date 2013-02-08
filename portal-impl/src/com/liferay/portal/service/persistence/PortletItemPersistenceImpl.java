@@ -14,9 +14,7 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchPortletItemException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -727,16 +725,18 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 
 			query.append(_FINDER_COLUMN_G_P_C_GROUPID_2);
 
+			boolean bindPortletId = false;
+
 			if (portletId == null) {
 				query.append(_FINDER_COLUMN_G_P_C_PORTLETID_1);
 			}
+			else if (portletId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_P_C_PORTLETID_3);
+			}
 			else {
-				if (portletId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_P_C_PORTLETID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_P_C_PORTLETID_2);
-				}
+				bindPortletId = true;
+
+				query.append(_FINDER_COLUMN_G_P_C_PORTLETID_2);
 			}
 
 			query.append(_FINDER_COLUMN_G_P_C_CLASSNAMEID_2);
@@ -763,7 +763,7 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 
 				qPos.add(groupId);
 
-				if (portletId != null) {
+				if (bindPortletId) {
 					qPos.add(portletId);
 				}
 
@@ -985,16 +985,18 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 
 		query.append(_FINDER_COLUMN_G_P_C_GROUPID_2);
 
+		boolean bindPortletId = false;
+
 		if (portletId == null) {
 			query.append(_FINDER_COLUMN_G_P_C_PORTLETID_1);
 		}
+		else if (portletId.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_P_C_PORTLETID_3);
+		}
 		else {
-			if (portletId.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_G_P_C_PORTLETID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_G_P_C_PORTLETID_2);
-			}
+			bindPortletId = true;
+
+			query.append(_FINDER_COLUMN_G_P_C_PORTLETID_2);
 		}
 
 		query.append(_FINDER_COLUMN_G_P_C_CLASSNAMEID_2);
@@ -1069,7 +1071,7 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 
 		qPos.add(groupId);
 
-		if (portletId != null) {
+		if (bindPortletId) {
 			qPos.add(portletId);
 		}
 
@@ -1134,16 +1136,18 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 
 			query.append(_FINDER_COLUMN_G_P_C_GROUPID_2);
 
+			boolean bindPortletId = false;
+
 			if (portletId == null) {
 				query.append(_FINDER_COLUMN_G_P_C_PORTLETID_1);
 			}
+			else if (portletId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_P_C_PORTLETID_3);
+			}
 			else {
-				if (portletId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_P_C_PORTLETID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_P_C_PORTLETID_2);
-				}
+				bindPortletId = true;
+
+				query.append(_FINDER_COLUMN_G_P_C_PORTLETID_2);
 			}
 
 			query.append(_FINDER_COLUMN_G_P_C_CLASSNAMEID_2);
@@ -1161,7 +1165,7 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 
 				qPos.add(groupId);
 
-				if (portletId != null) {
+				if (bindPortletId) {
 					qPos.add(portletId);
 				}
 
@@ -1187,7 +1191,7 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 	private static final String _FINDER_COLUMN_G_P_C_GROUPID_2 = "portletItem.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_P_C_PORTLETID_1 = "portletItem.portletId IS NULL AND ";
 	private static final String _FINDER_COLUMN_G_P_C_PORTLETID_2 = "portletItem.portletId = ? AND ";
-	private static final String _FINDER_COLUMN_G_P_C_PORTLETID_3 = "(portletItem.portletId IS NULL OR portletItem.portletId = ?) AND ";
+	private static final String _FINDER_COLUMN_G_P_C_PORTLETID_3 = "(portletItem.portletId IS NULL OR portletItem.portletId = '') AND ";
 	private static final String _FINDER_COLUMN_G_P_C_CLASSNAMEID_2 = "portletItem.classNameId = ?";
 	public static final FinderPath FINDER_PATH_FETCH_BY_G_N_P_C = new FinderPath(PortletItemModelImpl.ENTITY_CACHE_ENABLED,
 			PortletItemModelImpl.FINDER_CACHE_ENABLED, PortletItemImpl.class,
@@ -1310,28 +1314,32 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 
 			query.append(_FINDER_COLUMN_G_N_P_C_GROUPID_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_G_N_P_C_NAME_1);
 			}
-			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_N_P_C_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_N_P_C_NAME_2);
-				}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_N_P_C_NAME_3);
 			}
+			else {
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_G_N_P_C_NAME_2);
+			}
+
+			boolean bindPortletId = false;
 
 			if (portletId == null) {
 				query.append(_FINDER_COLUMN_G_N_P_C_PORTLETID_1);
 			}
+			else if (portletId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_N_P_C_PORTLETID_3);
+			}
 			else {
-				if (portletId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_N_P_C_PORTLETID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_N_P_C_PORTLETID_2);
-				}
+				bindPortletId = true;
+
+				query.append(_FINDER_COLUMN_G_N_P_C_PORTLETID_2);
 			}
 
 			query.append(_FINDER_COLUMN_G_N_P_C_CLASSNAMEID_2);
@@ -1349,11 +1357,11 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 
 				qPos.add(groupId);
 
-				if (name != null) {
-					qPos.add(name);
+				if (bindName) {
+					qPos.add(name.toLowerCase());
 				}
 
-				if (portletId != null) {
+				if (bindPortletId) {
 					qPos.add(portletId);
 				}
 
@@ -1454,28 +1462,32 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 
 			query.append(_FINDER_COLUMN_G_N_P_C_GROUPID_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_G_N_P_C_NAME_1);
 			}
-			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_N_P_C_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_N_P_C_NAME_2);
-				}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_N_P_C_NAME_3);
 			}
+			else {
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_G_N_P_C_NAME_2);
+			}
+
+			boolean bindPortletId = false;
 
 			if (portletId == null) {
 				query.append(_FINDER_COLUMN_G_N_P_C_PORTLETID_1);
 			}
+			else if (portletId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_N_P_C_PORTLETID_3);
+			}
 			else {
-				if (portletId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_N_P_C_PORTLETID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_N_P_C_PORTLETID_2);
-				}
+				bindPortletId = true;
+
+				query.append(_FINDER_COLUMN_G_N_P_C_PORTLETID_2);
 			}
 
 			query.append(_FINDER_COLUMN_G_N_P_C_CLASSNAMEID_2);
@@ -1493,11 +1505,11 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 
 				qPos.add(groupId);
 
-				if (name != null) {
-					qPos.add(name);
+				if (bindName) {
+					qPos.add(name.toLowerCase());
 				}
 
-				if (portletId != null) {
+				if (bindPortletId) {
 					qPos.add(portletId);
 				}
 
@@ -1522,11 +1534,11 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 
 	private static final String _FINDER_COLUMN_G_N_P_C_GROUPID_2 = "portletItem.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_N_P_C_NAME_1 = "portletItem.name IS NULL AND ";
-	private static final String _FINDER_COLUMN_G_N_P_C_NAME_2 = "lower(portletItem.name) = lower(CAST_TEXT(?)) AND ";
-	private static final String _FINDER_COLUMN_G_N_P_C_NAME_3 = "(portletItem.name IS NULL OR lower(portletItem.name) = lower(CAST_TEXT(?))) AND ";
+	private static final String _FINDER_COLUMN_G_N_P_C_NAME_2 = "lower(portletItem.name) = ? AND ";
+	private static final String _FINDER_COLUMN_G_N_P_C_NAME_3 = "(portletItem.name IS NULL OR portletItem.name = '') AND ";
 	private static final String _FINDER_COLUMN_G_N_P_C_PORTLETID_1 = "portletItem.portletId IS NULL AND ";
 	private static final String _FINDER_COLUMN_G_N_P_C_PORTLETID_2 = "portletItem.portletId = ? AND ";
-	private static final String _FINDER_COLUMN_G_N_P_C_PORTLETID_3 = "(portletItem.portletId IS NULL OR portletItem.portletId = ?) AND ";
+	private static final String _FINDER_COLUMN_G_N_P_C_PORTLETID_3 = "(portletItem.portletId IS NULL OR portletItem.portletId = '') AND ";
 	private static final String _FINDER_COLUMN_G_N_P_C_CLASSNAMEID_2 = "portletItem.classNameId = ?";
 
 	/**
@@ -1540,12 +1552,8 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_N_P_C,
 			new Object[] {
-				Long.valueOf(portletItem.getGroupId()),
-				
-			portletItem.getName(),
-				
-			portletItem.getPortletId(),
-				Long.valueOf(portletItem.getClassNameId())
+				portletItem.getGroupId(), portletItem.getName(),
+				portletItem.getPortletId(), portletItem.getClassNameId()
 			}, portletItem);
 
 		portletItem.resetOriginalValues();
@@ -1620,16 +1628,59 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 		}
 	}
 
+	protected void cacheUniqueFindersCache(PortletItem portletItem) {
+		if (portletItem.isNew()) {
+			Object[] args = new Object[] {
+					portletItem.getGroupId(), portletItem.getName(),
+					portletItem.getPortletId(), portletItem.getClassNameId()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_N_P_C, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_N_P_C, args,
+				portletItem);
+		}
+		else {
+			PortletItemModelImpl portletItemModelImpl = (PortletItemModelImpl)portletItem;
+
+			if ((portletItemModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_G_N_P_C.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						portletItem.getGroupId(), portletItem.getName(),
+						portletItem.getPortletId(), portletItem.getClassNameId()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_N_P_C, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_N_P_C, args,
+					portletItem);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(PortletItem portletItem) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_N_P_C,
-			new Object[] {
-				Long.valueOf(portletItem.getGroupId()),
-				
-			portletItem.getName(),
-				
-			portletItem.getPortletId(),
-				Long.valueOf(portletItem.getClassNameId())
-			});
+		PortletItemModelImpl portletItemModelImpl = (PortletItemModelImpl)portletItem;
+
+		Object[] args = new Object[] {
+				portletItem.getGroupId(), portletItem.getName(),
+				portletItem.getPortletId(), portletItem.getClassNameId()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_N_P_C, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_N_P_C, args);
+
+		if ((portletItemModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_G_N_P_C.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					portletItemModelImpl.getOriginalGroupId(),
+					portletItemModelImpl.getOriginalName(),
+					portletItemModelImpl.getOriginalPortletId(),
+					portletItemModelImpl.getOriginalClassNameId()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_N_P_C, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_N_P_C, args);
+		}
 	}
 
 	/**
@@ -1657,7 +1708,7 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 	 */
 	public PortletItem remove(long portletItemId)
 		throws NoSuchPortletItemException, SystemException {
-		return remove(Long.valueOf(portletItemId));
+		return remove((Serializable)portletItemId);
 	}
 
 	/**
@@ -1775,8 +1826,8 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 			if ((portletItemModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(portletItemModelImpl.getOriginalGroupId()),
-						Long.valueOf(portletItemModelImpl.getOriginalClassNameId())
+						portletItemModelImpl.getOriginalGroupId(),
+						portletItemModelImpl.getOriginalClassNameId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C, args);
@@ -1784,8 +1835,8 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(portletItemModelImpl.getGroupId()),
-						Long.valueOf(portletItemModelImpl.getClassNameId())
+						portletItemModelImpl.getGroupId(),
+						portletItemModelImpl.getClassNameId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C, args);
@@ -1796,10 +1847,9 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 			if ((portletItemModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_P_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(portletItemModelImpl.getOriginalGroupId()),
-						
+						portletItemModelImpl.getOriginalGroupId(),
 						portletItemModelImpl.getOriginalPortletId(),
-						Long.valueOf(portletItemModelImpl.getOriginalClassNameId())
+						portletItemModelImpl.getOriginalClassNameId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_P_C, args);
@@ -1807,10 +1857,9 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(portletItemModelImpl.getGroupId()),
-						
+						portletItemModelImpl.getGroupId(),
 						portletItemModelImpl.getPortletId(),
-						Long.valueOf(portletItemModelImpl.getClassNameId())
+						portletItemModelImpl.getClassNameId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_P_C, args);
@@ -1822,44 +1871,8 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 		EntityCacheUtil.putResult(PortletItemModelImpl.ENTITY_CACHE_ENABLED,
 			PortletItemImpl.class, portletItem.getPrimaryKey(), portletItem);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_N_P_C,
-				new Object[] {
-					Long.valueOf(portletItem.getGroupId()),
-					
-				portletItem.getName(),
-					
-				portletItem.getPortletId(),
-					Long.valueOf(portletItem.getClassNameId())
-				}, portletItem);
-		}
-		else {
-			if ((portletItemModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_G_N_P_C.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(portletItemModelImpl.getOriginalGroupId()),
-						
-						portletItemModelImpl.getOriginalName(),
-						
-						portletItemModelImpl.getOriginalPortletId(),
-						Long.valueOf(portletItemModelImpl.getOriginalClassNameId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_N_P_C, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_N_P_C, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_N_P_C,
-					new Object[] {
-						Long.valueOf(portletItem.getGroupId()),
-						
-					portletItem.getName(),
-						
-					portletItem.getPortletId(),
-						Long.valueOf(portletItem.getClassNameId())
-					}, portletItem);
-			}
-		}
+		clearUniqueFindersCache(portletItem);
+		cacheUniqueFindersCache(portletItem);
 
 		return portletItem;
 	}
@@ -1893,13 +1906,24 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 	 *
 	 * @param primaryKey the primary key of the portlet item
 	 * @return the portlet item
-	 * @throws com.liferay.portal.NoSuchModelException if a portlet item with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchPortletItemException if a portlet item with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public PortletItem findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchPortletItemException, SystemException {
+		PortletItem portletItem = fetchByPrimaryKey(primaryKey);
+
+		if (portletItem == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchPortletItemException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return portletItem;
 	}
 
 	/**
@@ -1912,18 +1936,7 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 	 */
 	public PortletItem findByPrimaryKey(long portletItemId)
 		throws NoSuchPortletItemException, SystemException {
-		PortletItem portletItem = fetchByPrimaryKey(portletItemId);
-
-		if (portletItem == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + portletItemId);
-			}
-
-			throw new NoSuchPortletItemException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				portletItemId);
-		}
-
-		return portletItem;
+		return findByPrimaryKey((Serializable)portletItemId);
 	}
 
 	/**
@@ -1936,20 +1949,8 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 	@Override
 	public PortletItem fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the portlet item with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param portletItemId the primary key of the portlet item
-	 * @return the portlet item, or <code>null</code> if a portlet item with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public PortletItem fetchByPrimaryKey(long portletItemId)
-		throws SystemException {
 		PortletItem portletItem = (PortletItem)EntityCacheUtil.getResult(PortletItemModelImpl.ENTITY_CACHE_ENABLED,
-				PortletItemImpl.class, portletItemId);
+				PortletItemImpl.class, primaryKey);
 
 		if (portletItem == _nullPortletItem) {
 			return null;
@@ -1962,19 +1963,19 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 				session = openSession();
 
 				portletItem = (PortletItem)session.get(PortletItemImpl.class,
-						Long.valueOf(portletItemId));
+						primaryKey);
 
 				if (portletItem != null) {
 					cacheResult(portletItem);
 				}
 				else {
 					EntityCacheUtil.putResult(PortletItemModelImpl.ENTITY_CACHE_ENABLED,
-						PortletItemImpl.class, portletItemId, _nullPortletItem);
+						PortletItemImpl.class, primaryKey, _nullPortletItem);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(PortletItemModelImpl.ENTITY_CACHE_ENABLED,
-					PortletItemImpl.class, portletItemId);
+					PortletItemImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -1984,6 +1985,18 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 		}
 
 		return portletItem;
+	}
+
+	/**
+	 * Returns the portlet item with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param portletItemId the primary key of the portlet item
+	 * @return the portlet item, or <code>null</code> if a portlet item with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public PortletItem fetchByPrimaryKey(long portletItemId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)portletItemId);
 	}
 
 	/**
@@ -2186,128 +2199,6 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
 	private static final String _SQL_SELECT_PORTLETITEM = "SELECT portletItem FROM PortletItem portletItem";
 	private static final String _SQL_SELECT_PORTLETITEM_WHERE = "SELECT portletItem FROM PortletItem portletItem WHERE ";
 	private static final String _SQL_COUNT_PORTLETITEM = "SELECT COUNT(portletItem) FROM PortletItem portletItem";

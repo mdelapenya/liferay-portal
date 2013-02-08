@@ -14,8 +14,6 @@
 
 package com.liferay.portlet.asset.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -37,7 +35,6 @@ import com.liferay.portal.kernel.util.UnmodifiableList;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.asset.NoSuchCategoryPropertyException;
@@ -1173,16 +1170,18 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 
 			query.append(_FINDER_COLUMN_C_K_COMPANYID_2);
 
+			boolean bindKey = false;
+
 			if (key == null) {
 				query.append(_FINDER_COLUMN_C_K_KEY_1);
 			}
+			else if (key.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_K_KEY_3);
+			}
 			else {
-				if (key.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_K_KEY_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_K_KEY_2);
-				}
+				bindKey = true;
+
+				query.append(_FINDER_COLUMN_C_K_KEY_2);
 			}
 
 			if (orderByComparator != null) {
@@ -1207,7 +1206,7 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 
 				qPos.add(companyId);
 
-				if (key != null) {
+				if (bindKey) {
 					qPos.add(key);
 				}
 
@@ -1414,16 +1413,18 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 
 		query.append(_FINDER_COLUMN_C_K_COMPANYID_2);
 
+		boolean bindKey = false;
+
 		if (key == null) {
 			query.append(_FINDER_COLUMN_C_K_KEY_1);
 		}
+		else if (key.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_C_K_KEY_3);
+		}
 		else {
-			if (key.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_C_K_KEY_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_C_K_KEY_2);
-			}
+			bindKey = true;
+
+			query.append(_FINDER_COLUMN_C_K_KEY_2);
 		}
 
 		if (orderByComparator != null) {
@@ -1496,7 +1497,7 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 
 		qPos.add(companyId);
 
-		if (key != null) {
+		if (bindKey) {
 			qPos.add(key);
 		}
 
@@ -1556,16 +1557,18 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 
 			query.append(_FINDER_COLUMN_C_K_COMPANYID_2);
 
+			boolean bindKey = false;
+
 			if (key == null) {
 				query.append(_FINDER_COLUMN_C_K_KEY_1);
 			}
+			else if (key.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_K_KEY_3);
+			}
 			else {
-				if (key.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_K_KEY_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_K_KEY_2);
-				}
+				bindKey = true;
+
+				query.append(_FINDER_COLUMN_C_K_KEY_2);
 			}
 
 			String sql = query.toString();
@@ -1581,7 +1584,7 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 
 				qPos.add(companyId);
 
-				if (key != null) {
+				if (bindKey) {
 					qPos.add(key);
 				}
 
@@ -1605,7 +1608,7 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 	private static final String _FINDER_COLUMN_C_K_COMPANYID_2 = "assetCategoryProperty.companyId = ? AND ";
 	private static final String _FINDER_COLUMN_C_K_KEY_1 = "assetCategoryProperty.key IS NULL";
 	private static final String _FINDER_COLUMN_C_K_KEY_2 = "assetCategoryProperty.key = ?";
-	private static final String _FINDER_COLUMN_C_K_KEY_3 = "(assetCategoryProperty.key IS NULL OR assetCategoryProperty.key = ?)";
+	private static final String _FINDER_COLUMN_C_K_KEY_3 = "(assetCategoryProperty.key IS NULL OR assetCategoryProperty.key = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_CA_K = new FinderPath(AssetCategoryPropertyModelImpl.ENTITY_CACHE_ENABLED,
 			AssetCategoryPropertyModelImpl.FINDER_CACHE_ENABLED,
 			AssetCategoryPropertyImpl.class, FINDER_CLASS_NAME_ENTITY,
@@ -1704,16 +1707,18 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 
 			query.append(_FINDER_COLUMN_CA_K_CATEGORYID_2);
 
+			boolean bindKey = false;
+
 			if (key == null) {
 				query.append(_FINDER_COLUMN_CA_K_KEY_1);
 			}
+			else if (key.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_CA_K_KEY_3);
+			}
 			else {
-				if (key.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_CA_K_KEY_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_CA_K_KEY_2);
-				}
+				bindKey = true;
+
+				query.append(_FINDER_COLUMN_CA_K_KEY_2);
 			}
 
 			String sql = query.toString();
@@ -1729,7 +1734,7 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 
 				qPos.add(categoryId);
 
-				if (key != null) {
+				if (bindKey) {
 					qPos.add(key);
 				}
 
@@ -1812,16 +1817,18 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 
 			query.append(_FINDER_COLUMN_CA_K_CATEGORYID_2);
 
+			boolean bindKey = false;
+
 			if (key == null) {
 				query.append(_FINDER_COLUMN_CA_K_KEY_1);
 			}
+			else if (key.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_CA_K_KEY_3);
+			}
 			else {
-				if (key.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_CA_K_KEY_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_CA_K_KEY_2);
-				}
+				bindKey = true;
+
+				query.append(_FINDER_COLUMN_CA_K_KEY_2);
 			}
 
 			String sql = query.toString();
@@ -1837,7 +1844,7 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 
 				qPos.add(categoryId);
 
-				if (key != null) {
+				if (bindKey) {
 					qPos.add(key);
 				}
 
@@ -1861,7 +1868,7 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 	private static final String _FINDER_COLUMN_CA_K_CATEGORYID_2 = "assetCategoryProperty.categoryId = ? AND ";
 	private static final String _FINDER_COLUMN_CA_K_KEY_1 = "assetCategoryProperty.key IS NULL";
 	private static final String _FINDER_COLUMN_CA_K_KEY_2 = "assetCategoryProperty.key = ?";
-	private static final String _FINDER_COLUMN_CA_K_KEY_3 = "(assetCategoryProperty.key IS NULL OR assetCategoryProperty.key = ?)";
+	private static final String _FINDER_COLUMN_CA_K_KEY_3 = "(assetCategoryProperty.key IS NULL OR assetCategoryProperty.key = '')";
 
 	/**
 	 * Caches the asset category property in the entity cache if it is enabled.
@@ -1875,9 +1882,8 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_CA_K,
 			new Object[] {
-				Long.valueOf(assetCategoryProperty.getCategoryId()),
-				
-			assetCategoryProperty.getKey()
+				assetCategoryProperty.getCategoryId(),
+				assetCategoryProperty.getKey()
 			}, assetCategoryProperty);
 
 		assetCategoryProperty.resetOriginalValues();
@@ -1955,14 +1961,59 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 		}
 	}
 
+	protected void cacheUniqueFindersCache(
+		AssetCategoryProperty assetCategoryProperty) {
+		if (assetCategoryProperty.isNew()) {
+			Object[] args = new Object[] {
+					assetCategoryProperty.getCategoryId(),
+					assetCategoryProperty.getKey()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_CA_K, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_CA_K, args,
+				assetCategoryProperty);
+		}
+		else {
+			AssetCategoryPropertyModelImpl assetCategoryPropertyModelImpl = (AssetCategoryPropertyModelImpl)assetCategoryProperty;
+
+			if ((assetCategoryPropertyModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_CA_K.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						assetCategoryProperty.getCategoryId(),
+						assetCategoryProperty.getKey()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_CA_K, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_CA_K, args,
+					assetCategoryProperty);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(
 		AssetCategoryProperty assetCategoryProperty) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CA_K,
-			new Object[] {
-				Long.valueOf(assetCategoryProperty.getCategoryId()),
-				
-			assetCategoryProperty.getKey()
-			});
+		AssetCategoryPropertyModelImpl assetCategoryPropertyModelImpl = (AssetCategoryPropertyModelImpl)assetCategoryProperty;
+
+		Object[] args = new Object[] {
+				assetCategoryProperty.getCategoryId(),
+				assetCategoryProperty.getKey()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CA_K, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CA_K, args);
+
+		if ((assetCategoryPropertyModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_CA_K.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					assetCategoryPropertyModelImpl.getOriginalCategoryId(),
+					assetCategoryPropertyModelImpl.getOriginalKey()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CA_K, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CA_K, args);
+		}
 	}
 
 	/**
@@ -1990,7 +2041,7 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 	 */
 	public AssetCategoryProperty remove(long categoryPropertyId)
 		throws NoSuchCategoryPropertyException, SystemException {
-		return remove(Long.valueOf(categoryPropertyId));
+		return remove((Serializable)categoryPropertyId);
 	}
 
 	/**
@@ -2108,7 +2159,7 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 			if ((assetCategoryPropertyModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(assetCategoryPropertyModelImpl.getOriginalCompanyId())
+						assetCategoryPropertyModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
@@ -2117,7 +2168,7 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 					args);
 
 				args = new Object[] {
-						Long.valueOf(assetCategoryPropertyModelImpl.getCompanyId())
+						assetCategoryPropertyModelImpl.getCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
@@ -2129,7 +2180,7 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 			if ((assetCategoryPropertyModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_CATEGORYID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(assetCategoryPropertyModelImpl.getOriginalCategoryId())
+						assetCategoryPropertyModelImpl.getOriginalCategoryId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CATEGORYID,
@@ -2138,7 +2189,7 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 					args);
 
 				args = new Object[] {
-						Long.valueOf(assetCategoryPropertyModelImpl.getCategoryId())
+						assetCategoryPropertyModelImpl.getCategoryId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CATEGORYID,
@@ -2150,8 +2201,7 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 			if ((assetCategoryPropertyModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_K.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(assetCategoryPropertyModelImpl.getOriginalCompanyId()),
-						
+						assetCategoryPropertyModelImpl.getOriginalCompanyId(),
 						assetCategoryPropertyModelImpl.getOriginalKey()
 					};
 
@@ -2160,8 +2210,7 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 					args);
 
 				args = new Object[] {
-						Long.valueOf(assetCategoryPropertyModelImpl.getCompanyId()),
-						
+						assetCategoryPropertyModelImpl.getCompanyId(),
 						assetCategoryPropertyModelImpl.getKey()
 					};
 
@@ -2175,35 +2224,8 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 			AssetCategoryPropertyImpl.class,
 			assetCategoryProperty.getPrimaryKey(), assetCategoryProperty);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_CA_K,
-				new Object[] {
-					Long.valueOf(assetCategoryProperty.getCategoryId()),
-					
-				assetCategoryProperty.getKey()
-				}, assetCategoryProperty);
-		}
-		else {
-			if ((assetCategoryPropertyModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_CA_K.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(assetCategoryPropertyModelImpl.getOriginalCategoryId()),
-						
-						assetCategoryPropertyModelImpl.getOriginalKey()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CA_K, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CA_K, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_CA_K,
-					new Object[] {
-						Long.valueOf(assetCategoryProperty.getCategoryId()),
-						
-					assetCategoryProperty.getKey()
-					}, assetCategoryProperty);
-			}
-		}
+		clearUniqueFindersCache(assetCategoryProperty);
+		cacheUniqueFindersCache(assetCategoryProperty);
 
 		return assetCategoryProperty;
 	}
@@ -2237,13 +2259,24 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 	 *
 	 * @param primaryKey the primary key of the asset category property
 	 * @return the asset category property
-	 * @throws com.liferay.portal.NoSuchModelException if a asset category property with the primary key could not be found
+	 * @throws com.liferay.portlet.asset.NoSuchCategoryPropertyException if a asset category property with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public AssetCategoryProperty findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchCategoryPropertyException, SystemException {
+		AssetCategoryProperty assetCategoryProperty = fetchByPrimaryKey(primaryKey);
+
+		if (assetCategoryProperty == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchCategoryPropertyException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return assetCategoryProperty;
 	}
 
 	/**
@@ -2256,19 +2289,7 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 	 */
 	public AssetCategoryProperty findByPrimaryKey(long categoryPropertyId)
 		throws NoSuchCategoryPropertyException, SystemException {
-		AssetCategoryProperty assetCategoryProperty = fetchByPrimaryKey(categoryPropertyId);
-
-		if (assetCategoryProperty == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-					categoryPropertyId);
-			}
-
-			throw new NoSuchCategoryPropertyException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				categoryPropertyId);
-		}
-
-		return assetCategoryProperty;
+		return findByPrimaryKey((Serializable)categoryPropertyId);
 	}
 
 	/**
@@ -2281,20 +2302,8 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 	@Override
 	public AssetCategoryProperty fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the asset category property with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param categoryPropertyId the primary key of the asset category property
-	 * @return the asset category property, or <code>null</code> if a asset category property with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public AssetCategoryProperty fetchByPrimaryKey(long categoryPropertyId)
-		throws SystemException {
 		AssetCategoryProperty assetCategoryProperty = (AssetCategoryProperty)EntityCacheUtil.getResult(AssetCategoryPropertyModelImpl.ENTITY_CACHE_ENABLED,
-				AssetCategoryPropertyImpl.class, categoryPropertyId);
+				AssetCategoryPropertyImpl.class, primaryKey);
 
 		if (assetCategoryProperty == _nullAssetCategoryProperty) {
 			return null;
@@ -2307,20 +2316,20 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 				session = openSession();
 
 				assetCategoryProperty = (AssetCategoryProperty)session.get(AssetCategoryPropertyImpl.class,
-						Long.valueOf(categoryPropertyId));
+						primaryKey);
 
 				if (assetCategoryProperty != null) {
 					cacheResult(assetCategoryProperty);
 				}
 				else {
 					EntityCacheUtil.putResult(AssetCategoryPropertyModelImpl.ENTITY_CACHE_ENABLED,
-						AssetCategoryPropertyImpl.class, categoryPropertyId,
+						AssetCategoryPropertyImpl.class, primaryKey,
 						_nullAssetCategoryProperty);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(AssetCategoryPropertyModelImpl.ENTITY_CACHE_ENABLED,
-					AssetCategoryPropertyImpl.class, categoryPropertyId);
+					AssetCategoryPropertyImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -2330,6 +2339,18 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 		}
 
 		return assetCategoryProperty;
+	}
+
+	/**
+	 * Returns the asset category property with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param categoryPropertyId the primary key of the asset category property
+	 * @return the asset category property, or <code>null</code> if a asset category property with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public AssetCategoryProperty fetchByPrimaryKey(long categoryPropertyId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)categoryPropertyId);
 	}
 
 	/**
@@ -2532,24 +2553,6 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AssetCategoryPersistence.class)
-	protected AssetCategoryPersistence assetCategoryPersistence;
-	@BeanReference(type = AssetCategoryPropertyPersistence.class)
-	protected AssetCategoryPropertyPersistence assetCategoryPropertyPersistence;
-	@BeanReference(type = AssetEntryPersistence.class)
-	protected AssetEntryPersistence assetEntryPersistence;
-	@BeanReference(type = AssetLinkPersistence.class)
-	protected AssetLinkPersistence assetLinkPersistence;
-	@BeanReference(type = AssetTagPersistence.class)
-	protected AssetTagPersistence assetTagPersistence;
-	@BeanReference(type = AssetTagPropertyPersistence.class)
-	protected AssetTagPropertyPersistence assetTagPropertyPersistence;
-	@BeanReference(type = AssetTagStatsPersistence.class)
-	protected AssetTagStatsPersistence assetTagStatsPersistence;
-	@BeanReference(type = AssetVocabularyPersistence.class)
-	protected AssetVocabularyPersistence assetVocabularyPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
 	private static final String _SQL_SELECT_ASSETCATEGORYPROPERTY = "SELECT assetCategoryProperty FROM AssetCategoryProperty assetCategoryProperty";
 	private static final String _SQL_SELECT_ASSETCATEGORYPROPERTY_WHERE = "SELECT assetCategoryProperty FROM AssetCategoryProperty assetCategoryProperty WHERE ";
 	private static final String _SQL_COUNT_ASSETCATEGORYPROPERTY = "SELECT COUNT(assetCategoryProperty) FROM AssetCategoryProperty assetCategoryProperty";

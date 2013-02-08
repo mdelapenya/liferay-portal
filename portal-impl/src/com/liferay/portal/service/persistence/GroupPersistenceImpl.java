@@ -15,7 +15,6 @@
 package com.liferay.portal.service.persistence;
 
 import com.liferay.portal.NoSuchGroupException;
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.jdbc.MappingSqlQuery;
@@ -49,30 +48,6 @@ import com.liferay.portal.model.ModelListener;
 import com.liferay.portal.model.impl.GroupImpl;
 import com.liferay.portal.model.impl.GroupModelImpl;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
-
-import com.liferay.portlet.asset.service.persistence.AssetEntryPersistence;
-import com.liferay.portlet.asset.service.persistence.AssetVocabularyPersistence;
-import com.liferay.portlet.blogs.service.persistence.BlogsEntryPersistence;
-import com.liferay.portlet.blogs.service.persistence.BlogsStatsUserPersistence;
-import com.liferay.portlet.bookmarks.service.persistence.BookmarksFolderPersistence;
-import com.liferay.portlet.calendar.service.persistence.CalEventPersistence;
-import com.liferay.portlet.documentlibrary.service.persistence.DLFileEntryTypePersistence;
-import com.liferay.portlet.journal.service.persistence.JournalArticlePersistence;
-import com.liferay.portlet.journal.service.persistence.JournalStructurePersistence;
-import com.liferay.portlet.journal.service.persistence.JournalTemplatePersistence;
-import com.liferay.portlet.messageboards.service.persistence.MBBanPersistence;
-import com.liferay.portlet.messageboards.service.persistence.MBCategoryPersistence;
-import com.liferay.portlet.messageboards.service.persistence.MBStatsUserPersistence;
-import com.liferay.portlet.messageboards.service.persistence.MBThreadPersistence;
-import com.liferay.portlet.polls.service.persistence.PollsQuestionPersistence;
-import com.liferay.portlet.shopping.service.persistence.ShoppingCartPersistence;
-import com.liferay.portlet.shopping.service.persistence.ShoppingCategoryPersistence;
-import com.liferay.portlet.shopping.service.persistence.ShoppingCouponPersistence;
-import com.liferay.portlet.shopping.service.persistence.ShoppingOrderPersistence;
-import com.liferay.portlet.social.service.persistence.SocialActivitySettingPersistence;
-import com.liferay.portlet.softwarecatalog.service.persistence.SCFrameworkVersionPersistence;
-import com.liferay.portlet.softwarecatalog.service.persistence.SCProductEntryPersistence;
-import com.liferay.portlet.wiki.service.persistence.WikiNodePersistence;
 
 import java.io.Serializable;
 
@@ -1411,16 +1386,18 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 			query.append(_FINDER_COLUMN_C_N_COMPANYID_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_C_N_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_N_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_N_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_N_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_C_N_NAME_2);
 			}
 
 			String sql = query.toString();
@@ -1436,7 +1413,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 				qPos.add(companyId);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -1519,16 +1496,18 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 			query.append(_FINDER_COLUMN_C_N_COMPANYID_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_C_N_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_N_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_N_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_N_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_C_N_NAME_2);
 			}
 
 			String sql = query.toString();
@@ -1544,7 +1523,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 				qPos.add(companyId);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -1568,7 +1547,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 	private static final String _FINDER_COLUMN_C_N_COMPANYID_2 = "group_.companyId = ? AND ";
 	private static final String _FINDER_COLUMN_C_N_NAME_1 = "group_.name IS NULL";
 	private static final String _FINDER_COLUMN_C_N_NAME_2 = "group_.name = ?";
-	private static final String _FINDER_COLUMN_C_N_NAME_3 = "(group_.name IS NULL OR group_.name = ?)";
+	private static final String _FINDER_COLUMN_C_N_NAME_3 = "(group_.name IS NULL OR group_.name = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_F = new FinderPath(GroupModelImpl.ENTITY_CACHE_ENABLED,
 			GroupModelImpl.FINDER_CACHE_ENABLED, GroupImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByC_F",
@@ -1665,16 +1644,18 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 			query.append(_FINDER_COLUMN_C_F_COMPANYID_2);
 
+			boolean bindFriendlyURL = false;
+
 			if (friendlyURL == null) {
 				query.append(_FINDER_COLUMN_C_F_FRIENDLYURL_1);
 			}
+			else if (friendlyURL.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_F_FRIENDLYURL_3);
+			}
 			else {
-				if (friendlyURL.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_F_FRIENDLYURL_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_F_FRIENDLYURL_2);
-				}
+				bindFriendlyURL = true;
+
+				query.append(_FINDER_COLUMN_C_F_FRIENDLYURL_2);
 			}
 
 			String sql = query.toString();
@@ -1690,7 +1671,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 				qPos.add(companyId);
 
-				if (friendlyURL != null) {
+				if (bindFriendlyURL) {
 					qPos.add(friendlyURL);
 				}
 
@@ -1773,16 +1754,18 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 			query.append(_FINDER_COLUMN_C_F_COMPANYID_2);
 
+			boolean bindFriendlyURL = false;
+
 			if (friendlyURL == null) {
 				query.append(_FINDER_COLUMN_C_F_FRIENDLYURL_1);
 			}
+			else if (friendlyURL.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_F_FRIENDLYURL_3);
+			}
 			else {
-				if (friendlyURL.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_F_FRIENDLYURL_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_F_FRIENDLYURL_2);
-				}
+				bindFriendlyURL = true;
+
+				query.append(_FINDER_COLUMN_C_F_FRIENDLYURL_2);
 			}
 
 			String sql = query.toString();
@@ -1798,7 +1781,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 				qPos.add(companyId);
 
-				if (friendlyURL != null) {
+				if (bindFriendlyURL) {
 					qPos.add(friendlyURL);
 				}
 
@@ -1822,7 +1805,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 	private static final String _FINDER_COLUMN_C_F_COMPANYID_2 = "group_.companyId = ? AND ";
 	private static final String _FINDER_COLUMN_C_F_FRIENDLYURL_1 = "group_.friendlyURL IS NULL";
 	private static final String _FINDER_COLUMN_C_F_FRIENDLYURL_2 = "group_.friendlyURL = ?";
-	private static final String _FINDER_COLUMN_C_F_FRIENDLYURL_3 = "(group_.friendlyURL IS NULL OR group_.friendlyURL = ?)";
+	private static final String _FINDER_COLUMN_C_F_FRIENDLYURL_3 = "(group_.friendlyURL IS NULL OR group_.friendlyURL = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C_S = new FinderPath(GroupModelImpl.ENTITY_CACHE_ENABLED,
 			GroupModelImpl.FINDER_CACHE_ENABLED, GroupImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_S",
@@ -3760,16 +3743,18 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 			query.append(_FINDER_COLUMN_C_L_N_LIVEGROUPID_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_C_L_N_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_L_N_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_L_N_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_L_N_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_C_L_N_NAME_2);
 			}
 
 			String sql = query.toString();
@@ -3787,7 +3772,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 				qPos.add(liveGroupId);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -3875,16 +3860,18 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 			query.append(_FINDER_COLUMN_C_L_N_LIVEGROUPID_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_C_L_N_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_L_N_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_L_N_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_L_N_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_C_L_N_NAME_2);
 			}
 
 			String sql = query.toString();
@@ -3902,7 +3889,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 				qPos.add(liveGroupId);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -3927,7 +3914,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 	private static final String _FINDER_COLUMN_C_L_N_LIVEGROUPID_2 = "group_.liveGroupId = ? AND ";
 	private static final String _FINDER_COLUMN_C_L_N_NAME_1 = "group_.name IS NULL";
 	private static final String _FINDER_COLUMN_C_L_N_NAME_2 = "group_.name = ?";
-	private static final String _FINDER_COLUMN_C_L_N_NAME_3 = "(group_.name IS NULL OR group_.name = ?)";
+	private static final String _FINDER_COLUMN_C_L_N_NAME_3 = "(group_.name IS NULL OR group_.name = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_C_L_N = new FinderPath(GroupModelImpl.ENTITY_CACHE_ENABLED,
 			GroupModelImpl.FINDER_CACHE_ENABLED, GroupImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByC_C_L_N",
@@ -4054,16 +4041,18 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 			query.append(_FINDER_COLUMN_C_C_L_N_LIVEGROUPID_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_C_C_L_N_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_C_L_N_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_C_L_N_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_C_L_N_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_C_C_L_N_NAME_2);
 			}
 
 			String sql = query.toString();
@@ -4083,7 +4072,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 				qPos.add(liveGroupId);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -4179,16 +4168,18 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 			query.append(_FINDER_COLUMN_C_C_L_N_LIVEGROUPID_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_C_C_L_N_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_C_L_N_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_C_L_N_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_C_L_N_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_C_C_L_N_NAME_2);
 			}
 
 			String sql = query.toString();
@@ -4208,7 +4199,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 				qPos.add(liveGroupId);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -4234,7 +4225,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 	private static final String _FINDER_COLUMN_C_C_L_N_LIVEGROUPID_2 = "group_.liveGroupId = ? AND ";
 	private static final String _FINDER_COLUMN_C_C_L_N_NAME_1 = "group_.name IS NULL";
 	private static final String _FINDER_COLUMN_C_C_L_N_NAME_2 = "group_.name = ?";
-	private static final String _FINDER_COLUMN_C_C_L_N_NAME_3 = "(group_.name IS NULL OR group_.name = ?)";
+	private static final String _FINDER_COLUMN_C_C_L_N_NAME_3 = "(group_.name IS NULL OR group_.name = '')";
 
 	/**
 	 * Caches the group in the entity cache if it is enabled.
@@ -4246,41 +4237,28 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			GroupImpl.class, group.getPrimaryKey(), group);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_LIVEGROUPID,
-			new Object[] { Long.valueOf(group.getLiveGroupId()) }, group);
+			new Object[] { group.getLiveGroupId() }, group);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_N,
-			new Object[] { Long.valueOf(group.getCompanyId()), group.getName() },
-			group);
+			new Object[] { group.getCompanyId(), group.getName() }, group);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_F,
-			new Object[] {
-				Long.valueOf(group.getCompanyId()),
-				
-			group.getFriendlyURL()
-			}, group);
+			new Object[] { group.getCompanyId(), group.getFriendlyURL() }, group);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C_C,
 			new Object[] {
-				Long.valueOf(group.getCompanyId()),
-				Long.valueOf(group.getClassNameId()),
-				Long.valueOf(group.getClassPK())
+				group.getCompanyId(), group.getClassNameId(), group.getClassPK()
 			}, group);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_L_N,
 			new Object[] {
-				Long.valueOf(group.getCompanyId()),
-				Long.valueOf(group.getLiveGroupId()),
-				
-			group.getName()
+				group.getCompanyId(), group.getLiveGroupId(), group.getName()
 			}, group);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C_L_N,
 			new Object[] {
-				Long.valueOf(group.getCompanyId()),
-				Long.valueOf(group.getClassNameId()),
-				Long.valueOf(group.getLiveGroupId()),
-				
-			group.getName()
+				group.getCompanyId(), group.getClassNameId(),
+				group.getLiveGroupId(), group.getName()
 			}, group);
 
 		group.resetOriginalValues();
@@ -4354,43 +4332,236 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 		}
 	}
 
+	protected void cacheUniqueFindersCache(Group group) {
+		if (group.isNew()) {
+			Object[] args = new Object[] { group.getLiveGroupId() };
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_LIVEGROUPID, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_LIVEGROUPID, args,
+				group);
+
+			args = new Object[] { group.getCompanyId(), group.getName() };
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_N, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_N, args, group);
+
+			args = new Object[] { group.getCompanyId(), group.getFriendlyURL() };
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_F, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_F, args, group);
+
+			args = new Object[] {
+					group.getCompanyId(), group.getClassNameId(),
+					group.getClassPK()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_C_C, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C_C, args, group);
+
+			args = new Object[] {
+					group.getCompanyId(), group.getLiveGroupId(),
+					group.getName()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_L_N, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_L_N, args, group);
+
+			args = new Object[] {
+					group.getCompanyId(), group.getClassNameId(),
+					group.getLiveGroupId(), group.getName()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_C_L_N, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C_L_N, args, group);
+		}
+		else {
+			GroupModelImpl groupModelImpl = (GroupModelImpl)group;
+
+			if ((groupModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_LIVEGROUPID.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] { group.getLiveGroupId() };
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_LIVEGROUPID,
+					args, Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_LIVEGROUPID,
+					args, group);
+			}
+
+			if ((groupModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_C_N.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						group.getCompanyId(), group.getName()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_N, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_N, args, group);
+			}
+
+			if ((groupModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_C_F.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						group.getCompanyId(), group.getFriendlyURL()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_F, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_F, args, group);
+			}
+
+			if ((groupModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_C_C_C.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						group.getCompanyId(), group.getClassNameId(),
+						group.getClassPK()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_C_C, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C_C, args,
+					group);
+			}
+
+			if ((groupModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_C_L_N.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						group.getCompanyId(), group.getLiveGroupId(),
+						group.getName()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_L_N, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_L_N, args,
+					group);
+			}
+
+			if ((groupModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_C_C_L_N.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						group.getCompanyId(), group.getClassNameId(),
+						group.getLiveGroupId(), group.getName()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_C_L_N, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C_L_N, args,
+					group);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(Group group) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_LIVEGROUPID,
-			new Object[] { Long.valueOf(group.getLiveGroupId()) });
+		GroupModelImpl groupModelImpl = (GroupModelImpl)group;
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_N,
-			new Object[] { Long.valueOf(group.getCompanyId()), group.getName() });
+		Object[] args = new Object[] { group.getLiveGroupId() };
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_F,
-			new Object[] {
-				Long.valueOf(group.getCompanyId()),
-				
-			group.getFriendlyURL()
-			});
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_LIVEGROUPID, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_LIVEGROUPID, args);
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C_C,
-			new Object[] {
-				Long.valueOf(group.getCompanyId()),
-				Long.valueOf(group.getClassNameId()),
-				Long.valueOf(group.getClassPK())
-			});
+		if ((groupModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_LIVEGROUPID.getColumnBitmask()) != 0) {
+			args = new Object[] { groupModelImpl.getOriginalLiveGroupId() };
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_L_N,
-			new Object[] {
-				Long.valueOf(group.getCompanyId()),
-				Long.valueOf(group.getLiveGroupId()),
-				
-			group.getName()
-			});
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_LIVEGROUPID, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_LIVEGROUPID, args);
+		}
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C_L_N,
-			new Object[] {
-				Long.valueOf(group.getCompanyId()),
-				Long.valueOf(group.getClassNameId()),
-				Long.valueOf(group.getLiveGroupId()),
-				
-			group.getName()
-			});
+		args = new Object[] { group.getCompanyId(), group.getName() };
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_N, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_N, args);
+
+		if ((groupModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_C_N.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					groupModelImpl.getOriginalCompanyId(),
+					groupModelImpl.getOriginalName()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_N, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_N, args);
+		}
+
+		args = new Object[] { group.getCompanyId(), group.getFriendlyURL() };
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_F, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_F, args);
+
+		if ((groupModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_C_F.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					groupModelImpl.getOriginalCompanyId(),
+					groupModelImpl.getOriginalFriendlyURL()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_F, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_F, args);
+		}
+
+		args = new Object[] {
+				group.getCompanyId(), group.getClassNameId(), group.getClassPK()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C_C, args);
+
+		if ((groupModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_C_C_C.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					groupModelImpl.getOriginalCompanyId(),
+					groupModelImpl.getOriginalClassNameId(),
+					groupModelImpl.getOriginalClassPK()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C_C, args);
+		}
+
+		args = new Object[] {
+				group.getCompanyId(), group.getLiveGroupId(), group.getName()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_L_N, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_L_N, args);
+
+		if ((groupModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_C_L_N.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					groupModelImpl.getOriginalCompanyId(),
+					groupModelImpl.getOriginalLiveGroupId(),
+					groupModelImpl.getOriginalName()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_L_N, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_L_N, args);
+		}
+
+		args = new Object[] {
+				group.getCompanyId(), group.getClassNameId(),
+				group.getLiveGroupId(), group.getName()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_L_N, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C_L_N, args);
+
+		if ((groupModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_C_C_L_N.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					groupModelImpl.getOriginalCompanyId(),
+					groupModelImpl.getOriginalClassNameId(),
+					groupModelImpl.getOriginalLiveGroupId(),
+					groupModelImpl.getOriginalName()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_L_N, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C_L_N, args);
+		}
 	}
 
 	/**
@@ -4418,7 +4589,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 	 */
 	public Group remove(long groupId)
 		throws NoSuchGroupException, SystemException {
-		return remove(Long.valueOf(groupId));
+		return remove((Serializable)groupId);
 	}
 
 	/**
@@ -4573,7 +4744,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			if ((groupModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(groupModelImpl.getOriginalCompanyId())
+						groupModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
@@ -4581,7 +4752,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,
 					args);
 
-				args = new Object[] { Long.valueOf(groupModelImpl.getCompanyId()) };
+				args = new Object[] { groupModelImpl.getCompanyId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
 					args);
@@ -4592,8 +4763,8 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			if ((groupModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_P.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(groupModelImpl.getOriginalCompanyId()),
-						Long.valueOf(groupModelImpl.getOriginalParentGroupId())
+						groupModelImpl.getOriginalCompanyId(),
+						groupModelImpl.getOriginalParentGroupId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_P, args);
@@ -4601,8 +4772,8 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(groupModelImpl.getCompanyId()),
-						Long.valueOf(groupModelImpl.getParentGroupId())
+						groupModelImpl.getCompanyId(),
+						groupModelImpl.getParentGroupId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_P, args);
@@ -4613,8 +4784,8 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			if ((groupModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_S.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(groupModelImpl.getOriginalCompanyId()),
-						Boolean.valueOf(groupModelImpl.getOriginalSite())
+						groupModelImpl.getOriginalCompanyId(),
+						groupModelImpl.getOriginalSite()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_S, args);
@@ -4622,8 +4793,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(groupModelImpl.getCompanyId()),
-						Boolean.valueOf(groupModelImpl.getSite())
+						groupModelImpl.getCompanyId(), groupModelImpl.getSite()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_S, args);
@@ -4634,8 +4804,8 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			if ((groupModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_T_A.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Integer.valueOf(groupModelImpl.getOriginalType()),
-						Boolean.valueOf(groupModelImpl.getOriginalActive())
+						groupModelImpl.getOriginalType(),
+						groupModelImpl.getOriginalActive()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_T_A, args);
@@ -4643,8 +4813,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 					args);
 
 				args = new Object[] {
-						Integer.valueOf(groupModelImpl.getType()),
-						Boolean.valueOf(groupModelImpl.getActive())
+						groupModelImpl.getType(), groupModelImpl.getActive()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_T_A, args);
@@ -4655,9 +4824,9 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			if ((groupModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_P_S.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(groupModelImpl.getOriginalCompanyId()),
-						Long.valueOf(groupModelImpl.getOriginalParentGroupId()),
-						Boolean.valueOf(groupModelImpl.getOriginalSite())
+						groupModelImpl.getOriginalCompanyId(),
+						groupModelImpl.getOriginalParentGroupId(),
+						groupModelImpl.getOriginalSite()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_P_S, args);
@@ -4665,9 +4834,9 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(groupModelImpl.getCompanyId()),
-						Long.valueOf(groupModelImpl.getParentGroupId()),
-						Boolean.valueOf(groupModelImpl.getSite())
+						groupModelImpl.getCompanyId(),
+						groupModelImpl.getParentGroupId(),
+						groupModelImpl.getSite()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_P_S, args);
@@ -4679,168 +4848,8 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 		EntityCacheUtil.putResult(GroupModelImpl.ENTITY_CACHE_ENABLED,
 			GroupImpl.class, group.getPrimaryKey(), group);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_LIVEGROUPID,
-				new Object[] { Long.valueOf(group.getLiveGroupId()) }, group);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_N,
-				new Object[] { Long.valueOf(group.getCompanyId()), group.getName() },
-				group);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_F,
-				new Object[] {
-					Long.valueOf(group.getCompanyId()),
-					
-				group.getFriendlyURL()
-				}, group);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C_C,
-				new Object[] {
-					Long.valueOf(group.getCompanyId()),
-					Long.valueOf(group.getClassNameId()),
-					Long.valueOf(group.getClassPK())
-				}, group);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_L_N,
-				new Object[] {
-					Long.valueOf(group.getCompanyId()),
-					Long.valueOf(group.getLiveGroupId()),
-					
-				group.getName()
-				}, group);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C_L_N,
-				new Object[] {
-					Long.valueOf(group.getCompanyId()),
-					Long.valueOf(group.getClassNameId()),
-					Long.valueOf(group.getLiveGroupId()),
-					
-				group.getName()
-				}, group);
-		}
-		else {
-			if ((groupModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_LIVEGROUPID.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(groupModelImpl.getOriginalLiveGroupId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_LIVEGROUPID,
-					args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_LIVEGROUPID,
-					args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_LIVEGROUPID,
-					new Object[] { Long.valueOf(group.getLiveGroupId()) }, group);
-			}
-
-			if ((groupModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_N.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(groupModelImpl.getOriginalCompanyId()),
-						
-						groupModelImpl.getOriginalName()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_N, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_N, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_N,
-					new Object[] {
-						Long.valueOf(group.getCompanyId()),
-						
-					group.getName()
-					}, group);
-			}
-
-			if ((groupModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_F.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(groupModelImpl.getOriginalCompanyId()),
-						
-						groupModelImpl.getOriginalFriendlyURL()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_F, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_F, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_F,
-					new Object[] {
-						Long.valueOf(group.getCompanyId()),
-						
-					group.getFriendlyURL()
-					}, group);
-			}
-
-			if ((groupModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_C_C.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(groupModelImpl.getOriginalCompanyId()),
-						Long.valueOf(groupModelImpl.getOriginalClassNameId()),
-						Long.valueOf(groupModelImpl.getOriginalClassPK())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C_C, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C_C,
-					new Object[] {
-						Long.valueOf(group.getCompanyId()),
-						Long.valueOf(group.getClassNameId()),
-						Long.valueOf(group.getClassPK())
-					}, group);
-			}
-
-			if ((groupModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_L_N.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(groupModelImpl.getOriginalCompanyId()),
-						Long.valueOf(groupModelImpl.getOriginalLiveGroupId()),
-						
-						groupModelImpl.getOriginalName()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_L_N, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_L_N, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_L_N,
-					new Object[] {
-						Long.valueOf(group.getCompanyId()),
-						Long.valueOf(group.getLiveGroupId()),
-						
-					group.getName()
-					}, group);
-			}
-
-			if ((groupModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_C_L_N.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(groupModelImpl.getOriginalCompanyId()),
-						Long.valueOf(groupModelImpl.getOriginalClassNameId()),
-						Long.valueOf(groupModelImpl.getOriginalLiveGroupId()),
-						
-						groupModelImpl.getOriginalName()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_L_N, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C_L_N, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C_L_N,
-					new Object[] {
-						Long.valueOf(group.getCompanyId()),
-						Long.valueOf(group.getClassNameId()),
-						Long.valueOf(group.getLiveGroupId()),
-						
-					group.getName()
-					}, group);
-			}
-		}
+		clearUniqueFindersCache(group);
+		cacheUniqueFindersCache(group);
 
 		return group;
 	}
@@ -4862,6 +4871,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 		groupImpl.setClassPK(group.getClassPK());
 		groupImpl.setParentGroupId(group.getParentGroupId());
 		groupImpl.setLiveGroupId(group.getLiveGroupId());
+		groupImpl.setTreePath(group.getTreePath());
 		groupImpl.setName(group.getName());
 		groupImpl.setDescription(group.getDescription());
 		groupImpl.setType(group.getType());
@@ -4878,13 +4888,24 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 	 *
 	 * @param primaryKey the primary key of the group
 	 * @return the group
-	 * @throws com.liferay.portal.NoSuchModelException if a group with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchGroupException if a group with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public Group findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchGroupException, SystemException {
+		Group group = fetchByPrimaryKey(primaryKey);
+
+		if (group == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchGroupException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return group;
 	}
 
 	/**
@@ -4897,18 +4918,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 	 */
 	public Group findByPrimaryKey(long groupId)
 		throws NoSuchGroupException, SystemException {
-		Group group = fetchByPrimaryKey(groupId);
-
-		if (group == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + groupId);
-			}
-
-			throw new NoSuchGroupException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				groupId);
-		}
-
-		return group;
+		return findByPrimaryKey((Serializable)groupId);
 	}
 
 	/**
@@ -4921,19 +4931,8 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 	@Override
 	public Group fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the group with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param groupId the primary key of the group
-	 * @return the group, or <code>null</code> if a group with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public Group fetchByPrimaryKey(long groupId) throws SystemException {
 		Group group = (Group)EntityCacheUtil.getResult(GroupModelImpl.ENTITY_CACHE_ENABLED,
-				GroupImpl.class, groupId);
+				GroupImpl.class, primaryKey);
 
 		if (group == _nullGroup) {
 			return null;
@@ -4945,20 +4944,19 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			try {
 				session = openSession();
 
-				group = (Group)session.get(GroupImpl.class,
-						Long.valueOf(groupId));
+				group = (Group)session.get(GroupImpl.class, primaryKey);
 
 				if (group != null) {
 					cacheResult(group);
 				}
 				else {
 					EntityCacheUtil.putResult(GroupModelImpl.ENTITY_CACHE_ENABLED,
-						GroupImpl.class, groupId, _nullGroup);
+						GroupImpl.class, primaryKey, _nullGroup);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(GroupModelImpl.ENTITY_CACHE_ENABLED,
-					GroupImpl.class, groupId);
+					GroupImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -4968,6 +4966,17 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 		}
 
 		return group;
+	}
+
+	/**
+	 * Returns the group with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param groupId the primary key of the group
+	 * @return the group, or <code>null</code> if a group with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Group fetchByPrimaryKey(long groupId) throws SystemException {
+		return fetchByPrimaryKey((Serializable)groupId);
 	}
 
 	/**
@@ -7158,186 +7167,26 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
 	@BeanReference(type = OrganizationPersistence.class)
 	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
-	@BeanReference(type = AssetEntryPersistence.class)
-	protected AssetEntryPersistence assetEntryPersistence;
-	@BeanReference(type = AssetVocabularyPersistence.class)
-	protected AssetVocabularyPersistence assetVocabularyPersistence;
-	@BeanReference(type = BlogsEntryPersistence.class)
-	protected BlogsEntryPersistence blogsEntryPersistence;
-	@BeanReference(type = BlogsStatsUserPersistence.class)
-	protected BlogsStatsUserPersistence blogsStatsUserPersistence;
-	@BeanReference(type = BookmarksFolderPersistence.class)
-	protected BookmarksFolderPersistence bookmarksFolderPersistence;
-	@BeanReference(type = CalEventPersistence.class)
-	protected CalEventPersistence calEventPersistence;
-	@BeanReference(type = DLFileEntryTypePersistence.class)
-	protected DLFileEntryTypePersistence dlFileEntryTypePersistence;
-	@BeanReference(type = JournalArticlePersistence.class)
-	protected JournalArticlePersistence journalArticlePersistence;
-	@BeanReference(type = JournalStructurePersistence.class)
-	protected JournalStructurePersistence journalStructurePersistence;
-	@BeanReference(type = JournalTemplatePersistence.class)
-	protected JournalTemplatePersistence journalTemplatePersistence;
-	@BeanReference(type = MBBanPersistence.class)
-	protected MBBanPersistence mbBanPersistence;
-	@BeanReference(type = MBCategoryPersistence.class)
-	protected MBCategoryPersistence mbCategoryPersistence;
-	@BeanReference(type = MBStatsUserPersistence.class)
-	protected MBStatsUserPersistence mbStatsUserPersistence;
-	@BeanReference(type = MBThreadPersistence.class)
-	protected MBThreadPersistence mbThreadPersistence;
-	@BeanReference(type = PollsQuestionPersistence.class)
-	protected PollsQuestionPersistence pollsQuestionPersistence;
-	@BeanReference(type = ShoppingCartPersistence.class)
-	protected ShoppingCartPersistence shoppingCartPersistence;
-	@BeanReference(type = ShoppingCategoryPersistence.class)
-	protected ShoppingCategoryPersistence shoppingCategoryPersistence;
-	@BeanReference(type = ShoppingCouponPersistence.class)
-	protected ShoppingCouponPersistence shoppingCouponPersistence;
-	@BeanReference(type = ShoppingOrderPersistence.class)
-	protected ShoppingOrderPersistence shoppingOrderPersistence;
-	@BeanReference(type = SocialActivitySettingPersistence.class)
-	protected SocialActivitySettingPersistence socialActivitySettingPersistence;
-	@BeanReference(type = SCFrameworkVersionPersistence.class)
-	protected SCFrameworkVersionPersistence scFrameworkVersionPersistence;
-	@BeanReference(type = SCProductEntryPersistence.class)
-	protected SCProductEntryPersistence scProductEntryPersistence;
-	@BeanReference(type = WikiNodePersistence.class)
-	protected WikiNodePersistence wikiNodePersistence;
 	protected ContainsOrganization containsOrganization;
 	protected AddOrganization addOrganization;
 	protected ClearOrganizations clearOrganizations;
 	protected RemoveOrganization removeOrganization;
+	@BeanReference(type = RolePersistence.class)
+	protected RolePersistence rolePersistence;
 	protected ContainsRole containsRole;
 	protected AddRole addRole;
 	protected ClearRoles clearRoles;
 	protected RemoveRole removeRole;
+	@BeanReference(type = UserGroupPersistence.class)
+	protected UserGroupPersistence userGroupPersistence;
 	protected ContainsUserGroup containsUserGroup;
 	protected AddUserGroup addUserGroup;
 	protected ClearUserGroups clearUserGroups;
 	protected RemoveUserGroup removeUserGroup;
+	@BeanReference(type = UserPersistence.class)
+	protected UserPersistence userPersistence;
 	protected ContainsUser containsUser;
 	protected AddUser addUser;
 	protected ClearUsers clearUsers;

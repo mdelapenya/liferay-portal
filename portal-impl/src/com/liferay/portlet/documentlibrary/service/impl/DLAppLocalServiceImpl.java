@@ -29,6 +29,8 @@ import com.liferay.portal.model.Repository;
 import com.liferay.portal.repository.liferayrepository.model.LiferayFolder;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.documentlibrary.NoSuchFileEntryException;
+import com.liferay.portlet.documentlibrary.model.DLFileEntryType;
+import com.liferay.portlet.documentlibrary.model.DLFileEntryTypeConstants;
 import com.liferay.portlet.documentlibrary.model.DLFileRank;
 import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
@@ -268,7 +270,7 @@ public class DLAppLocalServiceImpl extends DLAppLocalServiceBaseImpl {
 	public DLFileRank addFileRank(
 			long repositoryId, long companyId, long userId, long fileEntryId,
 			ServiceContext serviceContext)
-		throws SystemException {
+		throws PortalException, SystemException {
 
 		return dlFileRankLocalService.addFileRank(
 			repositoryId, companyId, userId, fileEntryId, serviceContext);
@@ -489,7 +491,7 @@ public class DLAppLocalServiceImpl extends DLAppLocalServiceBaseImpl {
 	/**
 	 * Returns the file entry with the UUID and group.
 	 *
-	 * @param  uuid the file entry's universally unique identifier
+	 * @param  uuid the file entry's UUID
 	 * @param  groupId the primary key of the file entry's group
 	 * @return the file entry with the UUID and group
 	 * @throws PortalException if the file entry could not be found
@@ -504,18 +506,19 @@ public class DLAppLocalServiceImpl extends DLAppLocalServiceBaseImpl {
 			return localRepository.getFileEntryByUuid(uuid);
 		}
 		catch (NoSuchFileEntryException nsfee) {
-			List<com.liferay.portal.model.Repository> repositories =
-				repositoryPersistence.findByGroupId(groupId);
+		}
 
-			for (Repository repository : repositories) {
-				try {
-					LocalRepository localRepository = getLocalRepository(
-						repository.getRepositoryId());
+		List<com.liferay.portal.model.Repository> repositories =
+			repositoryPersistence.findByGroupId(groupId);
 
-					return localRepository.getFileEntryByUuid(uuid);
-				}
-				catch (NoSuchFileEntryException nsfee2) {
-				}
+		for (Repository repository : repositories) {
+			try {
+				LocalRepository localRepository = getLocalRepository(
+					repository.getRepositoryId());
+
+				return localRepository.getFileEntryByUuid(uuid);
+			}
+			catch (NoSuchFileEntryException nsfee) {
 			}
 		}
 
@@ -702,6 +705,96 @@ public class DLAppLocalServiceImpl extends DLAppLocalServiceBaseImpl {
 		FileEntry fileEntry = localRepository.getFileEntry(fileEntryId);
 
 		dlAppHelperLocalService.restoreFileEntryFromTrash(userId, fileEntry);
+	}
+
+	/**
+	 * Subscribe the user to changes in documents of the file entry type. This
+	 * method is only supported by the Liferay repository.
+	 *
+	 * @param  userId the primary key of the user
+	 * @param  groupId the primary key of the file entry type's group
+	 * @param  fileEntryTypeId the primary key of the file entry type
+	 * @throws PortalException if the user or group could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void subscribeFileEntryType(
+			long userId, long groupId, long fileEntryTypeId)
+		throws PortalException, SystemException {
+
+		if (fileEntryTypeId ==
+				DLFileEntryTypeConstants.FILE_ENTRY_TYPE_ID_BASIC_DOCUMENT) {
+
+			fileEntryTypeId = groupId;
+		}
+
+		subscriptionLocalService.addSubscription(
+			userId, groupId, DLFileEntryType.class.getName(), fileEntryTypeId);
+	}
+
+	/**
+	 * Subscribe the user to document changes in the folder. This method is only
+	 * supported by the Liferay repository.
+	 *
+	 * @param  userId the primary key of the user
+	 * @param  groupId the primary key of the folder's group
+	 * @param  folderId the primary key of the folder
+	 * @throws PortalException if the user or group could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void subscribeFolder(long userId, long groupId, long folderId)
+		throws PortalException, SystemException {
+
+		if (folderId == DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
+			folderId = groupId;
+		}
+
+		subscriptionLocalService.addSubscription(
+			userId, groupId, Folder.class.getName(), folderId);
+	}
+
+	/**
+	 * Unsubscribe the user from changes in documents of the file entry type.
+	 * This method is only supported by the Liferay repository.
+	 *
+	 * @param  userId the primary key of the user
+	 * @param  groupId the primary key of the file entry type's group
+	 * @param  fileEntryTypeId the primary key of the file entry type
+	 * @throws PortalException if the user or group could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void unsubscribeFileEntryType(
+			long userId, long groupId, long fileEntryTypeId)
+		throws PortalException, SystemException {
+
+		if (fileEntryTypeId ==
+				DLFileEntryTypeConstants.FILE_ENTRY_TYPE_ID_BASIC_DOCUMENT) {
+
+			fileEntryTypeId = groupId;
+		}
+
+		subscriptionLocalService.deleteSubscription(
+			userId, DLFileEntryType.class.getName(), fileEntryTypeId);
+	}
+
+	/**
+	 * Unsubscribe the user from document changes in the folder. This method is
+	 * only supported by the Liferay repository.
+	 *
+	 * @param  userId the primary key of the user
+	 * @param  groupId the primary key of the folder's group
+	 * @param  folderId the primary key of the folder
+	 * @throws PortalException if the user or group could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void unsubscribeFolder(long userId, long groupId, long folderId)
+		throws PortalException, SystemException {
+
+		if (folderId == DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
+			folderId = groupId;
+		}
+
+		subscriptionLocalService.deleteSubscription(
+			userId, Folder.class.getName(), folderId);
 	}
 
 	/**
@@ -944,7 +1037,7 @@ public class DLAppLocalServiceImpl extends DLAppLocalServiceBaseImpl {
 	public DLFileRank updateFileRank(
 			long repositoryId, long companyId, long userId, long fileEntryId,
 			ServiceContext serviceContext)
-		throws SystemException {
+		throws PortalException, SystemException {
 
 		return dlFileRankLocalService.updateFileRank(
 			repositoryId, companyId, userId, fileEntryId, serviceContext);

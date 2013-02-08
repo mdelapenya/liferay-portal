@@ -15,8 +15,6 @@
 package com.liferay.portal.service.persistence;
 
 import com.liferay.portal.NoSuchLayoutSetException;
-import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -675,16 +673,18 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 
 			query.append(_SQL_SELECT_LAYOUTSET_WHERE);
 
+			boolean bindLayoutSetPrototypeUuid = false;
+
 			if (layoutSetPrototypeUuid == null) {
 				query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_1);
 			}
+			else if (layoutSetPrototypeUuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_3);
+			}
 			else {
-				if (layoutSetPrototypeUuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_2);
-				}
+				bindLayoutSetPrototypeUuid = true;
+
+				query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_2);
 			}
 
 			if (orderByComparator != null) {
@@ -707,7 +707,7 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (layoutSetPrototypeUuid != null) {
+				if (bindLayoutSetPrototypeUuid) {
 					qPos.add(layoutSetPrototypeUuid);
 				}
 
@@ -903,16 +903,18 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 
 		query.append(_SQL_SELECT_LAYOUTSET_WHERE);
 
+		boolean bindLayoutSetPrototypeUuid = false;
+
 		if (layoutSetPrototypeUuid == null) {
 			query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_1);
 		}
+		else if (layoutSetPrototypeUuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_3);
+		}
 		else {
-			if (layoutSetPrototypeUuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_2);
-			}
+			bindLayoutSetPrototypeUuid = true;
+
+			query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_2);
 		}
 
 		if (orderByComparator != null) {
@@ -983,7 +985,7 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (layoutSetPrototypeUuid != null) {
+		if (bindLayoutSetPrototypeUuid) {
 			qPos.add(layoutSetPrototypeUuid);
 		}
 
@@ -1041,16 +1043,18 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 
 			query.append(_SQL_COUNT_LAYOUTSET_WHERE);
 
+			boolean bindLayoutSetPrototypeUuid = false;
+
 			if (layoutSetPrototypeUuid == null) {
 				query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_1);
 			}
+			else if (layoutSetPrototypeUuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_3);
+			}
 			else {
-				if (layoutSetPrototypeUuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_2);
-				}
+				bindLayoutSetPrototypeUuid = true;
+
+				query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_2);
 			}
 
 			String sql = query.toString();
@@ -1064,7 +1068,7 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (layoutSetPrototypeUuid != null) {
+				if (bindLayoutSetPrototypeUuid) {
 					qPos.add(layoutSetPrototypeUuid);
 				}
 
@@ -1090,7 +1094,7 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 	private static final String _FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_2 =
 		"layoutSet.layoutSetPrototypeUuid = ?";
 	private static final String _FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_3 =
-		"(layoutSet.layoutSetPrototypeUuid IS NULL OR layoutSet.layoutSetPrototypeUuid = ?)";
+		"(layoutSet.layoutSetPrototypeUuid IS NULL OR layoutSet.layoutSetPrototypeUuid = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_G_P = new FinderPath(LayoutSetModelImpl.ENTITY_CACHE_ENABLED,
 			LayoutSetModelImpl.FINDER_CACHE_ENABLED, LayoutSetImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByG_P",
@@ -1329,10 +1333,8 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 			LayoutSetImpl.class, layoutSet.getPrimaryKey(), layoutSet);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_P,
-			new Object[] {
-				Long.valueOf(layoutSet.getGroupId()),
-				Boolean.valueOf(layoutSet.getPrivateLayout())
-			}, layoutSet);
+			new Object[] { layoutSet.getGroupId(), layoutSet.getPrivateLayout() },
+			layoutSet);
 
 		layoutSet.resetOriginalValues();
 	}
@@ -1406,12 +1408,53 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 		}
 	}
 
+	protected void cacheUniqueFindersCache(LayoutSet layoutSet) {
+		if (layoutSet.isNew()) {
+			Object[] args = new Object[] {
+					layoutSet.getGroupId(), layoutSet.getPrivateLayout()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_P, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_P, args, layoutSet);
+		}
+		else {
+			LayoutSetModelImpl layoutSetModelImpl = (LayoutSetModelImpl)layoutSet;
+
+			if ((layoutSetModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_G_P.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						layoutSet.getGroupId(), layoutSet.getPrivateLayout()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_P, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_P, args,
+					layoutSet);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(LayoutSet layoutSet) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_P,
-			new Object[] {
-				Long.valueOf(layoutSet.getGroupId()),
-				Boolean.valueOf(layoutSet.getPrivateLayout())
-			});
+		LayoutSetModelImpl layoutSetModelImpl = (LayoutSetModelImpl)layoutSet;
+
+		Object[] args = new Object[] {
+				layoutSet.getGroupId(), layoutSet.getPrivateLayout()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_P, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_P, args);
+
+		if ((layoutSetModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_G_P.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					layoutSetModelImpl.getOriginalGroupId(),
+					layoutSetModelImpl.getOriginalPrivateLayout()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_P, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_P, args);
+		}
 	}
 
 	/**
@@ -1439,7 +1482,7 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 	 */
 	public LayoutSet remove(long layoutSetId)
 		throws NoSuchLayoutSetException, SystemException {
-		return remove(Long.valueOf(layoutSetId));
+		return remove((Serializable)layoutSetId);
 	}
 
 	/**
@@ -1556,16 +1599,14 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 			if ((layoutSetModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(layoutSetModelImpl.getOriginalGroupId())
+						layoutSetModelImpl.getOriginalGroupId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(layoutSetModelImpl.getGroupId())
-					};
+				args = new Object[] { layoutSetModelImpl.getGroupId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
@@ -1597,32 +1638,8 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 		EntityCacheUtil.putResult(LayoutSetModelImpl.ENTITY_CACHE_ENABLED,
 			LayoutSetImpl.class, layoutSet.getPrimaryKey(), layoutSet);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_P,
-				new Object[] {
-					Long.valueOf(layoutSet.getGroupId()),
-					Boolean.valueOf(layoutSet.getPrivateLayout())
-				}, layoutSet);
-		}
-		else {
-			if ((layoutSetModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_G_P.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(layoutSetModelImpl.getOriginalGroupId()),
-						Boolean.valueOf(layoutSetModelImpl.getOriginalPrivateLayout())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_P, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_P, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_P,
-					new Object[] {
-						Long.valueOf(layoutSet.getGroupId()),
-						Boolean.valueOf(layoutSet.getPrivateLayout())
-					}, layoutSet);
-			}
-		}
+		clearUniqueFindersCache(layoutSet);
+		cacheUniqueFindersCache(layoutSet);
 
 		return layoutSet;
 	}
@@ -1663,13 +1680,24 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 	 *
 	 * @param primaryKey the primary key of the layout set
 	 * @return the layout set
-	 * @throws com.liferay.portal.NoSuchModelException if a layout set with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchLayoutSetException if a layout set with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public LayoutSet findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchLayoutSetException, SystemException {
+		LayoutSet layoutSet = fetchByPrimaryKey(primaryKey);
+
+		if (layoutSet == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchLayoutSetException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return layoutSet;
 	}
 
 	/**
@@ -1682,18 +1710,7 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 	 */
 	public LayoutSet findByPrimaryKey(long layoutSetId)
 		throws NoSuchLayoutSetException, SystemException {
-		LayoutSet layoutSet = fetchByPrimaryKey(layoutSetId);
-
-		if (layoutSet == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + layoutSetId);
-			}
-
-			throw new NoSuchLayoutSetException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				layoutSetId);
-		}
-
-		return layoutSet;
+		return findByPrimaryKey((Serializable)layoutSetId);
 	}
 
 	/**
@@ -1706,20 +1723,8 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 	@Override
 	public LayoutSet fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the layout set with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param layoutSetId the primary key of the layout set
-	 * @return the layout set, or <code>null</code> if a layout set with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public LayoutSet fetchByPrimaryKey(long layoutSetId)
-		throws SystemException {
 		LayoutSet layoutSet = (LayoutSet)EntityCacheUtil.getResult(LayoutSetModelImpl.ENTITY_CACHE_ENABLED,
-				LayoutSetImpl.class, layoutSetId);
+				LayoutSetImpl.class, primaryKey);
 
 		if (layoutSet == _nullLayoutSet) {
 			return null;
@@ -1732,19 +1737,19 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 				session = openSession();
 
 				layoutSet = (LayoutSet)session.get(LayoutSetImpl.class,
-						Long.valueOf(layoutSetId));
+						primaryKey);
 
 				if (layoutSet != null) {
 					cacheResult(layoutSet);
 				}
 				else {
 					EntityCacheUtil.putResult(LayoutSetModelImpl.ENTITY_CACHE_ENABLED,
-						LayoutSetImpl.class, layoutSetId, _nullLayoutSet);
+						LayoutSetImpl.class, primaryKey, _nullLayoutSet);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(LayoutSetModelImpl.ENTITY_CACHE_ENABLED,
-					LayoutSetImpl.class, layoutSetId);
+					LayoutSetImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -1754,6 +1759,18 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 		}
 
 		return layoutSet;
+	}
+
+	/**
+	 * Returns the layout set with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param layoutSetId the primary key of the layout set
+	 * @return the layout set, or <code>null</code> if a layout set with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public LayoutSet fetchByPrimaryKey(long layoutSetId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)layoutSetId);
 	}
 
 	/**
@@ -1956,128 +1973,6 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
 	private static final String _SQL_SELECT_LAYOUTSET = "SELECT layoutSet FROM LayoutSet layoutSet";
 	private static final String _SQL_SELECT_LAYOUTSET_WHERE = "SELECT layoutSet FROM LayoutSet layoutSet WHERE ";
 	private static final String _SQL_COUNT_LAYOUTSET = "SELECT COUNT(layoutSet) FROM LayoutSet layoutSet";

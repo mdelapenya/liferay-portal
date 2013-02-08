@@ -14,7 +14,6 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchTeamException;
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
@@ -1014,16 +1013,18 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 
 			query.append(_FINDER_COLUMN_G_N_GROUPID_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_G_N_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_N_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_N_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_N_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_G_N_NAME_2);
 			}
 
 			String sql = query.toString();
@@ -1039,7 +1040,7 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 
 				qPos.add(groupId);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -1121,16 +1122,18 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 
 			query.append(_FINDER_COLUMN_G_N_GROUPID_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_G_N_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_N_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_N_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_N_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_G_N_NAME_2);
 			}
 
 			String sql = query.toString();
@@ -1146,7 +1149,7 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 
 				qPos.add(groupId);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -1170,7 +1173,7 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 	private static final String _FINDER_COLUMN_G_N_GROUPID_2 = "team.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_N_NAME_1 = "team.name IS NULL";
 	private static final String _FINDER_COLUMN_G_N_NAME_2 = "team.name = ?";
-	private static final String _FINDER_COLUMN_G_N_NAME_3 = "(team.name IS NULL OR team.name = ?)";
+	private static final String _FINDER_COLUMN_G_N_NAME_3 = "(team.name IS NULL OR team.name = '')";
 
 	/**
 	 * Caches the team in the entity cache if it is enabled.
@@ -1182,8 +1185,7 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 			TeamImpl.class, team.getPrimaryKey(), team);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_N,
-			new Object[] { Long.valueOf(team.getGroupId()), team.getName() },
-			team);
+			new Object[] { team.getGroupId(), team.getName() }, team);
 
 		team.resetOriginalValues();
 	}
@@ -1256,9 +1258,46 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 		}
 	}
 
+	protected void cacheUniqueFindersCache(Team team) {
+		if (team.isNew()) {
+			Object[] args = new Object[] { team.getGroupId(), team.getName() };
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_N, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_N, args, team);
+		}
+		else {
+			TeamModelImpl teamModelImpl = (TeamModelImpl)team;
+
+			if ((teamModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_G_N.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] { team.getGroupId(), team.getName() };
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_N, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_N, args, team);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(Team team) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_N,
-			new Object[] { Long.valueOf(team.getGroupId()), team.getName() });
+		TeamModelImpl teamModelImpl = (TeamModelImpl)team;
+
+		Object[] args = new Object[] { team.getGroupId(), team.getName() };
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_N, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_N, args);
+
+		if ((teamModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_G_N.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					teamModelImpl.getOriginalGroupId(),
+					teamModelImpl.getOriginalName()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_N, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_N, args);
+		}
 	}
 
 	/**
@@ -1285,7 +1324,7 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 	 * @throws SystemException if a system exception occurred
 	 */
 	public Team remove(long teamId) throws NoSuchTeamException, SystemException {
-		return remove(Long.valueOf(teamId));
+		return remove((Serializable)teamId);
 	}
 
 	/**
@@ -1418,15 +1457,13 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 		else {
 			if ((teamModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(teamModelImpl.getOriginalGroupId())
-					};
+				Object[] args = new Object[] { teamModelImpl.getOriginalGroupId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
 					args);
 
-				args = new Object[] { Long.valueOf(teamModelImpl.getGroupId()) };
+				args = new Object[] { teamModelImpl.getGroupId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
@@ -1437,29 +1474,8 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 		EntityCacheUtil.putResult(TeamModelImpl.ENTITY_CACHE_ENABLED,
 			TeamImpl.class, team.getPrimaryKey(), team);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_N,
-				new Object[] { Long.valueOf(team.getGroupId()), team.getName() },
-				team);
-		}
-		else {
-			if ((teamModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_G_N.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(teamModelImpl.getOriginalGroupId()),
-						
-						teamModelImpl.getOriginalName()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_N, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_N, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_N,
-					new Object[] { Long.valueOf(team.getGroupId()), team.getName() },
-					team);
-			}
-		}
+		clearUniqueFindersCache(team);
+		cacheUniqueFindersCache(team);
 
 		return team;
 	}
@@ -1492,13 +1508,24 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 	 *
 	 * @param primaryKey the primary key of the team
 	 * @return the team
-	 * @throws com.liferay.portal.NoSuchModelException if a team with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchTeamException if a team with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public Team findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchTeamException, SystemException {
+		Team team = fetchByPrimaryKey(primaryKey);
+
+		if (team == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchTeamException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return team;
 	}
 
 	/**
@@ -1511,18 +1538,7 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 	 */
 	public Team findByPrimaryKey(long teamId)
 		throws NoSuchTeamException, SystemException {
-		Team team = fetchByPrimaryKey(teamId);
-
-		if (team == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + teamId);
-			}
-
-			throw new NoSuchTeamException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				teamId);
-		}
-
-		return team;
+		return findByPrimaryKey((Serializable)teamId);
 	}
 
 	/**
@@ -1535,19 +1551,8 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 	@Override
 	public Team fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the team with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param teamId the primary key of the team
-	 * @return the team, or <code>null</code> if a team with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public Team fetchByPrimaryKey(long teamId) throws SystemException {
 		Team team = (Team)EntityCacheUtil.getResult(TeamModelImpl.ENTITY_CACHE_ENABLED,
-				TeamImpl.class, teamId);
+				TeamImpl.class, primaryKey);
 
 		if (team == _nullTeam) {
 			return null;
@@ -1559,19 +1564,19 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 			try {
 				session = openSession();
 
-				team = (Team)session.get(TeamImpl.class, Long.valueOf(teamId));
+				team = (Team)session.get(TeamImpl.class, primaryKey);
 
 				if (team != null) {
 					cacheResult(team);
 				}
 				else {
 					EntityCacheUtil.putResult(TeamModelImpl.ENTITY_CACHE_ENABLED,
-						TeamImpl.class, teamId, _nullTeam);
+						TeamImpl.class, primaryKey, _nullTeam);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(TeamModelImpl.ENTITY_CACHE_ENABLED,
-					TeamImpl.class, teamId);
+					TeamImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -1581,6 +1586,17 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 		}
 
 		return team;
+	}
+
+	/**
+	 * Returns the team with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param teamId the primary key of the team
+	 * @return the team, or <code>null</code> if a team with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Team fetchByPrimaryKey(long teamId) throws SystemException {
+		return fetchByPrimaryKey((Serializable)teamId);
 	}
 
 	/**
@@ -2775,132 +2791,14 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
 	@BeanReference(type = UserPersistence.class)
 	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
 	protected ContainsUser containsUser;
 	protected AddUser addUser;
 	protected ClearUsers clearUsers;
 	protected RemoveUser removeUser;
+	@BeanReference(type = UserGroupPersistence.class)
+	protected UserGroupPersistence userGroupPersistence;
 	protected ContainsUserGroup containsUserGroup;
 	protected AddUserGroup addUserGroup;
 	protected ClearUserGroups clearUserGroups;

@@ -30,11 +30,6 @@ if (organizationId > 0) {
 }
 %>
 
-<portlet:renderURL var="organizationSelectorURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-	<portlet:param name="struts_action" value="/portlet_configuration/select_organization" />
-	<portlet:param name="tabs1" value="organizations" />
-</portlet:renderURL>
-
 <liferay-portlet:actionURL portletConfiguration="true" var="configurationURL" />
 
 <aui:form action="<%= configurationURL %>" method="post" name="fm">
@@ -52,7 +47,7 @@ if (organizationId > 0) {
 			<aui:field-wrapper label="organization">
 				<span id="<portlet:namespace />organizationName"><%= HtmlUtil.escape(organizationName) %></span>
 
-				<aui:button name="selectOrganizationButton" onClick='<%= renderResponse.getNamespace() + "openOrganizationSelector();" %>' value="select" />
+				<aui:button name="selectOrganizationButton" value="select" />
 
 				<aui:button disabled="<%= organizationId <= 0 %>" name="removeOrganizationButton" onClick='<%= renderResponse.getNamespace() + "removeOrganization();" %>' value="remove" />
 			</aui:field-wrapper>
@@ -106,12 +101,6 @@ if (organizationId > 0) {
 </aui:form>
 
 <aui:script>
-	function <portlet:namespace />openOrganizationSelector() {
-		var organizationWindow = window.open('<%= organizationSelectorURL %>', 'organization', 'directories=no,height=640,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no,width=680');
-
-		organizationWindow.focus();
-	}
-
 	function <portlet:namespace />removeOrganization() {
 		document.<portlet:namespace />fm.<portlet:namespace />organizationId.value = "";
 
@@ -121,19 +110,38 @@ if (organizationId > 0) {
 
 		document.getElementById("<portlet:namespace />removeOrganizationButton").disabled = true;
 	}
-
-	function <portlet:namespace />selectOrganization(organizationId, groupId, name) {
-		document.<portlet:namespace />fm.<portlet:namespace />organizationId.value = organizationId;
-
-		var nameEl = document.getElementById("<portlet:namespace />organizationName");
-
-		nameEl.innerHTML = name + "&nbsp;";
-
-		document.getElementById("<portlet:namespace />removeOrganizationButton").disabled = false;
-	}
 </aui:script>
 
 <aui:script use="aui-base">
+	A.one('#<portlet:namespace />selectOrganizationButton').on(
+		'click',
+		function(event) {
+			Liferay.Util.selectEntity(
+				{
+					dialog: {
+						align: Liferay.Util.Window.ALIGN_CENTER,
+						constrain: true,
+						modal: true,
+						stack: true,
+						width: 600
+					},
+					id: '<portlet:namespace />selectOrganization',
+					title: '<%= UnicodeLanguageUtil.get(pageContext, "select").concat(" ").concat(UnicodeLanguageUtil.get(pageContext, "organization")) %>',
+					uri: '<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="struts_action" value="/portlet_configuration/select_organization" /><portlet:param name="tabs1" value="organizations" /></portlet:renderURL>'
+				},
+				function(event){
+					document.<portlet:namespace />fm.<portlet:namespace />organizationId.value = event.organizationId;
+
+					var nameEl = document.getElementById('<portlet:namespace />organizationName');
+
+					nameEl.innerHTML = event.name + '&nbsp;';
+
+					document.getElementById('<portlet:namespace />removeOrganizationButton').disabled = false;
+				}
+			);
+		}
+	);
+
 	var selectionMethod = A.one('#<portlet:namespace />selectionMethod');
 
 	function showHiddenFields() {

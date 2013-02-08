@@ -15,8 +15,6 @@
 package com.liferay.portal.service.persistence;
 
 import com.liferay.portal.NoSuchCountryException;
-import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -167,16 +165,18 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 
 			query.append(_SQL_SELECT_COUNTRY_WHERE);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_NAME_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_NAME_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_NAME_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_NAME_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_NAME_NAME_2);
 			}
 
 			String sql = query.toString();
@@ -190,7 +190,7 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -267,16 +267,18 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 
 			query.append(_SQL_COUNT_COUNTRY_WHERE);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_NAME_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_NAME_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_NAME_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_NAME_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_NAME_NAME_2);
 			}
 
 			String sql = query.toString();
@@ -290,7 +292,7 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -313,7 +315,7 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 
 	private static final String _FINDER_COLUMN_NAME_NAME_1 = "country.name IS NULL";
 	private static final String _FINDER_COLUMN_NAME_NAME_2 = "country.name = ?";
-	private static final String _FINDER_COLUMN_NAME_NAME_3 = "(country.name IS NULL OR country.name = ?)";
+	private static final String _FINDER_COLUMN_NAME_NAME_3 = "(country.name IS NULL OR country.name = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_A2 = new FinderPath(CountryModelImpl.ENTITY_CACHE_ENABLED,
 			CountryModelImpl.FINDER_CACHE_ENABLED, CountryImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByA2",
@@ -399,16 +401,18 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 
 			query.append(_SQL_SELECT_COUNTRY_WHERE);
 
+			boolean bindA2 = false;
+
 			if (a2 == null) {
 				query.append(_FINDER_COLUMN_A2_A2_1);
 			}
+			else if (a2.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_A2_A2_3);
+			}
 			else {
-				if (a2.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_A2_A2_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_A2_A2_2);
-				}
+				bindA2 = true;
+
+				query.append(_FINDER_COLUMN_A2_A2_2);
 			}
 
 			String sql = query.toString();
@@ -422,7 +426,7 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (a2 != null) {
+				if (bindA2) {
 					qPos.add(a2);
 				}
 
@@ -498,16 +502,18 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 
 			query.append(_SQL_COUNT_COUNTRY_WHERE);
 
+			boolean bindA2 = false;
+
 			if (a2 == null) {
 				query.append(_FINDER_COLUMN_A2_A2_1);
 			}
+			else if (a2.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_A2_A2_3);
+			}
 			else {
-				if (a2.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_A2_A2_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_A2_A2_2);
-				}
+				bindA2 = true;
+
+				query.append(_FINDER_COLUMN_A2_A2_2);
 			}
 
 			String sql = query.toString();
@@ -521,7 +527,7 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (a2 != null) {
+				if (bindA2) {
 					qPos.add(a2);
 				}
 
@@ -544,7 +550,7 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 
 	private static final String _FINDER_COLUMN_A2_A2_1 = "country.a2 IS NULL";
 	private static final String _FINDER_COLUMN_A2_A2_2 = "country.a2 = ?";
-	private static final String _FINDER_COLUMN_A2_A2_3 = "(country.a2 IS NULL OR country.a2 = ?)";
+	private static final String _FINDER_COLUMN_A2_A2_3 = "(country.a2 IS NULL OR country.a2 = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_A3 = new FinderPath(CountryModelImpl.ENTITY_CACHE_ENABLED,
 			CountryModelImpl.FINDER_CACHE_ENABLED, CountryImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByA3",
@@ -630,16 +636,18 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 
 			query.append(_SQL_SELECT_COUNTRY_WHERE);
 
+			boolean bindA3 = false;
+
 			if (a3 == null) {
 				query.append(_FINDER_COLUMN_A3_A3_1);
 			}
+			else if (a3.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_A3_A3_3);
+			}
 			else {
-				if (a3.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_A3_A3_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_A3_A3_2);
-				}
+				bindA3 = true;
+
+				query.append(_FINDER_COLUMN_A3_A3_2);
 			}
 
 			String sql = query.toString();
@@ -653,7 +661,7 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (a3 != null) {
+				if (bindA3) {
 					qPos.add(a3);
 				}
 
@@ -729,16 +737,18 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 
 			query.append(_SQL_COUNT_COUNTRY_WHERE);
 
+			boolean bindA3 = false;
+
 			if (a3 == null) {
 				query.append(_FINDER_COLUMN_A3_A3_1);
 			}
+			else if (a3.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_A3_A3_3);
+			}
 			else {
-				if (a3.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_A3_A3_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_A3_A3_2);
-				}
+				bindA3 = true;
+
+				query.append(_FINDER_COLUMN_A3_A3_2);
 			}
 
 			String sql = query.toString();
@@ -752,7 +762,7 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (a3 != null) {
+				if (bindA3) {
 					qPos.add(a3);
 				}
 
@@ -775,7 +785,7 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 
 	private static final String _FINDER_COLUMN_A3_A3_1 = "country.a3 IS NULL";
 	private static final String _FINDER_COLUMN_A3_A3_2 = "country.a3 = ?";
-	private static final String _FINDER_COLUMN_A3_A3_3 = "(country.a3 IS NULL OR country.a3 = ?)";
+	private static final String _FINDER_COLUMN_A3_A3_3 = "(country.a3 IS NULL OR country.a3 = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_ACTIVE = new FinderPath(CountryModelImpl.ENTITY_CACHE_ENABLED,
 			CountryModelImpl.FINDER_CACHE_ENABLED, CountryImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByActive",
@@ -1339,15 +1349,100 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 		}
 	}
 
+	protected void cacheUniqueFindersCache(Country country) {
+		if (country.isNew()) {
+			Object[] args = new Object[] { country.getName() };
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_NAME, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_NAME, args, country);
+
+			args = new Object[] { country.getA2() };
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_A2, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_A2, args, country);
+
+			args = new Object[] { country.getA3() };
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_A3, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_A3, args, country);
+		}
+		else {
+			CountryModelImpl countryModelImpl = (CountryModelImpl)country;
+
+			if ((countryModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_NAME.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] { country.getName() };
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_NAME, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_NAME, args,
+					country);
+			}
+
+			if ((countryModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_A2.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] { country.getA2() };
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_A2, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_A2, args, country);
+			}
+
+			if ((countryModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_A3.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] { country.getA3() };
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_A3, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_A3, args, country);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(Country country) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_NAME,
-			new Object[] { country.getName() });
+		CountryModelImpl countryModelImpl = (CountryModelImpl)country;
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_A2,
-			new Object[] { country.getA2() });
+		Object[] args = new Object[] { country.getName() };
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_A3,
-			new Object[] { country.getA3() });
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_NAME, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_NAME, args);
+
+		if ((countryModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_NAME.getColumnBitmask()) != 0) {
+			args = new Object[] { countryModelImpl.getOriginalName() };
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_NAME, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_NAME, args);
+		}
+
+		args = new Object[] { country.getA2() };
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_A2, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_A2, args);
+
+		if ((countryModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_A2.getColumnBitmask()) != 0) {
+			args = new Object[] { countryModelImpl.getOriginalA2() };
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_A2, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_A2, args);
+		}
+
+		args = new Object[] { country.getA3() };
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_A3, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_A3, args);
+
+		if ((countryModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_A3.getColumnBitmask()) != 0) {
+			args = new Object[] { countryModelImpl.getOriginalA3() };
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_A3, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_A3, args);
+		}
 	}
 
 	/**
@@ -1375,7 +1470,7 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 	 */
 	public Country remove(long countryId)
 		throws NoSuchCountryException, SystemException {
-		return remove(Long.valueOf(countryId));
+		return remove((Serializable)countryId);
 	}
 
 	/**
@@ -1490,16 +1585,14 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 			if ((countryModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ACTIVE.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Boolean.valueOf(countryModelImpl.getOriginalActive())
+						countryModelImpl.getOriginalActive()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_ACTIVE, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ACTIVE,
 					args);
 
-				args = new Object[] {
-						Boolean.valueOf(countryModelImpl.getActive())
-					};
+				args = new Object[] { countryModelImpl.getActive() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_ACTIVE, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ACTIVE,
@@ -1510,53 +1603,8 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 		EntityCacheUtil.putResult(CountryModelImpl.ENTITY_CACHE_ENABLED,
 			CountryImpl.class, country.getPrimaryKey(), country);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_NAME,
-				new Object[] { country.getName() }, country);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_A2,
-				new Object[] { country.getA2() }, country);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_A3,
-				new Object[] { country.getA3() }, country);
-		}
-		else {
-			if ((countryModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_NAME.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] { countryModelImpl.getOriginalName() };
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_NAME, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_NAME, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_NAME,
-					new Object[] { country.getName() }, country);
-			}
-
-			if ((countryModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_A2.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] { countryModelImpl.getOriginalA2() };
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_A2, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_A2, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_A2,
-					new Object[] { country.getA2() }, country);
-			}
-
-			if ((countryModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_A3.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] { countryModelImpl.getOriginalA3() };
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_A3, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_A3, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_A3,
-					new Object[] { country.getA3() }, country);
-			}
-		}
+		clearUniqueFindersCache(country);
+		cacheUniqueFindersCache(country);
 
 		return country;
 	}
@@ -1588,13 +1636,24 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 	 *
 	 * @param primaryKey the primary key of the country
 	 * @return the country
-	 * @throws com.liferay.portal.NoSuchModelException if a country with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchCountryException if a country with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public Country findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchCountryException, SystemException {
+		Country country = fetchByPrimaryKey(primaryKey);
+
+		if (country == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchCountryException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return country;
 	}
 
 	/**
@@ -1607,18 +1666,7 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 	 */
 	public Country findByPrimaryKey(long countryId)
 		throws NoSuchCountryException, SystemException {
-		Country country = fetchByPrimaryKey(countryId);
-
-		if (country == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + countryId);
-			}
-
-			throw new NoSuchCountryException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				countryId);
-		}
-
-		return country;
+		return findByPrimaryKey((Serializable)countryId);
 	}
 
 	/**
@@ -1631,19 +1679,8 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 	@Override
 	public Country fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the country with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param countryId the primary key of the country
-	 * @return the country, or <code>null</code> if a country with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public Country fetchByPrimaryKey(long countryId) throws SystemException {
 		Country country = (Country)EntityCacheUtil.getResult(CountryModelImpl.ENTITY_CACHE_ENABLED,
-				CountryImpl.class, countryId);
+				CountryImpl.class, primaryKey);
 
 		if (country == _nullCountry) {
 			return null;
@@ -1655,20 +1692,19 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 			try {
 				session = openSession();
 
-				country = (Country)session.get(CountryImpl.class,
-						Long.valueOf(countryId));
+				country = (Country)session.get(CountryImpl.class, primaryKey);
 
 				if (country != null) {
 					cacheResult(country);
 				}
 				else {
 					EntityCacheUtil.putResult(CountryModelImpl.ENTITY_CACHE_ENABLED,
-						CountryImpl.class, countryId, _nullCountry);
+						CountryImpl.class, primaryKey, _nullCountry);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(CountryModelImpl.ENTITY_CACHE_ENABLED,
-					CountryImpl.class, countryId);
+					CountryImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -1678,6 +1714,17 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 		}
 
 		return country;
+	}
+
+	/**
+	 * Returns the country with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param countryId the primary key of the country
+	 * @return the country, or <code>null</code> if a country with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Country fetchByPrimaryKey(long countryId) throws SystemException {
+		return fetchByPrimaryKey((Serializable)countryId);
 	}
 
 	/**
@@ -1879,128 +1926,6 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
 	private static final String _SQL_SELECT_COUNTRY = "SELECT country FROM Country country";
 	private static final String _SQL_SELECT_COUNTRY_WHERE = "SELECT country FROM Country country WHERE ";
 	private static final String _SQL_COUNT_COUNTRY = "SELECT COUNT(country) FROM Country country";

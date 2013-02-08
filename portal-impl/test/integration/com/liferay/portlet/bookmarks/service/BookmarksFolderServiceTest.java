@@ -20,15 +20,18 @@ import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.Query;
-import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.model.Group;
+import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.AssertUtils;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
-import com.liferay.portal.util.TestPropsValues;
+import com.liferay.portal.test.Sync;
+import com.liferay.portal.test.SynchronousDestinationExecutionTestListener;
+import com.liferay.portal.test.TransactionalExecutionTestListener;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
 import com.liferay.portlet.bookmarks.model.BookmarksFolder;
 import com.liferay.portlet.bookmarks.util.BookmarksTestUtil;
@@ -36,67 +39,95 @@ import com.liferay.portlet.bookmarks.util.BookmarksTestUtil;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
  * @author Brian Wing Shun Chan
  */
-@ExecutionTestListeners(listeners = {EnvironmentExecutionTestListener.class})
+@ExecutionTestListeners(
+	listeners = {
+		EnvironmentExecutionTestListener.class,
+		SynchronousDestinationExecutionTestListener.class,
+		TransactionalExecutionTestListener.class
+	})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
+@Sync
 @Transactional
 public class BookmarksFolderServiceTest {
 
+	@Before
+	public void setUp() throws Exception {
+		_group = ServiceTestUtil.addGroup();
+	}
+
 	@Test
 	public void testAddFolder() throws Exception {
-		BookmarksTestUtil.addFolder();
+		BookmarksTestUtil.addFolder(
+			_group.getGroupId(), ServiceTestUtil.randomString());
 	}
 
 	@Test
 	public void testAddSubfolder() throws Exception {
-		BookmarksFolder folder = BookmarksTestUtil.addFolder();
+		BookmarksFolder folder = BookmarksTestUtil.addFolder(
+			_group.getGroupId(), ServiceTestUtil.randomString());
 
-		BookmarksTestUtil.addFolder(folder.getFolderId());
+		BookmarksTestUtil.addFolder(
+			_group.getGroupId(), folder.getFolderId(),
+			ServiceTestUtil.randomString());
 	}
 
 	@Test
 	public void testDeleteFolder() throws Exception {
-		BookmarksFolder folder = BookmarksTestUtil.addFolder();
+		BookmarksFolder folder = BookmarksTestUtil.addFolder(
+			_group.getGroupId(), ServiceTestUtil.randomString());
 
 		BookmarksFolderServiceUtil.deleteFolder(folder.getFolderId());
 	}
 
 	@Test
 	public void testGetFolder() throws Exception {
-		BookmarksFolder folder = BookmarksTestUtil.addFolder();
+		BookmarksFolder folder = BookmarksTestUtil.addFolder(
+			_group.getGroupId(), ServiceTestUtil.randomString());
 
 		BookmarksFolderServiceUtil.getFolder(folder.getFolderId());
 	}
 
 	@Test
 	public void testSearch() throws Exception {
-		BookmarksEntry entry = BookmarksTestUtil.addEntry();
+		BookmarksFolder folder = BookmarksTestUtil.addFolder(
+			_group.getGroupId(), ServiceTestUtil.randomString());
 
-		Thread.sleep(1000 * TestPropsValues.JUNIT_DELAY_FACTOR);
+		BookmarksEntry entry = BookmarksTestUtil.addEntry(
+			_group.getGroupId(), folder.getFolderId(), true);
+
+		SearchContext searchContext = BookmarksTestUtil.getSearchContext(
+			entry.getCompanyId(), entry.getGroupId(), entry.getFolderId(),
+			"test");
+
+		Indexer indexer = IndexerRegistryUtil.getIndexer(BookmarksEntry.class);
+
+		Hits hits = indexer.search(searchContext);
+
+		Assert.assertEquals(1, hits.getLength());
+	}
+
+	@Test
+	public void testSearchAndDeleteFolderAndSearch() throws Exception {
+		BookmarksFolder folder = BookmarksTestUtil.addFolder(
+			_group.getGroupId(), ServiceTestUtil.randomString());
+
+		BookmarksEntry entry = BookmarksTestUtil.addEntry(
+			_group.getGroupId(), folder.getFolderId(), true);
 
 		long companyId = entry.getCompanyId();
 		long groupId = entry.getFolder().getGroupId();
 		long folderId = entry.getFolderId();
 		String keywords = "test";
 
-		SearchContext searchContext = new SearchContext();
-
-		searchContext.setCompanyId(companyId);
-		searchContext.setFolderIds(new long[] {folderId});
-		searchContext.setGroupIds(new long[] {groupId});
-		searchContext.setKeywords(keywords);
-
-		QueryConfig queryConfig = new QueryConfig();
-
-		queryConfig.setHighlightEnabled(false);
-		queryConfig.setScoreEnabled(false);
-
-		searchContext.setQueryConfig(queryConfig);
+		SearchContext searchContext = BookmarksTestUtil.getSearchContext(
+			companyId, groupId, folderId, keywords);
 
 		Indexer indexer = IndexerRegistryUtil.getIndexer(BookmarksEntry.class);
 
@@ -104,53 +135,83 @@ public class BookmarksFolderServiceTest {
 
 		Assert.assertEquals(1, hits.getLength());
 
-		List<Document> results =  hits.toList();
-
-		for (Document doc : results) {
-			Assert.assertEquals(
-				companyId, GetterUtil.getLong(doc.get(Field.COMPANY_ID)));
-
-			Assert.assertEquals(
-					groupId, GetterUtil.getLong(doc.get(Field.GROUP_ID)));
-
-			AssertUtils.assertEqualsIgnoreCase(
-				entry.getName(), doc.get(Field.TITLE));
-			Assert.assertEquals(entry.getUrl(), doc.get(Field.URL));
-			AssertUtils.assertEqualsIgnoreCase(
-				entry.getDescription(), doc.get(Field.DESCRIPTION));
-
-			Assert.assertEquals(
-				folderId, GetterUtil.getLong(doc.get("folderId")));
-			Assert.assertEquals(
-				entry.getEntryId(),
-				GetterUtil.getLong(doc.get(Field.ENTRY_CLASS_PK)));
-		}
-
 		BookmarksFolderLocalServiceUtil.deleteFolder(folderId);
-
-		Thread.sleep(1000 * TestPropsValues.JUNIT_DELAY_FACTOR);
 
 		hits = indexer.search(searchContext);
 
 		Query query = hits.getQuery();
 
 		Assert.assertEquals(query.toString(), 0, hits.getLength());
+	}
 
-		BookmarksTestUtil.addEntry();
-		BookmarksTestUtil.addEntry();
-		BookmarksTestUtil.addEntry();
-		BookmarksTestUtil.addEntry();
+	@Test
+	public void testSearchAndVerifyDocs() throws Exception {
+		BookmarksFolder folder = BookmarksTestUtil.addFolder(
+			_group.getGroupId(), ServiceTestUtil.randomString());
 
-		Thread.sleep(1000 * TestPropsValues.JUNIT_DELAY_FACTOR);
+		BookmarksEntry entry = BookmarksTestUtil.addEntry(
+			_group.getGroupId(), folder.getFolderId(), true);
+
+		SearchContext searchContext = BookmarksTestUtil.getSearchContext(
+			entry.getCompanyId(), entry.getGroupId(), entry.getFolderId(),
+			"test");
+
+		Indexer indexer = IndexerRegistryUtil.getIndexer(BookmarksEntry.class);
+
+		Hits hits = indexer.search(searchContext);
+
+		Assert.assertEquals(1, hits.getLength());
+
+		List<Document> results = hits.toList();
+
+		for (Document doc : results) {
+			Assert.assertEquals(
+				entry.getCompanyId(),
+				GetterUtil.getLong(doc.get(Field.COMPANY_ID)));
+			AssertUtils.assertEqualsIgnoreCase(
+				entry.getDescription(), doc.get(Field.DESCRIPTION));
+			Assert.assertEquals(
+				entry.getEntryId(),
+				GetterUtil.getLong(doc.get(Field.ENTRY_CLASS_PK)));
+			Assert.assertEquals(
+				entry.getGroupId(),
+				GetterUtil.getLong(doc.get(Field.GROUP_ID)));
+			AssertUtils.assertEqualsIgnoreCase(
+				entry.getName(), doc.get(Field.TITLE));
+			Assert.assertEquals(entry.getUrl(), doc.get(Field.URL));
+			Assert.assertEquals(
+				entry.getFolderId(), GetterUtil.getLong(doc.get("folderId")));
+		}
+	}
+
+	@Test
+	public void testSearchRange() throws Exception {
+		BookmarksEntry entry = BookmarksTestUtil.addEntry(
+			_group.getGroupId(), true);
+
+		BookmarksTestUtil.addEntry(_group.getGroupId(), true);
+		BookmarksTestUtil.addEntry(_group.getGroupId(), true);
+		BookmarksTestUtil.addEntry(_group.getGroupId(), true);
+
+		SearchContext searchContext = BookmarksTestUtil.getSearchContext(
+			_group.getCompanyId(), _group.getGroupId(), entry.getFolderId(),
+			"test");
+
+		Indexer indexer = IndexerRegistryUtil.getIndexer(BookmarksEntry.class);
 
 		searchContext.setEnd(3);
 		searchContext.setFolderIds((long[])null);
 		searchContext.setStart(1);
 
-		hits = indexer.search(searchContext);
+		Hits hits = indexer.search(searchContext);
 
 		Assert.assertEquals(4, hits.getLength());
-		Assert.assertEquals(2, hits.getDocs().length);
+
+		Document[] documents = hits.getDocs();
+
+		Assert.assertEquals(2, documents.length);
 	}
+
+	private Group _group;
 
 }

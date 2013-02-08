@@ -768,6 +768,22 @@ public class JavadocFormatter {
 		int pos = fileName.indexOf("src/");
 
 		if (pos == -1) {
+			pos = fileName.indexOf("test/integration/");
+
+			if (pos != -1) {
+				pos = fileName.indexOf("integration/", pos);
+			}
+		}
+
+		if (pos == -1) {
+			pos = fileName.indexOf("test/unit/");
+
+			if (pos != -1) {
+				pos = fileName.indexOf("unit/", pos);
+			}
+		}
+
+		if (pos == -1) {
 			pos = fileName.indexOf("test/");
 		}
 
@@ -863,7 +879,7 @@ public class JavadocFormatter {
 
 		String comment = rootElement.elementText("comment");
 
-		if (_initializeMissingJavadocs || Validator.isNotNull(comment)) {
+		if (Validator.isNotNull(comment)) {
 			sb.append(_wrapText(comment, indent + " * "));
 		}
 
@@ -1046,7 +1062,7 @@ public class JavadocFormatter {
 
 		String comment = fieldElement.elementText("comment");
 
-		if (_initializeMissingJavadocs || Validator.isNotNull(comment)) {
+		if (Validator.isNotNull(comment)) {
 			sb.append(_wrapText(comment, indent + " * "));
 		}
 
@@ -1103,7 +1119,7 @@ public class JavadocFormatter {
 
 		String comment = methodElement.elementText("comment");
 
-		if (_initializeMissingJavadocs || Validator.isNotNull(comment)) {
+		if (Validator.isNotNull(comment)) {
 			sb.append(_wrapText(comment, indent + " * "));
 		}
 

@@ -14,8 +14,6 @@
 
 package com.liferay.portlet.ratings.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -36,17 +34,12 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnmodifiableList;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
-import com.liferay.portlet.asset.service.persistence.AssetEntryPersistence;
-import com.liferay.portlet.blogs.service.persistence.BlogsEntryPersistence;
-import com.liferay.portlet.blogs.service.persistence.BlogsStatsUserPersistence;
 import com.liferay.portlet.ratings.NoSuchEntryException;
 import com.liferay.portlet.ratings.model.RatingsEntry;
 import com.liferay.portlet.ratings.model.impl.RatingsEntryImpl;
 import com.liferay.portlet.ratings.model.impl.RatingsEntryModelImpl;
-import com.liferay.portlet.social.service.persistence.SocialActivityPersistence;
 
 import java.io.Serializable;
 
@@ -1419,9 +1412,8 @@ public class RatingsEntryPersistenceImpl extends BasePersistenceImpl<RatingsEntr
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_C_C,
 			new Object[] {
-				Long.valueOf(ratingsEntry.getUserId()),
-				Long.valueOf(ratingsEntry.getClassNameId()),
-				Long.valueOf(ratingsEntry.getClassPK())
+				ratingsEntry.getUserId(), ratingsEntry.getClassNameId(),
+				ratingsEntry.getClassPK()
 			}, ratingsEntry);
 
 		ratingsEntry.resetOriginalValues();
@@ -1496,13 +1488,58 @@ public class RatingsEntryPersistenceImpl extends BasePersistenceImpl<RatingsEntr
 		}
 	}
 
+	protected void cacheUniqueFindersCache(RatingsEntry ratingsEntry) {
+		if (ratingsEntry.isNew()) {
+			Object[] args = new Object[] {
+					ratingsEntry.getUserId(), ratingsEntry.getClassNameId(),
+					ratingsEntry.getClassPK()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_U_C_C, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_C_C, args,
+				ratingsEntry);
+		}
+		else {
+			RatingsEntryModelImpl ratingsEntryModelImpl = (RatingsEntryModelImpl)ratingsEntry;
+
+			if ((ratingsEntryModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_U_C_C.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						ratingsEntry.getUserId(), ratingsEntry.getClassNameId(),
+						ratingsEntry.getClassPK()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_U_C_C, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_C_C, args,
+					ratingsEntry);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(RatingsEntry ratingsEntry) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_C_C,
-			new Object[] {
-				Long.valueOf(ratingsEntry.getUserId()),
-				Long.valueOf(ratingsEntry.getClassNameId()),
-				Long.valueOf(ratingsEntry.getClassPK())
-			});
+		RatingsEntryModelImpl ratingsEntryModelImpl = (RatingsEntryModelImpl)ratingsEntry;
+
+		Object[] args = new Object[] {
+				ratingsEntry.getUserId(), ratingsEntry.getClassNameId(),
+				ratingsEntry.getClassPK()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_C_C, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_C_C, args);
+
+		if ((ratingsEntryModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_U_C_C.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					ratingsEntryModelImpl.getOriginalUserId(),
+					ratingsEntryModelImpl.getOriginalClassNameId(),
+					ratingsEntryModelImpl.getOriginalClassPK()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_C_C, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_C_C, args);
+		}
 	}
 
 	/**
@@ -1530,7 +1567,7 @@ public class RatingsEntryPersistenceImpl extends BasePersistenceImpl<RatingsEntr
 	 */
 	public RatingsEntry remove(long entryId)
 		throws NoSuchEntryException, SystemException {
-		return remove(Long.valueOf(entryId));
+		return remove((Serializable)entryId);
 	}
 
 	/**
@@ -1648,8 +1685,8 @@ public class RatingsEntryPersistenceImpl extends BasePersistenceImpl<RatingsEntr
 			if ((ratingsEntryModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(ratingsEntryModelImpl.getOriginalClassNameId()),
-						Long.valueOf(ratingsEntryModelImpl.getOriginalClassPK())
+						ratingsEntryModelImpl.getOriginalClassNameId(),
+						ratingsEntryModelImpl.getOriginalClassPK()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -1657,8 +1694,8 @@ public class RatingsEntryPersistenceImpl extends BasePersistenceImpl<RatingsEntr
 					args);
 
 				args = new Object[] {
-						Long.valueOf(ratingsEntryModelImpl.getClassNameId()),
-						Long.valueOf(ratingsEntryModelImpl.getClassPK())
+						ratingsEntryModelImpl.getClassNameId(),
+						ratingsEntryModelImpl.getClassPK()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -1669,9 +1706,9 @@ public class RatingsEntryPersistenceImpl extends BasePersistenceImpl<RatingsEntr
 			if ((ratingsEntryModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C_S.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(ratingsEntryModelImpl.getOriginalClassNameId()),
-						Long.valueOf(ratingsEntryModelImpl.getOriginalClassPK()),
-						Double.valueOf(ratingsEntryModelImpl.getOriginalScore())
+						ratingsEntryModelImpl.getOriginalClassNameId(),
+						ratingsEntryModelImpl.getOriginalClassPK(),
+						ratingsEntryModelImpl.getOriginalScore()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_S, args);
@@ -1679,9 +1716,9 @@ public class RatingsEntryPersistenceImpl extends BasePersistenceImpl<RatingsEntr
 					args);
 
 				args = new Object[] {
-						Long.valueOf(ratingsEntryModelImpl.getClassNameId()),
-						Long.valueOf(ratingsEntryModelImpl.getClassPK()),
-						Double.valueOf(ratingsEntryModelImpl.getScore())
+						ratingsEntryModelImpl.getClassNameId(),
+						ratingsEntryModelImpl.getClassPK(),
+						ratingsEntryModelImpl.getScore()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_S, args);
@@ -1693,35 +1730,8 @@ public class RatingsEntryPersistenceImpl extends BasePersistenceImpl<RatingsEntr
 		EntityCacheUtil.putResult(RatingsEntryModelImpl.ENTITY_CACHE_ENABLED,
 			RatingsEntryImpl.class, ratingsEntry.getPrimaryKey(), ratingsEntry);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_C_C,
-				new Object[] {
-					Long.valueOf(ratingsEntry.getUserId()),
-					Long.valueOf(ratingsEntry.getClassNameId()),
-					Long.valueOf(ratingsEntry.getClassPK())
-				}, ratingsEntry);
-		}
-		else {
-			if ((ratingsEntryModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_U_C_C.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(ratingsEntryModelImpl.getOriginalUserId()),
-						Long.valueOf(ratingsEntryModelImpl.getOriginalClassNameId()),
-						Long.valueOf(ratingsEntryModelImpl.getOriginalClassPK())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_C_C, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_C_C, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_C_C,
-					new Object[] {
-						Long.valueOf(ratingsEntry.getUserId()),
-						Long.valueOf(ratingsEntry.getClassNameId()),
-						Long.valueOf(ratingsEntry.getClassPK())
-					}, ratingsEntry);
-			}
-		}
+		clearUniqueFindersCache(ratingsEntry);
+		cacheUniqueFindersCache(ratingsEntry);
 
 		return ratingsEntry;
 	}
@@ -1754,13 +1764,24 @@ public class RatingsEntryPersistenceImpl extends BasePersistenceImpl<RatingsEntr
 	 *
 	 * @param primaryKey the primary key of the ratings entry
 	 * @return the ratings entry
-	 * @throws com.liferay.portal.NoSuchModelException if a ratings entry with the primary key could not be found
+	 * @throws com.liferay.portlet.ratings.NoSuchEntryException if a ratings entry with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public RatingsEntry findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchEntryException, SystemException {
+		RatingsEntry ratingsEntry = fetchByPrimaryKey(primaryKey);
+
+		if (ratingsEntry == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchEntryException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return ratingsEntry;
 	}
 
 	/**
@@ -1773,18 +1794,7 @@ public class RatingsEntryPersistenceImpl extends BasePersistenceImpl<RatingsEntr
 	 */
 	public RatingsEntry findByPrimaryKey(long entryId)
 		throws NoSuchEntryException, SystemException {
-		RatingsEntry ratingsEntry = fetchByPrimaryKey(entryId);
-
-		if (ratingsEntry == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + entryId);
-			}
-
-			throw new NoSuchEntryException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				entryId);
-		}
-
-		return ratingsEntry;
+		return findByPrimaryKey((Serializable)entryId);
 	}
 
 	/**
@@ -1797,20 +1807,8 @@ public class RatingsEntryPersistenceImpl extends BasePersistenceImpl<RatingsEntr
 	@Override
 	public RatingsEntry fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the ratings entry with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param entryId the primary key of the ratings entry
-	 * @return the ratings entry, or <code>null</code> if a ratings entry with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public RatingsEntry fetchByPrimaryKey(long entryId)
-		throws SystemException {
 		RatingsEntry ratingsEntry = (RatingsEntry)EntityCacheUtil.getResult(RatingsEntryModelImpl.ENTITY_CACHE_ENABLED,
-				RatingsEntryImpl.class, entryId);
+				RatingsEntryImpl.class, primaryKey);
 
 		if (ratingsEntry == _nullRatingsEntry) {
 			return null;
@@ -1823,19 +1821,19 @@ public class RatingsEntryPersistenceImpl extends BasePersistenceImpl<RatingsEntr
 				session = openSession();
 
 				ratingsEntry = (RatingsEntry)session.get(RatingsEntryImpl.class,
-						Long.valueOf(entryId));
+						primaryKey);
 
 				if (ratingsEntry != null) {
 					cacheResult(ratingsEntry);
 				}
 				else {
 					EntityCacheUtil.putResult(RatingsEntryModelImpl.ENTITY_CACHE_ENABLED,
-						RatingsEntryImpl.class, entryId, _nullRatingsEntry);
+						RatingsEntryImpl.class, primaryKey, _nullRatingsEntry);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(RatingsEntryModelImpl.ENTITY_CACHE_ENABLED,
-					RatingsEntryImpl.class, entryId);
+					RatingsEntryImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -1845,6 +1843,18 @@ public class RatingsEntryPersistenceImpl extends BasePersistenceImpl<RatingsEntr
 		}
 
 		return ratingsEntry;
+	}
+
+	/**
+	 * Returns the ratings entry with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param entryId the primary key of the ratings entry
+	 * @return the ratings entry, or <code>null</code> if a ratings entry with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public RatingsEntry fetchByPrimaryKey(long entryId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)entryId);
 	}
 
 	/**
@@ -2047,20 +2057,6 @@ public class RatingsEntryPersistenceImpl extends BasePersistenceImpl<RatingsEntr
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = RatingsEntryPersistence.class)
-	protected RatingsEntryPersistence ratingsEntryPersistence;
-	@BeanReference(type = RatingsStatsPersistence.class)
-	protected RatingsStatsPersistence ratingsStatsPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = AssetEntryPersistence.class)
-	protected AssetEntryPersistence assetEntryPersistence;
-	@BeanReference(type = BlogsEntryPersistence.class)
-	protected BlogsEntryPersistence blogsEntryPersistence;
-	@BeanReference(type = BlogsStatsUserPersistence.class)
-	protected BlogsStatsUserPersistence blogsStatsUserPersistence;
-	@BeanReference(type = SocialActivityPersistence.class)
-	protected SocialActivityPersistence socialActivityPersistence;
 	private static final String _SQL_SELECT_RATINGSENTRY = "SELECT ratingsEntry FROM RatingsEntry ratingsEntry";
 	private static final String _SQL_SELECT_RATINGSENTRY_WHERE = "SELECT ratingsEntry FROM RatingsEntry ratingsEntry WHERE ";
 	private static final String _SQL_COUNT_RATINGSENTRY = "SELECT COUNT(ratingsEntry) FROM RatingsEntry ratingsEntry";

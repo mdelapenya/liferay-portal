@@ -116,8 +116,31 @@ public interface BookmarksEntryService extends BaseService {
 	public int getGroupEntriesCount(long groupId, long userId)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
+	public com.liferay.portlet.bookmarks.model.BookmarksEntry moveEntry(
+		long entryId, long parentFolderId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	public com.liferay.portlet.bookmarks.model.BookmarksEntry moveEntryFromTrash(
+		long entryId, long parentFolderId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	public void moveEntryToTrash(long entryId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	public com.liferay.portlet.bookmarks.model.BookmarksEntry openEntry(
+		com.liferay.portlet.bookmarks.model.BookmarksEntry entry)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
 	public com.liferay.portlet.bookmarks.model.BookmarksEntry openEntry(
 		long entryId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	public void restoreEntryFromTrash(long entryId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 

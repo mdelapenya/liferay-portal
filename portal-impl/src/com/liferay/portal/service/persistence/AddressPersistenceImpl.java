@@ -15,8 +15,6 @@
 package com.liferay.portal.service.persistence;
 
 import com.liferay.portal.NoSuchAddressException;
-import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -3382,7 +3380,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 */
 	public Address remove(long addressId)
 		throws NoSuchAddressException, SystemException {
-		return remove(Long.valueOf(addressId));
+		return remove((Serializable)addressId);
 	}
 
 	/**
@@ -3497,7 +3495,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			if ((addressModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(addressModelImpl.getOriginalCompanyId())
+						addressModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
@@ -3505,9 +3503,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(addressModelImpl.getCompanyId())
-					};
+				args = new Object[] { addressModelImpl.getCompanyId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
 					args);
@@ -3518,14 +3514,14 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			if ((addressModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(addressModelImpl.getOriginalUserId())
+						addressModelImpl.getOriginalUserId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
 					args);
 
-				args = new Object[] { Long.valueOf(addressModelImpl.getUserId()) };
+				args = new Object[] { addressModelImpl.getUserId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
@@ -3535,8 +3531,8 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			if ((addressModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(addressModelImpl.getOriginalCompanyId()),
-						Long.valueOf(addressModelImpl.getOriginalClassNameId())
+						addressModelImpl.getOriginalCompanyId(),
+						addressModelImpl.getOriginalClassNameId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -3544,8 +3540,8 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(addressModelImpl.getCompanyId()),
-						Long.valueOf(addressModelImpl.getClassNameId())
+						addressModelImpl.getCompanyId(),
+						addressModelImpl.getClassNameId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -3556,9 +3552,9 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			if ((addressModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(addressModelImpl.getOriginalCompanyId()),
-						Long.valueOf(addressModelImpl.getOriginalClassNameId()),
-						Long.valueOf(addressModelImpl.getOriginalClassPK())
+						addressModelImpl.getOriginalCompanyId(),
+						addressModelImpl.getOriginalClassNameId(),
+						addressModelImpl.getOriginalClassPK()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C, args);
@@ -3566,9 +3562,9 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(addressModelImpl.getCompanyId()),
-						Long.valueOf(addressModelImpl.getClassNameId()),
-						Long.valueOf(addressModelImpl.getClassPK())
+						addressModelImpl.getCompanyId(),
+						addressModelImpl.getClassNameId(),
+						addressModelImpl.getClassPK()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C, args);
@@ -3579,10 +3575,10 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			if ((addressModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C_C_M.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(addressModelImpl.getOriginalCompanyId()),
-						Long.valueOf(addressModelImpl.getOriginalClassNameId()),
-						Long.valueOf(addressModelImpl.getOriginalClassPK()),
-						Boolean.valueOf(addressModelImpl.getOriginalMailing())
+						addressModelImpl.getOriginalCompanyId(),
+						addressModelImpl.getOriginalClassNameId(),
+						addressModelImpl.getOriginalClassPK(),
+						addressModelImpl.getOriginalMailing()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C_M, args);
@@ -3590,10 +3586,10 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(addressModelImpl.getCompanyId()),
-						Long.valueOf(addressModelImpl.getClassNameId()),
-						Long.valueOf(addressModelImpl.getClassPK()),
-						Boolean.valueOf(addressModelImpl.getMailing())
+						addressModelImpl.getCompanyId(),
+						addressModelImpl.getClassNameId(),
+						addressModelImpl.getClassPK(),
+						addressModelImpl.getMailing()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C_M, args);
@@ -3604,10 +3600,10 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			if ((addressModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C_C_P.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(addressModelImpl.getOriginalCompanyId()),
-						Long.valueOf(addressModelImpl.getOriginalClassNameId()),
-						Long.valueOf(addressModelImpl.getOriginalClassPK()),
-						Boolean.valueOf(addressModelImpl.getOriginalPrimary())
+						addressModelImpl.getOriginalCompanyId(),
+						addressModelImpl.getOriginalClassNameId(),
+						addressModelImpl.getOriginalClassPK(),
+						addressModelImpl.getOriginalPrimary()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C_P, args);
@@ -3615,10 +3611,10 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(addressModelImpl.getCompanyId()),
-						Long.valueOf(addressModelImpl.getClassNameId()),
-						Long.valueOf(addressModelImpl.getClassPK()),
-						Boolean.valueOf(addressModelImpl.getPrimary())
+						addressModelImpl.getCompanyId(),
+						addressModelImpl.getClassNameId(),
+						addressModelImpl.getClassPK(),
+						addressModelImpl.getPrimary()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C_P, args);
@@ -3670,13 +3666,24 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param primaryKey the primary key of the address
 	 * @return the address
-	 * @throws com.liferay.portal.NoSuchModelException if a address with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchAddressException if a address with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public Address findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchAddressException, SystemException {
+		Address address = fetchByPrimaryKey(primaryKey);
+
+		if (address == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchAddressException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return address;
 	}
 
 	/**
@@ -3689,18 +3696,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 */
 	public Address findByPrimaryKey(long addressId)
 		throws NoSuchAddressException, SystemException {
-		Address address = fetchByPrimaryKey(addressId);
-
-		if (address == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + addressId);
-			}
-
-			throw new NoSuchAddressException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				addressId);
-		}
-
-		return address;
+		return findByPrimaryKey((Serializable)addressId);
 	}
 
 	/**
@@ -3713,19 +3709,8 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	@Override
 	public Address fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the address with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param addressId the primary key of the address
-	 * @return the address, or <code>null</code> if a address with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public Address fetchByPrimaryKey(long addressId) throws SystemException {
 		Address address = (Address)EntityCacheUtil.getResult(AddressModelImpl.ENTITY_CACHE_ENABLED,
-				AddressImpl.class, addressId);
+				AddressImpl.class, primaryKey);
 
 		if (address == _nullAddress) {
 			return null;
@@ -3737,20 +3722,19 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			try {
 				session = openSession();
 
-				address = (Address)session.get(AddressImpl.class,
-						Long.valueOf(addressId));
+				address = (Address)session.get(AddressImpl.class, primaryKey);
 
 				if (address != null) {
 					cacheResult(address);
 				}
 				else {
 					EntityCacheUtil.putResult(AddressModelImpl.ENTITY_CACHE_ENABLED,
-						AddressImpl.class, addressId, _nullAddress);
+						AddressImpl.class, primaryKey, _nullAddress);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(AddressModelImpl.ENTITY_CACHE_ENABLED,
-					AddressImpl.class, addressId);
+					AddressImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -3760,6 +3744,17 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 		}
 
 		return address;
+	}
+
+	/**
+	 * Returns the address with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param addressId the primary key of the address
+	 * @return the address, or <code>null</code> if a address with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Address fetchByPrimaryKey(long addressId) throws SystemException {
+		return fetchByPrimaryKey((Serializable)addressId);
 	}
 
 	/**
@@ -3961,128 +3956,6 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
 	private static final String _SQL_SELECT_ADDRESS = "SELECT address FROM Address address";
 	private static final String _SQL_SELECT_ADDRESS_WHERE = "SELECT address FROM Address address WHERE ";
 	private static final String _SQL_COUNT_ADDRESS = "SELECT COUNT(address) FROM Address address";

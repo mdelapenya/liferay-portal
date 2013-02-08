@@ -26,7 +26,9 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.SystemProperties;
@@ -90,7 +92,6 @@ import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.PortletPreferencesImpl;
-import com.liferay.portlet.usersadmin.search.GroupSearchTerms;
 
 import java.io.File;
 import java.io.InputStream;
@@ -120,6 +121,26 @@ import javax.servlet.http.HttpServletResponse;
 public class SitesUtil {
 
 	public static final String ANALYTICS_PREFIX = "analytics_";
+
+	public static final int CONTENT_SHARING_WITH_CHILDREN_DEFAULT_VALUE = -1;
+
+	public static final int CONTENT_SHARING_WITH_CHILDREN_DISABLED = 0;
+
+	public static final int CONTENT_SHARING_WITH_CHILDREN_DISABLED_BY_DEFAULT =
+		1;
+
+	public static final int CONTENT_SHARING_WITH_CHILDREN_ENABLED = 3;
+
+	public static final int CONTENT_SHARING_WITH_CHILDREN_ENABLED_BY_DEFAULT =
+		2;
+
+	public static final String LAST_MERGE_TIME = "last-merge-time";
+
+	public static final String LAST_RESET_TIME = "last-reset-time";
+
+	public static final String LAYOUT_UPDATEABLE = "layoutUpdateable";
+
+	public static final String MERGE_FAIL_COUNT = "merge-fail-count";
 
 	public static void addPortletBreadcrumbEntries(
 			Group group, HttpServletRequest request,
@@ -236,7 +257,7 @@ public class SitesUtil {
 			targetLayout.getTypeSettingsProperties();
 
 		typeSettingsProperties.setProperty(
-			"last-merge-time",
+			LAST_MERGE_TIME,
 			String.valueOf(targetLayout.getModifiedDate().getTime()));
 
 		LayoutLocalServiceUtil.updateLayout(targetLayout);
@@ -244,7 +265,7 @@ public class SitesUtil {
 		UnicodeProperties prototypeTypeSettingsProperties =
 			layoutPrototypeLayout.getTypeSettingsProperties();
 
-		prototypeTypeSettingsProperties.setProperty("merge-fail-count", "0");
+		prototypeTypeSettingsProperties.setProperty(MERGE_FAIL_COUNT, "0");
 
 		LayoutLocalServiceUtil.updateLayout(layoutPrototypeLayout);
 	}
@@ -290,7 +311,7 @@ public class SitesUtil {
 	}
 
 	public static void copyPortletPermissions(
-		Layout targetLayout, Layout sourceLayout)
+			Layout targetLayout, Layout sourceLayout)
 		throws Exception {
 
 		long companyId = targetLayout.getCompanyId();
@@ -492,7 +513,7 @@ public class SitesUtil {
 
 		if (newPlid <= 0) {
 			Layout firstLayout = LayoutLocalServiceUtil.fetchFirstLayout(
-				layoutSet.getGroupId(), layoutSet.getPrivateLayout(),
+				layoutSet.getGroupId(), layoutSet.isPrivateLayout(),
 				LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
 			if (firstLayout != null) {
@@ -547,7 +568,8 @@ public class SitesUtil {
 			Group group = layoutSetPrototype.getGroup();
 
 			return LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
-				layout.getSourcePrototypeLayoutUuid(), group.getGroupId());
+				layout.getSourcePrototypeLayoutUuid(), group.getGroupId(),
+				true);
 		}
 		catch (Exception e) {
 			_log.error(
@@ -639,6 +661,40 @@ public class SitesUtil {
 			inputStream);
 	}
 
+	public static boolean isContentSharingWithChildrenEnabled(Group group)
+		throws SystemException {
+
+		UnicodeProperties typeSettingsProperties =
+			group.getParentLiveGroupTypeSettingsProperties();
+
+		int companyContentSharingEnabled = PrefsPropsUtil.getInteger(
+			group.getCompanyId(),
+			PropsKeys.SITES_CONTENT_SHARING_WITH_CHILDREN_ENABLED);
+
+		if (companyContentSharingEnabled ==
+				SitesUtil.CONTENT_SHARING_WITH_CHILDREN_DISABLED) {
+
+			return false;
+		}
+
+		int groupContentSharingEnabled = GetterUtil.getInteger(
+			typeSettingsProperties.getProperty(
+				"contentSharingWithChildrenEnabled"),
+				SitesUtil.CONTENT_SHARING_WITH_CHILDREN_DEFAULT_VALUE);
+
+		if ((groupContentSharingEnabled ==
+				SitesUtil.CONTENT_SHARING_WITH_CHILDREN_ENABLED) ||
+			((companyContentSharingEnabled ==
+				SitesUtil.CONTENT_SHARING_WITH_CHILDREN_ENABLED_BY_DEFAULT) &&
+			 (groupContentSharingEnabled ==
+				SitesUtil.CONTENT_SHARING_WITH_CHILDREN_DEFAULT_VALUE))) {
+
+			return true;
+		}
+
+		return false;
+	}
+
 	public static boolean isLayoutDeleteable(Layout layout) {
 		try {
 			if (layout instanceof VirtualLayout) {
@@ -657,8 +713,8 @@ public class SitesUtil {
 
 			if (LayoutLocalServiceUtil.hasLayoutSetPrototypeLayout(
 					layoutSet.getLayoutSetPrototypeUuid(),
-					layout.getSourcePrototypeLayoutUuid(),
-					layout.getCompanyId())) {
+					layout.getCompanyId(),
+					layout.getSourcePrototypeLayoutUuid())) {
 
 				return false;
 			}
@@ -685,7 +741,7 @@ public class SitesUtil {
 		LayoutSet existingLayoutSet = layout.getLayoutSet();
 
 		long lastMergeTime = GetterUtil.getLong(
-			existingLayoutSet.getSettingsProperty("last-merge-time"));
+			existingLayoutSet.getSettingsProperty(LAST_MERGE_TIME));
 
 		Date existingLayoutModifiedDate = layout.getModifiedDate();
 
@@ -752,11 +808,9 @@ public class SitesUtil {
 				Layout layoutSetPrototypeLayout = getLayoutSetPrototypeLayout(
 					layout);
 
-				UnicodeProperties typeSettingsProperties =
-					layoutSetPrototypeLayout.getTypeSettingsProperties();
-
-				String layoutUpdateable = typeSettingsProperties.getProperty(
-					"layoutUpdateable");
+				String layoutUpdateable =
+					layoutSetPrototypeLayout.getTypeSettingsProperty(
+						LAYOUT_UPDATEABLE);
 
 				if (Validator.isNull(layoutUpdateable)) {
 					return true;
@@ -776,7 +830,7 @@ public class SitesUtil {
 
 	public static boolean isOrganizationUser(
 			long companyId, Group group, User user,
-			GroupSearchTerms searchTerms, List<String> organizationNames)
+			List<String> organizationNames)
 		throws Exception {
 
 		boolean organizationUser = false;
@@ -785,13 +839,15 @@ public class SitesUtil {
 			new LinkedHashMap<String, Object>();
 
 		organizationParams.put(
+			"groupOrganization", new Long(group.getGroupId()));
+		organizationParams.put(
 			"organizationsGroups", new Long(group.getGroupId()));
 
 		List<Organization> organizationsGroups =
 			OrganizationLocalServiceUtil.search(
 				companyId, OrganizationConstants.ANY_PARENT_ORGANIZATION_ID,
-				searchTerms.getKeywords(), null, null, null, organizationParams,
-				QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+				null, null, null, null, organizationParams, QueryUtil.ALL_POS,
+				QueryUtil.ALL_POS);
 
 		for (Organization organization : organizationsGroups) {
 			for (long userOrganizationId : user.getOrganizationIds()) {
@@ -846,8 +902,8 @@ public class SitesUtil {
 		userGroupParams.put("userGroupsGroups", new Long(group.getGroupId()));
 
 		List<UserGroup> userGroupsGroups = UserGroupLocalServiceUtil.search(
-			companyId, null, null, userGroupParams, QueryUtil.ALL_POS,
-			QueryUtil.ALL_POS, null);
+			companyId, null, userGroupParams, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, (OrderByComparator)null);
 
 		for (UserGroup userGroup : userGroupsGroups) {
 			for (long userGroupId : user.getUserGroupIds()) {
@@ -862,119 +918,42 @@ public class SitesUtil {
 		return userGroupUser;
 	}
 
+	public static void mergeLayoutPrototypeLayout(Group group, Layout layout)
+		throws Exception {
+
+		String sourcePrototypeLayoutUuid =
+			layout.getSourcePrototypeLayoutUuid();
+
+		if (Validator.isNotNull(sourcePrototypeLayoutUuid)) {
+			LayoutSet layoutSet = layout.getLayoutSet();
+
+			Group layoutSetPrototypeGroup =
+				GroupLocalServiceUtil.getLayoutSetPrototypeGroup(
+					layout.getCompanyId(), layoutSet.getLayoutSetPrototypeId());
+
+			Layout sourcePrototypeLayout =
+				LayoutLocalServiceUtil.getLayoutByUuidAndGroupId(
+					sourcePrototypeLayoutUuid,
+					layoutSetPrototypeGroup.getGroupId(), true);
+
+			doMergeLayoutPrototypeLayout(
+				layoutSetPrototypeGroup, sourcePrototypeLayout);
+		}
+
+		doMergeLayoutPrototypeLayout(group, layout);
+	}
+
+	/**
+	 * @deprecated {@link #mergeLayoutPrototypeLayout(Group, Layout)}
+	 */
 	public static void mergeLayoutProtypeLayout(Group group, Layout layout)
 		throws Exception {
 
-		if (!layout.isLayoutPrototypeLinkActive() ||
-			group.isLayoutPrototype() || group.hasStagingGroup()) {
-
-			return;
-		}
-
-		UnicodeProperties typeSettingsProperties =
-			layout.getTypeSettingsProperties();
-
-		long lastMergeTime = GetterUtil.getLong(
-			typeSettingsProperties.getProperty("last-merge-time"));
-
-		LayoutPrototype layoutPrototype =
-			LayoutPrototypeLocalServiceUtil.
-				getLayoutPrototypeByUuidAndCompanyId(
-					layout.getLayoutPrototypeUuid(), layout.getCompanyId());
-
-		Layout layoutPrototypeLayout = layoutPrototype.getLayout();
-
-		Date modifiedDate = layoutPrototypeLayout.getModifiedDate();
-
-		if (lastMergeTime >= modifiedDate.getTime()) {
-			return;
-		}
-
-		UnicodeProperties prototypeTypeSettingsProperties =
-			layoutPrototypeLayout.getTypeSettingsProperties();
-
-		int mergeFailCount = GetterUtil.getInteger(
-			prototypeTypeSettingsProperties.getProperty("merge-fail-count"));
-
-		if (mergeFailCount >
-			PropsValues.LAYOUT_PROTOTYPE_MERGE_FAIL_THRESHOLD) {
-
-			if (_log.isWarnEnabled()) {
-				StringBundler sb = new StringBundler(6);
-
-				sb.append("Merge not performed because the fail threshold ");
-				sb.append("was reached for layoutPrototypeId ");
-				sb.append(layoutPrototype.getLayoutPrototypeId());
-				sb.append(" and layoutId ");
-				sb.append(layoutPrototypeLayout.getLayoutId());
-				sb.append(". Update the count in the database to try again.");
-
-				_log.warn(sb.toString());
-			}
-
-			return;
-		}
-
-		String owner = PortalUUIDUtil.generate();
-
-		try {
-			Lock lock = LockLocalServiceUtil.lock(
-				LayoutLocalServiceVirtualLayoutsAdvice.class.getName(),
-				String.valueOf(layout.getPlid()), owner, false);
-
-			// Double deep check
-
-			if (!owner.equals(lock.getOwner())) {
-				Date createDate = lock.getCreateDate();
-
-				if ((System.currentTimeMillis() - createDate.getTime()) >=
-						PropsValues.LAYOUT_PROTOTYPE_MERGE_LOCK_MAX_TIME) {
-
-					// Acquire lock if the lock is older than the lock max time
-
-					lock = LockLocalServiceUtil.lock(
-						LayoutLocalServiceVirtualLayoutsAdvice.class.getName(),
-						String.valueOf(layout.getPlid()), lock.getOwner(),
-						owner, false);
-
-					// Check if acquiring the lock succeeded or if another
-					// process has the lock
-
-					if (!owner.equals(lock.getOwner())) {
-						return;
-					}
-				}
-				else {
-					return;
-				}
-			}
-		}
-		catch (Exception e) {
-			return;
-		}
-
-		try {
-			SitesUtil.applyLayoutPrototype(layoutPrototype, layout, true);
-		}
-		catch (Exception e) {
-			_log.error(e, e);
-
-			prototypeTypeSettingsProperties.setProperty(
-				"merge-fail-count", String.valueOf(++mergeFailCount));
-
-			// Invoke updateImpl so that we do not trigger the listeners
-
-			LayoutUtil.updateImpl(layoutPrototypeLayout);
-		}
-		finally {
-			LockLocalServiceUtil.unlock(
-				LayoutLocalServiceVirtualLayoutsAdvice.class.getName(),
-				String.valueOf(layout.getPlid()), owner, false);
-		}
+		mergeLayoutPrototypeLayout(group, layout);
 	}
 
-	public static void mergeLayoutSetProtypeLayouts(
-		Group group, LayoutSet layoutSet)
+	public static void mergeLayoutSetPrototypeLayouts(
+			Group group, LayoutSet layoutSet)
 		throws Exception {
 
 		if (!layoutSet.isLayoutSetPrototypeLinkActive() ||
@@ -987,7 +966,7 @@ public class SitesUtil {
 			layoutSet.getSettingsProperties();
 
 		long lastMergeTime = GetterUtil.getLong(
-			settingsProperties.getProperty("last-merge-time"));
+			settingsProperties.getProperty(LAST_MERGE_TIME));
 
 		LayoutSetPrototype layoutSetPrototype =
 			LayoutSetPrototypeLocalServiceUtil.
@@ -1008,8 +987,7 @@ public class SitesUtil {
 			layoutSetPrototypeLayoutSet.getSettingsProperties();
 
 		int mergeFailCount = GetterUtil.getInteger(
-			layoutSetPrototypeSettingsProperties.getProperty(
-				"merge-fail-count"));
+			layoutSetPrototypeSettingsProperties.getProperty(MERGE_FAIL_COUNT));
 
 		if (mergeFailCount >
 			PropsValues.LAYOUT_SET_PROTOTYPE_MERGE_FAIL_THRESHOLD) {
@@ -1072,7 +1050,7 @@ public class SitesUtil {
 			boolean importData = true;
 
 			long lastResetTime = GetterUtil.getLong(
-				settingsProperties.getProperty("last-reset-time"));
+				settingsProperties.getProperty(LAST_RESET_TIME));
 
 			if ((lastMergeTime > 0) || (lastResetTime > 0)) {
 				importData = false;
@@ -1084,22 +1062,12 @@ public class SitesUtil {
 			importLayoutSetPrototype(
 				layoutSetPrototype, layoutSet.getGroupId(),
 				layoutSet.isPrivateLayout(), parameterMap, importData);
-
-			layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
-				layoutSet.getGroupId(), layoutSet.isPrivateLayout());
-
-			settingsProperties = layoutSet.getSettingsProperties();
-
-			settingsProperties.setProperty(
-				"last-merge-time", String.valueOf(System.currentTimeMillis()));
-
-			LayoutSetLocalServiceUtil.updateLayoutSet(layoutSet);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
 
 			layoutSetPrototypeSettingsProperties.setProperty(
-				"merge-fail-count", String.valueOf(++mergeFailCount));
+				MERGE_FAIL_COUNT, String.valueOf(++mergeFailCount));
 
 			// Invoke updateImpl so that we do not trigger the listeners
 
@@ -1110,6 +1078,16 @@ public class SitesUtil {
 				LayoutLocalServiceVirtualLayoutsAdvice.class.getName(),
 				String.valueOf(layoutSet.getLayoutSetId()), owner, false);
 		}
+	}
+
+	/**
+	 * @deprecated {@link #mergeLayoutSetPrototypeLayouts(Group, LayoutSet)}
+	 */
+	public static void mergeLayoutSetProtypeLayouts(
+			Group group, LayoutSet layoutSet)
+		throws Exception {
+
+		mergeLayoutSetPrototypeLayouts(group, layoutSet);
 	}
 
 	public static void resetPrototype(Layout layout)
@@ -1123,10 +1101,10 @@ public class SitesUtil {
 		UnicodeProperties settingsProperties =
 			layoutSet.getSettingsProperties();
 
-		settingsProperties.remove("last-merge-time");
+		settingsProperties.remove(LAST_MERGE_TIME);
 
 		settingsProperties.setProperty(
-			"last-reset-time", String.valueOf(System.currentTimeMillis()));
+			LAST_RESET_TIME, String.valueOf(System.currentTimeMillis()));
 
 		LayoutSetLocalServiceUtil.updateLayoutSet(layoutSet);
 	}
@@ -1147,7 +1125,8 @@ public class SitesUtil {
 
 		Layout targetScopeLayout =
 			LayoutLocalServiceUtil.getLayoutByUuidAndGroupId(
-				targetLayout.getUuid(), targetLayout.getGroupId());
+				targetLayout.getUuid(), targetLayout.getGroupId(),
+				targetLayout.isPrivateLayout());
 
 		if (!targetScopeLayout.hasScopeGroup()) {
 			GroupLocalServiceUtil.addGroup(
@@ -1191,6 +1170,113 @@ public class SitesUtil {
 		updateLayoutSetPrototypeLink(
 			group.getGroupId(), false, publicLayoutSetPrototypeId,
 			publicLayoutSetPrototypeLinkEnabled);
+	}
+
+	protected static void doMergeLayoutPrototypeLayout(
+			Group group, Layout layout)
+		throws Exception {
+
+		if (!layout.isLayoutPrototypeLinkActive() ||
+			group.isLayoutPrototype() || group.hasStagingGroup()) {
+
+			return;
+		}
+
+		long lastMergeTime = GetterUtil.getLong(
+			layout.getTypeSettingsProperty(LAST_MERGE_TIME));
+
+		LayoutPrototype layoutPrototype =
+			LayoutPrototypeLocalServiceUtil.
+				getLayoutPrototypeByUuidAndCompanyId(
+					layout.getLayoutPrototypeUuid(), layout.getCompanyId());
+
+		Layout layoutPrototypeLayout = layoutPrototype.getLayout();
+
+		Date modifiedDate = layoutPrototypeLayout.getModifiedDate();
+
+		if (lastMergeTime >= modifiedDate.getTime()) {
+			return;
+		}
+
+		UnicodeProperties prototypeTypeSettingsProperties =
+			layoutPrototypeLayout.getTypeSettingsProperties();
+
+		int mergeFailCount = GetterUtil.getInteger(
+			prototypeTypeSettingsProperties.getProperty(MERGE_FAIL_COUNT));
+
+		if (mergeFailCount >
+				PropsValues.LAYOUT_PROTOTYPE_MERGE_FAIL_THRESHOLD) {
+
+			if (_log.isWarnEnabled()) {
+				StringBundler sb = new StringBundler(6);
+
+				sb.append("Merge not performed because the fail threshold ");
+				sb.append("was reached for layoutPrototypeId ");
+				sb.append(layoutPrototype.getLayoutPrototypeId());
+				sb.append(" and layoutId ");
+				sb.append(layoutPrototypeLayout.getLayoutId());
+				sb.append(". Update the count in the database to try again.");
+
+				_log.warn(sb.toString());
+			}
+
+			return;
+		}
+
+		String owner = PortalUUIDUtil.generate();
+
+		try {
+			Lock lock = LockLocalServiceUtil.lock(
+				LayoutLocalServiceVirtualLayoutsAdvice.class.getName(),
+				String.valueOf(layout.getPlid()), owner, false);
+
+			if (!owner.equals(lock.getOwner())) {
+				Date createDate = lock.getCreateDate();
+
+				if ((System.currentTimeMillis() - createDate.getTime()) >=
+						PropsValues.LAYOUT_PROTOTYPE_MERGE_LOCK_MAX_TIME) {
+
+					// Acquire lock if the lock is older than the lock max time
+
+					lock = LockLocalServiceUtil.lock(
+						LayoutLocalServiceVirtualLayoutsAdvice.class.getName(),
+						String.valueOf(layout.getPlid()), lock.getOwner(),
+						owner, false);
+
+					// Check if acquiring the lock succeeded or if another
+					// process has the lock
+
+					if (!owner.equals(lock.getOwner())) {
+						return;
+					}
+				}
+				else {
+					return;
+				}
+			}
+		}
+		catch (Exception e) {
+			return;
+		}
+
+		try {
+			SitesUtil.applyLayoutPrototype(layoutPrototype, layout, true);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			prototypeTypeSettingsProperties.setProperty(
+				MERGE_FAIL_COUNT, String.valueOf(++mergeFailCount));
+
+			// Invoke updateImpl so that we do not trigger the listeners
+
+			LayoutUtil.updateImpl(layoutPrototypeLayout);
+		}
+		finally {
+			LockLocalServiceUtil.unlock(
+				LayoutLocalServiceVirtualLayoutsAdvice.class.getName(),
+				String.valueOf(layout.getPlid()), owner, false);
+		}
 	}
 
 	protected static Map<String, String[]> getLayoutSetPrototypesParameters(

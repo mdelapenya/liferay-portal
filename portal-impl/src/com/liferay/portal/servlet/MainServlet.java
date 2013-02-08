@@ -28,7 +28,6 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.plugin.PluginPackage;
 import com.liferay.portal.kernel.servlet.DynamicServletRequest;
-import com.liferay.portal.kernel.servlet.NonSerializableObjectRequestWrapper;
 import com.liferay.portal.kernel.servlet.PortalSessionThreadLocal;
 import com.liferay.portal.kernel.servlet.PortletSessionTracker;
 import com.liferay.portal.kernel.servlet.ProtectedServletRequest;
@@ -43,7 +42,6 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalLifecycleUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.ReleaseInfo;
-import com.liferay.portal.kernel.util.ServerDetector;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -55,6 +53,7 @@ import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.Layout;
+import com.liferay.portal.model.LayoutConstants;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.PortletApp;
 import com.liferay.portal.model.PortletFilter;
@@ -101,6 +100,7 @@ import com.liferay.util.servlet.EncryptedServletRequest;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -248,10 +248,10 @@ public class MainServlet extends ActionServlet {
 			_log.debug("Initialize portlets");
 		}
 
-		List<Portlet> portlets = null;
+		List<Portlet> portlets = new ArrayList<Portlet>();
 
 		try {
-			portlets = initPortlets(pluginPackage);
+			portlets.addAll(initPortlets(pluginPackage));
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -431,8 +431,6 @@ public class MainServlet extends ActionServlet {
 		if (_log.isDebugEnabled()) {
 			_log.debug("Handle non-serializable request");
 		}
-
-		request = handleNonSerializableRequest(request);
 
 		if (_log.isDebugEnabled()) {
 			_log.debug("Encrypt request");
@@ -743,16 +741,6 @@ public class MainServlet extends ActionServlet {
 
 	protected long getUserId(HttpServletRequest request) {
 		return PortalUtil.getUserId(request);
-	}
-
-	protected HttpServletRequest handleNonSerializableRequest(
-		HttpServletRequest request) {
-
-		if (ServerDetector.isWebLogic()) {
-			request = new NonSerializableObjectRequestWrapper(request);
-		}
-
-		return request;
 	}
 
 	protected boolean hasAbsoluteRedirect(HttpServletRequest request) {
@@ -1209,15 +1197,17 @@ public class MainServlet extends ActionServlet {
 			try {
 				Layout layout = LayoutLocalServiceUtil.getLayout(plid);
 
-				if (layout.getGroup().isStagingGroup()) {
-					Group group = GroupLocalServiceUtil.getGroup(
+				Group group = layout.getGroup();
+
+				plid = group.getDefaultPublicPlid();
+
+				if ((plid == LayoutConstants.DEFAULT_PLID) ||
+					 group.isStagingGroup()) {
+
+					Group guestGroup = GroupLocalServiceUtil.getGroup(
 						layout.getCompanyId(), GroupConstants.GUEST);
 
-					plid = group.getDefaultPublicPlid();
-				}
-				else if (layout.isPrivateLayout()) {
-					plid = LayoutLocalServiceUtil.getDefaultPlid(
-						layout.getGroupId(), false);
+					plid = guestGroup.getDefaultPublicPlid();
 				}
 
 				redirect = HttpUtil.addParameter(redirect, "p_l_id", plid);

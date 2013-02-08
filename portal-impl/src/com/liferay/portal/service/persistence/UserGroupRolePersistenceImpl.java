@@ -14,9 +14,7 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchUserGroupRoleException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -2767,16 +2765,14 @@ public class UserGroupRolePersistenceImpl extends BasePersistenceImpl<UserGroupR
 			if ((userGroupRoleModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(userGroupRoleModelImpl.getOriginalUserId())
+						userGroupRoleModelImpl.getOriginalUserId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(userGroupRoleModelImpl.getUserId())
-					};
+				args = new Object[] { userGroupRoleModelImpl.getUserId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
@@ -2786,16 +2782,14 @@ public class UserGroupRolePersistenceImpl extends BasePersistenceImpl<UserGroupR
 			if ((userGroupRoleModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(userGroupRoleModelImpl.getOriginalGroupId())
+						userGroupRoleModelImpl.getOriginalGroupId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(userGroupRoleModelImpl.getGroupId())
-					};
+				args = new Object[] { userGroupRoleModelImpl.getGroupId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
@@ -2805,16 +2799,14 @@ public class UserGroupRolePersistenceImpl extends BasePersistenceImpl<UserGroupR
 			if ((userGroupRoleModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ROLEID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(userGroupRoleModelImpl.getOriginalRoleId())
+						userGroupRoleModelImpl.getOriginalRoleId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_ROLEID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ROLEID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(userGroupRoleModelImpl.getRoleId())
-					};
+				args = new Object[] { userGroupRoleModelImpl.getRoleId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_ROLEID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ROLEID,
@@ -2824,8 +2816,8 @@ public class UserGroupRolePersistenceImpl extends BasePersistenceImpl<UserGroupR
 			if ((userGroupRoleModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_G.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(userGroupRoleModelImpl.getOriginalUserId()),
-						Long.valueOf(userGroupRoleModelImpl.getOriginalGroupId())
+						userGroupRoleModelImpl.getOriginalUserId(),
+						userGroupRoleModelImpl.getOriginalGroupId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_G, args);
@@ -2833,8 +2825,8 @@ public class UserGroupRolePersistenceImpl extends BasePersistenceImpl<UserGroupR
 					args);
 
 				args = new Object[] {
-						Long.valueOf(userGroupRoleModelImpl.getUserId()),
-						Long.valueOf(userGroupRoleModelImpl.getGroupId())
+						userGroupRoleModelImpl.getUserId(),
+						userGroupRoleModelImpl.getGroupId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_G, args);
@@ -2845,8 +2837,8 @@ public class UserGroupRolePersistenceImpl extends BasePersistenceImpl<UserGroupR
 			if ((userGroupRoleModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_R.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(userGroupRoleModelImpl.getOriginalGroupId()),
-						Long.valueOf(userGroupRoleModelImpl.getOriginalRoleId())
+						userGroupRoleModelImpl.getOriginalGroupId(),
+						userGroupRoleModelImpl.getOriginalRoleId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_R, args);
@@ -2854,8 +2846,8 @@ public class UserGroupRolePersistenceImpl extends BasePersistenceImpl<UserGroupR
 					args);
 
 				args = new Object[] {
-						Long.valueOf(userGroupRoleModelImpl.getGroupId()),
-						Long.valueOf(userGroupRoleModelImpl.getRoleId())
+						userGroupRoleModelImpl.getGroupId(),
+						userGroupRoleModelImpl.getRoleId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_R, args);
@@ -2893,13 +2885,24 @@ public class UserGroupRolePersistenceImpl extends BasePersistenceImpl<UserGroupR
 	 *
 	 * @param primaryKey the primary key of the user group role
 	 * @return the user group role
-	 * @throws com.liferay.portal.NoSuchModelException if a user group role with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchUserGroupRoleException if a user group role with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public UserGroupRole findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey((UserGroupRolePK)primaryKey);
+		throws NoSuchUserGroupRoleException, SystemException {
+		UserGroupRole userGroupRole = fetchByPrimaryKey(primaryKey);
+
+		if (userGroupRole == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchUserGroupRoleException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return userGroupRole;
 	}
 
 	/**
@@ -2912,18 +2915,7 @@ public class UserGroupRolePersistenceImpl extends BasePersistenceImpl<UserGroupR
 	 */
 	public UserGroupRole findByPrimaryKey(UserGroupRolePK userGroupRolePK)
 		throws NoSuchUserGroupRoleException, SystemException {
-		UserGroupRole userGroupRole = fetchByPrimaryKey(userGroupRolePK);
-
-		if (userGroupRole == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + userGroupRolePK);
-			}
-
-			throw new NoSuchUserGroupRoleException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				userGroupRolePK);
-		}
-
-		return userGroupRole;
+		return findByPrimaryKey((Serializable)userGroupRolePK);
 	}
 
 	/**
@@ -2936,20 +2928,8 @@ public class UserGroupRolePersistenceImpl extends BasePersistenceImpl<UserGroupR
 	@Override
 	public UserGroupRole fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey((UserGroupRolePK)primaryKey);
-	}
-
-	/**
-	 * Returns the user group role with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param userGroupRolePK the primary key of the user group role
-	 * @return the user group role, or <code>null</code> if a user group role with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public UserGroupRole fetchByPrimaryKey(UserGroupRolePK userGroupRolePK)
-		throws SystemException {
 		UserGroupRole userGroupRole = (UserGroupRole)EntityCacheUtil.getResult(UserGroupRoleModelImpl.ENTITY_CACHE_ENABLED,
-				UserGroupRoleImpl.class, userGroupRolePK);
+				UserGroupRoleImpl.class, primaryKey);
 
 		if (userGroupRole == _nullUserGroupRole) {
 			return null;
@@ -2962,20 +2942,19 @@ public class UserGroupRolePersistenceImpl extends BasePersistenceImpl<UserGroupR
 				session = openSession();
 
 				userGroupRole = (UserGroupRole)session.get(UserGroupRoleImpl.class,
-						userGroupRolePK);
+						primaryKey);
 
 				if (userGroupRole != null) {
 					cacheResult(userGroupRole);
 				}
 				else {
 					EntityCacheUtil.putResult(UserGroupRoleModelImpl.ENTITY_CACHE_ENABLED,
-						UserGroupRoleImpl.class, userGroupRolePK,
-						_nullUserGroupRole);
+						UserGroupRoleImpl.class, primaryKey, _nullUserGroupRole);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(UserGroupRoleModelImpl.ENTITY_CACHE_ENABLED,
-					UserGroupRoleImpl.class, userGroupRolePK);
+					UserGroupRoleImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -2985,6 +2964,18 @@ public class UserGroupRolePersistenceImpl extends BasePersistenceImpl<UserGroupR
 		}
 
 		return userGroupRole;
+	}
+
+	/**
+	 * Returns the user group role with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param userGroupRolePK the primary key of the user group role
+	 * @return the user group role, or <code>null</code> if a user group role with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public UserGroupRole fetchByPrimaryKey(UserGroupRolePK userGroupRolePK)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)userGroupRolePK);
 	}
 
 	/**
@@ -3187,128 +3178,6 @@ public class UserGroupRolePersistenceImpl extends BasePersistenceImpl<UserGroupR
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
 	private static final String _SQL_SELECT_USERGROUPROLE = "SELECT userGroupRole FROM UserGroupRole userGroupRole";
 	private static final String _SQL_SELECT_USERGROUPROLE_WHERE = "SELECT userGroupRole FROM UserGroupRole userGroupRole WHERE ";
 	private static final String _SQL_COUNT_USERGROUPROLE = "SELECT COUNT(userGroupRole) FROM UserGroupRole userGroupRole";

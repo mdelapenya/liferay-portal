@@ -20,9 +20,13 @@ import com.liferay.portal.upgrade.v6_2_0.UpgradeAssetPublisher;
 import com.liferay.portal.upgrade.v6_2_0.UpgradeBlogs;
 import com.liferay.portal.upgrade.v6_2_0.UpgradeBlogsAggregator;
 import com.liferay.portal.upgrade.v6_2_0.UpgradeCustomizablePortlets;
+import com.liferay.portal.upgrade.v6_2_0.UpgradeDocumentLibrary;
 import com.liferay.portal.upgrade.v6_2_0.UpgradeDynamicDataListDisplay;
 import com.liferay.portal.upgrade.v6_2_0.UpgradeDynamicDataMapping;
+import com.liferay.portal.upgrade.v6_2_0.UpgradeJournal;
+import com.liferay.portal.upgrade.v6_2_0.UpgradeMessageBoards;
 import com.liferay.portal.upgrade.v6_2_0.UpgradeMessageBoardsAttachments;
+import com.liferay.portal.upgrade.v6_2_0.UpgradePortletPreferences;
 import com.liferay.portal.upgrade.v6_2_0.UpgradeSchema;
 import com.liferay.portal.upgrade.v6_2_0.UpgradeUser;
 import com.liferay.portal.upgrade.v6_2_0.UpgradeWikiAttachments;
@@ -45,9 +49,13 @@ public class UpgradeProcess_6_2_0 extends UpgradeProcess {
 		upgrade(UpgradeBlogs.class);
 		upgrade(UpgradeBlogsAggregator.class);
 		upgrade(UpgradeCustomizablePortlets.class);
-		upgrade(UpgradeDynamicDataMapping.class);
+		upgrade(UpgradeDocumentLibrary.class);
 		upgrade(UpgradeDynamicDataListDisplay.class);
+		upgrade(UpgradeDynamicDataMapping.class);
+		upgrade(UpgradeJournal.class);
+		upgrade(UpgradeMessageBoards.class);
 		upgrade(UpgradeMessageBoardsAttachments.class);
+		upgrade(UpgradePortletPreferences.class);
 		upgrade(UpgradeUser.class);
 		upgrade(UpgradeWikiAttachments.class);
 	}

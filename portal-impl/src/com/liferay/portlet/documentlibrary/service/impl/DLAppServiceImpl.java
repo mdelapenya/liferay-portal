@@ -49,6 +49,7 @@ import com.liferay.portlet.documentlibrary.service.base.DLAppServiceBaseImpl;
 import com.liferay.portlet.documentlibrary.service.permission.DLFileEntryPermission;
 import com.liferay.portlet.documentlibrary.service.permission.DLFileShortcutPermission;
 import com.liferay.portlet.documentlibrary.service.permission.DLFolderPermission;
+import com.liferay.portlet.documentlibrary.service.permission.DLPermission;
 import com.liferay.portlet.documentlibrary.util.DLAppUtil;
 import com.liferay.portlet.documentlibrary.util.DLProcessorRegistryUtil;
 import com.liferay.portlet.documentlibrary.util.comparator.RepositoryModelModifiedDateComparator;
@@ -480,7 +481,7 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 	 * </p>
 	 *
 	 * @param  fileEntryId the primary key of the file entry to check in
-	 * @param  lockUuid the lock's universally unique identifier
+	 * @param  lockUuid the lock's UUID
 	 * @param  serviceContext the service context to be applied
 	 * @throws PortalException if the file entry could not be found
 	 * @throws SystemException if a system exception occurred
@@ -968,7 +969,7 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 	 */
 	public int getFileEntriesAndFileShortcutsCount(
 			long repositoryId, long folderId, int status, String[] mimeTypes)
-			throws PortalException, SystemException {
+		throws PortalException, SystemException {
 
 		Repository repository = getRepository(repositoryId);
 
@@ -1062,7 +1063,7 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 	/**
 	 * Returns the file entry with the UUID and group.
 	 *
-	 * @param  uuid the file entry's universally unique identifier
+	 * @param  uuid the file entry's UUID
 	 * @param  groupId the primary key of the file entry's group
 	 * @return the file entry with the UUID and group
 	 * @throws PortalException if the file entry could not be found
@@ -2295,7 +2296,7 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 	 * Refreshes the lock for the file entry. This method is primarily used by
 	 * WebDAV.
 	 *
-	 * @param  lockUuid the lock's universally unique identifier
+	 * @param  lockUuid the lock's UUID
 	 * @param  companyId the primary key of the file entry's company
 	 * @param  expirationTime the time in milliseconds before the lock expires.
 	 *         If the value is <code>0</code>, the default expiration time will
@@ -2323,7 +2324,7 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 	 * Refreshes the lock for the folder. This method is primarily used by
 	 * WebDAV.
 	 *
-	 * @param  lockUuid the lock's universally unique identifier
+	 * @param  lockUuid the lock's UUID
 	 * @param  companyId the primary key of the file entry's company
 	 * @param  expirationTime the time in milliseconds before the lock expires.
 	 *         If the value is <code>0</code>, the default expiration time will
@@ -2472,6 +2473,45 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 	}
 
 	/**
+	 * Subscribe the user to changes in documents of the file entry type. This
+	 * method is only supported by the Liferay repository.
+	 *
+	 * @param  groupId the primary key of the file entry type's group
+	 * @param  fileEntryTypeId the primary key of the file entry type
+	 * @throws PortalException if the user or group could not be found, or if
+	 *         subscribing was not permissible
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void subscribeFileEntryType(long groupId, long fileEntryTypeId)
+		throws PortalException, SystemException {
+
+		DLPermission.check(
+			getPermissionChecker(), groupId, ActionKeys.SUBSCRIBE);
+
+		dlAppLocalService.subscribeFileEntryType(
+			getUserId(), groupId, fileEntryTypeId);
+	}
+
+	/**
+	 * Subscribe the user to document changes in the folder. This method is only
+	 * supported by the Liferay repository.
+	 *
+	 * @param  groupId the primary key of the folder's group
+	 * @param  folderId the primary key of the folder
+	 * @throws PortalException if the user or group could not be found, or if
+	 *         subscribing was not permissible
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void subscribeFolder(long groupId, long folderId)
+		throws PortalException, SystemException {
+
+		DLPermission.check(
+			getPermissionChecker(), groupId, ActionKeys.SUBSCRIBE);
+
+		dlAppLocalService.subscribeFolder(getUserId(), groupId, folderId);
+	}
+
+	/**
 	 * @deprecated Use {@link #checkInFileEntry(long, boolean, String,
 	 *             ServiceContext)}.
 	 */
@@ -2496,7 +2536,7 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 	 *
 	 * @param  repositoryId the primary key of the repository
 	 * @param  folderId the primary key of the folder
-	 * @param  lockUuid the lock's universally unique identifier
+	 * @param  lockUuid the lock's UUID
 	 * @throws PortalException if the repository or folder could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
@@ -2514,7 +2554,7 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 	 * @param  repositoryId the primary key of the repository
 	 * @param  parentFolderId the primary key of the parent folder
 	 * @param  name the folder's name
-	 * @param  lockUuid the lock's universally unique identifier
+	 * @param  lockUuid the lock's UUID
 	 * @throws PortalException if the repository or folder could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
@@ -2526,6 +2566,45 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 		Repository repository = getRepository(repositoryId);
 
 		repository.unlockFolder(parentFolderId, name, lockUuid);
+	}
+
+	/**
+	 * Unsubscribe the user from changes in documents of the file entry type.
+	 * This method is only supported by the Liferay repository.
+	 *
+	 * @param  groupId the primary key of the file entry type's group
+	 * @param  fileEntryTypeId the primary key of the file entry type
+	 * @throws PortalException if the user or group could not be found, or if
+	 *         unsubscribing was not permissible
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void unsubscribeFileEntryType(long groupId, long fileEntryTypeId)
+		throws PortalException, SystemException {
+
+		DLPermission.check(
+			getPermissionChecker(), groupId, ActionKeys.SUBSCRIBE);
+
+		dlAppLocalService.unsubscribeFileEntryType(
+			getUserId(), groupId, fileEntryTypeId);
+	}
+
+	/**
+	 * Unsubscribe the user from document changes in the folder. This method is
+	 * only supported by the Liferay repository.
+	 *
+	 * @param  groupId the primary key of the folder's group
+	 * @param  folderId the primary key of the folder
+	 * @throws PortalException if the user or group could not be found, or if
+	 *         unsubscribing was not permissible
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void unsubscribeFolder(long groupId, long folderId)
+		throws PortalException, SystemException {
+
+		DLPermission.check(
+			getPermissionChecker(), groupId, ActionKeys.SUBSCRIBE);
+
+		dlAppLocalService.unsubscribeFolder(getUserId(), groupId, folderId);
 	}
 
 	/**
@@ -2857,7 +2936,7 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 	 *
 	 * @param  repositoryId the primary key for the repository
 	 * @param  fileEntryId the primary key for the file entry
-	 * @param  lockUuid the lock's universally unique identifier
+	 * @param  lockUuid the lock's UUID
 	 * @return <code>true</code> if the file entry is checked out;
 	 *         <code>false</code> otherwise
 	 * @throws PortalException if the file entry could not be found
@@ -2887,7 +2966,7 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 	 *
 	 * @param  repositoryId the primary key for the repository
 	 * @param  folderId the primary key for the folder
-	 * @param  lockUuid the lock's universally unique identifier
+	 * @param  lockUuid the lock's UUID
 	 * @return <code>true</code> if the inheritable lock exists;
 	 *         <code>false</code> otherwise
 	 * @throws PortalException if the folder could not be found

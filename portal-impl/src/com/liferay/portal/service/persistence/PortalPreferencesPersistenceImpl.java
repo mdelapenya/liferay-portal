@@ -14,9 +14,7 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchPreferencesException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -331,8 +329,7 @@ public class PortalPreferencesPersistenceImpl extends BasePersistenceImpl<Portal
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_O_O,
 			new Object[] {
-				Long.valueOf(portalPreferences.getOwnerId()),
-				Integer.valueOf(portalPreferences.getOwnerType())
+				portalPreferences.getOwnerId(), portalPreferences.getOwnerType()
 			}, portalPreferences);
 
 		portalPreferences.resetOriginalValues();
@@ -408,12 +405,56 @@ public class PortalPreferencesPersistenceImpl extends BasePersistenceImpl<Portal
 		}
 	}
 
+	protected void cacheUniqueFindersCache(PortalPreferences portalPreferences) {
+		if (portalPreferences.isNew()) {
+			Object[] args = new Object[] {
+					portalPreferences.getOwnerId(),
+					portalPreferences.getOwnerType()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_O_O, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_O_O, args,
+				portalPreferences);
+		}
+		else {
+			PortalPreferencesModelImpl portalPreferencesModelImpl = (PortalPreferencesModelImpl)portalPreferences;
+
+			if ((portalPreferencesModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_O_O.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						portalPreferences.getOwnerId(),
+						portalPreferences.getOwnerType()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_O_O, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_O_O, args,
+					portalPreferences);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(PortalPreferences portalPreferences) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_O_O,
-			new Object[] {
-				Long.valueOf(portalPreferences.getOwnerId()),
-				Integer.valueOf(portalPreferences.getOwnerType())
-			});
+		PortalPreferencesModelImpl portalPreferencesModelImpl = (PortalPreferencesModelImpl)portalPreferences;
+
+		Object[] args = new Object[] {
+				portalPreferences.getOwnerId(), portalPreferences.getOwnerType()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_O_O, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_O_O, args);
+
+		if ((portalPreferencesModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_O_O.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					portalPreferencesModelImpl.getOriginalOwnerId(),
+					portalPreferencesModelImpl.getOriginalOwnerType()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_O_O, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_O_O, args);
+		}
 	}
 
 	/**
@@ -441,7 +482,7 @@ public class PortalPreferencesPersistenceImpl extends BasePersistenceImpl<Portal
 	 */
 	public PortalPreferences remove(long portalPreferencesId)
 		throws NoSuchPreferencesException, SystemException {
-		return remove(Long.valueOf(portalPreferencesId));
+		return remove((Serializable)portalPreferencesId);
 	}
 
 	/**
@@ -526,8 +567,6 @@ public class PortalPreferencesPersistenceImpl extends BasePersistenceImpl<Portal
 
 		boolean isNew = portalPreferences.isNew();
 
-		PortalPreferencesModelImpl portalPreferencesModelImpl = (PortalPreferencesModelImpl)portalPreferences;
-
 		Session session = null;
 
 		try {
@@ -559,32 +598,8 @@ public class PortalPreferencesPersistenceImpl extends BasePersistenceImpl<Portal
 			PortalPreferencesImpl.class, portalPreferences.getPrimaryKey(),
 			portalPreferences);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_O_O,
-				new Object[] {
-					Long.valueOf(portalPreferences.getOwnerId()),
-					Integer.valueOf(portalPreferences.getOwnerType())
-				}, portalPreferences);
-		}
-		else {
-			if ((portalPreferencesModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_O_O.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(portalPreferencesModelImpl.getOriginalOwnerId()),
-						Integer.valueOf(portalPreferencesModelImpl.getOriginalOwnerType())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_O_O, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_O_O, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_O_O,
-					new Object[] {
-						Long.valueOf(portalPreferences.getOwnerId()),
-						Integer.valueOf(portalPreferences.getOwnerType())
-					}, portalPreferences);
-			}
-		}
+		clearUniqueFindersCache(portalPreferences);
+		cacheUniqueFindersCache(portalPreferences);
 
 		return portalPreferences;
 	}
@@ -613,13 +628,24 @@ public class PortalPreferencesPersistenceImpl extends BasePersistenceImpl<Portal
 	 *
 	 * @param primaryKey the primary key of the portal preferences
 	 * @return the portal preferences
-	 * @throws com.liferay.portal.NoSuchModelException if a portal preferences with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchPreferencesException if a portal preferences with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public PortalPreferences findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchPreferencesException, SystemException {
+		PortalPreferences portalPreferences = fetchByPrimaryKey(primaryKey);
+
+		if (portalPreferences == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchPreferencesException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return portalPreferences;
 	}
 
 	/**
@@ -632,19 +658,7 @@ public class PortalPreferencesPersistenceImpl extends BasePersistenceImpl<Portal
 	 */
 	public PortalPreferences findByPrimaryKey(long portalPreferencesId)
 		throws NoSuchPreferencesException, SystemException {
-		PortalPreferences portalPreferences = fetchByPrimaryKey(portalPreferencesId);
-
-		if (portalPreferences == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-					portalPreferencesId);
-			}
-
-			throw new NoSuchPreferencesException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				portalPreferencesId);
-		}
-
-		return portalPreferences;
+		return findByPrimaryKey((Serializable)portalPreferencesId);
 	}
 
 	/**
@@ -657,20 +671,8 @@ public class PortalPreferencesPersistenceImpl extends BasePersistenceImpl<Portal
 	@Override
 	public PortalPreferences fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the portal preferences with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param portalPreferencesId the primary key of the portal preferences
-	 * @return the portal preferences, or <code>null</code> if a portal preferences with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public PortalPreferences fetchByPrimaryKey(long portalPreferencesId)
-		throws SystemException {
 		PortalPreferences portalPreferences = (PortalPreferences)EntityCacheUtil.getResult(PortalPreferencesModelImpl.ENTITY_CACHE_ENABLED,
-				PortalPreferencesImpl.class, portalPreferencesId);
+				PortalPreferencesImpl.class, primaryKey);
 
 		if (portalPreferences == _nullPortalPreferences) {
 			return null;
@@ -683,20 +685,20 @@ public class PortalPreferencesPersistenceImpl extends BasePersistenceImpl<Portal
 				session = openSession();
 
 				portalPreferences = (PortalPreferences)session.get(PortalPreferencesImpl.class,
-						Long.valueOf(portalPreferencesId));
+						primaryKey);
 
 				if (portalPreferences != null) {
 					cacheResult(portalPreferences);
 				}
 				else {
 					EntityCacheUtil.putResult(PortalPreferencesModelImpl.ENTITY_CACHE_ENABLED,
-						PortalPreferencesImpl.class, portalPreferencesId,
+						PortalPreferencesImpl.class, primaryKey,
 						_nullPortalPreferences);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(PortalPreferencesModelImpl.ENTITY_CACHE_ENABLED,
-					PortalPreferencesImpl.class, portalPreferencesId);
+					PortalPreferencesImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -706,6 +708,18 @@ public class PortalPreferencesPersistenceImpl extends BasePersistenceImpl<Portal
 		}
 
 		return portalPreferences;
+	}
+
+	/**
+	 * Returns the portal preferences with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param portalPreferencesId the primary key of the portal preferences
+	 * @return the portal preferences, or <code>null</code> if a portal preferences with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public PortalPreferences fetchByPrimaryKey(long portalPreferencesId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)portalPreferencesId);
 	}
 
 	/**
@@ -908,128 +922,6 @@ public class PortalPreferencesPersistenceImpl extends BasePersistenceImpl<Portal
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
 	private static final String _SQL_SELECT_PORTALPREFERENCES = "SELECT portalPreferences FROM PortalPreferences portalPreferences";
 	private static final String _SQL_SELECT_PORTALPREFERENCES_WHERE = "SELECT portalPreferences FROM PortalPreferences portalPreferences WHERE ";
 	private static final String _SQL_COUNT_PORTALPREFERENCES = "SELECT COUNT(portalPreferences) FROM PortalPreferences portalPreferences";

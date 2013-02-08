@@ -14,8 +14,6 @@
 
 package com.liferay.portlet.shopping.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -36,7 +34,6 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnmodifiableList;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.shopping.NoSuchOrderItemException;
@@ -670,7 +667,7 @@ public class ShoppingOrderItemPersistenceImpl extends BasePersistenceImpl<Shoppi
 	 */
 	public ShoppingOrderItem remove(long orderItemId)
 		throws NoSuchOrderItemException, SystemException {
-		return remove(Long.valueOf(orderItemId));
+		return remove((Serializable)orderItemId);
 	}
 
 	/**
@@ -788,16 +785,14 @@ public class ShoppingOrderItemPersistenceImpl extends BasePersistenceImpl<Shoppi
 			if ((shoppingOrderItemModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ORDERID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(shoppingOrderItemModelImpl.getOriginalOrderId())
+						shoppingOrderItemModelImpl.getOriginalOrderId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_ORDERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ORDERID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(shoppingOrderItemModelImpl.getOrderId())
-					};
+				args = new Object[] { shoppingOrderItemModelImpl.getOrderId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_ORDERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ORDERID,
@@ -842,13 +837,24 @@ public class ShoppingOrderItemPersistenceImpl extends BasePersistenceImpl<Shoppi
 	 *
 	 * @param primaryKey the primary key of the shopping order item
 	 * @return the shopping order item
-	 * @throws com.liferay.portal.NoSuchModelException if a shopping order item with the primary key could not be found
+	 * @throws com.liferay.portlet.shopping.NoSuchOrderItemException if a shopping order item with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public ShoppingOrderItem findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchOrderItemException, SystemException {
+		ShoppingOrderItem shoppingOrderItem = fetchByPrimaryKey(primaryKey);
+
+		if (shoppingOrderItem == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchOrderItemException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return shoppingOrderItem;
 	}
 
 	/**
@@ -861,18 +867,7 @@ public class ShoppingOrderItemPersistenceImpl extends BasePersistenceImpl<Shoppi
 	 */
 	public ShoppingOrderItem findByPrimaryKey(long orderItemId)
 		throws NoSuchOrderItemException, SystemException {
-		ShoppingOrderItem shoppingOrderItem = fetchByPrimaryKey(orderItemId);
-
-		if (shoppingOrderItem == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + orderItemId);
-			}
-
-			throw new NoSuchOrderItemException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				orderItemId);
-		}
-
-		return shoppingOrderItem;
+		return findByPrimaryKey((Serializable)orderItemId);
 	}
 
 	/**
@@ -885,20 +880,8 @@ public class ShoppingOrderItemPersistenceImpl extends BasePersistenceImpl<Shoppi
 	@Override
 	public ShoppingOrderItem fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the shopping order item with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param orderItemId the primary key of the shopping order item
-	 * @return the shopping order item, or <code>null</code> if a shopping order item with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public ShoppingOrderItem fetchByPrimaryKey(long orderItemId)
-		throws SystemException {
 		ShoppingOrderItem shoppingOrderItem = (ShoppingOrderItem)EntityCacheUtil.getResult(ShoppingOrderItemModelImpl.ENTITY_CACHE_ENABLED,
-				ShoppingOrderItemImpl.class, orderItemId);
+				ShoppingOrderItemImpl.class, primaryKey);
 
 		if (shoppingOrderItem == _nullShoppingOrderItem) {
 			return null;
@@ -911,20 +894,20 @@ public class ShoppingOrderItemPersistenceImpl extends BasePersistenceImpl<Shoppi
 				session = openSession();
 
 				shoppingOrderItem = (ShoppingOrderItem)session.get(ShoppingOrderItemImpl.class,
-						Long.valueOf(orderItemId));
+						primaryKey);
 
 				if (shoppingOrderItem != null) {
 					cacheResult(shoppingOrderItem);
 				}
 				else {
 					EntityCacheUtil.putResult(ShoppingOrderItemModelImpl.ENTITY_CACHE_ENABLED,
-						ShoppingOrderItemImpl.class, orderItemId,
+						ShoppingOrderItemImpl.class, primaryKey,
 						_nullShoppingOrderItem);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(ShoppingOrderItemModelImpl.ENTITY_CACHE_ENABLED,
-					ShoppingOrderItemImpl.class, orderItemId);
+					ShoppingOrderItemImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -934,6 +917,18 @@ public class ShoppingOrderItemPersistenceImpl extends BasePersistenceImpl<Shoppi
 		}
 
 		return shoppingOrderItem;
+	}
+
+	/**
+	 * Returns the shopping order item with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param orderItemId the primary key of the shopping order item
+	 * @return the shopping order item, or <code>null</code> if a shopping order item with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public ShoppingOrderItem fetchByPrimaryKey(long orderItemId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)orderItemId);
 	}
 
 	/**
@@ -1136,24 +1131,6 @@ public class ShoppingOrderItemPersistenceImpl extends BasePersistenceImpl<Shoppi
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = ShoppingCartPersistence.class)
-	protected ShoppingCartPersistence shoppingCartPersistence;
-	@BeanReference(type = ShoppingCategoryPersistence.class)
-	protected ShoppingCategoryPersistence shoppingCategoryPersistence;
-	@BeanReference(type = ShoppingCouponPersistence.class)
-	protected ShoppingCouponPersistence shoppingCouponPersistence;
-	@BeanReference(type = ShoppingItemPersistence.class)
-	protected ShoppingItemPersistence shoppingItemPersistence;
-	@BeanReference(type = ShoppingItemFieldPersistence.class)
-	protected ShoppingItemFieldPersistence shoppingItemFieldPersistence;
-	@BeanReference(type = ShoppingItemPricePersistence.class)
-	protected ShoppingItemPricePersistence shoppingItemPricePersistence;
-	@BeanReference(type = ShoppingOrderPersistence.class)
-	protected ShoppingOrderPersistence shoppingOrderPersistence;
-	@BeanReference(type = ShoppingOrderItemPersistence.class)
-	protected ShoppingOrderItemPersistence shoppingOrderItemPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
 	private static final String _SQL_SELECT_SHOPPINGORDERITEM = "SELECT shoppingOrderItem FROM ShoppingOrderItem shoppingOrderItem";
 	private static final String _SQL_SELECT_SHOPPINGORDERITEM_WHERE = "SELECT shoppingOrderItem FROM ShoppingOrderItem shoppingOrderItem WHERE ";
 	private static final String _SQL_COUNT_SHOPPINGORDERITEM = "SELECT COUNT(shoppingOrderItem) FROM ShoppingOrderItem shoppingOrderItem";

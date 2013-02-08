@@ -236,9 +236,13 @@ public class VerifyProperties extends VerifyProcess {
 	};
 
 	private static final String[] _OBSOLETE_PORTAL_KEYS = new String[] {
-		"auth.max.failures.limit", "cas.validate.url",
+		"asset.entry.increment.view.counter.enabled", "auth.max.failures.limit",
+		"buffered.increment.parallel.queue.size",
+		"buffered.increment.serial.queue.size", "cas.validate.url",
 		"cluster.executor.heartbeat.interval", "commons.pool.enabled",
-		"jbi.workflow.url", "lucene.analyzer",
+		"dl.file.entry.read.count.enabled",
+		"dynamic.data.mapping.template.language.types", "jbi.workflow.url",
+		"journal.template.language.types", "lucene.analyzer",
 		"lucene.store.jdbc.auto.clean.up",
 		"lucene.store.jdbc.auto.clean.up.enabled",
 		"lucene.store.jdbc.auto.clean.up.interval",
@@ -248,8 +252,8 @@ public class VerifyProperties extends VerifyProcess {
 		"lucene.store.jdbc.dialect.mysql", "lucene.store.jdbc.dialect.oracle",
 		"lucene.store.jdbc.dialect.postgresql",
 		"message.boards.thread.locking.enabled",
-		"portal.security.manager.enable", "shard.available.names",
-		"velocity.engine.resource.manager",
+		"portal.security.manager.enable", "scheduler.classes",
+		"shard.available.names", "velocity.engine.resource.manager",
 		"velocity.engine.resource.manager.cache.enabled",
 		"webdav.storage.class", "webdav.storage.show.edit.url",
 		"webdav.storage.show.view.url", "webdav.storage.tokens", "xss.allow"

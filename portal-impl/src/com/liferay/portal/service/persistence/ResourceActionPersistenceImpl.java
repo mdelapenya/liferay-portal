@@ -14,9 +14,7 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchResourceActionException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -193,16 +191,18 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 
 			query.append(_SQL_SELECT_RESOURCEACTION_WHERE);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_NAME_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_NAME_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_NAME_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_NAME_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_NAME_NAME_2);
 			}
 
 			if (orderByComparator != null) {
@@ -225,7 +225,7 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -416,16 +416,18 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 
 		query.append(_SQL_SELECT_RESOURCEACTION_WHERE);
 
+		boolean bindName = false;
+
 		if (name == null) {
 			query.append(_FINDER_COLUMN_NAME_NAME_1);
 		}
+		else if (name.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_NAME_NAME_3);
+		}
 		else {
-			if (name.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_NAME_NAME_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_NAME_NAME_2);
-			}
+			bindName = true;
+
+			query.append(_FINDER_COLUMN_NAME_NAME_2);
 		}
 
 		if (orderByComparator != null) {
@@ -496,7 +498,7 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (name != null) {
+		if (bindName) {
 			qPos.add(name);
 		}
 
@@ -551,16 +553,18 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 
 			query.append(_SQL_COUNT_RESOURCEACTION_WHERE);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_NAME_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_NAME_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_NAME_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_NAME_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_NAME_NAME_2);
 			}
 
 			String sql = query.toString();
@@ -574,7 +578,7 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -597,7 +601,7 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 
 	private static final String _FINDER_COLUMN_NAME_NAME_1 = "resourceAction.name IS NULL";
 	private static final String _FINDER_COLUMN_NAME_NAME_2 = "resourceAction.name = ?";
-	private static final String _FINDER_COLUMN_NAME_NAME_3 = "(resourceAction.name IS NULL OR resourceAction.name = ?)";
+	private static final String _FINDER_COLUMN_NAME_NAME_3 = "(resourceAction.name IS NULL OR resourceAction.name = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_N_A = new FinderPath(ResourceActionModelImpl.ENTITY_CACHE_ENABLED,
 			ResourceActionModelImpl.FINDER_CACHE_ENABLED,
 			ResourceActionImpl.class, FINDER_CLASS_NAME_ENTITY, "fetchByN_A",
@@ -692,28 +696,32 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 
 			query.append(_SQL_SELECT_RESOURCEACTION_WHERE);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_N_A_NAME_1);
 			}
-			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_N_A_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_N_A_NAME_2);
-				}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_N_A_NAME_3);
 			}
+			else {
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_N_A_NAME_2);
+			}
+
+			boolean bindActionId = false;
 
 			if (actionId == null) {
 				query.append(_FINDER_COLUMN_N_A_ACTIONID_1);
 			}
+			else if (actionId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_N_A_ACTIONID_3);
+			}
 			else {
-				if (actionId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_N_A_ACTIONID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_N_A_ACTIONID_2);
-				}
+				bindActionId = true;
+
+				query.append(_FINDER_COLUMN_N_A_ACTIONID_2);
 			}
 
 			String sql = query.toString();
@@ -727,11 +735,11 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
-				if (actionId != null) {
+				if (bindActionId) {
 					qPos.add(actionId);
 				}
 
@@ -813,28 +821,32 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 
 			query.append(_SQL_COUNT_RESOURCEACTION_WHERE);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_N_A_NAME_1);
 			}
-			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_N_A_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_N_A_NAME_2);
-				}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_N_A_NAME_3);
 			}
+			else {
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_N_A_NAME_2);
+			}
+
+			boolean bindActionId = false;
 
 			if (actionId == null) {
 				query.append(_FINDER_COLUMN_N_A_ACTIONID_1);
 			}
+			else if (actionId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_N_A_ACTIONID_3);
+			}
 			else {
-				if (actionId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_N_A_ACTIONID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_N_A_ACTIONID_2);
-				}
+				bindActionId = true;
+
+				query.append(_FINDER_COLUMN_N_A_ACTIONID_2);
 			}
 
 			String sql = query.toString();
@@ -848,11 +860,11 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
-				if (actionId != null) {
+				if (bindActionId) {
 					qPos.add(actionId);
 				}
 
@@ -874,11 +886,11 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 	}
 
 	private static final String _FINDER_COLUMN_N_A_NAME_1 = "resourceAction.name IS NULL AND ";
-	private static final String _FINDER_COLUMN_N_A_NAME_2 = "lower(resourceAction.name) = lower(CAST_TEXT(?)) AND ";
-	private static final String _FINDER_COLUMN_N_A_NAME_3 = "(resourceAction.name IS NULL OR lower(resourceAction.name) = lower(CAST_TEXT(?))) AND ";
+	private static final String _FINDER_COLUMN_N_A_NAME_2 = "resourceAction.name = ? AND ";
+	private static final String _FINDER_COLUMN_N_A_NAME_3 = "(resourceAction.name IS NULL OR resourceAction.name = '') AND ";
 	private static final String _FINDER_COLUMN_N_A_ACTIONID_1 = "resourceAction.actionId IS NULL";
 	private static final String _FINDER_COLUMN_N_A_ACTIONID_2 = "resourceAction.actionId = ?";
-	private static final String _FINDER_COLUMN_N_A_ACTIONID_3 = "(resourceAction.actionId IS NULL OR resourceAction.actionId = ?)";
+	private static final String _FINDER_COLUMN_N_A_ACTIONID_3 = "(resourceAction.actionId IS NULL OR resourceAction.actionId = '')";
 
 	/**
 	 * Caches the resource action in the entity cache if it is enabled.
@@ -966,9 +978,54 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 		}
 	}
 
+	protected void cacheUniqueFindersCache(ResourceAction resourceAction) {
+		if (resourceAction.isNew()) {
+			Object[] args = new Object[] {
+					resourceAction.getName(), resourceAction.getActionId()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_N_A, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_N_A, args,
+				resourceAction);
+		}
+		else {
+			ResourceActionModelImpl resourceActionModelImpl = (ResourceActionModelImpl)resourceAction;
+
+			if ((resourceActionModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_N_A.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						resourceAction.getName(), resourceAction.getActionId()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_N_A, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_N_A, args,
+					resourceAction);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(ResourceAction resourceAction) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_N_A,
-			new Object[] { resourceAction.getName(), resourceAction.getActionId() });
+		ResourceActionModelImpl resourceActionModelImpl = (ResourceActionModelImpl)resourceAction;
+
+		Object[] args = new Object[] {
+				resourceAction.getName(), resourceAction.getActionId()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_N_A, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_N_A, args);
+
+		if ((resourceActionModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_N_A.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					resourceActionModelImpl.getOriginalName(),
+					resourceActionModelImpl.getOriginalActionId()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_N_A, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_N_A, args);
+		}
 	}
 
 	/**
@@ -996,7 +1053,7 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 	 */
 	public ResourceAction remove(long resourceActionId)
 		throws NoSuchResourceActionException, SystemException {
-		return remove(Long.valueOf(resourceActionId));
+		return remove((Serializable)resourceActionId);
 	}
 
 	/**
@@ -1133,35 +1190,8 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 			ResourceActionImpl.class, resourceAction.getPrimaryKey(),
 			resourceAction);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_N_A,
-				new Object[] {
-					resourceAction.getName(),
-					
-				resourceAction.getActionId()
-				}, resourceAction);
-		}
-		else {
-			if ((resourceActionModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_N_A.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						resourceActionModelImpl.getOriginalName(),
-						
-						resourceActionModelImpl.getOriginalActionId()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_N_A, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_N_A, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_N_A,
-					new Object[] {
-						resourceAction.getName(),
-						
-					resourceAction.getActionId()
-					}, resourceAction);
-			}
-		}
+		clearUniqueFindersCache(resourceAction);
+		cacheUniqueFindersCache(resourceAction);
 
 		return resourceAction;
 	}
@@ -1189,13 +1219,24 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 	 *
 	 * @param primaryKey the primary key of the resource action
 	 * @return the resource action
-	 * @throws com.liferay.portal.NoSuchModelException if a resource action with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchResourceActionException if a resource action with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public ResourceAction findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchResourceActionException, SystemException {
+		ResourceAction resourceAction = fetchByPrimaryKey(primaryKey);
+
+		if (resourceAction == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchResourceActionException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return resourceAction;
 	}
 
 	/**
@@ -1208,18 +1249,7 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 	 */
 	public ResourceAction findByPrimaryKey(long resourceActionId)
 		throws NoSuchResourceActionException, SystemException {
-		ResourceAction resourceAction = fetchByPrimaryKey(resourceActionId);
-
-		if (resourceAction == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + resourceActionId);
-			}
-
-			throw new NoSuchResourceActionException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				resourceActionId);
-		}
-
-		return resourceAction;
+		return findByPrimaryKey((Serializable)resourceActionId);
 	}
 
 	/**
@@ -1232,20 +1262,8 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 	@Override
 	public ResourceAction fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the resource action with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param resourceActionId the primary key of the resource action
-	 * @return the resource action, or <code>null</code> if a resource action with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public ResourceAction fetchByPrimaryKey(long resourceActionId)
-		throws SystemException {
 		ResourceAction resourceAction = (ResourceAction)EntityCacheUtil.getResult(ResourceActionModelImpl.ENTITY_CACHE_ENABLED,
-				ResourceActionImpl.class, resourceActionId);
+				ResourceActionImpl.class, primaryKey);
 
 		if (resourceAction == _nullResourceAction) {
 			return null;
@@ -1258,20 +1276,20 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 				session = openSession();
 
 				resourceAction = (ResourceAction)session.get(ResourceActionImpl.class,
-						Long.valueOf(resourceActionId));
+						primaryKey);
 
 				if (resourceAction != null) {
 					cacheResult(resourceAction);
 				}
 				else {
 					EntityCacheUtil.putResult(ResourceActionModelImpl.ENTITY_CACHE_ENABLED,
-						ResourceActionImpl.class, resourceActionId,
+						ResourceActionImpl.class, primaryKey,
 						_nullResourceAction);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(ResourceActionModelImpl.ENTITY_CACHE_ENABLED,
-					ResourceActionImpl.class, resourceActionId);
+					ResourceActionImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -1281,6 +1299,18 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 		}
 
 		return resourceAction;
+	}
+
+	/**
+	 * Returns the resource action with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param resourceActionId the primary key of the resource action
+	 * @return the resource action, or <code>null</code> if a resource action with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public ResourceAction fetchByPrimaryKey(long resourceActionId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)resourceActionId);
 	}
 
 	/**
@@ -1483,128 +1513,6 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
 	private static final String _SQL_SELECT_RESOURCEACTION = "SELECT resourceAction FROM ResourceAction resourceAction";
 	private static final String _SQL_SELECT_RESOURCEACTION_WHERE = "SELECT resourceAction FROM ResourceAction resourceAction WHERE ";
 	private static final String _SQL_COUNT_RESOURCEACTION = "SELECT COUNT(resourceAction) FROM ResourceAction resourceAction";

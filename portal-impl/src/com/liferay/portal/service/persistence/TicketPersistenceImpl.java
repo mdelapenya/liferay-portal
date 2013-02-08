@@ -14,9 +14,7 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchTicketException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -167,16 +165,18 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 
 			query.append(_SQL_SELECT_TICKET_WHERE);
 
+			boolean bindKey = false;
+
 			if (key == null) {
 				query.append(_FINDER_COLUMN_KEY_KEY_1);
 			}
+			else if (key.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_KEY_KEY_3);
+			}
 			else {
-				if (key.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_KEY_KEY_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_KEY_KEY_2);
-				}
+				bindKey = true;
+
+				query.append(_FINDER_COLUMN_KEY_KEY_2);
 			}
 
 			String sql = query.toString();
@@ -190,7 +190,7 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (key != null) {
+				if (bindKey) {
 					qPos.add(key);
 				}
 
@@ -274,16 +274,18 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 
 			query.append(_SQL_COUNT_TICKET_WHERE);
 
+			boolean bindKey = false;
+
 			if (key == null) {
 				query.append(_FINDER_COLUMN_KEY_KEY_1);
 			}
+			else if (key.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_KEY_KEY_3);
+			}
 			else {
-				if (key.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_KEY_KEY_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_KEY_KEY_2);
-				}
+				bindKey = true;
+
+				query.append(_FINDER_COLUMN_KEY_KEY_2);
 			}
 
 			String sql = query.toString();
@@ -297,7 +299,7 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (key != null) {
+				if (bindKey) {
 					qPos.add(key);
 				}
 
@@ -320,7 +322,7 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 
 	private static final String _FINDER_COLUMN_KEY_KEY_1 = "ticket.key IS NULL";
 	private static final String _FINDER_COLUMN_KEY_KEY_2 = "ticket.key = ?";
-	private static final String _FINDER_COLUMN_KEY_KEY_3 = "(ticket.key IS NULL OR ticket.key = ?)";
+	private static final String _FINDER_COLUMN_KEY_KEY_3 = "(ticket.key IS NULL OR ticket.key = '')";
 
 	/**
 	 * Caches the ticket in the entity cache if it is enabled.
@@ -406,9 +408,43 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 		}
 	}
 
+	protected void cacheUniqueFindersCache(Ticket ticket) {
+		if (ticket.isNew()) {
+			Object[] args = new Object[] { ticket.getKey() };
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_KEY, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_KEY, args, ticket);
+		}
+		else {
+			TicketModelImpl ticketModelImpl = (TicketModelImpl)ticket;
+
+			if ((ticketModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_KEY.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] { ticket.getKey() };
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_KEY, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_KEY, args, ticket);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(Ticket ticket) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_KEY,
-			new Object[] { ticket.getKey() });
+		TicketModelImpl ticketModelImpl = (TicketModelImpl)ticket;
+
+		Object[] args = new Object[] { ticket.getKey() };
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_KEY, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_KEY, args);
+
+		if ((ticketModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_KEY.getColumnBitmask()) != 0) {
+			args = new Object[] { ticketModelImpl.getOriginalKey() };
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_KEY, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_KEY, args);
+		}
 	}
 
 	/**
@@ -436,7 +472,7 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 	 */
 	public Ticket remove(long ticketId)
 		throws NoSuchTicketException, SystemException {
-		return remove(Long.valueOf(ticketId));
+		return remove((Serializable)ticketId);
 	}
 
 	/**
@@ -518,8 +554,6 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 
 		boolean isNew = ticket.isNew();
 
-		TicketModelImpl ticketModelImpl = (TicketModelImpl)ticket;
-
 		Session session = null;
 
 		try {
@@ -550,23 +584,8 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 		EntityCacheUtil.putResult(TicketModelImpl.ENTITY_CACHE_ENABLED,
 			TicketImpl.class, ticket.getPrimaryKey(), ticket);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_KEY,
-				new Object[] { ticket.getKey() }, ticket);
-		}
-		else {
-			if ((ticketModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_KEY.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] { ticketModelImpl.getOriginalKey() };
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_KEY, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_KEY, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_KEY,
-					new Object[] { ticket.getKey() }, ticket);
-			}
-		}
+		clearUniqueFindersCache(ticket);
+		cacheUniqueFindersCache(ticket);
 
 		return ticket;
 	}
@@ -599,13 +618,24 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 	 *
 	 * @param primaryKey the primary key of the ticket
 	 * @return the ticket
-	 * @throws com.liferay.portal.NoSuchModelException if a ticket with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchTicketException if a ticket with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public Ticket findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchTicketException, SystemException {
+		Ticket ticket = fetchByPrimaryKey(primaryKey);
+
+		if (ticket == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchTicketException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return ticket;
 	}
 
 	/**
@@ -618,18 +648,7 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 	 */
 	public Ticket findByPrimaryKey(long ticketId)
 		throws NoSuchTicketException, SystemException {
-		Ticket ticket = fetchByPrimaryKey(ticketId);
-
-		if (ticket == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + ticketId);
-			}
-
-			throw new NoSuchTicketException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				ticketId);
-		}
-
-		return ticket;
+		return findByPrimaryKey((Serializable)ticketId);
 	}
 
 	/**
@@ -642,19 +661,8 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 	@Override
 	public Ticket fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the ticket with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param ticketId the primary key of the ticket
-	 * @return the ticket, or <code>null</code> if a ticket with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public Ticket fetchByPrimaryKey(long ticketId) throws SystemException {
 		Ticket ticket = (Ticket)EntityCacheUtil.getResult(TicketModelImpl.ENTITY_CACHE_ENABLED,
-				TicketImpl.class, ticketId);
+				TicketImpl.class, primaryKey);
 
 		if (ticket == _nullTicket) {
 			return null;
@@ -666,20 +674,19 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 			try {
 				session = openSession();
 
-				ticket = (Ticket)session.get(TicketImpl.class,
-						Long.valueOf(ticketId));
+				ticket = (Ticket)session.get(TicketImpl.class, primaryKey);
 
 				if (ticket != null) {
 					cacheResult(ticket);
 				}
 				else {
 					EntityCacheUtil.putResult(TicketModelImpl.ENTITY_CACHE_ENABLED,
-						TicketImpl.class, ticketId, _nullTicket);
+						TicketImpl.class, primaryKey, _nullTicket);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(TicketModelImpl.ENTITY_CACHE_ENABLED,
-					TicketImpl.class, ticketId);
+					TicketImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -689,6 +696,17 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 		}
 
 		return ticket;
+	}
+
+	/**
+	 * Returns the ticket with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param ticketId the primary key of the ticket
+	 * @return the ticket, or <code>null</code> if a ticket with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Ticket fetchByPrimaryKey(long ticketId) throws SystemException {
+		return fetchByPrimaryKey((Serializable)ticketId);
 	}
 
 	/**
@@ -890,128 +908,6 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
 	private static final String _SQL_SELECT_TICKET = "SELECT ticket FROM Ticket ticket";
 	private static final String _SQL_SELECT_TICKET_WHERE = "SELECT ticket FROM Ticket ticket WHERE ";
 	private static final String _SQL_COUNT_TICKET = "SELECT COUNT(ticket) FROM Ticket ticket";

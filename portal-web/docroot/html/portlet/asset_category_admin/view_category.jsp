@@ -53,14 +53,14 @@ List<AssetCategoryProperty> categoryProperties = AssetCategoryPropertyServiceUti
 			<aui:button data-url="<%= permissionsURL %>" id="updateCategoryPermissions" value="permissions" />
 		</c:if>
 
-		<c:if test="<%= AssetPermission.contains(permissionChecker, themeDisplay.getParentGroupId(), ActionKeys.ADD_CATEGORY) %>">
+		<c:if test="<%= AssetPermission.contains(permissionChecker, themeDisplay.getSiteGroupId(), ActionKeys.ADD_CATEGORY) %>">
 			<aui:button id="addSubCategoryButton" value="add-subcategory" />
 		</c:if>
 	</c:if>
 
 	<c:if test="<%= Validator.isNotNull(category.getDescription(locale)) %>">
 		<div class="category-field">
-			<label><liferay-ui:message key="description" />:</label> <%= category.getDescription(locale) %>
+			<label><liferay-ui:message key="description" />:</label> <%= HtmlUtil.escape(category.getDescription(locale)) %>
 		</div>
 	</c:if>
 

@@ -14,9 +14,7 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchPluginSettingException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -674,28 +672,32 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 
 			query.append(_FINDER_COLUMN_C_I_T_COMPANYID_2);
 
+			boolean bindPluginId = false;
+
 			if (pluginId == null) {
 				query.append(_FINDER_COLUMN_C_I_T_PLUGINID_1);
 			}
-			else {
-				if (pluginId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_I_T_PLUGINID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_I_T_PLUGINID_2);
-				}
+			else if (pluginId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_I_T_PLUGINID_3);
 			}
+			else {
+				bindPluginId = true;
+
+				query.append(_FINDER_COLUMN_C_I_T_PLUGINID_2);
+			}
+
+			boolean bindPluginType = false;
 
 			if (pluginType == null) {
 				query.append(_FINDER_COLUMN_C_I_T_PLUGINTYPE_1);
 			}
+			else if (pluginType.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_I_T_PLUGINTYPE_3);
+			}
 			else {
-				if (pluginType.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_I_T_PLUGINTYPE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_I_T_PLUGINTYPE_2);
-				}
+				bindPluginType = true;
+
+				query.append(_FINDER_COLUMN_C_I_T_PLUGINTYPE_2);
 			}
 
 			String sql = query.toString();
@@ -711,11 +713,11 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 
 				qPos.add(companyId);
 
-				if (pluginId != null) {
+				if (bindPluginId) {
 					qPos.add(pluginId);
 				}
 
-				if (pluginType != null) {
+				if (bindPluginType) {
 					qPos.add(pluginType);
 				}
 
@@ -803,28 +805,32 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 
 			query.append(_FINDER_COLUMN_C_I_T_COMPANYID_2);
 
+			boolean bindPluginId = false;
+
 			if (pluginId == null) {
 				query.append(_FINDER_COLUMN_C_I_T_PLUGINID_1);
 			}
-			else {
-				if (pluginId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_I_T_PLUGINID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_I_T_PLUGINID_2);
-				}
+			else if (pluginId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_I_T_PLUGINID_3);
 			}
+			else {
+				bindPluginId = true;
+
+				query.append(_FINDER_COLUMN_C_I_T_PLUGINID_2);
+			}
+
+			boolean bindPluginType = false;
 
 			if (pluginType == null) {
 				query.append(_FINDER_COLUMN_C_I_T_PLUGINTYPE_1);
 			}
+			else if (pluginType.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_I_T_PLUGINTYPE_3);
+			}
 			else {
-				if (pluginType.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_I_T_PLUGINTYPE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_I_T_PLUGINTYPE_2);
-				}
+				bindPluginType = true;
+
+				query.append(_FINDER_COLUMN_C_I_T_PLUGINTYPE_2);
 			}
 
 			String sql = query.toString();
@@ -840,11 +846,11 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 
 				qPos.add(companyId);
 
-				if (pluginId != null) {
+				if (bindPluginId) {
 					qPos.add(pluginId);
 				}
 
-				if (pluginType != null) {
+				if (bindPluginType) {
 					qPos.add(pluginType);
 				}
 
@@ -868,10 +874,10 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 	private static final String _FINDER_COLUMN_C_I_T_COMPANYID_2 = "pluginSetting.companyId = ? AND ";
 	private static final String _FINDER_COLUMN_C_I_T_PLUGINID_1 = "pluginSetting.pluginId IS NULL AND ";
 	private static final String _FINDER_COLUMN_C_I_T_PLUGINID_2 = "pluginSetting.pluginId = ? AND ";
-	private static final String _FINDER_COLUMN_C_I_T_PLUGINID_3 = "(pluginSetting.pluginId IS NULL OR pluginSetting.pluginId = ?) AND ";
+	private static final String _FINDER_COLUMN_C_I_T_PLUGINID_3 = "(pluginSetting.pluginId IS NULL OR pluginSetting.pluginId = '') AND ";
 	private static final String _FINDER_COLUMN_C_I_T_PLUGINTYPE_1 = "pluginSetting.pluginType IS NULL";
 	private static final String _FINDER_COLUMN_C_I_T_PLUGINTYPE_2 = "pluginSetting.pluginType = ?";
-	private static final String _FINDER_COLUMN_C_I_T_PLUGINTYPE_3 = "(pluginSetting.pluginType IS NULL OR pluginSetting.pluginType = ?)";
+	private static final String _FINDER_COLUMN_C_I_T_PLUGINTYPE_3 = "(pluginSetting.pluginType IS NULL OR pluginSetting.pluginType = '')";
 
 	/**
 	 * Caches the plugin setting in the entity cache if it is enabled.
@@ -885,11 +891,8 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_I_T,
 			new Object[] {
-				Long.valueOf(pluginSetting.getCompanyId()),
-				
-			pluginSetting.getPluginId(),
-				
-			pluginSetting.getPluginType()
+				pluginSetting.getCompanyId(), pluginSetting.getPluginId(),
+				pluginSetting.getPluginType()
 			}, pluginSetting);
 
 		pluginSetting.resetOriginalValues();
@@ -964,15 +967,59 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 		}
 	}
 
+	protected void cacheUniqueFindersCache(PluginSetting pluginSetting) {
+		if (pluginSetting.isNew()) {
+			Object[] args = new Object[] {
+					pluginSetting.getCompanyId(), pluginSetting.getPluginId(),
+					pluginSetting.getPluginType()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_I_T, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_I_T, args,
+				pluginSetting);
+		}
+		else {
+			PluginSettingModelImpl pluginSettingModelImpl = (PluginSettingModelImpl)pluginSetting;
+
+			if ((pluginSettingModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_C_I_T.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						pluginSetting.getCompanyId(),
+						pluginSetting.getPluginId(),
+						pluginSetting.getPluginType()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_I_T, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_I_T, args,
+					pluginSetting);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(PluginSetting pluginSetting) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_I_T,
-			new Object[] {
-				Long.valueOf(pluginSetting.getCompanyId()),
-				
-			pluginSetting.getPluginId(),
-				
-			pluginSetting.getPluginType()
-			});
+		PluginSettingModelImpl pluginSettingModelImpl = (PluginSettingModelImpl)pluginSetting;
+
+		Object[] args = new Object[] {
+				pluginSetting.getCompanyId(), pluginSetting.getPluginId(),
+				pluginSetting.getPluginType()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_I_T, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_I_T, args);
+
+		if ((pluginSettingModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_C_I_T.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					pluginSettingModelImpl.getOriginalCompanyId(),
+					pluginSettingModelImpl.getOriginalPluginId(),
+					pluginSettingModelImpl.getOriginalPluginType()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_I_T, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_I_T, args);
+		}
 	}
 
 	/**
@@ -1000,7 +1047,7 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 	 */
 	public PluginSetting remove(long pluginSettingId)
 		throws NoSuchPluginSettingException, SystemException {
-		return remove(Long.valueOf(pluginSettingId));
+		return remove((Serializable)pluginSettingId);
 	}
 
 	/**
@@ -1118,7 +1165,7 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 			if ((pluginSettingModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(pluginSettingModelImpl.getOriginalCompanyId())
+						pluginSettingModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
@@ -1126,9 +1173,7 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(pluginSettingModelImpl.getCompanyId())
-					};
+				args = new Object[] { pluginSettingModelImpl.getCompanyId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
 					args);
@@ -1141,41 +1186,8 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 			PluginSettingImpl.class, pluginSetting.getPrimaryKey(),
 			pluginSetting);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_I_T,
-				new Object[] {
-					Long.valueOf(pluginSetting.getCompanyId()),
-					
-				pluginSetting.getPluginId(),
-					
-				pluginSetting.getPluginType()
-				}, pluginSetting);
-		}
-		else {
-			if ((pluginSettingModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_I_T.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(pluginSettingModelImpl.getOriginalCompanyId()),
-						
-						pluginSettingModelImpl.getOriginalPluginId(),
-						
-						pluginSettingModelImpl.getOriginalPluginType()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_I_T, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_I_T, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_I_T,
-					new Object[] {
-						Long.valueOf(pluginSetting.getCompanyId()),
-						
-					pluginSetting.getPluginId(),
-						
-					pluginSetting.getPluginType()
-					}, pluginSetting);
-			}
-		}
+		clearUniqueFindersCache(pluginSetting);
+		cacheUniqueFindersCache(pluginSetting);
 
 		return pluginSetting;
 	}
@@ -1205,13 +1217,24 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 	 *
 	 * @param primaryKey the primary key of the plugin setting
 	 * @return the plugin setting
-	 * @throws com.liferay.portal.NoSuchModelException if a plugin setting with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchPluginSettingException if a plugin setting with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public PluginSetting findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchPluginSettingException, SystemException {
+		PluginSetting pluginSetting = fetchByPrimaryKey(primaryKey);
+
+		if (pluginSetting == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchPluginSettingException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return pluginSetting;
 	}
 
 	/**
@@ -1224,18 +1247,7 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 	 */
 	public PluginSetting findByPrimaryKey(long pluginSettingId)
 		throws NoSuchPluginSettingException, SystemException {
-		PluginSetting pluginSetting = fetchByPrimaryKey(pluginSettingId);
-
-		if (pluginSetting == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + pluginSettingId);
-			}
-
-			throw new NoSuchPluginSettingException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				pluginSettingId);
-		}
-
-		return pluginSetting;
+		return findByPrimaryKey((Serializable)pluginSettingId);
 	}
 
 	/**
@@ -1248,20 +1260,8 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 	@Override
 	public PluginSetting fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the plugin setting with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param pluginSettingId the primary key of the plugin setting
-	 * @return the plugin setting, or <code>null</code> if a plugin setting with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public PluginSetting fetchByPrimaryKey(long pluginSettingId)
-		throws SystemException {
 		PluginSetting pluginSetting = (PluginSetting)EntityCacheUtil.getResult(PluginSettingModelImpl.ENTITY_CACHE_ENABLED,
-				PluginSettingImpl.class, pluginSettingId);
+				PluginSettingImpl.class, primaryKey);
 
 		if (pluginSetting == _nullPluginSetting) {
 			return null;
@@ -1274,20 +1274,19 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 				session = openSession();
 
 				pluginSetting = (PluginSetting)session.get(PluginSettingImpl.class,
-						Long.valueOf(pluginSettingId));
+						primaryKey);
 
 				if (pluginSetting != null) {
 					cacheResult(pluginSetting);
 				}
 				else {
 					EntityCacheUtil.putResult(PluginSettingModelImpl.ENTITY_CACHE_ENABLED,
-						PluginSettingImpl.class, pluginSettingId,
-						_nullPluginSetting);
+						PluginSettingImpl.class, primaryKey, _nullPluginSetting);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(PluginSettingModelImpl.ENTITY_CACHE_ENABLED,
-					PluginSettingImpl.class, pluginSettingId);
+					PluginSettingImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -1297,6 +1296,18 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 		}
 
 		return pluginSetting;
+	}
+
+	/**
+	 * Returns the plugin setting with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param pluginSettingId the primary key of the plugin setting
+	 * @return the plugin setting, or <code>null</code> if a plugin setting with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public PluginSetting fetchByPrimaryKey(long pluginSettingId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)pluginSettingId);
 	}
 
 	/**
@@ -1499,128 +1510,6 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
 	private static final String _SQL_SELECT_PLUGINSETTING = "SELECT pluginSetting FROM PluginSetting pluginSetting";
 	private static final String _SQL_SELECT_PLUGINSETTING_WHERE = "SELECT pluginSetting FROM PluginSetting pluginSetting WHERE ";
 	private static final String _SQL_COUNT_PLUGINSETTING = "SELECT COUNT(pluginSetting) FROM PluginSetting pluginSetting";

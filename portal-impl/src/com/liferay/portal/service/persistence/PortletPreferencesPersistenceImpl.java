@@ -14,9 +14,7 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchPortletPreferencesException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -674,16 +672,18 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 			query.append(_SQL_SELECT_PORTLETPREFERENCES_WHERE);
 
+			boolean bindPortletId = false;
+
 			if (portletId == null) {
 				query.append(_FINDER_COLUMN_PORTLETID_PORTLETID_1);
 			}
+			else if (portletId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_PORTLETID_PORTLETID_3);
+			}
 			else {
-				if (portletId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_PORTLETID_PORTLETID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_PORTLETID_PORTLETID_2);
-				}
+				bindPortletId = true;
+
+				query.append(_FINDER_COLUMN_PORTLETID_PORTLETID_2);
 			}
 
 			if (orderByComparator != null) {
@@ -706,7 +706,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (portletId != null) {
+				if (bindPortletId) {
 					qPos.add(portletId);
 				}
 
@@ -900,16 +900,18 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 		query.append(_SQL_SELECT_PORTLETPREFERENCES_WHERE);
 
+		boolean bindPortletId = false;
+
 		if (portletId == null) {
 			query.append(_FINDER_COLUMN_PORTLETID_PORTLETID_1);
 		}
+		else if (portletId.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_PORTLETID_PORTLETID_3);
+		}
 		else {
-			if (portletId.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_PORTLETID_PORTLETID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_PORTLETID_PORTLETID_2);
-			}
+			bindPortletId = true;
+
+			query.append(_FINDER_COLUMN_PORTLETID_PORTLETID_2);
 		}
 
 		if (orderByComparator != null) {
@@ -980,7 +982,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (portletId != null) {
+		if (bindPortletId) {
 			qPos.add(portletId);
 		}
 
@@ -1035,16 +1037,18 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 			query.append(_SQL_COUNT_PORTLETPREFERENCES_WHERE);
 
+			boolean bindPortletId = false;
+
 			if (portletId == null) {
 				query.append(_FINDER_COLUMN_PORTLETID_PORTLETID_1);
 			}
+			else if (portletId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_PORTLETID_PORTLETID_3);
+			}
 			else {
-				if (portletId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_PORTLETID_PORTLETID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_PORTLETID_PORTLETID_2);
-				}
+				bindPortletId = true;
+
+				query.append(_FINDER_COLUMN_PORTLETID_PORTLETID_2);
 			}
 
 			String sql = query.toString();
@@ -1058,7 +1062,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (portletId != null) {
+				if (bindPortletId) {
 					qPos.add(portletId);
 				}
 
@@ -1081,7 +1085,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 	private static final String _FINDER_COLUMN_PORTLETID_PORTLETID_1 = "portletPreferences.portletId IS NULL";
 	private static final String _FINDER_COLUMN_PORTLETID_PORTLETID_2 = "portletPreferences.portletId = ?";
-	private static final String _FINDER_COLUMN_PORTLETID_PORTLETID_3 = "(portletPreferences.portletId IS NULL OR portletPreferences.portletId = ?)";
+	private static final String _FINDER_COLUMN_PORTLETID_PORTLETID_3 = "(portletPreferences.portletId IS NULL OR portletPreferences.portletId = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_P_P = new FinderPath(PortletPreferencesModelImpl.ENTITY_CACHE_ENABLED,
 			PortletPreferencesModelImpl.FINDER_CACHE_ENABLED,
 			PortletPreferencesImpl.class,
@@ -1204,16 +1208,18 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 			query.append(_FINDER_COLUMN_P_P_PLID_2);
 
+			boolean bindPortletId = false;
+
 			if (portletId == null) {
 				query.append(_FINDER_COLUMN_P_P_PORTLETID_1);
 			}
+			else if (portletId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_P_P_PORTLETID_3);
+			}
 			else {
-				if (portletId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_P_P_PORTLETID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_P_P_PORTLETID_2);
-				}
+				bindPortletId = true;
+
+				query.append(_FINDER_COLUMN_P_P_PORTLETID_2);
 			}
 
 			if (orderByComparator != null) {
@@ -1238,7 +1244,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 				qPos.add(plid);
 
-				if (portletId != null) {
+				if (bindPortletId) {
 					qPos.add(portletId);
 				}
 
@@ -1445,16 +1451,18 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 		query.append(_FINDER_COLUMN_P_P_PLID_2);
 
+		boolean bindPortletId = false;
+
 		if (portletId == null) {
 			query.append(_FINDER_COLUMN_P_P_PORTLETID_1);
 		}
+		else if (portletId.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_P_P_PORTLETID_3);
+		}
 		else {
-			if (portletId.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_P_P_PORTLETID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_P_P_PORTLETID_2);
-			}
+			bindPortletId = true;
+
+			query.append(_FINDER_COLUMN_P_P_PORTLETID_2);
 		}
 
 		if (orderByComparator != null) {
@@ -1527,7 +1535,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 		qPos.add(plid);
 
-		if (portletId != null) {
+		if (bindPortletId) {
 			qPos.add(portletId);
 		}
 
@@ -1588,16 +1596,18 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 			query.append(_FINDER_COLUMN_P_P_PLID_2);
 
+			boolean bindPortletId = false;
+
 			if (portletId == null) {
 				query.append(_FINDER_COLUMN_P_P_PORTLETID_1);
 			}
+			else if (portletId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_P_P_PORTLETID_3);
+			}
 			else {
-				if (portletId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_P_P_PORTLETID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_P_P_PORTLETID_2);
-				}
+				bindPortletId = true;
+
+				query.append(_FINDER_COLUMN_P_P_PORTLETID_2);
 			}
 
 			String sql = query.toString();
@@ -1613,7 +1623,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 				qPos.add(plid);
 
-				if (portletId != null) {
+				if (bindPortletId) {
 					qPos.add(portletId);
 				}
 
@@ -1637,7 +1647,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 	private static final String _FINDER_COLUMN_P_P_PLID_2 = "portletPreferences.plid = ? AND ";
 	private static final String _FINDER_COLUMN_P_P_PORTLETID_1 = "portletPreferences.portletId IS NULL";
 	private static final String _FINDER_COLUMN_P_P_PORTLETID_2 = "portletPreferences.portletId = ?";
-	private static final String _FINDER_COLUMN_P_P_PORTLETID_3 = "(portletPreferences.portletId IS NULL OR portletPreferences.portletId = ?)";
+	private static final String _FINDER_COLUMN_P_P_PORTLETID_3 = "(portletPreferences.portletId IS NULL OR portletPreferences.portletId = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_O_O_P = new FinderPath(PortletPreferencesModelImpl.ENTITY_CACHE_ENABLED,
 			PortletPreferencesModelImpl.FINDER_CACHE_ENABLED,
 			PortletPreferencesImpl.class,
@@ -2331,16 +2341,18 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 			query.append(_FINDER_COLUMN_O_P_P_PLID_2);
 
+			boolean bindPortletId = false;
+
 			if (portletId == null) {
 				query.append(_FINDER_COLUMN_O_P_P_PORTLETID_1);
 			}
+			else if (portletId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_O_P_P_PORTLETID_3);
+			}
 			else {
-				if (portletId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_O_P_P_PORTLETID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_O_P_P_PORTLETID_2);
-				}
+				bindPortletId = true;
+
+				query.append(_FINDER_COLUMN_O_P_P_PORTLETID_2);
 			}
 
 			if (orderByComparator != null) {
@@ -2367,7 +2379,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 				qPos.add(plid);
 
-				if (portletId != null) {
+				if (bindPortletId) {
 					qPos.add(portletId);
 				}
 
@@ -2589,16 +2601,18 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 		query.append(_FINDER_COLUMN_O_P_P_PLID_2);
 
+		boolean bindPortletId = false;
+
 		if (portletId == null) {
 			query.append(_FINDER_COLUMN_O_P_P_PORTLETID_1);
 		}
+		else if (portletId.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_O_P_P_PORTLETID_3);
+		}
 		else {
-			if (portletId.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_O_P_P_PORTLETID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_O_P_P_PORTLETID_2);
-			}
+			bindPortletId = true;
+
+			query.append(_FINDER_COLUMN_O_P_P_PORTLETID_2);
 		}
 
 		if (orderByComparator != null) {
@@ -2673,7 +2687,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 		qPos.add(plid);
 
-		if (portletId != null) {
+		if (bindPortletId) {
 			qPos.add(portletId);
 		}
 
@@ -2738,16 +2752,18 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 			query.append(_FINDER_COLUMN_O_P_P_PLID_2);
 
+			boolean bindPortletId = false;
+
 			if (portletId == null) {
 				query.append(_FINDER_COLUMN_O_P_P_PORTLETID_1);
 			}
+			else if (portletId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_O_P_P_PORTLETID_3);
+			}
 			else {
-				if (portletId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_O_P_P_PORTLETID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_O_P_P_PORTLETID_2);
-				}
+				bindPortletId = true;
+
+				query.append(_FINDER_COLUMN_O_P_P_PORTLETID_2);
 			}
 
 			String sql = query.toString();
@@ -2765,7 +2781,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 				qPos.add(plid);
 
-				if (portletId != null) {
+				if (bindPortletId) {
 					qPos.add(portletId);
 				}
 
@@ -2790,7 +2806,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 	private static final String _FINDER_COLUMN_O_P_P_PLID_2 = "portletPreferences.plid = ? AND ";
 	private static final String _FINDER_COLUMN_O_P_P_PORTLETID_1 = "portletPreferences.portletId IS NULL";
 	private static final String _FINDER_COLUMN_O_P_P_PORTLETID_2 = "portletPreferences.portletId = ?";
-	private static final String _FINDER_COLUMN_O_P_P_PORTLETID_3 = "(portletPreferences.portletId IS NULL OR portletPreferences.portletId = ?)";
+	private static final String _FINDER_COLUMN_O_P_P_PORTLETID_3 = "(portletPreferences.portletId IS NULL OR portletPreferences.portletId = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_O_O_P_P = new FinderPath(PortletPreferencesModelImpl.ENTITY_CACHE_ENABLED,
 			PortletPreferencesModelImpl.FINDER_CACHE_ENABLED,
 			PortletPreferencesImpl.class, FINDER_CLASS_NAME_ENTITY,
@@ -2918,16 +2934,18 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 			query.append(_FINDER_COLUMN_O_O_P_P_PLID_2);
 
+			boolean bindPortletId = false;
+
 			if (portletId == null) {
 				query.append(_FINDER_COLUMN_O_O_P_P_PORTLETID_1);
 			}
+			else if (portletId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_O_O_P_P_PORTLETID_3);
+			}
 			else {
-				if (portletId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_O_O_P_P_PORTLETID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_O_O_P_P_PORTLETID_2);
-				}
+				bindPortletId = true;
+
+				query.append(_FINDER_COLUMN_O_O_P_P_PORTLETID_2);
 			}
 
 			String sql = query.toString();
@@ -2947,7 +2965,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 				qPos.add(plid);
 
-				if (portletId != null) {
+				if (bindPortletId) {
 					qPos.add(portletId);
 				}
 
@@ -3042,16 +3060,18 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 			query.append(_FINDER_COLUMN_O_O_P_P_PLID_2);
 
+			boolean bindPortletId = false;
+
 			if (portletId == null) {
 				query.append(_FINDER_COLUMN_O_O_P_P_PORTLETID_1);
 			}
+			else if (portletId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_O_O_P_P_PORTLETID_3);
+			}
 			else {
-				if (portletId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_O_O_P_P_PORTLETID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_O_O_P_P_PORTLETID_2);
-				}
+				bindPortletId = true;
+
+				query.append(_FINDER_COLUMN_O_O_P_P_PORTLETID_2);
 			}
 
 			String sql = query.toString();
@@ -3071,7 +3091,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 				qPos.add(plid);
 
-				if (portletId != null) {
+				if (bindPortletId) {
 					qPos.add(portletId);
 				}
 
@@ -3097,7 +3117,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 	private static final String _FINDER_COLUMN_O_O_P_P_PLID_2 = "portletPreferences.plid = ? AND ";
 	private static final String _FINDER_COLUMN_O_O_P_P_PORTLETID_1 = "portletPreferences.portletId IS NULL";
 	private static final String _FINDER_COLUMN_O_O_P_P_PORTLETID_2 = "portletPreferences.portletId = ?";
-	private static final String _FINDER_COLUMN_O_O_P_P_PORTLETID_3 = "(portletPreferences.portletId IS NULL OR portletPreferences.portletId = ?)";
+	private static final String _FINDER_COLUMN_O_O_P_P_PORTLETID_3 = "(portletPreferences.portletId IS NULL OR portletPreferences.portletId = '')";
 
 	/**
 	 * Caches the portlet preferences in the entity cache if it is enabled.
@@ -3111,11 +3131,9 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_O_O_P_P,
 			new Object[] {
-				Long.valueOf(portletPreferences.getOwnerId()),
-				Integer.valueOf(portletPreferences.getOwnerType()),
-				Long.valueOf(portletPreferences.getPlid()),
-				
-			portletPreferences.getPortletId()
+				portletPreferences.getOwnerId(),
+				portletPreferences.getOwnerType(), portletPreferences.getPlid(),
+				portletPreferences.getPortletId()
 			}, portletPreferences);
 
 		portletPreferences.resetOriginalValues();
@@ -3191,16 +3209,66 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		}
 	}
 
+	protected void cacheUniqueFindersCache(
+		PortletPreferences portletPreferences) {
+		if (portletPreferences.isNew()) {
+			Object[] args = new Object[] {
+					portletPreferences.getOwnerId(),
+					portletPreferences.getOwnerType(),
+					portletPreferences.getPlid(),
+					portletPreferences.getPortletId()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_O_O_P_P, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_O_O_P_P, args,
+				portletPreferences);
+		}
+		else {
+			PortletPreferencesModelImpl portletPreferencesModelImpl = (PortletPreferencesModelImpl)portletPreferences;
+
+			if ((portletPreferencesModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_O_O_P_P.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						portletPreferences.getOwnerId(),
+						portletPreferences.getOwnerType(),
+						portletPreferences.getPlid(),
+						portletPreferences.getPortletId()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_O_O_P_P, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_O_O_P_P, args,
+					portletPreferences);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(
 		PortletPreferences portletPreferences) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_O_O_P_P,
-			new Object[] {
-				Long.valueOf(portletPreferences.getOwnerId()),
-				Integer.valueOf(portletPreferences.getOwnerType()),
-				Long.valueOf(portletPreferences.getPlid()),
-				
-			portletPreferences.getPortletId()
-			});
+		PortletPreferencesModelImpl portletPreferencesModelImpl = (PortletPreferencesModelImpl)portletPreferences;
+
+		Object[] args = new Object[] {
+				portletPreferences.getOwnerId(),
+				portletPreferences.getOwnerType(), portletPreferences.getPlid(),
+				portletPreferences.getPortletId()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_O_O_P_P, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_O_O_P_P, args);
+
+		if ((portletPreferencesModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_O_O_P_P.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					portletPreferencesModelImpl.getOriginalOwnerId(),
+					portletPreferencesModelImpl.getOriginalOwnerType(),
+					portletPreferencesModelImpl.getOriginalPlid(),
+					portletPreferencesModelImpl.getOriginalPortletId()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_O_O_P_P, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_O_O_P_P, args);
+		}
 	}
 
 	/**
@@ -3228,7 +3296,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 	 */
 	public PortletPreferences remove(long portletPreferencesId)
 		throws NoSuchPortletPreferencesException, SystemException {
-		return remove(Long.valueOf(portletPreferencesId));
+		return remove((Serializable)portletPreferencesId);
 	}
 
 	/**
@@ -3346,16 +3414,14 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 			if ((portletPreferencesModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_PLID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(portletPreferencesModelImpl.getOriginalPlid())
+						portletPreferencesModelImpl.getOriginalPlid()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_PLID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_PLID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(portletPreferencesModelImpl.getPlid())
-					};
+				args = new Object[] { portletPreferencesModelImpl.getPlid() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_PLID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_PLID,
@@ -3384,8 +3450,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 			if ((portletPreferencesModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_P_P.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(portletPreferencesModelImpl.getOriginalPlid()),
-						
+						portletPreferencesModelImpl.getOriginalPlid(),
 						portletPreferencesModelImpl.getOriginalPortletId()
 					};
 
@@ -3394,8 +3459,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 					args);
 
 				args = new Object[] {
-						Long.valueOf(portletPreferencesModelImpl.getPlid()),
-						
+						portletPreferencesModelImpl.getPlid(),
 						portletPreferencesModelImpl.getPortletId()
 					};
 
@@ -3407,9 +3471,9 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 			if ((portletPreferencesModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_O_O_P.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(portletPreferencesModelImpl.getOriginalOwnerId()),
-						Integer.valueOf(portletPreferencesModelImpl.getOriginalOwnerType()),
-						Long.valueOf(portletPreferencesModelImpl.getOriginalPlid())
+						portletPreferencesModelImpl.getOriginalOwnerId(),
+						portletPreferencesModelImpl.getOriginalOwnerType(),
+						portletPreferencesModelImpl.getOriginalPlid()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_O_O_P, args);
@@ -3417,9 +3481,9 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 					args);
 
 				args = new Object[] {
-						Long.valueOf(portletPreferencesModelImpl.getOwnerId()),
-						Integer.valueOf(portletPreferencesModelImpl.getOwnerType()),
-						Long.valueOf(portletPreferencesModelImpl.getPlid())
+						portletPreferencesModelImpl.getOwnerId(),
+						portletPreferencesModelImpl.getOwnerType(),
+						portletPreferencesModelImpl.getPlid()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_O_O_P, args);
@@ -3430,9 +3494,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 			if ((portletPreferencesModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_O_P_P.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Integer.valueOf(portletPreferencesModelImpl.getOriginalOwnerType()),
-						Long.valueOf(portletPreferencesModelImpl.getOriginalPlid()),
-						
+						portletPreferencesModelImpl.getOriginalOwnerType(),
+						portletPreferencesModelImpl.getOriginalPlid(),
 						portletPreferencesModelImpl.getOriginalPortletId()
 					};
 
@@ -3441,9 +3504,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 					args);
 
 				args = new Object[] {
-						Integer.valueOf(portletPreferencesModelImpl.getOwnerType()),
-						Long.valueOf(portletPreferencesModelImpl.getPlid()),
-						
+						portletPreferencesModelImpl.getOwnerType(),
+						portletPreferencesModelImpl.getPlid(),
 						portletPreferencesModelImpl.getPortletId()
 					};
 
@@ -3457,41 +3519,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 			PortletPreferencesImpl.class, portletPreferences.getPrimaryKey(),
 			portletPreferences);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_O_O_P_P,
-				new Object[] {
-					Long.valueOf(portletPreferences.getOwnerId()),
-					Integer.valueOf(portletPreferences.getOwnerType()),
-					Long.valueOf(portletPreferences.getPlid()),
-					
-				portletPreferences.getPortletId()
-				}, portletPreferences);
-		}
-		else {
-			if ((portletPreferencesModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_O_O_P_P.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(portletPreferencesModelImpl.getOriginalOwnerId()),
-						Integer.valueOf(portletPreferencesModelImpl.getOriginalOwnerType()),
-						Long.valueOf(portletPreferencesModelImpl.getOriginalPlid()),
-						
-						portletPreferencesModelImpl.getOriginalPortletId()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_O_O_P_P, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_O_O_P_P, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_O_O_P_P,
-					new Object[] {
-						Long.valueOf(portletPreferences.getOwnerId()),
-						Integer.valueOf(portletPreferences.getOwnerType()),
-						Long.valueOf(portletPreferences.getPlid()),
-						
-					portletPreferences.getPortletId()
-					}, portletPreferences);
-			}
-		}
+		clearUniqueFindersCache(portletPreferences);
+		cacheUniqueFindersCache(portletPreferences);
 
 		return portletPreferences;
 	}
@@ -3522,13 +3551,24 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 	 *
 	 * @param primaryKey the primary key of the portlet preferences
 	 * @return the portlet preferences
-	 * @throws com.liferay.portal.NoSuchModelException if a portlet preferences with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchPortletPreferencesException if a portlet preferences with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public PortletPreferences findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchPortletPreferencesException, SystemException {
+		PortletPreferences portletPreferences = fetchByPrimaryKey(primaryKey);
+
+		if (portletPreferences == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchPortletPreferencesException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return portletPreferences;
 	}
 
 	/**
@@ -3541,19 +3581,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 	 */
 	public PortletPreferences findByPrimaryKey(long portletPreferencesId)
 		throws NoSuchPortletPreferencesException, SystemException {
-		PortletPreferences portletPreferences = fetchByPrimaryKey(portletPreferencesId);
-
-		if (portletPreferences == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-					portletPreferencesId);
-			}
-
-			throw new NoSuchPortletPreferencesException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				portletPreferencesId);
-		}
-
-		return portletPreferences;
+		return findByPrimaryKey((Serializable)portletPreferencesId);
 	}
 
 	/**
@@ -3566,20 +3594,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 	@Override
 	public PortletPreferences fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the portlet preferences with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param portletPreferencesId the primary key of the portlet preferences
-	 * @return the portlet preferences, or <code>null</code> if a portlet preferences with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public PortletPreferences fetchByPrimaryKey(long portletPreferencesId)
-		throws SystemException {
 		PortletPreferences portletPreferences = (PortletPreferences)EntityCacheUtil.getResult(PortletPreferencesModelImpl.ENTITY_CACHE_ENABLED,
-				PortletPreferencesImpl.class, portletPreferencesId);
+				PortletPreferencesImpl.class, primaryKey);
 
 		if (portletPreferences == _nullPortletPreferences) {
 			return null;
@@ -3592,20 +3608,20 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 				session = openSession();
 
 				portletPreferences = (PortletPreferences)session.get(PortletPreferencesImpl.class,
-						Long.valueOf(portletPreferencesId));
+						primaryKey);
 
 				if (portletPreferences != null) {
 					cacheResult(portletPreferences);
 				}
 				else {
 					EntityCacheUtil.putResult(PortletPreferencesModelImpl.ENTITY_CACHE_ENABLED,
-						PortletPreferencesImpl.class, portletPreferencesId,
+						PortletPreferencesImpl.class, primaryKey,
 						_nullPortletPreferences);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(PortletPreferencesModelImpl.ENTITY_CACHE_ENABLED,
-					PortletPreferencesImpl.class, portletPreferencesId);
+					PortletPreferencesImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -3615,6 +3631,18 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		}
 
 		return portletPreferences;
+	}
+
+	/**
+	 * Returns the portlet preferences with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param portletPreferencesId the primary key of the portlet preferences
+	 * @return the portlet preferences, or <code>null</code> if a portlet preferences with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public PortletPreferences fetchByPrimaryKey(long portletPreferencesId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)portletPreferencesId);
 	}
 
 	/**
@@ -3817,128 +3845,6 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
 	private static final String _SQL_SELECT_PORTLETPREFERENCES = "SELECT portletPreferences FROM PortletPreferences portletPreferences";
 	private static final String _SQL_SELECT_PORTLETPREFERENCES_WHERE = "SELECT portletPreferences FROM PortletPreferences portletPreferences WHERE ";
 	private static final String _SQL_COUNT_PORTLETPREFERENCES = "SELECT COUNT(portletPreferences) FROM PortletPreferences portletPreferences";

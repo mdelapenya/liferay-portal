@@ -15,8 +15,6 @@
 package com.liferay.portal.service.persistence;
 
 import com.liferay.portal.NoSuchBrowserTrackerException;
-import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -300,8 +298,7 @@ public class BrowserTrackerPersistenceImpl extends BasePersistenceImpl<BrowserTr
 			browserTracker);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_USERID,
-			new Object[] { Long.valueOf(browserTracker.getUserId()) },
-			browserTracker);
+			new Object[] { browserTracker.getUserId() }, browserTracker);
 
 		browserTracker.resetOriginalValues();
 	}
@@ -375,9 +372,45 @@ public class BrowserTrackerPersistenceImpl extends BasePersistenceImpl<BrowserTr
 		}
 	}
 
+	protected void cacheUniqueFindersCache(BrowserTracker browserTracker) {
+		if (browserTracker.isNew()) {
+			Object[] args = new Object[] { browserTracker.getUserId() };
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_USERID, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_USERID, args,
+				browserTracker);
+		}
+		else {
+			BrowserTrackerModelImpl browserTrackerModelImpl = (BrowserTrackerModelImpl)browserTracker;
+
+			if ((browserTrackerModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_USERID.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] { browserTracker.getUserId() };
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_USERID, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_USERID, args,
+					browserTracker);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(BrowserTracker browserTracker) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_USERID,
-			new Object[] { Long.valueOf(browserTracker.getUserId()) });
+		BrowserTrackerModelImpl browserTrackerModelImpl = (BrowserTrackerModelImpl)browserTracker;
+
+		Object[] args = new Object[] { browserTracker.getUserId() };
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_USERID, args);
+
+		if ((browserTrackerModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_USERID.getColumnBitmask()) != 0) {
+			args = new Object[] { browserTrackerModelImpl.getOriginalUserId() };
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_USERID, args);
+		}
 	}
 
 	/**
@@ -405,7 +438,7 @@ public class BrowserTrackerPersistenceImpl extends BasePersistenceImpl<BrowserTr
 	 */
 	public BrowserTracker remove(long browserTrackerId)
 		throws NoSuchBrowserTrackerException, SystemException {
-		return remove(Long.valueOf(browserTrackerId));
+		return remove((Serializable)browserTrackerId);
 	}
 
 	/**
@@ -490,8 +523,6 @@ public class BrowserTrackerPersistenceImpl extends BasePersistenceImpl<BrowserTr
 
 		boolean isNew = browserTracker.isNew();
 
-		BrowserTrackerModelImpl browserTrackerModelImpl = (BrowserTrackerModelImpl)browserTracker;
-
 		Session session = null;
 
 		try {
@@ -523,27 +554,8 @@ public class BrowserTrackerPersistenceImpl extends BasePersistenceImpl<BrowserTr
 			BrowserTrackerImpl.class, browserTracker.getPrimaryKey(),
 			browserTracker);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_USERID,
-				new Object[] { Long.valueOf(browserTracker.getUserId()) },
-				browserTracker);
-		}
-		else {
-			if ((browserTrackerModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_USERID.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(browserTrackerModelImpl.getOriginalUserId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_USERID, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_USERID,
-					new Object[] { Long.valueOf(browserTracker.getUserId()) },
-					browserTracker);
-			}
-		}
+		clearUniqueFindersCache(browserTracker);
+		cacheUniqueFindersCache(browserTracker);
 
 		return browserTracker;
 	}
@@ -570,13 +582,24 @@ public class BrowserTrackerPersistenceImpl extends BasePersistenceImpl<BrowserTr
 	 *
 	 * @param primaryKey the primary key of the browser tracker
 	 * @return the browser tracker
-	 * @throws com.liferay.portal.NoSuchModelException if a browser tracker with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchBrowserTrackerException if a browser tracker with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public BrowserTracker findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchBrowserTrackerException, SystemException {
+		BrowserTracker browserTracker = fetchByPrimaryKey(primaryKey);
+
+		if (browserTracker == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchBrowserTrackerException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return browserTracker;
 	}
 
 	/**
@@ -589,18 +612,7 @@ public class BrowserTrackerPersistenceImpl extends BasePersistenceImpl<BrowserTr
 	 */
 	public BrowserTracker findByPrimaryKey(long browserTrackerId)
 		throws NoSuchBrowserTrackerException, SystemException {
-		BrowserTracker browserTracker = fetchByPrimaryKey(browserTrackerId);
-
-		if (browserTracker == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + browserTrackerId);
-			}
-
-			throw new NoSuchBrowserTrackerException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				browserTrackerId);
-		}
-
-		return browserTracker;
+		return findByPrimaryKey((Serializable)browserTrackerId);
 	}
 
 	/**
@@ -613,20 +625,8 @@ public class BrowserTrackerPersistenceImpl extends BasePersistenceImpl<BrowserTr
 	@Override
 	public BrowserTracker fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the browser tracker with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param browserTrackerId the primary key of the browser tracker
-	 * @return the browser tracker, or <code>null</code> if a browser tracker with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public BrowserTracker fetchByPrimaryKey(long browserTrackerId)
-		throws SystemException {
 		BrowserTracker browserTracker = (BrowserTracker)EntityCacheUtil.getResult(BrowserTrackerModelImpl.ENTITY_CACHE_ENABLED,
-				BrowserTrackerImpl.class, browserTrackerId);
+				BrowserTrackerImpl.class, primaryKey);
 
 		if (browserTracker == _nullBrowserTracker) {
 			return null;
@@ -639,20 +639,20 @@ public class BrowserTrackerPersistenceImpl extends BasePersistenceImpl<BrowserTr
 				session = openSession();
 
 				browserTracker = (BrowserTracker)session.get(BrowserTrackerImpl.class,
-						Long.valueOf(browserTrackerId));
+						primaryKey);
 
 				if (browserTracker != null) {
 					cacheResult(browserTracker);
 				}
 				else {
 					EntityCacheUtil.putResult(BrowserTrackerModelImpl.ENTITY_CACHE_ENABLED,
-						BrowserTrackerImpl.class, browserTrackerId,
+						BrowserTrackerImpl.class, primaryKey,
 						_nullBrowserTracker);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(BrowserTrackerModelImpl.ENTITY_CACHE_ENABLED,
-					BrowserTrackerImpl.class, browserTrackerId);
+					BrowserTrackerImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -662,6 +662,18 @@ public class BrowserTrackerPersistenceImpl extends BasePersistenceImpl<BrowserTr
 		}
 
 		return browserTracker;
+	}
+
+	/**
+	 * Returns the browser tracker with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param browserTrackerId the primary key of the browser tracker
+	 * @return the browser tracker, or <code>null</code> if a browser tracker with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public BrowserTracker fetchByPrimaryKey(long browserTrackerId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)browserTrackerId);
 	}
 
 	/**
@@ -864,128 +876,6 @@ public class BrowserTrackerPersistenceImpl extends BasePersistenceImpl<BrowserTr
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
 	private static final String _SQL_SELECT_BROWSERTRACKER = "SELECT browserTracker FROM BrowserTracker browserTracker";
 	private static final String _SQL_SELECT_BROWSERTRACKER_WHERE = "SELECT browserTracker FROM BrowserTracker browserTracker WHERE ";
 	private static final String _SQL_COUNT_BROWSERTRACKER = "SELECT COUNT(browserTracker) FROM BrowserTracker browserTracker";
