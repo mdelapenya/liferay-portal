@@ -28,6 +28,7 @@ import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.TransactionalCallbackAwareExecutionTestListener;
 import com.liferay.portal.util.GroupTestUtil;
+import com.liferay.portal.util.LayoutTestUtil;
 import com.liferay.portlet.sites.util.SitesUtil;
 
 import org.junit.Assert;
@@ -132,7 +133,7 @@ public class LayoutExportImportTest extends BaseExportImportTestCase {
 		throws Exception {
 
 		LayoutSetPrototype layoutSetPrototype =
-			ServiceTestUtil.addLayoutSetPrototype(
+			LayoutTestUtil.addLayoutSetPrototype(
 				ServiceTestUtil.randomString());
 
 		Group layoutSetPrototypeGroup = layoutSetPrototype.getGroup();
@@ -141,10 +142,10 @@ public class LayoutExportImportTest extends BaseExportImportTestCase {
 			LayoutLocalServiceUtil.getLayoutsCount(
 				layoutSetPrototypeGroup, true);
 
-		ServiceTestUtil.addLayout(
+		LayoutTestUtil.addLayout(
 			layoutSetPrototypeGroup.getGroupId(),
 			ServiceTestUtil.randomString(), true);
-		ServiceTestUtil.addLayout(
+		LayoutTestUtil.addLayout(
 			layoutSetPrototypeGroup.getGroupId(),
 			ServiceTestUtil.randomString(), true);
 
@@ -176,7 +177,7 @@ public class LayoutExportImportTest extends BaseExportImportTestCase {
 
 			if (useLayoutPrototype) {
 				LayoutPrototype layoutPrototype =
-					ServiceTestUtil.addLayoutPrototype(
+					LayoutTestUtil.addLayoutPrototype(
 						ServiceTestUtil.randomString());
 
 				Layout layoutPrototypeLayout = layoutPrototype.getLayout();
@@ -184,7 +185,7 @@ public class LayoutExportImportTest extends BaseExportImportTestCase {
 				updateLayoutTemplateId(layoutPrototypeLayout, "2_2_columns");
 
 				if (layoutPrototypeToLayoutSetPrototype) {
-					Layout layoutSetPrototypeLayout = ServiceTestUtil.addLayout(
+					Layout layoutSetPrototypeLayout = LayoutTestUtil.addLayout(
 						layoutSetPrototypeGroup.getGroupId(),
 						ServiceTestUtil.randomString(), true, layoutPrototype,
 						layoutLinkEnabled);
@@ -196,7 +197,7 @@ public class LayoutExportImportTest extends BaseExportImportTestCase {
 						layoutSetPrototypeLayout.getFriendlyURL());
 				}
 				else {
-					layout = ServiceTestUtil.addLayout(
+					layout = LayoutTestUtil.addLayout(
 						group.getGroupId(), ServiceTestUtil.randomString(),
 						false, layoutPrototype, layoutLinkEnabled);
 				}
@@ -215,7 +216,7 @@ public class LayoutExportImportTest extends BaseExportImportTestCase {
 				}
 			}
 			else {
-				layout = ServiceTestUtil.addLayout(
+				layout = LayoutTestUtil.addLayout(
 					layoutSetPrototypeGroup.getGroupId(),
 					ServiceTestUtil.randomString(), true);
 			}
