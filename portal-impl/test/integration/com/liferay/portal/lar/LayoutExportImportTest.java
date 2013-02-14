@@ -27,6 +27,7 @@ import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.TransactionalCallbackAwareExecutionTestListener;
+import com.liferay.portal.util.GroupTestUtil;
 import com.liferay.portlet.sites.util.SitesUtil;
 
 import org.junit.Assert;
@@ -147,7 +148,7 @@ public class LayoutExportImportTest extends BaseExportImportTestCase {
 			layoutSetPrototypeGroup.getGroupId(),
 			ServiceTestUtil.randomString(), true);
 
-		Group group = ServiceTestUtil.addGroup();
+		Group group = GroupTestUtil.addGroup();
 
 		SitesUtil.updateLayoutSetPrototypesLinks(
 			group, layoutSetPrototype.getLayoutSetPrototypeId(), 0,
