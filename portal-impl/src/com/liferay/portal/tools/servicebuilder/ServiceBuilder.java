@@ -15,6 +15,7 @@
 package com.liferay.portal.tools.servicebuilder;
 
 import com.liferay.portal.freemarker.FreeMarkerUtil;
+import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.dao.db.IndexMetadata;
 import com.liferay.portal.kernel.dao.db.IndexMetadataFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -551,6 +552,7 @@ public class ServiceBuilder {
 		_tplModelHintsXml = _getTplProperty(
 			"model_hints_xml", _tplModelHintsXml);
 		_tplModelImpl = _getTplProperty("model_impl", _tplModelImpl);
+		_tplModelImplTest = _getTplProperty("model_impl", _tplModelImplTest);
 		_tplModelSoap = _getTplProperty("model_soap", _tplModelSoap);
 		_tplModelWrapper = _getTplProperty("model_wrapper", _tplModelWrapper);
 		_tplPersistence = _getTplProperty("persistence", _tplPersistence);
@@ -735,6 +737,8 @@ public class ServiceBuilder {
 
 							if (Validator.isNotNull(_testDir)) {
 								_createPersistenceTest(entity);
+
+								_createModelImplTest(entity);
 							}
 
 							_createModelImpl(entity);
@@ -2297,6 +2301,57 @@ public class ServiceBuilder {
 			_outputPath + "/model/impl/" + entity.getName() + "ModelImpl.java");
 
 		writeFile(modelFile, content, _author);
+	}
+
+	private void _createModelImplTest(Entity entity) throws Exception {
+
+		// Only methods with @AutoEscape and not being overridden at ModelImpl
+		// will have test for escaping
+
+		JavaClass modelJavaClass = _getJavaClass(
+			_serviceOutputPath + "/model/" + entity.getName() + "Model.java");
+
+		JavaMethod[] modelMethods = _getMethods(modelJavaClass);
+
+		List<String> autoEscapedAnnotatedMethods =
+			new ArrayList<String>();
+
+		for (JavaMethod method : modelMethods) {
+			if (_hasAnnotationMethod(method, AutoEscape.class)) {
+				autoEscapedAnnotatedMethods.add(method.getName());
+			}
+		}
+
+		// remove those methods that are overriden in the Impl
+
+		JavaClass modelImplJavaClass = _getJavaClass(
+			_outputPath + "/model/impl/" + entity.getName() + "Impl.java");
+
+		JavaMethod[] modelImplMethods = _getMethods(modelImplJavaClass, true);
+
+		for (JavaMethod implMethod : modelImplMethods) {
+			if (_hasAnnotationMethod(implMethod, Override.class)) {
+				autoEscapedAnnotatedMethods.remove(implMethod.getName());
+			}
+		}
+
+		Map<String, Object> context = _getContext();
+
+		context.put("entity", entity);
+
+		context.put("autoEscapedAnnotatedMethods", autoEscapedAnnotatedMethods);
+
+		// Content
+
+		String content = _processTemplate(_tplModelImplTest, context);
+
+		// Write file
+
+		File modelImplTestFile = new File(
+			_testOutputPath + "/model/impl/" + entity.getName() +
+				"ModelImplTest.java");
+
+		writeFile(modelImplTestFile, content, _author);
 	}
 
 	private void _createModelSoap(Entity entity) throws Exception {
@@ -4268,6 +4323,10 @@ public class ServiceBuilder {
 		JavaMethod[] methods = javaClass.getMethods(superclasses);
 
 		for (JavaMethod method : methods) {
+			if (method.getClass().getName().contains("Delegate")) {
+				System.out.println(method.getClass());
+			}
+
 			Arrays.sort(method.getExceptions());
 		}
 
@@ -4363,6 +4422,22 @@ public class ServiceBuilder {
 		Collections.sort(transients);
 
 		return transients;
+	}
+
+	private boolean _hasAnnotationMethod(JavaMethod method, Class clazz) {
+		Annotation[] annotations = method.getAnnotations();
+
+		for (Annotation annotation : annotations) {
+			Type annotationType = annotation.getType();
+
+			String annotationClassName = annotationType.getValue();
+
+			if (annotationClassName.equals(clazz.getName())) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private boolean _hasHttpMethods(JavaClass javaClass) {
@@ -4961,6 +5036,7 @@ public class ServiceBuilder {
 	private String _tplModelClp = _TPL_ROOT + "model_clp.ftl";
 	private String _tplModelHintsXml = _TPL_ROOT + "model_hints_xml.ftl";
 	private String _tplModelImpl = _TPL_ROOT + "model_impl.ftl";
+	private String _tplModelImplTest = _TPL_ROOT + "model_impl_test.ftl";
 	private String _tplModelSoap = _TPL_ROOT + "model_soap.ftl";
 	private String _tplModelWrapper = _TPL_ROOT + "model_wrapper.ftl";
 	private String _tplOrmXml = _TPL_ROOT + "orm_xml.ftl";
