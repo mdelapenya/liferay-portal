@@ -18,10 +18,13 @@ import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
+import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.OrderByComparatorFactoryUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.service.persistence.BasePersistence;
@@ -185,6 +188,19 @@ public class SocialRequestPersistenceTest {
 		}
 		catch (NoSuchRequestException nsee) {
 		}
+	}
+
+	@Test
+	public void testFindAllOrderBy() throws Exception {
+		OrderByComparator obc = OrderByComparatorFactoryUtil.create("SocialRequest",
+				"uuid_", true, "requestId", true, "groupId", true, "companyId",
+				true, "userId", true, "createDate", true, "modifiedDate", true,
+				"classNameId", true, "classPK", true, "type_", true,
+				"extraData", true, "receiverUserId", true, "status", true);
+
+		_persistence.findAll(QueryUtil.ALL_POS, QueryUtil.ALL_POS, obc);
+
+		Assert.assertTrue(true);
 	}
 
 	@Test

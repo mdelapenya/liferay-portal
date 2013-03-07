@@ -18,10 +18,13 @@ import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
+import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.OrderByComparatorFactoryUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.service.persistence.BasePersistence;
@@ -162,6 +165,17 @@ public class AnnouncementsDeliveryPersistenceTest {
 		}
 		catch (NoSuchDeliveryException nsee) {
 		}
+	}
+
+	@Test
+	public void testFindAllOrderBy() throws Exception {
+		OrderByComparator obc = OrderByComparatorFactoryUtil.create("AnnouncementsDelivery",
+				"deliveryId", true, "companyId", true, "userId", true, "type_",
+				true, "email", true, "sms", true, "website", true);
+
+		_persistence.findAll(QueryUtil.ALL_POS, QueryUtil.ALL_POS, obc);
+
+		Assert.assertTrue(true);
 	}
 
 	@Test
