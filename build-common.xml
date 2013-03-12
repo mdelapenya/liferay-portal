@@ -547,6 +547,8 @@ Please set the environment variable ANT_OPTS to the recommended value of
 		<if>
 			<equals arg1="${junit.code.coverage}" arg2="true" />
 			<then>
+				<mkdir dir="test-coverage/${test.type}" />
+
 				<cobertura-report
 					datafile="test-coverage/${test.type}/cobertura.ser"
 					destdir="test-coverage/${test.type}"
