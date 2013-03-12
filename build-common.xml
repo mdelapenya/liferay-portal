@@ -549,27 +549,32 @@ Please set the environment variable ANT_OPTS to the recommended value of
 			<then>
 				<mkdir dir="test-coverage/${test.type}" />
 
-				<cobertura-report
-					datafile="test-coverage/${test.type}/cobertura.ser"
-					destdir="test-coverage/${test.type}"
-					format="${junit.cobertura.report.format}"
-				>
-					<fileset dir="${project.dir}/portal-impl/src">
-						<include name="**/*.java" />
-					</fileset>
-					<fileset dir="${project.dir}/portal-impl/test/unit">
-						<include name="**/*.java" />
-					</fileset>
-					<fileset dir="${project.dir}/portal-service/src">
-						<include name="**/*.java" />
-					</fileset>
-					<fileset dir="${project.dir}/util-java/src">
-						<include name="**/*.java" />
-					</fileset>
-					<fileset dir="${project.dir}/util-taglib/src">
-						<include name="**/*.java" />
-					</fileset>
-				</cobertura-report>
+				<if>
+					<available file="test-coverage/${test.type}/cobertura.ser" type="file" />
+					<then>
+						<cobertura-report
+							datafile="test-coverage/${test.type}/cobertura.ser"
+							destdir="test-coverage/${test.type}"
+							format="${junit.cobertura.report.format}"
+						>
+							<fileset dir="${project.dir}/portal-impl/src">
+								<include name="**/*.java" />
+							</fileset>
+							<fileset dir="${project.dir}/portal-impl/test/unit">
+								<include name="**/*.java" />
+							</fileset>
+							<fileset dir="${project.dir}/portal-service/src">
+								<include name="**/*.java" />
+							</fileset>
+							<fileset dir="${project.dir}/util-java/src">
+								<include name="**/*.java" />
+							</fileset>
+							<fileset dir="${project.dir}/util-taglib/src">
+								<include name="**/*.java" />
+							</fileset>
+						</cobertura-report>
+					</then>
+				</if>
 			</then>
 		</if>
 	</target>
