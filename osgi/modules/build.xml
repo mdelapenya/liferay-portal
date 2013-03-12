@@ -64,6 +64,7 @@
 
 	<target name="test-integration">
 		<antcall target="loop-modules">
+            <param name="test.type" value="integration" />
 			<param name="loop.modules.cmd" value="test-integration-module" />
 		</antcall>
 	</target>
@@ -74,7 +75,8 @@
 
 	<target name="test-unit">
 		<antcall target="loop-modules">
-			<param name="loop.modules.cmd" value="test-unit-module" />
+            <param name="test.type" value="unit" />
+            <param name="loop.modules.cmd" value="test-unit-module" />
 		</antcall>
 	</target>
 
