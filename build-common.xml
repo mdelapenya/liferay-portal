@@ -773,7 +773,9 @@ Please set the environment variable ANT_OPTS to the recommended value of
 			<property name="test.type" value="${test.type}" />
 		</ant>
 
-		<antcall target="report-test-coverage" />
+		<antcall target="report-test-coverage">
+			<param name="" value="${test.type}" />
+		</antcall>
 	</target>
 
 	<target name="test-cmd">
@@ -828,7 +830,9 @@ Please set the environment variable ANT_OPTS to the recommended value of
 			<property name="test.type" value="integration" />
 		</ant>
 
-		<antcall target="report-test-coverage" />
+		<antcall target="report-test-coverage">
+			<param name="test.type" value="integration" />
+		</antcall>
 	</target>
 
 	<target name="test-method" depends="compile,compile-test">
@@ -859,6 +863,8 @@ Please set the environment variable ANT_OPTS to the recommended value of
 			<property name="test.type" value="unit" />
 		</ant>
 
-		<antcall target="report-test-coverage" />
+		<antcall target="report-test-coverage" >
+			<param name="test.type" value="unit" />
+		</antcall>
 	</target>
 </project>
