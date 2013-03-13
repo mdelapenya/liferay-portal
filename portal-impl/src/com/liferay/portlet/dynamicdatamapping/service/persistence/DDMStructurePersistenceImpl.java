@@ -24,7 +24,6 @@ import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -219,7 +218,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			}
 			else
 			 if (pagination) {
-				query.append(DDMStructureModelImpl.ORDER_BY_JPQL);
+				query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -229,7 +228,9 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMStructureImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -493,12 +494,14 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			}
 		}
 		else {
-			query.append(DDMStructureModelImpl.ORDER_BY_JPQL);
+			query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMStructureImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -581,7 +584,10 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -606,9 +612,9 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "ddmStructure.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "ddmStructure.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(ddmStructure.uuid IS NULL OR ddmStructure.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "ddmStructure.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "ddmStructure.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(ddmStructure.uuid_ IS NULL OR ddmStructure.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(DDMStructureModelImpl.ENTITY_CACHE_ENABLED,
 			DDMStructureModelImpl.FINDER_CACHE_ENABLED, DDMStructureImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
@@ -726,7 +732,9 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMStructureImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -836,7 +844,10 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -863,9 +874,9 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "ddmStructure.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "ddmStructure.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(ddmStructure.uuid IS NULL OR ddmStructure.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "ddmStructure.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "ddmStructure.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(ddmStructure.uuid_ IS NULL OR ddmStructure.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "ddmStructure.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(DDMStructureModelImpl.ENTITY_CACHE_ENABLED,
 			DDMStructureModelImpl.FINDER_CACHE_ENABLED, DDMStructureImpl.class,
@@ -1007,7 +1018,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			}
 			else
 			 if (pagination) {
-				query.append(DDMStructureModelImpl.ORDER_BY_JPQL);
+				query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1017,7 +1028,9 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMStructureImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1299,12 +1312,14 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			}
 		}
 		else {
-			query.append(DDMStructureModelImpl.ORDER_BY_JPQL);
+			query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMStructureImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1395,7 +1410,10 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1422,9 +1440,9 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "ddmStructure.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "ddmStructure.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(ddmStructure.uuid IS NULL OR ddmStructure.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "ddmStructure.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "ddmStructure.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(ddmStructure.uuid_ IS NULL OR ddmStructure.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "ddmStructure.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_GROUPID = new FinderPath(DDMStructureModelImpl.ENTITY_CACHE_ENABLED,
 			DDMStructureModelImpl.FINDER_CACHE_ENABLED, DDMStructureImpl.class,
@@ -1545,7 +1563,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			}
 			else
 			 if (pagination) {
-				query.append(DDMStructureModelImpl.ORDER_BY_JPQL);
+				query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1555,7 +1573,9 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMStructureImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1807,12 +1827,14 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			}
 		}
 		else {
-			query.append(DDMStructureModelImpl.ORDER_BY_JPQL);
+			query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMStructureImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1925,10 +1947,10 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DDMStructureModelImpl.ORDER_BY_JPQL);
+				query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DDMStructureModelImpl.ORDER_BY_SQL);
+				query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2105,10 +2127,10 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DDMStructureModelImpl.ORDER_BY_JPQL);
+				query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DDMStructureModelImpl.ORDER_BY_SQL);
+				query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2248,10 +2270,10 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DDMStructureModelImpl.ORDER_BY_JPQL);
+				query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DDMStructureModelImpl.ORDER_BY_SQL);
+				query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2407,7 +2429,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			}
 			else
 			 if (pagination) {
-				query.append(DDMStructureModelImpl.ORDER_BY_JPQL);
+				query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2417,7 +2439,9 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMStructureImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2499,7 +2523,10 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2569,7 +2596,10 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2834,7 +2864,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			}
 			else
 			 if (pagination) {
-				query.append(DDMStructureModelImpl.ORDER_BY_JPQL);
+				query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2844,7 +2874,9 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMStructureImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3097,12 +3129,14 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			}
 		}
 		else {
-			query.append(DDMStructureModelImpl.ORDER_BY_JPQL);
+			query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMStructureImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3171,7 +3205,10 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3330,7 +3367,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			}
 			else
 			 if (pagination) {
-				query.append(DDMStructureModelImpl.ORDER_BY_JPQL);
+				query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3340,7 +3377,9 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMStructureImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3607,12 +3646,14 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			}
 		}
 		else {
-			query.append(DDMStructureModelImpl.ORDER_BY_JPQL);
+			query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMStructureImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3697,7 +3738,10 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3856,7 +3900,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			}
 			else
 			 if (pagination) {
-				query.append(DDMStructureModelImpl.ORDER_BY_JPQL);
+				query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3866,7 +3910,9 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMStructureImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4134,12 +4180,14 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			}
 		}
 		else {
-			query.append(DDMStructureModelImpl.ORDER_BY_JPQL);
+			query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMStructureImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -4260,10 +4308,10 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DDMStructureModelImpl.ORDER_BY_JPQL);
+				query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DDMStructureModelImpl.ORDER_BY_SQL);
+				query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -4445,10 +4493,10 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DDMStructureModelImpl.ORDER_BY_JPQL);
+				query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DDMStructureModelImpl.ORDER_BY_SQL);
+				query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -4603,10 +4651,10 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DDMStructureModelImpl.ORDER_BY_JPQL);
+				query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DDMStructureModelImpl.ORDER_BY_SQL);
+				query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -4778,7 +4826,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			}
 			else
 			 if (pagination) {
-				query.append(DDMStructureModelImpl.ORDER_BY_JPQL);
+				query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -4788,7 +4836,9 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMStructureImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4878,7 +4928,10 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4962,7 +5015,10 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5260,7 +5316,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			}
 			else
 			 if (pagination) {
-				query.append(DDMStructureModelImpl.ORDER_BY_JPQL);
+				query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -5270,7 +5326,9 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMStructureImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5538,12 +5596,14 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			}
 		}
 		else {
-			query.append(DDMStructureModelImpl.ORDER_BY_JPQL);
+			query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMStructureImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -5620,7 +5680,10 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5783,7 +5846,9 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMStructureImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5901,7 +5966,10 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6101,7 +6169,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			}
 			else
 			 if (pagination) {
-				query.append(DDMStructureModelImpl.ORDER_BY_JPQL);
+				query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -6111,7 +6179,9 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMStructureImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6426,12 +6496,14 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			}
 		}
 		else {
-			query.append(DDMStructureModelImpl.ORDER_BY_JPQL);
+			query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMStructureImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -6588,10 +6660,10 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DDMStructureModelImpl.ORDER_BY_JPQL);
+				query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DDMStructureModelImpl.ORDER_BY_SQL);
+				query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -6808,10 +6880,10 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DDMStructureModelImpl.ORDER_BY_JPQL);
+				query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DDMStructureModelImpl.ORDER_BY_SQL);
+				query.append(DDMStructureModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -6937,7 +7009,10 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7782,7 +7857,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 				sql = _SQL_SELECT_DDMSTRUCTURE;
 
 				if (pagination) {
-					sql = sql.concat(DDMStructureModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(DDMStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -7791,7 +7866,9 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMStructureImpl.class);
 
 				if (!pagination) {
 					list = (List<DDMStructure>)QueryUtil.list(q, getDialect(),
@@ -7850,7 +7927,10 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_DDMSTRUCTURE);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_DDMSTRUCTURE);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -7963,7 +8043,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 					sql = _SQL_GETDLFILEENTRYTYPES;
 
 					if (pagination) {
-						sql = sql.concat(com.liferay.portlet.documentlibrary.model.impl.DLFileEntryTypeModelImpl.ORDER_BY_SQL);
+						sql = sql.concat(com.liferay.portlet.documentlibrary.model.impl.DLFileEntryTypeModelImpl.ORDER_BY_ENTITY_TABLE);
 					}
 				}
 
@@ -8591,10 +8671,10 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 		private SqlUpdate _sqlUpdate;
 	}
 
-	private static final String _SQL_SELECT_DDMSTRUCTURE = "SELECT ddmStructure FROM DDMStructure ddmStructure";
-	private static final String _SQL_SELECT_DDMSTRUCTURE_WHERE = "SELECT ddmStructure FROM DDMStructure ddmStructure WHERE ";
-	private static final String _SQL_COUNT_DDMSTRUCTURE = "SELECT COUNT(ddmStructure) FROM DDMStructure ddmStructure";
-	private static final String _SQL_COUNT_DDMSTRUCTURE_WHERE = "SELECT COUNT(ddmStructure) FROM DDMStructure ddmStructure WHERE ";
+	private static final String _SQL_SELECT_DDMSTRUCTURE = "SELECT {ddmStructure.*} FROM DDMStructure ddmStructure";
+	private static final String _SQL_SELECT_DDMSTRUCTURE_WHERE = "SELECT {ddmStructure.*} FROM DDMStructure ddmStructure WHERE ";
+	private static final String _SQL_COUNT_DDMSTRUCTURE = "SELECT COUNT(*) AS COUNT_VALUE FROM DDMStructure ddmStructure";
+	private static final String _SQL_COUNT_DDMSTRUCTURE_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM DDMStructure ddmStructure WHERE ";
 	private static final String _SQL_GETDLFILEENTRYTYPES = "SELECT {DLFileEntryType.*} FROM DLFileEntryType INNER JOIN DLFileEntryTypes_DDMStructures ON (DLFileEntryTypes_DDMStructures.fileEntryTypeId = DLFileEntryType.fileEntryTypeId) WHERE (DLFileEntryTypes_DDMStructures.structureId = ?)";
 	private static final String _SQL_GETDLFILEENTRYTYPESSIZE = "SELECT COUNT(*) AS COUNT_VALUE FROM DLFileEntryTypes_DDMStructures WHERE structureId = ?";
 	private static final String _SQL_CONTAINSDLFILEENTRYTYPE = "SELECT COUNT(*) AS COUNT_VALUE FROM DLFileEntryTypes_DDMStructures WHERE structureId = ? AND fileEntryTypeId = ?";
@@ -8607,6 +8687,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 	private static final String _FILTER_SQL_COUNT_DDMSTRUCTURE_WHERE = "SELECT COUNT(DISTINCT ddmStructure.structureId) AS COUNT_VALUE FROM DDMStructure ddmStructure WHERE ";
 	private static final String _FILTER_ENTITY_ALIAS = "ddmStructure";
 	private static final String _FILTER_ENTITY_TABLE = "DDMStructure";
+	private static final String _ENTITY_ALIAS = "ddmStructure";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "ddmStructure.";
 	private static final String _ORDER_BY_ENTITY_TABLE = "DDMStructure.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No DDMStructure exists with the primary key ";
