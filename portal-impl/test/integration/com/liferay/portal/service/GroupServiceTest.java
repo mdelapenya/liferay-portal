@@ -15,6 +15,7 @@
 package com.liferay.portal.service;
 
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -157,13 +158,13 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	public void testGetParentSites() throws Exception {
-		getParentSites(false);
+	public void testSelectableParentSite() throws Exception {
+		selectableParentSite(false);
 	}
 
 	@Test
-	public void testGetParentSitesStaging() throws Exception {
-		getParentSites(true);
+	public void testSelectableParentSiteStaging() throws Exception {
+		selectableParentSite(true);
 	}
 
 	@Test
@@ -268,7 +269,7 @@ public class GroupServiceTest {
 			true);
 	}
 
-	protected void getParentSites(boolean staging) throws Exception {
+	protected void selectableParentSite(boolean staging) throws Exception {
 		Group group = GroupTestUtil.addGroup();
 
 		Assert.assertTrue(group.isRoot());
@@ -289,39 +290,25 @@ public class GroupServiceTest {
 
 			Assert.assertTrue(group.hasStagingGroup());
 
-			if (group.isStagingGroup()) {
-				excludedGroupIds.add(group.getLiveGroupId());
-			}
-			else if (group.hasStagingGroup()) {
-				excludedGroupIds.add(group.getStagingGroup().getGroupId());
-			}
+			excludedGroupIds.add(group.getLiveGroupId());
 		}
 
 		groupParams.put("excludedGroupIds", excludedGroupIds);
 
-		List<Group> parentCandidates = GroupLocalServiceUtil.search(
-			group.getCompanyId(), null, keywords, groupParams, -1, -1, null);
+		List<Group> selectableGroups = GroupLocalServiceUtil.search(
+			group.getCompanyId(), null, keywords, groupParams,
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 
-		for (Group parentCandidate : parentCandidates) {
-			long parentCandidateGroupId = parentCandidate.getGroupId();
+		for (Group selectableGroup : selectableGroups) {
+			long selectableGroupId = selectableGroup.getGroupId();
 
-			if (parentCandidateGroupId == group.getGroupId()) {
+			if (selectableGroupId == group.getGroupId()) {
 				Assert.fail("A group cannot be its own parent");
 			}
 			else if (staging) {
-				if (group.isStagingGroup()) {
-					if (parentCandidateGroupId == group.getLiveGroupId()) {
-						Assert.fail(
-							"A group cannot have its live group as parent");
-					}
-				}
-				else if (group.hasStagingGroup()) {
-					Group stagingGroup = group.getStagingGroup();
-
-					if (parentCandidateGroupId == stagingGroup.getGroupId()) {
-						Assert.fail(
-							"A group cannot have its staying group as parent");
-					}
+				if (selectableGroupId == group.getLiveGroupId()) {
+					Assert.fail(
+						"A group cannot have its live group as parent");
 				}
 			}
 		}
