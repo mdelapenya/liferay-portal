@@ -1464,6 +1464,23 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 		</#if>
 	</#list>
 
+	<#if entity.getBadNamedColumns()?size != 0>
+		@Override
+	    protected Set<String> getBadColumnNames() {
+			return SetUtil.fromArray(new String[] {
+
+			<#list entity.getBadNamedColumns() as column>
+				"${column.name}"
+
+				<#if column_has_next>
+					,
+				</#if>
+			</#list>
+
+			});
+		}
+	</#if>
+
 	<#if entity.isHierarchicalTree()>
 		/**
 		 * Rebuilds the ${entity.humanNames} tree for the scope using the modified pre-order tree traversal algorithm.
