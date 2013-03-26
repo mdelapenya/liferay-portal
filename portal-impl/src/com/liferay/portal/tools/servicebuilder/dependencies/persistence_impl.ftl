@@ -1464,6 +1464,13 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 		</#if>
 	</#list>
 
+	<#if entity.getBadNamedColumns()?size != 0>
+		@Override
+	    protected String[] getBadColumnNames() {
+			return _BAD_COLUMN_NAMES;
+		}
+	</#if>
+
 	<#if entity.isHierarchicalTree()>
 		/**
 		 * Rebuilds the ${entity.humanNames} tree for the scope using the modified pre-order tree traversal algorithm.
@@ -2018,6 +2025,18 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 			private SqlUpdate _sqlUpdate;
 
 		}
+	</#if>
+
+	<#if entity.getBadNamedColumns()?size != 0>
+		private static final String[] _BAD_COLUMN_NAMES = new String[]{
+			<#list entity.getBadNamedColumns() as column>
+				"${column.name}"
+
+				<#if column_has_next>
+					,
+				</#if>
+			</#list>
+		};
 	</#if>
 
 	private static final String _SQL_SELECT_${entity.alias?upper_case} = "SELECT ${entity.alias} FROM ${entity.name} ${entity.alias}";
