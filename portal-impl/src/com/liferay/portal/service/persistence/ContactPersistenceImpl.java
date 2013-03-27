@@ -186,7 +186,7 @@ public class ContactPersistenceImpl extends BasePersistenceImpl<Contact>
 				query = new StringBundler(3);
 			}
 
-			query.append(_SQL_SELECT_CONTACT_WHERE);
+			query.append(_SQL_SELECT_CONTACT__WHERE);
 
 			query.append(_FINDER_COLUMN_COMPANYID_COMPANYID_2);
 
@@ -396,7 +396,7 @@ public class ContactPersistenceImpl extends BasePersistenceImpl<Contact>
 			query = new StringBundler(3);
 		}
 
-		query.append(_SQL_SELECT_CONTACT_WHERE);
+		query.append(_SQL_SELECT_CONTACT__WHERE);
 
 		query.append(_FINDER_COLUMN_COMPANYID_COMPANYID_2);
 
@@ -519,7 +519,7 @@ public class ContactPersistenceImpl extends BasePersistenceImpl<Contact>
 		if (count == null) {
 			StringBundler query = new StringBundler(2);
 
-			query.append(_SQL_COUNT_CONTACT_WHERE);
+			query.append(_SQL_COUNT_CONTACT__WHERE);
 
 			query.append(_FINDER_COLUMN_COMPANYID_COMPANYID_2);
 
@@ -553,7 +553,7 @@ public class ContactPersistenceImpl extends BasePersistenceImpl<Contact>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_COMPANYID_COMPANYID_2 = "contact.companyId = ?";
+	private static final String _FINDER_COLUMN_COMPANYID_COMPANYID_2 = "contact_.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_ACCOUNTID =
 		new FinderPath(ContactModelImpl.ENTITY_CACHE_ENABLED,
 			ContactModelImpl.FINDER_CACHE_ENABLED, ContactImpl.class,
@@ -661,7 +661,7 @@ public class ContactPersistenceImpl extends BasePersistenceImpl<Contact>
 				query = new StringBundler(3);
 			}
 
-			query.append(_SQL_SELECT_CONTACT_WHERE);
+			query.append(_SQL_SELECT_CONTACT__WHERE);
 
 			query.append(_FINDER_COLUMN_ACCOUNTID_ACCOUNTID_2);
 
@@ -871,7 +871,7 @@ public class ContactPersistenceImpl extends BasePersistenceImpl<Contact>
 			query = new StringBundler(3);
 		}
 
-		query.append(_SQL_SELECT_CONTACT_WHERE);
+		query.append(_SQL_SELECT_CONTACT__WHERE);
 
 		query.append(_FINDER_COLUMN_ACCOUNTID_ACCOUNTID_2);
 
@@ -994,7 +994,7 @@ public class ContactPersistenceImpl extends BasePersistenceImpl<Contact>
 		if (count == null) {
 			StringBundler query = new StringBundler(2);
 
-			query.append(_SQL_COUNT_CONTACT_WHERE);
+			query.append(_SQL_COUNT_CONTACT__WHERE);
 
 			query.append(_FINDER_COLUMN_ACCOUNTID_ACCOUNTID_2);
 
@@ -1028,7 +1028,7 @@ public class ContactPersistenceImpl extends BasePersistenceImpl<Contact>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_ACCOUNTID_ACCOUNTID_2 = "contact.accountId = ?";
+	private static final String _FINDER_COLUMN_ACCOUNTID_ACCOUNTID_2 = "contact_.accountId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C_C = new FinderPath(ContactModelImpl.ENTITY_CACHE_ENABLED,
 			ContactModelImpl.FINDER_CACHE_ENABLED, ContactImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_C",
@@ -1143,7 +1143,7 @@ public class ContactPersistenceImpl extends BasePersistenceImpl<Contact>
 				query = new StringBundler(4);
 			}
 
-			query.append(_SQL_SELECT_CONTACT_WHERE);
+			query.append(_SQL_SELECT_CONTACT__WHERE);
 
 			query.append(_FINDER_COLUMN_C_C_CLASSNAMEID_2);
 
@@ -1371,7 +1371,7 @@ public class ContactPersistenceImpl extends BasePersistenceImpl<Contact>
 			query = new StringBundler(3);
 		}
 
-		query.append(_SQL_SELECT_CONTACT_WHERE);
+		query.append(_SQL_SELECT_CONTACT__WHERE);
 
 		query.append(_FINDER_COLUMN_C_C_CLASSNAMEID_2);
 
@@ -1502,7 +1502,7 @@ public class ContactPersistenceImpl extends BasePersistenceImpl<Contact>
 		if (count == null) {
 			StringBundler query = new StringBundler(3);
 
-			query.append(_SQL_COUNT_CONTACT_WHERE);
+			query.append(_SQL_COUNT_CONTACT__WHERE);
 
 			query.append(_FINDER_COLUMN_C_C_CLASSNAMEID_2);
 
@@ -1540,8 +1540,8 @@ public class ContactPersistenceImpl extends BasePersistenceImpl<Contact>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_C_C_CLASSNAMEID_2 = "contact.classNameId = ? AND ";
-	private static final String _FINDER_COLUMN_C_C_CLASSPK_2 = "contact.classPK = ?";
+	private static final String _FINDER_COLUMN_C_C_CLASSNAMEID_2 = "contact_.classNameId = ? AND ";
+	private static final String _FINDER_COLUMN_C_C_CLASSPK_2 = "contact_.classPK = ?";
 
 	/**
 	 * Caches the contact in the entity cache if it is enabled.
@@ -2033,7 +2033,7 @@ public class ContactPersistenceImpl extends BasePersistenceImpl<Contact>
 				query = new StringBundler(2 +
 						(orderByComparator.getOrderByFields().length * 3));
 
-				query.append(_SQL_SELECT_CONTACT);
+				query.append(_SQL_SELECT_CONTACT_);
 
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
 					orderByComparator);
@@ -2041,7 +2041,7 @@ public class ContactPersistenceImpl extends BasePersistenceImpl<Contact>
 				sql = query.toString();
 			}
 			else {
-				sql = _SQL_SELECT_CONTACT;
+				sql = _SQL_SELECT_CONTACT_;
 
 				if (pagination) {
 					sql = sql.concat(ContactModelImpl.ORDER_BY_JPQL);
@@ -2112,7 +2112,7 @@ public class ContactPersistenceImpl extends BasePersistenceImpl<Contact>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_CONTACT);
+				Query q = session.createQuery(_SQL_COUNT_CONTACT_);
 
 				count = (Long)q.uniqueResult();
 
@@ -2165,11 +2165,11 @@ public class ContactPersistenceImpl extends BasePersistenceImpl<Contact>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_CONTACT = "SELECT contact FROM Contact contact";
-	private static final String _SQL_SELECT_CONTACT_WHERE = "SELECT contact FROM Contact contact WHERE ";
-	private static final String _SQL_COUNT_CONTACT = "SELECT COUNT(contact) FROM Contact contact";
-	private static final String _SQL_COUNT_CONTACT_WHERE = "SELECT COUNT(contact) FROM Contact contact WHERE ";
-	private static final String _ORDER_BY_ENTITY_ALIAS = "contact.";
+	private static final String _SQL_SELECT_CONTACT_ = "SELECT contact_ FROM Contact contact_";
+	private static final String _SQL_SELECT_CONTACT__WHERE = "SELECT contact_ FROM Contact contact_ WHERE ";
+	private static final String _SQL_COUNT_CONTACT_ = "SELECT COUNT(contact_) FROM Contact contact_";
+	private static final String _SQL_COUNT_CONTACT__WHERE = "SELECT COUNT(contact_) FROM Contact contact_ WHERE ";
+	private static final String _ORDER_BY_ENTITY_ALIAS = "contact_.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No Contact exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No Contact exists with the key {";
 	private static final boolean _HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE = com.liferay.portal.util.PropsValues.HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE;
