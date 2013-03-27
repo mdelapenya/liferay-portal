@@ -49,7 +49,7 @@ public class DoPrivilegedFactory implements BeanPostProcessor {
 
 		Class<?> clazz = bean.getClass();
 
-		if (!_isDoPrivileged(clazz) && !_isFinderOrPersistence(beanName)) {
+		if (!_isDoPrivileged(clazz)) {
 			return bean;
 		}
 
@@ -83,20 +83,6 @@ public class DoPrivilegedFactory implements BeanPostProcessor {
 
 		return false;
 	}
-
-	private boolean _isFinderOrPersistence(String beanName) {
-		if (beanName.endsWith(_BEAN_NAME_SUFFIX_FINDER) ||
-			beanName.endsWith(_BEAN_NAME_SUFFIX_PERSISTENCE)) {
-
-			return true;
-		}
-
-		return false;
-	}
-
-	private static final String _BEAN_NAME_SUFFIX_FINDER = "Finder";
-
-	private static final String _BEAN_NAME_SUFFIX_PERSISTENCE = "Persistence";
 
 	private static Log _log = LogFactoryUtil.getLog(DoPrivilegedFactory.class);
 
