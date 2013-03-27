@@ -488,7 +488,7 @@ public class AccountPersistenceImpl extends BasePersistenceImpl<Account>
 				query = new StringBundler(2 +
 						(orderByComparator.getOrderByFields().length * 3));
 
-				query.append(_SQL_SELECT_ACCOUNT);
+				query.append(_SQL_SELECT_ACCOUNT_);
 
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
 					orderByComparator);
@@ -496,7 +496,7 @@ public class AccountPersistenceImpl extends BasePersistenceImpl<Account>
 				sql = query.toString();
 			}
 			else {
-				sql = _SQL_SELECT_ACCOUNT;
+				sql = _SQL_SELECT_ACCOUNT_;
 
 				if (pagination) {
 					sql = sql.concat(AccountModelImpl.ORDER_BY_JPQL);
@@ -567,7 +567,7 @@ public class AccountPersistenceImpl extends BasePersistenceImpl<Account>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_ACCOUNT);
+				Query q = session.createQuery(_SQL_COUNT_ACCOUNT_);
 
 				count = (Long)q.uniqueResult();
 
@@ -586,6 +586,11 @@ public class AccountPersistenceImpl extends BasePersistenceImpl<Account>
 		}
 
 		return count.intValue();
+	}
+
+	@Override
+	protected String[] getBadColumnNames() {
+		return _BAD_COLUMN_NAMES;
 	}
 
 	/**
@@ -620,9 +625,12 @@ public class AccountPersistenceImpl extends BasePersistenceImpl<Account>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_ACCOUNT = "SELECT account FROM Account account";
-	private static final String _SQL_COUNT_ACCOUNT = "SELECT COUNT(account) FROM Account account";
-	private static final String _ORDER_BY_ENTITY_ALIAS = "account.";
+	private static final String[] _BAD_COLUMN_NAMES = new String[] {
+			"type", "size"
+		};
+	private static final String _SQL_SELECT_ACCOUNT_ = "SELECT account_ FROM Account account_";
+	private static final String _SQL_COUNT_ACCOUNT_ = "SELECT COUNT(account_) FROM Account account_";
+	private static final String _ORDER_BY_ENTITY_ALIAS = "account_.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No Account exists with the primary key ";
 	private static final boolean _HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE = com.liferay.portal.util.PropsValues.HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE;
 	private static Log _log = LogFactoryUtil.getLog(AccountPersistenceImpl.class);

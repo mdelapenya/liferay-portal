@@ -195,7 +195,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 				query = new StringBundler(3);
 			}
 
-			query.append(_SQL_SELECT_USER_WHERE);
+			query.append(_SQL_SELECT_USER__WHERE);
 
 			boolean bindUuid = false;
 
@@ -416,7 +416,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			query = new StringBundler(3);
 		}
 
-		query.append(_SQL_SELECT_USER_WHERE);
+		query.append(_SQL_SELECT_USER__WHERE);
 
 		boolean bindUuid = false;
 
@@ -553,7 +553,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		if (count == null) {
 			StringBundler query = new StringBundler(2);
 
-			query.append(_SQL_COUNT_USER_WHERE);
+			query.append(_SQL_COUNT_USER__WHERE);
 
 			boolean bindUuid = false;
 
@@ -601,9 +601,12 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "user.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "user.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(user.uuid IS NULL OR user.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "user_.uuid IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "user_.uuid = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(user_.uuid IS NULL OR user_.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1_SQL = "user_.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2_SQL = "user_.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3_SQL = "(user_.uuid_ IS NULL OR user_.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
 			UserModelImpl.FINDER_CACHE_ENABLED, UserImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByUuid_C",
@@ -719,7 +722,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 				query = new StringBundler(4);
 			}
 
-			query.append(_SQL_SELECT_USER_WHERE);
+			query.append(_SQL_SELECT_USER__WHERE);
 
 			boolean bindUuid = false;
 
@@ -958,7 +961,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			query = new StringBundler(3);
 		}
 
-		query.append(_SQL_SELECT_USER_WHERE);
+		query.append(_SQL_SELECT_USER__WHERE);
 
 		boolean bindUuid = false;
 
@@ -1103,7 +1106,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		if (count == null) {
 			StringBundler query = new StringBundler(3);
 
-			query.append(_SQL_COUNT_USER_WHERE);
+			query.append(_SQL_COUNT_USER__WHERE);
 
 			boolean bindUuid = false;
 
@@ -1155,10 +1158,13 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "user.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "user.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(user.uuid IS NULL OR user.uuid = '') AND ";
-	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "user.companyId = ?";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "user_.uuid IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "user_.uuid = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(user_.uuid IS NULL OR user_.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1_SQL = "user_.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2_SQL = "user_.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3_SQL = "(user_.uuid_ IS NULL OR user_.uuid_ = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "user_.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_COMPANYID =
 		new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
 			UserModelImpl.FINDER_CACHE_ENABLED, UserImpl.class,
@@ -1265,7 +1271,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 				query = new StringBundler(3);
 			}
 
-			query.append(_SQL_SELECT_USER_WHERE);
+			query.append(_SQL_SELECT_USER__WHERE);
 
 			query.append(_FINDER_COLUMN_COMPANYID_COMPANYID_2);
 
@@ -1474,7 +1480,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			query = new StringBundler(3);
 		}
 
-		query.append(_SQL_SELECT_USER_WHERE);
+		query.append(_SQL_SELECT_USER__WHERE);
 
 		query.append(_FINDER_COLUMN_COMPANYID_COMPANYID_2);
 
@@ -1597,7 +1603,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		if (count == null) {
 			StringBundler query = new StringBundler(2);
 
-			query.append(_SQL_COUNT_USER_WHERE);
+			query.append(_SQL_COUNT_USER__WHERE);
 
 			query.append(_FINDER_COLUMN_COMPANYID_COMPANYID_2);
 
@@ -1631,7 +1637,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_COMPANYID_COMPANYID_2 = "user.companyId = ?";
+	private static final String _FINDER_COLUMN_COMPANYID_COMPANYID_2 = "user_.companyId = ?";
 	public static final FinderPath FINDER_PATH_FETCH_BY_CONTACTID = new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
 			UserModelImpl.FINDER_CACHE_ENABLED, UserImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByContactId",
@@ -1715,7 +1721,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		if (result == null) {
 			StringBundler query = new StringBundler(3);
 
-			query.append(_SQL_SELECT_USER_WHERE);
+			query.append(_SQL_SELECT_USER__WHERE);
 
 			query.append(_FINDER_COLUMN_CONTACTID_CONTACTID_2);
 
@@ -1802,7 +1808,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		if (count == null) {
 			StringBundler query = new StringBundler(2);
 
-			query.append(_SQL_COUNT_USER_WHERE);
+			query.append(_SQL_COUNT_USER__WHERE);
 
 			query.append(_FINDER_COLUMN_CONTACTID_CONTACTID_2);
 
@@ -1836,7 +1842,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_CONTACTID_CONTACTID_2 = "user.contactId = ?";
+	private static final String _FINDER_COLUMN_CONTACTID_CONTACTID_2 = "user_.contactId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_EMAILADDRESS =
 		new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
 			UserModelImpl.FINDER_CACHE_ENABLED, UserImpl.class,
@@ -1948,7 +1954,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 				query = new StringBundler(3);
 			}
 
-			query.append(_SQL_SELECT_USER_WHERE);
+			query.append(_SQL_SELECT_USER__WHERE);
 
 			boolean bindEmailAddress = false;
 
@@ -2173,7 +2179,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			query = new StringBundler(3);
 		}
 
-		query.append(_SQL_SELECT_USER_WHERE);
+		query.append(_SQL_SELECT_USER__WHERE);
 
 		boolean bindEmailAddress = false;
 
@@ -2312,7 +2318,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		if (count == null) {
 			StringBundler query = new StringBundler(2);
 
-			query.append(_SQL_COUNT_USER_WHERE);
+			query.append(_SQL_COUNT_USER__WHERE);
 
 			boolean bindEmailAddress = false;
 
@@ -2360,9 +2366,9 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_1 = "user.emailAddress IS NULL";
-	private static final String _FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_2 = "user.emailAddress = ?";
-	private static final String _FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_3 = "(user.emailAddress IS NULL OR user.emailAddress = '')";
+	private static final String _FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_1 = "user_.emailAddress IS NULL";
+	private static final String _FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_2 = "user_.emailAddress = ?";
+	private static final String _FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_3 = "(user_.emailAddress IS NULL OR user_.emailAddress = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_PORTRAITID = new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
 			UserModelImpl.FINDER_CACHE_ENABLED, UserImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByPortraitId",
@@ -2446,7 +2452,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		if (result == null) {
 			StringBundler query = new StringBundler(3);
 
-			query.append(_SQL_SELECT_USER_WHERE);
+			query.append(_SQL_SELECT_USER__WHERE);
 
 			query.append(_FINDER_COLUMN_PORTRAITID_PORTRAITID_2);
 
@@ -2540,7 +2546,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		if (count == null) {
 			StringBundler query = new StringBundler(2);
 
-			query.append(_SQL_COUNT_USER_WHERE);
+			query.append(_SQL_COUNT_USER__WHERE);
 
 			query.append(_FINDER_COLUMN_PORTRAITID_PORTRAITID_2);
 
@@ -2574,7 +2580,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_PORTRAITID_PORTRAITID_2 = "user.portraitId = ?";
+	private static final String _FINDER_COLUMN_PORTRAITID_PORTRAITID_2 = "user_.portraitId = ?";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_U = new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
 			UserModelImpl.FINDER_CACHE_ENABLED, UserImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByC_U",
@@ -2667,7 +2673,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		if (result == null) {
 			StringBundler query = new StringBundler(4);
 
-			query.append(_SQL_SELECT_USER_WHERE);
+			query.append(_SQL_SELECT_USER__WHERE);
 
 			query.append(_FINDER_COLUMN_C_U_COMPANYID_2);
 
@@ -2762,7 +2768,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		if (count == null) {
 			StringBundler query = new StringBundler(3);
 
-			query.append(_SQL_COUNT_USER_WHERE);
+			query.append(_SQL_COUNT_USER__WHERE);
 
 			query.append(_FINDER_COLUMN_C_U_COMPANYID_2);
 
@@ -2800,8 +2806,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_C_U_COMPANYID_2 = "user.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_U_USERID_2 = "user.userId = ?";
+	private static final String _FINDER_COLUMN_C_U_COMPANYID_2 = "user_.companyId = ? AND ";
+	private static final String _FINDER_COLUMN_C_U_USERID_2 = "user_.userId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C_CD = new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
 			UserModelImpl.FINDER_CACHE_ENABLED, UserImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_CD",
@@ -2916,7 +2922,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 				query = new StringBundler(4);
 			}
 
-			query.append(_SQL_SELECT_USER_WHERE);
+			query.append(_SQL_SELECT_USER__WHERE);
 
 			query.append(_FINDER_COLUMN_C_CD_COMPANYID_2);
 
@@ -3153,7 +3159,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			query = new StringBundler(3);
 		}
 
-		query.append(_SQL_SELECT_USER_WHERE);
+		query.append(_SQL_SELECT_USER__WHERE);
 
 		query.append(_FINDER_COLUMN_C_CD_COMPANYID_2);
 
@@ -3295,7 +3301,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		if (count == null) {
 			StringBundler query = new StringBundler(3);
 
-			query.append(_SQL_COUNT_USER_WHERE);
+			query.append(_SQL_COUNT_USER__WHERE);
 
 			query.append(_FINDER_COLUMN_C_CD_COMPANYID_2);
 
@@ -3344,9 +3350,9 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_C_CD_COMPANYID_2 = "user.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_CD_CREATEDATE_1 = "user.createDate IS NULL";
-	private static final String _FINDER_COLUMN_C_CD_CREATEDATE_2 = "user.createDate = ?";
+	private static final String _FINDER_COLUMN_C_CD_COMPANYID_2 = "user_.companyId = ? AND ";
+	private static final String _FINDER_COLUMN_C_CD_CREATEDATE_1 = "user_.createDate IS NULL";
+	private static final String _FINDER_COLUMN_C_CD_CREATEDATE_2 = "user_.createDate = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C_MD = new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
 			UserModelImpl.FINDER_CACHE_ENABLED, UserImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_MD",
@@ -3461,7 +3467,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 				query = new StringBundler(4);
 			}
 
-			query.append(_SQL_SELECT_USER_WHERE);
+			query.append(_SQL_SELECT_USER__WHERE);
 
 			query.append(_FINDER_COLUMN_C_MD_COMPANYID_2);
 
@@ -3698,7 +3704,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			query = new StringBundler(3);
 		}
 
-		query.append(_SQL_SELECT_USER_WHERE);
+		query.append(_SQL_SELECT_USER__WHERE);
 
 		query.append(_FINDER_COLUMN_C_MD_COMPANYID_2);
 
@@ -3840,7 +3846,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		if (count == null) {
 			StringBundler query = new StringBundler(3);
 
-			query.append(_SQL_COUNT_USER_WHERE);
+			query.append(_SQL_COUNT_USER__WHERE);
 
 			query.append(_FINDER_COLUMN_C_MD_COMPANYID_2);
 
@@ -3889,9 +3895,9 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_C_MD_COMPANYID_2 = "user.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_MD_MODIFIEDDATE_1 = "user.modifiedDate IS NULL";
-	private static final String _FINDER_COLUMN_C_MD_MODIFIEDDATE_2 = "user.modifiedDate = ?";
+	private static final String _FINDER_COLUMN_C_MD_COMPANYID_2 = "user_.companyId = ? AND ";
+	private static final String _FINDER_COLUMN_C_MD_MODIFIEDDATE_1 = "user_.modifiedDate IS NULL";
+	private static final String _FINDER_COLUMN_C_MD_MODIFIEDDATE_2 = "user_.modifiedDate = ?";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_DU = new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
 			UserModelImpl.FINDER_CACHE_ENABLED, UserImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByC_DU",
@@ -3984,7 +3990,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		if (result == null) {
 			StringBundler query = new StringBundler(4);
 
-			query.append(_SQL_SELECT_USER_WHERE);
+			query.append(_SQL_SELECT_USER__WHERE);
 
 			query.append(_FINDER_COLUMN_C_DU_COMPANYID_2);
 
@@ -4086,7 +4092,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		if (count == null) {
 			StringBundler query = new StringBundler(3);
 
-			query.append(_SQL_COUNT_USER_WHERE);
+			query.append(_SQL_COUNT_USER__WHERE);
 
 			query.append(_FINDER_COLUMN_C_DU_COMPANYID_2);
 
@@ -4124,8 +4130,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_C_DU_COMPANYID_2 = "user.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_DU_DEFAULTUSER_2 = "user.defaultUser = ?";
+	private static final String _FINDER_COLUMN_C_DU_COMPANYID_2 = "user_.companyId = ? AND ";
+	private static final String _FINDER_COLUMN_C_DU_DEFAULTUSER_2 = "user_.defaultUser = ?";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_SN = new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
 			UserModelImpl.FINDER_CACHE_ENABLED, UserImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByC_SN",
@@ -4218,7 +4224,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		if (result == null) {
 			StringBundler query = new StringBundler(4);
 
-			query.append(_SQL_SELECT_USER_WHERE);
+			query.append(_SQL_SELECT_USER__WHERE);
 
 			query.append(_FINDER_COLUMN_C_SN_COMPANYID_2);
 
@@ -4328,7 +4334,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		if (count == null) {
 			StringBundler query = new StringBundler(3);
 
-			query.append(_SQL_COUNT_USER_WHERE);
+			query.append(_SQL_COUNT_USER__WHERE);
 
 			query.append(_FINDER_COLUMN_C_SN_COMPANYID_2);
 
@@ -4380,10 +4386,10 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_C_SN_COMPANYID_2 = "user.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_SN_SCREENNAME_1 = "user.screenName IS NULL";
-	private static final String _FINDER_COLUMN_C_SN_SCREENNAME_2 = "user.screenName = ?";
-	private static final String _FINDER_COLUMN_C_SN_SCREENNAME_3 = "(user.screenName IS NULL OR user.screenName = '')";
+	private static final String _FINDER_COLUMN_C_SN_COMPANYID_2 = "user_.companyId = ? AND ";
+	private static final String _FINDER_COLUMN_C_SN_SCREENNAME_1 = "user_.screenName IS NULL";
+	private static final String _FINDER_COLUMN_C_SN_SCREENNAME_2 = "user_.screenName = ?";
+	private static final String _FINDER_COLUMN_C_SN_SCREENNAME_3 = "(user_.screenName IS NULL OR user_.screenName = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_EA = new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
 			UserModelImpl.FINDER_CACHE_ENABLED, UserImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByC_EA",
@@ -4476,7 +4482,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		if (result == null) {
 			StringBundler query = new StringBundler(4);
 
-			query.append(_SQL_SELECT_USER_WHERE);
+			query.append(_SQL_SELECT_USER__WHERE);
 
 			query.append(_FINDER_COLUMN_C_EA_COMPANYID_2);
 
@@ -4586,7 +4592,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		if (count == null) {
 			StringBundler query = new StringBundler(3);
 
-			query.append(_SQL_COUNT_USER_WHERE);
+			query.append(_SQL_COUNT_USER__WHERE);
 
 			query.append(_FINDER_COLUMN_C_EA_COMPANYID_2);
 
@@ -4638,10 +4644,10 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_C_EA_COMPANYID_2 = "user.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_EA_EMAILADDRESS_1 = "user.emailAddress IS NULL";
-	private static final String _FINDER_COLUMN_C_EA_EMAILADDRESS_2 = "user.emailAddress = ?";
-	private static final String _FINDER_COLUMN_C_EA_EMAILADDRESS_3 = "(user.emailAddress IS NULL OR user.emailAddress = '')";
+	private static final String _FINDER_COLUMN_C_EA_COMPANYID_2 = "user_.companyId = ? AND ";
+	private static final String _FINDER_COLUMN_C_EA_EMAILADDRESS_1 = "user_.emailAddress IS NULL";
+	private static final String _FINDER_COLUMN_C_EA_EMAILADDRESS_2 = "user_.emailAddress = ?";
+	private static final String _FINDER_COLUMN_C_EA_EMAILADDRESS_3 = "(user_.emailAddress IS NULL OR user_.emailAddress = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_FID = new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
 			UserModelImpl.FINDER_CACHE_ENABLED, UserImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByC_FID",
@@ -4734,7 +4740,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		if (result == null) {
 			StringBundler query = new StringBundler(4);
 
-			query.append(_SQL_SELECT_USER_WHERE);
+			query.append(_SQL_SELECT_USER__WHERE);
 
 			query.append(_FINDER_COLUMN_C_FID_COMPANYID_2);
 
@@ -4836,7 +4842,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		if (count == null) {
 			StringBundler query = new StringBundler(3);
 
-			query.append(_SQL_COUNT_USER_WHERE);
+			query.append(_SQL_COUNT_USER__WHERE);
 
 			query.append(_FINDER_COLUMN_C_FID_COMPANYID_2);
 
@@ -4874,8 +4880,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_C_FID_COMPANYID_2 = "user.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_FID_FACEBOOKID_2 = "user.facebookId = ?";
+	private static final String _FINDER_COLUMN_C_FID_COMPANYID_2 = "user_.companyId = ? AND ";
+	private static final String _FINDER_COLUMN_C_FID_FACEBOOKID_2 = "user_.facebookId = ?";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_O = new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
 			UserModelImpl.FINDER_CACHE_ENABLED, UserImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByC_O",
@@ -4968,7 +4974,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		if (result == null) {
 			StringBundler query = new StringBundler(4);
 
-			query.append(_SQL_SELECT_USER_WHERE);
+			query.append(_SQL_SELECT_USER__WHERE);
 
 			query.append(_FINDER_COLUMN_C_O_COMPANYID_2);
 
@@ -5085,7 +5091,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		if (count == null) {
 			StringBundler query = new StringBundler(3);
 
-			query.append(_SQL_COUNT_USER_WHERE);
+			query.append(_SQL_COUNT_USER__WHERE);
 
 			query.append(_FINDER_COLUMN_C_O_COMPANYID_2);
 
@@ -5137,10 +5143,10 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_C_O_COMPANYID_2 = "user.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_O_OPENID_1 = "user.openId IS NULL";
-	private static final String _FINDER_COLUMN_C_O_OPENID_2 = "user.openId = ?";
-	private static final String _FINDER_COLUMN_C_O_OPENID_3 = "(user.openId IS NULL OR user.openId = '')";
+	private static final String _FINDER_COLUMN_C_O_COMPANYID_2 = "user_.companyId = ? AND ";
+	private static final String _FINDER_COLUMN_C_O_OPENID_1 = "user_.openId IS NULL";
+	private static final String _FINDER_COLUMN_C_O_OPENID_2 = "user_.openId = ?";
+	private static final String _FINDER_COLUMN_C_O_OPENID_3 = "(user_.openId IS NULL OR user_.openId = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C_S = new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
 			UserModelImpl.FINDER_CACHE_ENABLED, UserImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_S",
@@ -5255,7 +5261,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 				query = new StringBundler(4);
 			}
 
-			query.append(_SQL_SELECT_USER_WHERE);
+			query.append(_SQL_SELECT_USER__WHERE);
 
 			query.append(_FINDER_COLUMN_C_S_COMPANYID_2);
 
@@ -5480,7 +5486,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			query = new StringBundler(3);
 		}
 
-		query.append(_SQL_SELECT_USER_WHERE);
+		query.append(_SQL_SELECT_USER__WHERE);
 
 		query.append(_FINDER_COLUMN_C_S_COMPANYID_2);
 
@@ -5610,7 +5616,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		if (count == null) {
 			StringBundler query = new StringBundler(3);
 
-			query.append(_SQL_COUNT_USER_WHERE);
+			query.append(_SQL_COUNT_USER__WHERE);
 
 			query.append(_FINDER_COLUMN_C_S_COMPANYID_2);
 
@@ -5648,8 +5654,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_C_S_COMPANYID_2 = "user.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_S_STATUS_2 = "user.status = ?";
+	private static final String _FINDER_COLUMN_C_S_COMPANYID_2 = "user_.companyId = ? AND ";
+	private static final String _FINDER_COLUMN_C_S_STATUS_2 = "user_.status = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C_CD_MD = new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
 			UserModelImpl.FINDER_CACHE_ENABLED, UserImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_CD_MD",
@@ -5776,7 +5782,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 				query = new StringBundler(5);
 			}
 
-			query.append(_SQL_SELECT_USER_WHERE);
+			query.append(_SQL_SELECT_USER__WHERE);
 
 			query.append(_FINDER_COLUMN_C_CD_MD_COMPANYID_2);
 
@@ -6043,7 +6049,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			query = new StringBundler(3);
 		}
 
-		query.append(_SQL_SELECT_USER_WHERE);
+		query.append(_SQL_SELECT_USER__WHERE);
 
 		query.append(_FINDER_COLUMN_C_CD_MD_COMPANYID_2);
 
@@ -6202,7 +6208,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		if (count == null) {
 			StringBundler query = new StringBundler(4);
 
-			query.append(_SQL_COUNT_USER_WHERE);
+			query.append(_SQL_COUNT_USER__WHERE);
 
 			query.append(_FINDER_COLUMN_C_CD_MD_COMPANYID_2);
 
@@ -6266,11 +6272,11 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_C_CD_MD_COMPANYID_2 = "user.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_CD_MD_CREATEDATE_1 = "user.createDate IS NULL AND ";
-	private static final String _FINDER_COLUMN_C_CD_MD_CREATEDATE_2 = "user.createDate = ? AND ";
-	private static final String _FINDER_COLUMN_C_CD_MD_MODIFIEDDATE_1 = "user.modifiedDate IS NULL";
-	private static final String _FINDER_COLUMN_C_CD_MD_MODIFIEDDATE_2 = "user.modifiedDate = ?";
+	private static final String _FINDER_COLUMN_C_CD_MD_COMPANYID_2 = "user_.companyId = ? AND ";
+	private static final String _FINDER_COLUMN_C_CD_MD_CREATEDATE_1 = "user_.createDate IS NULL AND ";
+	private static final String _FINDER_COLUMN_C_CD_MD_CREATEDATE_2 = "user_.createDate = ? AND ";
+	private static final String _FINDER_COLUMN_C_CD_MD_MODIFIEDDATE_1 = "user_.modifiedDate IS NULL";
+	private static final String _FINDER_COLUMN_C_CD_MD_MODIFIEDDATE_2 = "user_.modifiedDate = ?";
 
 	/**
 	 * Caches the user in the entity cache if it is enabled.
@@ -7224,7 +7230,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 				query = new StringBundler(2 +
 						(orderByComparator.getOrderByFields().length * 3));
 
-				query.append(_SQL_SELECT_USER);
+				query.append(_SQL_SELECT_USER_);
 
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
 					orderByComparator);
@@ -7232,7 +7238,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 				sql = query.toString();
 			}
 			else {
-				sql = _SQL_SELECT_USER;
+				sql = _SQL_SELECT_USER_;
 
 				if (pagination) {
 					sql = sql.concat(UserModelImpl.ORDER_BY_JPQL);
@@ -7303,7 +7309,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_USER);
+				Query q = session.createQuery(_SQL_COUNT_USER_);
 
 				count = (Long)q.uniqueResult();
 
@@ -9773,6 +9779,11 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		}
 	}
 
+	@Override
+	protected String[] getBadColumnNames() {
+		return _BAD_COLUMN_NAMES;
+	}
+
 	/**
 	 * Initializes the user persistence.
 	 */
@@ -10672,10 +10683,13 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		private SqlUpdate _sqlUpdate;
 	}
 
-	private static final String _SQL_SELECT_USER = "SELECT user FROM User user";
-	private static final String _SQL_SELECT_USER_WHERE = "SELECT user FROM User user WHERE ";
-	private static final String _SQL_COUNT_USER = "SELECT COUNT(user) FROM User user";
-	private static final String _SQL_COUNT_USER_WHERE = "SELECT COUNT(user) FROM User user WHERE ";
+	private static final String[] _BAD_COLUMN_NAMES = new String[] {
+			"uuid", "password"
+		};
+	private static final String _SQL_SELECT_USER_ = "SELECT user_ FROM User user_";
+	private static final String _SQL_SELECT_USER__WHERE = "SELECT user_ FROM User user_ WHERE ";
+	private static final String _SQL_COUNT_USER_ = "SELECT COUNT(user_) FROM User user_";
+	private static final String _SQL_COUNT_USER__WHERE = "SELECT COUNT(user_) FROM User user_ WHERE ";
 	private static final String _SQL_GETGROUPS = "SELECT {Group_.*} FROM Group_ INNER JOIN Users_Groups ON (Users_Groups.groupId = Group_.groupId) WHERE (Users_Groups.userId = ?)";
 	private static final String _SQL_GETGROUPSSIZE = "SELECT COUNT(*) AS COUNT_VALUE FROM Users_Groups WHERE userId = ?";
 	private static final String _SQL_CONTAINSGROUP = "SELECT COUNT(*) AS COUNT_VALUE FROM Users_Groups WHERE userId = ? AND groupId = ?";
@@ -10691,7 +10705,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	private static final String _SQL_GETUSERGROUPS = "SELECT {UserGroup.*} FROM UserGroup INNER JOIN Users_UserGroups ON (Users_UserGroups.userGroupId = UserGroup.userGroupId) WHERE (Users_UserGroups.userId = ?)";
 	private static final String _SQL_GETUSERGROUPSSIZE = "SELECT COUNT(*) AS COUNT_VALUE FROM Users_UserGroups WHERE userId = ?";
 	private static final String _SQL_CONTAINSUSERGROUP = "SELECT COUNT(*) AS COUNT_VALUE FROM Users_UserGroups WHERE userId = ? AND userGroupId = ?";
-	private static final String _ORDER_BY_ENTITY_ALIAS = "user.";
+	private static final String _ORDER_BY_ENTITY_ALIAS = "user_.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No User exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No User exists with the key {";
 	private static final boolean _HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE = com.liferay.portal.util.PropsValues.HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE;
