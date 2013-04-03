@@ -477,8 +477,6 @@ public class GroupServiceTest {
 
 		Assert.assertTrue(group.isRoot());
 
-		String keywords = StringPool.BLANK;
-
 		LinkedHashMap<String, Object> groupParams =
 			new LinkedHashMap<String, Object>();
 
@@ -500,19 +498,19 @@ public class GroupServiceTest {
 
 		groupParams.put("excludedGroupIds", excludedGroupIds);
 
-		List<Group> parentCandidates = GroupLocalServiceUtil.search(
-			group.getCompanyId(), null, keywords, groupParams,
+		List<Group> selectableGroups = GroupLocalServiceUtil.search(
+			group.getCompanyId(), null, StringPool.BLANK, groupParams,
 			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 
-		for (Group parentCandidate : parentCandidates) {
-			long parentCandidateGroupId = parentCandidate.getGroupId();
+		for (Group selectableGroup : selectableGroups) {
+			long selectableGroupId = selectableGroup.getGroupId();
 
-			if (parentCandidateGroupId == group.getGroupId()) {
+			if (selectableGroupId == group.getGroupId()) {
 				Assert.fail("A group cannot be its own parent");
 			}
 			else if (staging) {
 				if (group.isStagingGroup()) {
-					if (parentCandidateGroupId == group.getLiveGroupId()) {
+					if (selectableGroupId == group.getLiveGroupId()) {
 						Assert.fail(
 							"A group cannot have its live group as parent");
 					}
@@ -520,7 +518,7 @@ public class GroupServiceTest {
 				else if (group.hasStagingGroup()) {
 					Group stagingGroup = group.getStagingGroup();
 
-					if (parentCandidateGroupId == stagingGroup.getGroupId()) {
+					if (selectableGroupId == stagingGroup.getGroupId()) {
 						Assert.fail(
 							"A group cannot have its staying group as parent");
 					}

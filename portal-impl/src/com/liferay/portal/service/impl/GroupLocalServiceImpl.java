@@ -3668,20 +3668,15 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 				GroupParentException.SELF_DESCENDANT);
 		}
 
-		Group group = groupLocalService.fetchGroup(groupId);
-
-		if (group == null) {
+		if (groupId == 0) {
 			return;
 		}
 
-		Group parentGroup = groupLocalService.fetchGroup(parentGroupId);
-
-		if (parentGroup == null) {
-			throw new GroupParentException(
-				"Site " + parentGroupId + " doesn't exist");
-		}
+		Group group = groupLocalService.getGroup(groupId);
 
 		if (group.isStagingGroup()) {
+			Group parentGroup = groupLocalService.getGroup(parentGroupId);
+
 			Group stagingGroup = parentGroup.getStagingGroup();
 
 			if (groupId == stagingGroup.getGroupId()) {
