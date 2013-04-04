@@ -14,15 +14,16 @@
 
 package com.liferay.portlet.messageboards.util;
 
-import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portal.util.UserTestUtil;
+import com.liferay.portlet.messageboards.attachments.MBAttachmentsTest;
 import com.liferay.portlet.messageboards.model.MBBan;
 import com.liferay.portlet.messageboards.model.MBCategory;
 import com.liferay.portlet.messageboards.model.MBCategoryConstants;
@@ -105,6 +106,14 @@ public class MBTestUtil {
 			groupId, MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID);
 	}
 
+	public static MBMessage addMessage(MBMessage parentMesssage)
+		throws Exception {
+
+		return addMessage(
+			parentMesssage.getGroupId(), parentMesssage.getCategoryId(),
+			parentMesssage.getThreadId(), parentMesssage.getParentMessageId());
+	}
+
 	public static MBMessage addMessage(long groupId, long categoryId)
 		throws Exception {
 
@@ -140,33 +149,24 @@ public class MBTestUtil {
 			ServiceContext serviceContext)
 		throws Exception {
 
+		if (!Validator.isBlank(keywords)) {
+			return MBMessageLocalServiceUtil.addMessage(
+				TestPropsValues.getUserId(), ServiceTestUtil.randomString(),
+				categoryId, keywords, keywords, serviceContext);
+		}
+
 		MBMessage message = MBMessageLocalServiceUtil.addMessage(
 			TestPropsValues.getUserId(), ServiceTestUtil.randomString(),
-			categoryId, keywords, keywords, serviceContext);
+			categoryId, "subject", "body", serviceContext);
 
 		if (!approved) {
-			message = MBMessageLocalServiceUtil.updateStatus(
+			return MBMessageLocalServiceUtil.updateStatus(
 				message.getStatusByUserId(), message.getMessageId(),
 				WorkflowConstants.STATUS_DRAFT, serviceContext);
+
 		}
 
 		return message;
-	}
-
-	public static MBMessage addMessageWithAttachment(
-			User user, long groupId, String filePath, String fileName,
-			Class<?> clazz)
-		throws Exception {
-
-		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
-			groupId);
-
-		return MBMessageLocalServiceUtil.addMessage(
-			user.getUserId(), user.getFullName(), groupId,
-			MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID, "Subject", "Body",
-			MBMessageConstants.DEFAULT_FORMAT,
-			getInputStreamOVPs(filePath, fileName, clazz), false, 0, false,
-			serviceContext);
 	}
 
 	public static MBMessage addMessageWithWorkflow(
@@ -198,28 +198,6 @@ public class MBTestUtil {
 
 		return MBThreadFlagLocalServiceUtil.getThreadFlag(
 			TestPropsValues.getUserId(), thread);
-	}
-
-	public static MBMessage updateMessageWithAttachment(
-			User user, MBMessage message, String filePath, String fileName,
-			Class<?> clazz)
-		throws Exception {
-
-		List<FileEntry> fileEntries = message.getAttachmentsFileEntries();
-
-		List<String> existingFiles = new ArrayList<String>();
-
-		for (FileEntry fileEntry : fileEntries) {
-			existingFiles.add(String.valueOf(fileEntry.getFileEntryId()));
-		}
-
-		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
-			message.getGroupId());
-
-		return MBMessageLocalServiceUtil.updateMessage(
-			user.getUserId(), message.getMessageId(), "Subject", "Body",
-			getInputStreamOVPs(filePath, fileName, clazz), existingFiles, 0,
-			false, serviceContext);
 	}
 
 	protected static MBMessage addMessage(
@@ -258,27 +236,40 @@ public class MBTestUtil {
 		return MBMessageLocalServiceUtil.getMessage(message.getMessageId());
 	}
 
-	protected static List<ObjectValuePair<String, InputStream>>
-			getInputStreamOVPs(
-		String filePath, String fileName, Class<?> clazz) {
+	public static List<ObjectValuePair<String, InputStream>> getInputStreamOVPs(
+		String fileName, Class<?> clazz, String keywords) {
 
 		List<ObjectValuePair<String, InputStream>> inputStreamOVPs =
 			new ArrayList<ObjectValuePair<String, InputStream>>(1);
 
-		StringBuffer sb = new StringBuffer(3);
+		StringBuffer sb = new StringBuffer(2);
 
-		sb.append(filePath);
-		sb.append(StringPool.SLASH);
+		sb.append("dependencies/");
 		sb.append(fileName);
 
 		InputStream inputStream = clazz.getResourceAsStream(sb.toString());
 
-		ObjectValuePair<String, InputStream> inputStreamOVP =
-			new ObjectValuePair<String, InputStream>(fileName, inputStream);
+		ObjectValuePair<String, InputStream> inputStreamOVP = null;
+
+		if (Validator.isBlank(keywords)) {
+			inputStreamOVP = new ObjectValuePair<String, InputStream>(
+				fileName, inputStream);
+		}
+		else {
+			inputStreamOVP = new ObjectValuePair<String, InputStream>(
+				keywords, inputStream);
+		}
 
 		inputStreamOVPs.add(inputStreamOVP);
 
 		return inputStreamOVPs;
 	}
 
+	public static MBMessage addMessage(MBCategory category) throws Exception {
+		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
+			category.getGroupId());
+
+		return addMessage(
+			category.getCategoryId(), StringPool.BLANK, false, serviceContext);
+	}
 }
