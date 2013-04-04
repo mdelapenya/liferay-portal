@@ -23,7 +23,6 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portal.util.UserTestUtil;
-import com.liferay.portlet.messageboards.attachments.MBAttachmentsTest;
 import com.liferay.portlet.messageboards.model.MBBan;
 import com.liferay.portlet.messageboards.model.MBCategory;
 import com.liferay.portlet.messageboards.model.MBCategoryConstants;
@@ -106,20 +105,6 @@ public class MBTestUtil {
 			groupId, MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID);
 	}
 
-	public static MBMessage addMessage(MBMessage parentMesssage)
-		throws Exception {
-
-		return addMessage(
-			parentMesssage.getGroupId(), parentMesssage.getCategoryId(),
-			parentMesssage.getThreadId(), parentMesssage.getParentMessageId());
-	}
-
-	public static MBMessage addMessage(long groupId, long categoryId)
-		throws Exception {
-
-		return addMessage(groupId, categoryId, 0, 0);
-	}
-
 	public static MBMessage addMessage(
 			long groupId, long categoryId, long threadId, long parentMessageId)
 		throws Exception {
@@ -169,6 +154,26 @@ public class MBTestUtil {
 		return message;
 	}
 
+	public static MBMessage addMessage(MBCategory category) throws Exception {
+		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
+			category.getGroupId());
+
+		return addMessage(
+			category.getCategoryId(), StringPool.BLANK, false, serviceContext);
+	} public static MBMessage addMessage(long groupId, long categoryId)
+		throws Exception {
+
+		return addMessage(groupId, categoryId, 0, 0);
+	}
+
+	public static MBMessage addMessage(MBMessage parentMesssage)
+		throws Exception {
+
+		return addMessage(
+			parentMesssage.getGroupId(), parentMesssage.getCategoryId(),
+			parentMesssage.getThreadId(), parentMesssage.getParentMessageId());
+	}
+
 	public static MBMessage addMessageWithWorkflow(
 			long groupId, boolean approved)
 		throws Exception {
@@ -198,6 +203,35 @@ public class MBTestUtil {
 
 		return MBThreadFlagLocalServiceUtil.getThreadFlag(
 			TestPropsValues.getUserId(), thread);
+	}
+
+	public static List<ObjectValuePair<String, InputStream>> getInputStreamOVPs(
+		String fileName, Class<?> clazz, String keywords) {
+
+		List<ObjectValuePair<String, InputStream>> inputStreamOVPs =
+			new ArrayList<ObjectValuePair<String, InputStream>>(1);
+
+		StringBuffer sb = new StringBuffer(2);
+
+		sb.append("dependencies/");
+		sb.append(fileName);
+
+		InputStream inputStream = clazz.getResourceAsStream(sb.toString());
+
+		ObjectValuePair<String, InputStream> inputStreamOVP = null;
+
+		if (Validator.isBlank(keywords)) {
+			inputStreamOVP = new ObjectValuePair<String, InputStream>(
+				fileName, inputStream);
+		}
+		else {
+			inputStreamOVP = new ObjectValuePair<String, InputStream>(
+				keywords, inputStream);
+		}
+
+		inputStreamOVPs.add(inputStreamOVP);
+
+		return inputStreamOVPs;
 	}
 
 	protected static MBMessage addMessage(
@@ -236,40 +270,5 @@ public class MBTestUtil {
 		return MBMessageLocalServiceUtil.getMessage(message.getMessageId());
 	}
 
-	public static List<ObjectValuePair<String, InputStream>> getInputStreamOVPs(
-		String fileName, Class<?> clazz, String keywords) {
 
-		List<ObjectValuePair<String, InputStream>> inputStreamOVPs =
-			new ArrayList<ObjectValuePair<String, InputStream>>(1);
-
-		StringBuffer sb = new StringBuffer(2);
-
-		sb.append("dependencies/");
-		sb.append(fileName);
-
-		InputStream inputStream = clazz.getResourceAsStream(sb.toString());
-
-		ObjectValuePair<String, InputStream> inputStreamOVP = null;
-
-		if (Validator.isBlank(keywords)) {
-			inputStreamOVP = new ObjectValuePair<String, InputStream>(
-				fileName, inputStream);
-		}
-		else {
-			inputStreamOVP = new ObjectValuePair<String, InputStream>(
-				keywords, inputStream);
-		}
-
-		inputStreamOVPs.add(inputStreamOVP);
-
-		return inputStreamOVPs;
-	}
-
-	public static MBMessage addMessage(MBCategory category) throws Exception {
-		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
-			category.getGroupId());
-
-		return addMessage(
-			category.getCategoryId(), StringPool.BLANK, false, serviceContext);
-	}
 }
