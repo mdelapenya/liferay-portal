@@ -2477,11 +2477,11 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		if (orderByComparator != null) {
 			if (getDB().isSupportsInlineDistinct()) {
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
-					orderByComparator);
+					orderByComparator, true);
 			}
 			else {
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_TABLE,
-					orderByComparator);
+					orderByComparator, true);
 			}
 		}
 		else {
@@ -3315,11 +3315,11 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		if (orderByComparator != null) {
 			if (getDB().isSupportsInlineDistinct()) {
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
-					orderByComparator);
+					orderByComparator, true);
 			}
 			else {
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_TABLE,
-					orderByComparator);
+					orderByComparator, true);
 			}
 		}
 		else {
@@ -4192,11 +4192,11 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		if (orderByComparator != null) {
 			if (getDB().isSupportsInlineDistinct()) {
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
-					orderByComparator);
+					orderByComparator, true);
 			}
 			else {
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_TABLE,
-					orderByComparator);
+					orderByComparator, true);
 			}
 		}
 		else {
@@ -6497,6 +6497,11 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		finally {
 			FinderCacheUtil.clearCache(OrganizationModelImpl.MAPPING_TABLE_USERS_ORGS_NAME);
 		}
+	}
+
+	@Override
+	protected Set<String> getBadColumnNames() {
+		return SetUtil.fromArray(new String[] { "type" });
 	}
 
 	/**
