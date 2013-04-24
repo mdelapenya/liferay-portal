@@ -26,11 +26,16 @@ import org.junit.runner.RunWith;
  * @author Manuel de la Peña
  */
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
-public class UpgradeProcess_6_2_0_Test extends BaseUpgradeProcessTestCase {
+public abstract class UpgradeProcess_6_2_0_TestCase
+	extends BaseUpgradeProcessTestCase {
 
 	@Test
 	public void testDoUpgrade() throws Exception {
 		UpgradeProcessTestUtil.doUpgrade(UpgradeProcess_6_2_0.class);
+	}
+
+	protected String getTargetVersion() {
+		return "6.2.0";
 	}
 
 }

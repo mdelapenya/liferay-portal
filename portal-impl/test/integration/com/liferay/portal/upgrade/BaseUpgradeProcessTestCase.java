@@ -16,6 +16,7 @@ package com.liferay.portal.upgrade;
 
 import com.liferay.portal.kernel.dao.db.DBFactoryUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.InputStream;
@@ -52,13 +53,21 @@ public abstract class BaseUpgradeProcessTestCase {
 	protected void additionalChecks() {
 	}
 
+	protected abstract String getOriginVersion();
+
+	protected abstract String getTargetVersion();
+
 	protected String readOriginDatabaseFile() throws Exception {
-		StringBundler sb = new StringBundler(3);
+		StringBundler sb = new StringBundler(7);
 
 		String type = DBFactoryUtil.getDB().getType();
 
 		sb.append("dependencies/portal-");
 		sb.append(type.toLowerCase());
+		sb.append(StringPool.DASH);
+		sb.append(getOriginVersion());
+		sb.append(StringPool.DASH);
+		sb.append(getTargetVersion());
 		sb.append(".sql");
 
 		Class<?> clazz = this.getClass();
