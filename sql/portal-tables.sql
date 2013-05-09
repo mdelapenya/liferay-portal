@@ -590,13 +590,14 @@ create table DLFileEntryType (
 	createDate DATE null,
 	modifiedDate DATE null,
 	name VARCHAR(75) null,
+	title STRING null,
 	description STRING null
 );
 
 create table DLFileEntryTypes_DDMStructures (
-	structureId LONG not null,
 	fileEntryTypeId LONG not null,
-	primary key (structureId, fileEntryTypeId)
+	structureId LONG not null,
+	primary key (fileEntryTypeId, structureId)
 );
 
 create table DLFileEntryTypes_DLFolders (

@@ -131,6 +131,8 @@ public class DLFileEntryTypePersistenceTest {
 
 		newDLFileEntryType.setName(ServiceTestUtil.randomString());
 
+		newDLFileEntryType.setTitle(ServiceTestUtil.randomString());
+
 		newDLFileEntryType.setDescription(ServiceTestUtil.randomString());
 
 		_persistence.update(newDLFileEntryType);
@@ -157,6 +159,8 @@ public class DLFileEntryTypePersistenceTest {
 			Time.getShortTimestamp(newDLFileEntryType.getModifiedDate()));
 		Assert.assertEquals(existingDLFileEntryType.getName(),
 			newDLFileEntryType.getName());
+		Assert.assertEquals(existingDLFileEntryType.getTitle(),
+			newDLFileEntryType.getTitle());
 		Assert.assertEquals(existingDLFileEntryType.getDescription(),
 			newDLFileEntryType.getDescription());
 	}
@@ -210,7 +214,8 @@ public class DLFileEntryTypePersistenceTest {
 		return OrderByComparatorFactoryUtil.create("DLFileEntryType", "uuid",
 			true, "fileEntryTypeId", true, "groupId", true, "companyId", true,
 			"userId", true, "userName", true, "createDate", true,
-			"modifiedDate", true, "name", true, "description", true);
+			"modifiedDate", true, "name", true, "title", true, "description",
+			true);
 	}
 
 	@Test
@@ -370,6 +375,8 @@ public class DLFileEntryTypePersistenceTest {
 		dlFileEntryType.setModifiedDate(ServiceTestUtil.nextDate());
 
 		dlFileEntryType.setName(ServiceTestUtil.randomString());
+
+		dlFileEntryType.setTitle(ServiceTestUtil.randomString());
 
 		dlFileEntryType.setDescription(ServiceTestUtil.randomString());
 

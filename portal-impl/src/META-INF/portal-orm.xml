@@ -2007,10 +2007,15 @@
 				<temporal>TIMESTAMP</temporal>
 			</basic>
 			<basic name="name" />
+			<basic name="title" />
 			<basic name="description" />
+			<transient name="descriptionCurrentLanguageId" />
+			<transient name="descriptionMap" />
 			<transient name="modelAttributes" />
 			<transient name="primaryKey" />
 			<transient name="primaryKeyObj" />
+			<transient name="titleCurrentLanguageId" />
+			<transient name="titleMap" />
 			<transient name="userUuid" />
 		</attributes>
 	</mapped-superclass>
