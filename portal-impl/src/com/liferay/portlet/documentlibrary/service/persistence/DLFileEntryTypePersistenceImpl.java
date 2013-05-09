@@ -3424,6 +3424,7 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 		dlFileEntryTypeImpl.setCreateDate(dlFileEntryType.getCreateDate());
 		dlFileEntryTypeImpl.setModifiedDate(dlFileEntryType.getModifiedDate());
 		dlFileEntryTypeImpl.setName(dlFileEntryType.getName());
+		dlFileEntryTypeImpl.setTitle(dlFileEntryType.getTitle());
 		dlFileEntryTypeImpl.setDescription(dlFileEntryType.getDescription());
 
 		return dlFileEntryTypeImpl;

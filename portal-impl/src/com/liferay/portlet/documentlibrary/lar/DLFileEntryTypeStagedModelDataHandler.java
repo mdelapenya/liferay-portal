@@ -138,7 +138,8 @@ public class DLFileEntryTypeStagedModelDataHandler
 				importedDLFileEntryType =
 					DLFileEntryTypeLocalServiceUtil.addFileEntryType(
 						userId, portletDataContext.getScopeGroupId(), name,
-						fileEntryType.getDescription(), ddmStructureIdsArray,
+						fileEntryType.getTitleMap(),
+						fileEntryType.getDescriptionMap(), ddmStructureIdsArray,
 						serviceContext);
 			}
 			else {
@@ -148,8 +149,9 @@ public class DLFileEntryTypeStagedModelDataHandler
 
 					DLFileEntryTypeLocalServiceUtil.updateFileEntryType(
 						userId, existingDLFileEntryType.getFileEntryTypeId(),
-						name, fileEntryType.getDescription(),
-						ddmStructureIdsArray, serviceContext);
+						name,fileEntryType.getTitleMap(),
+						fileEntryType.getDescriptionMap(), ddmStructureIdsArray,
+						serviceContext);
 				}
 
 				importedDLFileEntryType = existingDLFileEntryType;
@@ -159,7 +161,8 @@ public class DLFileEntryTypeStagedModelDataHandler
 			importedDLFileEntryType =
 				DLFileEntryTypeLocalServiceUtil.addFileEntryType(
 					userId, portletDataContext.getScopeGroupId(), name,
-					fileEntryType.getDescription(), ddmStructureIdsArray,
+					fileEntryType.getTitleMap(),
+					fileEntryType.getDescriptionMap(), ddmStructureIdsArray,
 					serviceContext);
 		}
 

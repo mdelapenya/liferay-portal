@@ -49,13 +49,15 @@ public class DLFileEntryTypeServiceWrapper implements DLFileEntryTypeService,
 	}
 
 	public com.liferay.portlet.documentlibrary.model.DLFileEntryType addFileEntryType(
-		long groupId, java.lang.String name, java.lang.String description,
+		long groupId, java.lang.String name,
+		java.util.Map<java.util.Locale, java.lang.String> titleMap,
+		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
 		long[] ddmStructureIds,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _dlFileEntryTypeService.addFileEntryType(groupId, name,
-			description, ddmStructureIds, serviceContext);
+			titleMap, descriptionMap, ddmStructureIds, serviceContext);
 	}
 
 	public void deleteFileEntryType(long fileEntryTypeId)
@@ -107,13 +109,15 @@ public class DLFileEntryTypeServiceWrapper implements DLFileEntryTypeService,
 	}
 
 	public void updateFileEntryType(long fileEntryTypeId,
-		java.lang.String name, java.lang.String description,
+		java.lang.String name,
+		java.util.Map<java.util.Locale, java.lang.String> titleMap,
+		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
 		long[] ddmStructureIds,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		_dlFileEntryTypeService.updateFileEntryType(fileEntryTypeId, name,
-			description, ddmStructureIds, serviceContext);
+			titleMap, descriptionMap, ddmStructureIds, serviceContext);
 	}
 
 	/**
