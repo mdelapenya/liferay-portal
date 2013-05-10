@@ -38,7 +38,7 @@ public class DLFileEntryTypeCacheModel implements CacheModel<DLFileEntryType>,
 	Externalizable {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(21);
+		StringBundler sb = new StringBundler(23);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -58,6 +58,8 @@ public class DLFileEntryTypeCacheModel implements CacheModel<DLFileEntryType>,
 		sb.append(modifiedDate);
 		sb.append(", name=");
 		sb.append(name);
+		sb.append(", title=");
+		sb.append(title);
 		sb.append(", description=");
 		sb.append(description);
 		sb.append("}");
@@ -108,6 +110,13 @@ public class DLFileEntryTypeCacheModel implements CacheModel<DLFileEntryType>,
 			dlFileEntryTypeImpl.setName(name);
 		}
 
+		if (title == null) {
+			dlFileEntryTypeImpl.setTitle(StringPool.BLANK);
+		}
+		else {
+			dlFileEntryTypeImpl.setTitle(title);
+		}
+
 		if (description == null) {
 			dlFileEntryTypeImpl.setDescription(StringPool.BLANK);
 		}
@@ -130,6 +139,7 @@ public class DLFileEntryTypeCacheModel implements CacheModel<DLFileEntryType>,
 		createDate = objectInput.readLong();
 		modifiedDate = objectInput.readLong();
 		name = objectInput.readUTF();
+		title = objectInput.readUTF();
 		description = objectInput.readUTF();
 	}
 
@@ -164,6 +174,13 @@ public class DLFileEntryTypeCacheModel implements CacheModel<DLFileEntryType>,
 			objectOutput.writeUTF(name);
 		}
 
+		if (title == null) {
+			objectOutput.writeUTF(StringPool.BLANK);
+		}
+		else {
+			objectOutput.writeUTF(title);
+		}
+
 		if (description == null) {
 			objectOutput.writeUTF(StringPool.BLANK);
 		}
@@ -181,5 +198,6 @@ public class DLFileEntryTypeCacheModel implements CacheModel<DLFileEntryType>,
 	public long createDate;
 	public long modifiedDate;
 	public String name;
+	public String title;
 	public String description;
 }

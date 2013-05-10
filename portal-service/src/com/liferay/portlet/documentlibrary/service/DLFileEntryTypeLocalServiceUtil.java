@@ -568,13 +568,15 @@ public class DLFileEntryTypeLocalServiceUtil {
 
 	public static com.liferay.portlet.documentlibrary.model.DLFileEntryType addFileEntryType(
 		long userId, long groupId, java.lang.String name,
-		java.lang.String description, long[] ddmStructureIds,
+		java.util.Map<java.util.Locale, java.lang.String> titleMap,
+		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
+		long[] ddmStructureIds,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return getService()
-				   .addFileEntryType(userId, groupId, name, description,
-			ddmStructureIds, serviceContext);
+				   .addFileEntryType(userId, groupId, name, titleMap,
+			descriptionMap, ddmStructureIds, serviceContext);
 	}
 
 	public static void cascadeFileEntryTypes(long userId,
@@ -676,14 +678,16 @@ public class DLFileEntryTypeLocalServiceUtil {
 	}
 
 	public static void updateFileEntryType(long userId, long fileEntryTypeId,
-		java.lang.String name, java.lang.String description,
+		java.lang.String name,
+		java.util.Map<java.util.Locale, java.lang.String> titleMap,
+		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
 		long[] ddmStructureIds,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		getService()
-			.updateFileEntryType(userId, fileEntryTypeId, name, description,
-			ddmStructureIds, serviceContext);
+			.updateFileEntryType(userId, fileEntryTypeId, name, titleMap,
+			descriptionMap, ddmStructureIds, serviceContext);
 	}
 
 	public static void updateFolderFileEntryTypes(

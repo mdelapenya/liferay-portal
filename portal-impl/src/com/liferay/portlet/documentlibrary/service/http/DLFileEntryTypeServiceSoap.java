@@ -16,10 +16,14 @@ package com.liferay.portlet.documentlibrary.service.http;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.LocalizationUtil;
 
 import com.liferay.portlet.documentlibrary.service.DLFileEntryTypeServiceUtil;
 
 import java.rmi.RemoteException;
+
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Provides the SOAP utility for the
@@ -63,14 +67,22 @@ import java.rmi.RemoteException;
  */
 public class DLFileEntryTypeServiceSoap {
 	public static com.liferay.portlet.documentlibrary.model.DLFileEntryTypeSoap addFileEntryType(
-		long groupId, java.lang.String name, java.lang.String description,
-		long[] ddmStructureIds,
+		long groupId, java.lang.String name,
+		java.lang.String[] titleMapLanguageIds,
+		java.lang.String[] titleMapValues,
+		java.lang.String[] descriptionMapLanguageIds,
+		java.lang.String[] descriptionMapValues, long[] ddmStructureIds,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {
+			Map<Locale, String> titleMap = LocalizationUtil.getLocalizationMap(titleMapLanguageIds,
+					titleMapValues);
+			Map<Locale, String> descriptionMap = LocalizationUtil.getLocalizationMap(descriptionMapLanguageIds,
+					descriptionMapValues);
+
 			com.liferay.portlet.documentlibrary.model.DLFileEntryType returnValue =
 				DLFileEntryTypeServiceUtil.addFileEntryType(groupId, name,
-					description, ddmStructureIds, serviceContext);
+					titleMap, descriptionMap, ddmStructureIds, serviceContext);
 
 			return com.liferay.portlet.documentlibrary.model.DLFileEntryTypeSoap.toSoapModel(returnValue);
 		}
@@ -191,13 +203,20 @@ public class DLFileEntryTypeServiceSoap {
 	}
 
 	public static void updateFileEntryType(long fileEntryTypeId,
-		java.lang.String name, java.lang.String description,
-		long[] ddmStructureIds,
+		java.lang.String name, java.lang.String[] titleMapLanguageIds,
+		java.lang.String[] titleMapValues,
+		java.lang.String[] descriptionMapLanguageIds,
+		java.lang.String[] descriptionMapValues, long[] ddmStructureIds,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {
+			Map<Locale, String> titleMap = LocalizationUtil.getLocalizationMap(titleMapLanguageIds,
+					titleMapValues);
+			Map<Locale, String> descriptionMap = LocalizationUtil.getLocalizationMap(descriptionMapLanguageIds,
+					descriptionMapValues);
+
 			DLFileEntryTypeServiceUtil.updateFileEntryType(fileEntryTypeId,
-				name, description, ddmStructureIds, serviceContext);
+				name, titleMap, descriptionMap, ddmStructureIds, serviceContext);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
