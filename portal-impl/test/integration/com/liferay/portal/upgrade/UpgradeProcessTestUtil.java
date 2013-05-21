@@ -94,13 +94,15 @@ public class UpgradeProcessTestUtil {
 	}
 
 	protected static String buildPermissionsSQL() {
-		StringBundler sb = new StringBundler(7);
+		StringBundler sb = new StringBundler(9);
 
 		sb.append("GRANT ALL PRIVILEGES ON ");
 		sb.append(DATABASE_NAME);
 		sb.append(".* TO '");
 		sb.append(PropsValues.JDBC_DEFAULT_USERNAME);
-		sb.append("'@'localhost' IDENTIFIED BY '");
+		sb.append("'@'");
+		sb.append(StringPool.PERCENT);
+		sb.append("' IDENTIFIED BY '");
 		sb.append(PropsValues.JDBC_DEFAULT_PASSWORD);
 		sb.append("' WITH GRANT OPTION;");
 
