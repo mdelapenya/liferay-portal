@@ -17,8 +17,7 @@ package com.liferay.portlet.social.service;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
-import com.liferay.portal.test.Sync;
-import com.liferay.portal.test.SynchronousDestinationExecutionTestListener;
+import com.liferay.portal.test.TransactionalExecutionTestListener;
 import com.liferay.portlet.social.model.SocialActivityCounter;
 import com.liferay.portlet.social.model.SocialActivityCounterConstants;
 import com.liferay.portlet.social.model.SocialActivityLimit;
@@ -38,10 +37,9 @@ import org.junit.runner.RunWith;
 @ExecutionTestListeners(
 	listeners = {
 		EnvironmentExecutionTestListener.class,
-		SynchronousDestinationExecutionTestListener.class
+		TransactionalExecutionTestListener.class
 	})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
-@Sync
 public class SocialActivityCounterLocalServiceTest
 	extends BaseSocialActivityTestCase {
 
@@ -56,8 +54,9 @@ public class SocialActivityCounterLocalServiceTest
 
 	@Test
 	public void testAddActivity() throws Exception {
-		SocialActivityTestUtil.addActivity(
-			_creatorUser, _group, _assetEntry, 1);
+		SocialActivityCounterLocalServiceUtil.addActivityCounters(
+			SocialActivityTestUtil.addActivity(
+				_creatorUser, _group, _assetEntry, 1));
 
 		SocialActivityCounter contribution =
 			SocialActivityTestUtil.getActivityCounter(
@@ -74,7 +73,9 @@ public class SocialActivityCounterLocalServiceTest
 
 		Assert.assertEquals(2, participation.getCurrentValue());
 
-		SocialActivityTestUtil.addActivity(_actorUser, _group, _assetEntry, 2);
+		SocialActivityCounterLocalServiceUtil.addActivityCounters(
+			SocialActivityTestUtil.addActivity(
+				_actorUser, _group, _assetEntry, 2));
 
 		contribution = SocialActivityTestUtil.getActivityCounter(
 			_group.getGroupId(),
@@ -98,9 +99,11 @@ public class SocialActivityCounterLocalServiceTest
 		Assert.assertNotNull(activityLimit);
 		Assert.assertEquals(1, activityLimit.getCount());
 
-		SocialActivityTestUtil.addActivity(_actorUser, _group, _assetEntry, 2);
+		SocialActivityCounterLocalServiceUtil.addActivityCounters(
+			SocialActivityTestUtil.addActivity(
+				_actorUser, _group, _assetEntry, 2));
 
-		activityLimit = SocialActivityTestUtil.getActivityLimit(
+		activityLimit =  SocialActivityTestUtil.getActivityLimit(
 			_group.getGroupId(), _actorUser, _assetEntry, 2,
 			SocialActivityCounterConstants.NAME_PARTICIPATION);
 
@@ -110,10 +113,13 @@ public class SocialActivityCounterLocalServiceTest
 
 	@Test
 	public void testToggleActivities() throws Exception {
-		SocialActivityTestUtil.addActivity(
-			_creatorUser, _group, _assetEntry, 1);
+		SocialActivityCounterLocalServiceUtil.addActivityCounters(
+			SocialActivityTestUtil.addActivity(
+				_creatorUser, _group, _assetEntry, 1));
 
-		SocialActivityTestUtil.addActivity(_actorUser, _group, _assetEntry, 2);
+		SocialActivityCounterLocalServiceUtil.addActivityCounters(
+			SocialActivityTestUtil.addActivity(
+				_actorUser, _group, _assetEntry, 2));
 
 		SocialActivityCounter contribution =
 			SocialActivityTestUtil.getActivityCounter(
