@@ -14,7 +14,6 @@
 
 package com.liferay.portal.verify;
 
-import com.liferay.portal.events.StartupHelper;
 import com.liferay.portal.events.StartupHelperUtil;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.model.Company;
@@ -23,8 +22,6 @@ import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.util.CompanyTestUtil;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -33,19 +30,7 @@ import org.junit.runner.RunWith;
  */
 @ExecutionTestListeners(listeners = {MainServletExecutionTestListener.class})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
-public class VerifyResourcePermissionsTest {
-
-	@BeforeClass
-	public static void setUpClass() {
-		_startupHelper = StartupHelperUtil.getStartupHelper();
-
-		new StartupHelperUtil().setStartupHelper(new MockStartupHelper());
-	}
-
-	@AfterClass
-	public static void tearDownClass() {
-		new StartupHelperUtil().setStartupHelper(_startupHelper);
-	}
+public class VerifyResourcePermissionsTest extends BaseVerifyTestCase {
 
 	@Test
 	public void testDoVerifyMoreThanOneCompany() throws Exception {
@@ -62,15 +47,5 @@ public class VerifyResourcePermissionsTest {
 		StartupHelperUtil.verifyProcess(
 			VerifyResourcePermissions.class.getName(), true);
 	}
-
-	protected static class MockStartupHelper extends StartupHelper {
-
-		public boolean isUpgraded() {
-			return true;
-		}
-
-	}
-
-	private static StartupHelper _startupHelper;
 
 }
