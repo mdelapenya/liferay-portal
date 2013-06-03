@@ -144,6 +144,13 @@ public class StartupHelper {
 		_verified = VerifyProcessUtil.verifyProcess(_upgraded, verified);
 	}
 
+	public void verifyProcess(String verifyProcessClassName, boolean verified)
+		throws VerifyException {
+
+		_verified = VerifyProcessUtil.verifyProcess(
+			verifyProcessClassName, _upgraded, verified);
+	}
+
 	protected String[] getUpgradeProcessClassNames(String key) {
 
 		// We would normally call PropsUtil#getArray(String) to return a String

@@ -65,6 +65,13 @@ public class StartupHelperUtil {
 		getStartupHelper().verifyProcess(verified);
 	}
 
+	public static void verifyProcess(
+			String verifyProcessClassName, boolean verified)
+		throws VerifyException {
+
+		getStartupHelper().verifyProcess(verifyProcessClassName, verified);
+	}
+
 	public void setStartupHelper(StartupHelper startupHelper) {
 		_startupHelper = startupHelper;
 	}

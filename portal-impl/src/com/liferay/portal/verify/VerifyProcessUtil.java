@@ -49,6 +49,24 @@ public class VerifyProcessUtil {
 		return false;
 	}
 
+	public static boolean verifyProcess(
+			String verifyProcessClassName, boolean ranUpgradeProcess,
+			boolean verified)
+		throws VerifyException {
+
+		int verifyFrequency = GetterUtil.getInteger(
+			PropsUtil.get(PropsKeys.VERIFY_FREQUENCY));
+
+		if ((verifyFrequency == VerifyProcess.ALWAYS) ||
+			((verifyFrequency == VerifyProcess.ONCE) && !verified) ||
+			ranUpgradeProcess) {
+
+			return _verifyProcess(verifyProcessClassName);
+		}
+
+		return false;
+	}
+
 	private static boolean _verifyProcess(boolean ranUpgradeProcess)
 		throws VerifyException {
 
