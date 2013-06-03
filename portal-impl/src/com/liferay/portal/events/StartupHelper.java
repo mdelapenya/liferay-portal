@@ -141,14 +141,14 @@ public class StartupHelper {
 	}
 
 	public void verifyProcess(boolean verified) throws VerifyException {
-		_verified = VerifyProcessUtil.verifyProcess(_upgraded, verified);
+		_verified = VerifyProcessUtil.verifyProcess(isUpgraded(), verified);
 	}
 
 	public void verifyProcess(String verifyProcessClassName, boolean verified)
 		throws VerifyException {
 
 		_verified = VerifyProcessUtil.verifyProcess(
-			verifyProcessClassName, _upgraded, verified);
+			verifyProcessClassName, isUpgraded(), verified);
 	}
 
 	protected String[] getUpgradeProcessClassNames(String key) {
