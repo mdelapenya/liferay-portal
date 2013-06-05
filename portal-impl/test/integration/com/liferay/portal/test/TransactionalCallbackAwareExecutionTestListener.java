@@ -14,49 +14,10 @@
 
 package com.liferay.portal.test;
 
-import com.liferay.portal.cache.transactional.TransactionalPortalCacheHelper;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.spring.transaction.TransactionCommitCallbackTestUtil;
-
-import java.util.List;
-import java.util.concurrent.Callable;
-
 /**
  * @author Miguel Pastor
  */
 public class TransactionalCallbackAwareExecutionTestListener
 	extends TransactionalExecutionTestListener {
-
-	@Override
-	protected void rollbackTransaction(TransactionContext transactionContext) {
-		TransactionalPortalCacheHelper.commit();
-
-		List<Callable<?>> callables =
-			TransactionCommitCallbackTestUtil.popCallbackList();
-
-		for (Callable<?> callable : callables) {
-			try {
-				callable.call();
-			}
-			catch (Exception e) {
-				_log.error(e, e);
-			}
-		}
-
-		super.rollbackTransaction(transactionContext);
-	}
-
-	@Override
-	protected void startNewTransaction(TransactionContext transactionContext) {
-		super.startNewTransaction(transactionContext);
-
-		TransactionalPortalCacheHelper.begin();
-
-		TransactionCommitCallbackTestUtil.pushCallbackList();
-	}
-
-	private static Log _log = LogFactoryUtil.getLog(
-		TransactionalCallbackAwareExecutionTestListener.class);
 
 }
