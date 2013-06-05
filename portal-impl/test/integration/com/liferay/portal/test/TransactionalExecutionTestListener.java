@@ -23,10 +23,14 @@ import com.liferay.portal.kernel.test.TestContext;
 import com.liferay.portal.kernel.util.ReflectionUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.template.TemplateException;
+import com.liferay.portal.kernel.template.TemplateManagerUtil;
 import com.liferay.portal.kernel.test.AbstractExecutionTestListener;
 import com.liferay.portal.kernel.test.TestContext;
 import com.liferay.portal.service.persistence.BasePersistence;
 import com.liferay.portal.test.persistence.TransactionalPersistenceAdvice;
+import com.liferay.portal.util.PropsValues;
+import org.junit.Assert;
 
 import java.io.Serializable;
 
@@ -69,8 +73,41 @@ public class TransactionalExecutionTestListener
 	}
 
 	@Override
+	public void runBeforeClass(TestContext testContext) {
+		PropsValues.SPRING_HIBERNATE_SESSION_DELEGATED = false;
+
+		try {
+			TemplateManagerUtil.init();
+		}
+		catch (TemplateException te) {
+			Assert.fail("The template manager can not been initialized");
+		}
+	}
+
+	@Override
+	public void runBeforeTest(TestContext testContext) {
+		PropsValues.SPRING_HIBERNATE_SESSION_DELEGATED = false;
+
+		try {
+			TemplateManagerUtil.init();
+		}
+		catch (TemplateException te) {
+			Assert.fail("The template manager can not been initialized");
+		}
+	}
+
+	@Override
 	public void runAfterClass(TestContext testContext) {
 		rollback();
+
+		PropsValues.SPRING_HIBERNATE_SESSION_DELEGATED = true;
+	}
+
+	@Override
+	public void runAfterTest(TestContext testContext) {
+		rollback();
+
+		PropsValues.SPRING_HIBERNATE_SESSION_DELEGATED = true;
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(
@@ -78,4 +115,5 @@ public class TransactionalExecutionTestListener
 	private TransactionalPersistenceAdvice _transactionalPersistenceAdvice =
 		(TransactionalPersistenceAdvice)PortalBeanLocatorUtil.locate(
 			TransactionalPersistenceAdvice.class.getName());
+
 }
