@@ -22,6 +22,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.junit.runner.notification.RunNotifier;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 
@@ -43,7 +47,11 @@ public class LiferayIntegrationJUnitTestRunner
 	public void initApplicationContext() {
 		System.setProperty("catalina.base", ".");
 
-		InitUtil.initWithSpringAndModuleFramework();
+		List<String> extraConfigLocations = new ArrayList<String>(1);
+
+		extraConfigLocations.add("META-INF/test-persistence-spring.xml");
+
+		InitUtil.initWithSpringAndModuleFramework(extraConfigLocations);
 	}
 
 	@Override

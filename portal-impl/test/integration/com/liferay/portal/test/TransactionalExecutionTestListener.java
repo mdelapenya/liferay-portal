@@ -21,159 +21,61 @@ import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.test.AbstractExecutionTestListener;
 import com.liferay.portal.kernel.test.TestContext;
 import com.liferay.portal.kernel.util.ReflectionUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.test.AbstractExecutionTestListener;
+import com.liferay.portal.kernel.test.TestContext;
+import com.liferay.portal.service.persistence.BasePersistence;
+import com.liferay.portal.test.persistence.TransactionalPersistenceAdvice;
 
-import java.lang.reflect.Method;
+import java.io.Serializable;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.interceptor.TransactionAttribute;
-import org.springframework.transaction.interceptor.TransactionAttributeSource;
+import java.util.Set;
 
 /**
  * @author Miguel Pastor
+<<<<<<< HEAD
  * @author Shuyang Zhou
+=======
+ * @author Manuel de la Peña
+>>>>>>> LPS-35990 Create a transactional memory that holds updated base persistence entities in tests
  */
 public class TransactionalExecutionTestListener
 	extends AbstractExecutionTestListener {
 
-	public TransactionalExecutionTestListener() {
-		_platformTransactionManager =
-			(PlatformTransactionManager)PortalBeanLocatorUtil.locate(
-				"liferayTransactionManager");
+	public void rollback() {
+		Map<Serializable, BasePersistence<?>> basePersistences =
+			_transactionalPersistenceAdvice.getBasePersistences();
 
-		_transactionAttributeSource =
-			(TransactionAttributeSource)PortalBeanLocatorUtil.locate(
-				"transactionAttributeSource");
-	}
+		Set<Serializable> primaryKeys = basePersistences.keySet();
 
-	@Override
-	public void runAfterTest(TestContext testContext) {
-		Method testMethod = testContext.getMethod();
+		for (Serializable primaryKey : primaryKeys) {
+			BasePersistence<?> basePersistence = basePersistences.get(
+				primaryKey);
 
-		TransactionContext transactionContext = _transactionContextCache.remove(
-			testMethod);
-
-		if ((transactionContext != null) &&
-			!transactionContext._transactionStatus.isCompleted()) {
-
-			rollbackTransaction(transactionContext);
-		}
-	}
-
-	@Override
-	public void runBeforeTest(TestContext testContext) {
-		Method testMethod = testContext.getMethod();
-
-		if (_transactionContextCache.get(testMethod) != null) {
-			throw new IllegalArgumentException(
-				"Current transaction open. " +
-					"Close the opening transaction before opening a new one");
-		}
-
-		TransactionAttribute transactionAttribute =
-			_transactionAttributeSource.getTransactionAttribute(
-				testMethod, testContext.getClazz());
-
-		if (transactionAttribute != null) {
-			TransactionContext transactionContext = new TransactionContext(
-				_platformTransactionManager, transactionAttribute);
-
-			startNewTransaction(transactionContext);
-
-			_transactionContextCache.put(testMethod, transactionContext);
-		}
-	}
-
-	protected void rollbackTransaction(TransactionContext transactionContext) {
-		transactionContext.rollBackTransaction();
-	}
-
-	protected void startNewTransaction(TransactionContext transactionContext) {
-		transactionContext.startTransaction();
-	}
-
-	protected static class TransactionContext {
-
-		public TransactionContext(
-			PlatformTransactionManager platformTransactionManager,
-			TransactionAttribute transactionAttribute) {
-
-			_platformTransactionManager = platformTransactionManager;
-
-			_transactionAttribute = transactionAttribute;
-		}
-
-		public void startTransaction() {
-			_transactionStatus = _platformTransactionManager.getTransaction(
-				_transactionAttribute);
-
-			boolean newTransaction = _transactionStatus.isNewTransaction();
-
-			if (newTransaction) {
-				TransactionalPortalCacheHelper.begin();
-
-				try {
-					_pushCallbackListMethod.invoke(null);
-				}
-				catch (Exception e) {
-					throw new RuntimeException(e);
+			try {
+				basePersistence.remove(primaryKey);
+			}
+			catch (Exception e) {
+				if (_log.isDebugEnabled()) {
+					_log.debug("The model with primary key " + primaryKey +
+						" was already deleted");
 				}
 			}
 		}
 
-		public void rollBackTransaction() {
-			_platformTransactionManager.rollback(_transactionStatus);
-
-			if (_transactionStatus.isNewTransaction()) {
-				TransactionalPortalCacheHelper.rollback();
-
-				try {
-					_popCallbackListMethod.invoke(null);
-				}
-				catch (Exception e) {
-					throw new RuntimeException(e);
-				}
-
-				EntityCacheUtil.clearLocalCache();
-				FinderCacheUtil.clearLocalCache();
-			}
-		}
-
-		private PlatformTransactionManager _platformTransactionManager;
-		private TransactionAttribute _transactionAttribute;
-		private TransactionStatus _transactionStatus;
-
+		_transactionalPersistenceAdvice.reset();
 	}
 
-	private static Method _popCallbackListMethod;
-	private static Method _pushCallbackListMethod;
-
-	static {
-		Class<?> clazz = TransactionalExecutionTestListener.class;
-
-		ClassLoader classLoader = clazz.getClassLoader();
-
-		try {
-			Class<?> transactionCommitCallbackUtilClass = classLoader.loadClass(
-				"com.liferay.portal.spring.transaction." +
-					"TransactionCommitCallbackUtil");
-
-			_popCallbackListMethod = ReflectionUtil.getDeclaredMethod(
-				transactionCommitCallbackUtilClass, "popCallbackList");
-			_pushCallbackListMethod = ReflectionUtil.getDeclaredMethod(
-				transactionCommitCallbackUtilClass, "pushCallbackList");
-		}
-		catch (Exception e) {
-			throw new ExceptionInInitializerError(e);
-		}
+	@Override
+	public void runAfterClass(TestContext testContext) {
+		rollback();
 	}
 
-	private PlatformTransactionManager _platformTransactionManager;
-	private TransactionAttributeSource _transactionAttributeSource;
-	private Map<Method, TransactionContext> _transactionContextCache =
-		new ConcurrentHashMap<Method, TransactionContext>();
-
+	private static Log _log = LogFactoryUtil.getLog(
+		TransactionalExecutionTestListener.class);
+	private TransactionalPersistenceAdvice _transactionalPersistenceAdvice =
+		(TransactionalPersistenceAdvice)PortalBeanLocatorUtil.locate(
+			TransactionalPersistenceAdvice.class.getName());
 }

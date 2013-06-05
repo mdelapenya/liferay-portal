@@ -14,43 +14,31 @@
 
 package com.liferay.portal.test.persistence;
 
-import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import java.io.Serializable;
 
+import java.util.HashMap;
 import java.util.Map;
 
-import org.aopalliance.intercept.MethodInterceptor;
-import org.aopalliance.intercept.MethodInvocation;
-
 /**
- * @author Miguel Pastor
  * @author Manuel de la Peña
  */
-public class TransactionalPersistenceAdvice implements MethodInterceptor {
+public class TransactionalMemory {
 
 	public Map<Serializable, BasePersistence<?>> getBasePersistences() {
-		return _transactionalMemory.getBasePersistences();
+		return _basePersistences;
 	}
 
-	@Override
-	public Object invoke(MethodInvocation methodInvocation) throws Throwable {
-		BaseModel<?> baseModel = (BaseModel<?>)methodInvocation.proceed();
-
-		BasePersistence<?> basePersistence =
-			(BasePersistence<?>)methodInvocation.getThis();
-
-		_transactionalMemory.put(baseModel.getPrimaryKeyObj(), basePersistence);
-
-		return baseModel;
+	public void put(Serializable key, BasePersistence<?> value) {
+		_basePersistences.put(key, value);
 	}
 
 	public void reset() {
-		_transactionalMemory.reset();
+		_basePersistences.clear();
 	}
 
-	private TransactionalMemory _transactionalMemory =
-		new TransactionalMemory();
+	private Map<Serializable, BasePersistence<?>> _basePersistences =
+		new HashMap<Serializable, BasePersistence<?>>();
 
 }
