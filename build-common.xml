@@ -862,6 +862,7 @@ Please set the environment variable ANT_OPTS to the recommended value of
 
 	<target name="test-integration" depends="compile,compile-test-integration">
 		<var name="class" value="*Test" />
+		<var name="junit.forkmode" value="once" />
 
 		<ant target="test-cmd">
 			<property name="junit.forkmode" value="once" />
@@ -904,6 +905,7 @@ Please set the environment variable ANT_OPTS to the recommended value of
 
 	<target name="test-unit" depends="compile,compile-test-unit">
 		<property name="class" value="*Test" />
+		<var name="junit.forkmode" value="perTest" />
 
 		<ant target="test-cmd">
 			<property name="junit.forkmode" value="perTest" />
