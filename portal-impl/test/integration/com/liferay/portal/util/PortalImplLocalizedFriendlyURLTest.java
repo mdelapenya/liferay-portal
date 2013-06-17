@@ -14,6 +14,7 @@
 
 package com.liferay.portal.util;
 
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -38,6 +39,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -54,6 +56,15 @@ import org.springframework.mock.web.MockHttpServletRequest;
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 @Transactional
 public class PortalImplLocalizedFriendlyURLTest {
+
+	@Before
+	public void setUp() {
+		Locale[] locales = LanguageUtil.getAvailableLocales();
+
+		for (Locale locale : locales) {
+			System.out.println("[" + locale.getLanguage() + ", " + locale.getCountry() + "]");
+		}
+	}
 
 	@Test
 	public void testLocalizedURLSitePrivateLayoutFriendlyURL()
