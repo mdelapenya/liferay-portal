@@ -225,14 +225,6 @@ public class PortalImplLocalizedFriendlyURLTest {
 			StringPool.BLANK, false, friendlyURLMap, serviceContext);
 	}
 
-	protected UserGroup addUserGroup(ServiceContext serviceContext)
-		throws Exception {
-
-		return UserGroupLocalServiceUtil.addUserGroup(
-			serviceContext.getUserId(), serviceContext.getCompanyId(),
-			ServiceTestUtil.randomString(), StringPool.BLANK, serviceContext);
-	}
-
 	protected void assertLocalizedURLSiteLayoutFriendlyURL(
 			long groupId, Layout layout, String layoutFriendlyURL,
 			Locale locale, String expectedLayoutFriendlyURL)
@@ -345,7 +337,8 @@ public class PortalImplLocalizedFriendlyURLTest {
 		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
 			group.getGroupId());
 
-		UserGroup userGroup = addUserGroup(serviceContext);
+		UserGroup userGroup = UserGroupTestUtil.addUserGroup(
+			group.getGroupId());
 
 		Group userGroupGroup = userGroup.getGroup();
 
@@ -380,7 +373,8 @@ public class PortalImplLocalizedFriendlyURLTest {
 		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
 			group.getGroupId());
 
-		UserGroup userGroup = addUserGroup(serviceContext);
+		UserGroup userGroup = UserGroupTestUtil.addUserGroup(
+			group.getGroupId());
 
 		Group userGroupGroup = userGroup.getGroup();
 
@@ -414,7 +408,8 @@ public class PortalImplLocalizedFriendlyURLTest {
 		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
 			group.getGroupId());
 
-		UserGroup userGroup = addUserGroup(serviceContext);
+		UserGroup userGroup = UserGroupTestUtil.addUserGroup(
+			group.getGroupId());
 
 		Group userGroupGroup = userGroup.getGroup();
 
@@ -451,7 +446,8 @@ public class PortalImplLocalizedFriendlyURLTest {
 		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
 			group.getGroupId());
 
-		UserGroup userGroup = addUserGroup(serviceContext);
+		UserGroup userGroup = UserGroupTestUtil.addUserGroup(
+			group.getGroupId());
 
 		Group userGroupGroup = userGroup.getGroup();
 
