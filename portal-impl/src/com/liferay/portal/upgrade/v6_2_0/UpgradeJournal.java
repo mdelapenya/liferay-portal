@@ -416,10 +416,11 @@ public class UpgradeJournal extends BaseUpgradePortletPreferences {
 				long classNameId = PortalUtil.getClassNameId(
 					DDMStructure.class.getName());
 
-				long classPK = 0;
+				Long classPK = _ddmStructureIds.get(
+					groupId + "#" + structureId);
 
-				if (Validator.isNotNull(structureId)) {
-					classPK = _ddmStructureIds.get(groupId + "#" + structureId);
+				if (classPK == null) {
+					classPK = 0l;
 				}
 
 				addDDMTemplate(
