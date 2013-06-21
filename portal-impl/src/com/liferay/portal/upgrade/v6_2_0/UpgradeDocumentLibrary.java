@@ -98,7 +98,7 @@ public class UpgradeDocumentLibrary extends UpgradeProcess {
 		}
 
 		updateFileEntryTypes();
-
+/*
 		// Checksum directory
 
 		deleteChecksumDirectory();
@@ -106,6 +106,7 @@ public class UpgradeDocumentLibrary extends UpgradeProcess {
 		// Temp directory
 
 		deleteTempDirectory();
+*/
 	}
 
 	protected String getUserName(long userId) throws Exception {

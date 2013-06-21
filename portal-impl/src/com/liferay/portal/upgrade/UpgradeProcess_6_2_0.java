@@ -56,32 +56,32 @@ public class UpgradeProcess_6_2_0 extends UpgradeProcess {
 
 	@Override
 	protected void doUpgrade() throws Exception {
-		upgrade(UpgradeSchema.class);
-		upgrade(UpgradeAssetPublisher.class);
-		upgrade(UpgradeBlogs.class);
-		upgrade(UpgradeBlogsAggregator.class);
-		upgrade(UpgradeCompany.class);
-		upgrade(UpgradeCustomizablePortlets.class);
+//		upgrade(UpgradeSchema.class);
+//		upgrade(UpgradeAssetPublisher.class);
+//		upgrade(UpgradeBlogs.class);
+//		upgrade(UpgradeBlogsAggregator.class);
+//		upgrade(UpgradeCompany.class);
+//		upgrade(UpgradeCustomizablePortlets.class);
 		upgrade(UpgradeDocumentLibrary.class);
-		upgrade(UpgradeDynamicDataListDisplay.class);
-		upgrade(UpgradeDynamicDataMapping.class);
-		upgrade(UpgradeGroup.class);
-		upgrade(UpgradeImageGallery.class);
-		upgrade(UpgradeJournal.class);
-		upgrade(UpgradeLayout.class);
-		upgrade(UpgradeLayoutFriendlyURL.class);
-		upgrade(UpgradeLayoutRevision.class);
-		upgrade(UpgradeLayoutSet.class);
-		upgrade(UpgradeLayoutSetBranch.class);
-		upgrade(UpgradeMessageBoards.class);
-		upgrade(UpgradeMessageBoardsAttachments.class);
-		upgrade(UpgradePortletItem.class);
-		upgrade(UpgradePortletPreferences.class);
-		upgrade(UpgradeRepository.class);
-		upgrade(UpgradeSocial.class);
-		upgrade(UpgradeUser.class);
-		upgrade(UpgradeWiki.class);
-		upgrade(UpgradeWikiAttachments.class);
+//		upgrade(UpgradeDynamicDataListDisplay.class);
+//		upgrade(UpgradeDynamicDataMapping.class);
+//		upgrade(UpgradeGroup.class);
+//		upgrade(UpgradeImageGallery.class);
+//		upgrade(UpgradeJournal.class);
+//		upgrade(UpgradeLayout.class);
+//		upgrade(UpgradeLayoutFriendlyURL.class);
+//		upgrade(UpgradeLayoutRevision.class);
+//		upgrade(UpgradeLayoutSet.class);
+//		upgrade(UpgradeLayoutSetBranch.class);
+//		upgrade(UpgradeMessageBoards.class);
+//		upgrade(UpgradeMessageBoardsAttachments.class);
+//		upgrade(UpgradePortletItem.class);
+//		upgrade(UpgradePortletPreferences.class);
+//		upgrade(UpgradeRepository.class);
+//		upgrade(UpgradeSocial.class);
+//		upgrade(UpgradeUser.class);
+//		upgrade(UpgradeWiki.class);
+//		upgrade(UpgradeWikiAttachments.class);
 	}
 
 }
