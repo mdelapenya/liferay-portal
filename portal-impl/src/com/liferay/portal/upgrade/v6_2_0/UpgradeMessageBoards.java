@@ -48,7 +48,7 @@ public class UpgradeMessageBoards extends BaseUpgradePortletPreferences {
 		PortletPreferences portletPreferences =
 			PortletPreferencesFactoryUtil.fromXML(
 				companyId, ownerId, ownerType, plid, portletId, xml);
-
+/*
 		String rssFormat = GetterUtil.getString(
 			portletPreferences.getValue("rssFormat", null));
 
@@ -61,7 +61,7 @@ public class UpgradeMessageBoards extends BaseUpgradePortletPreferences {
 		}
 
 		portletPreferences.reset("rssFormat");
-
+*/
 		portletPreferences = upgradeSubscriptionSubject(
 			"emailMessageAddedSubject", "emailMessageAddedSubjectPrefix",
 			portletPreferences);

@@ -73,14 +73,14 @@ public class UpgradeProcess_6_2_0 extends UpgradeProcess {
 //		upgrade(UpgradeLayoutRevision.class);
 //		upgrade(UpgradeLayoutSet.class);
 		upgrade(UpgradeLayoutSetBranch.class);
-//		upgrade(UpgradeMessageBoards.class);
+		upgrade(UpgradeMessageBoards.class);
 //		upgrade(UpgradeMessageBoardsAttachments.class);
 		upgrade(UpgradePortletItem.class);
 //		upgrade(UpgradePortletPreferences.class);
 		upgrade(UpgradeRepository.class);
 //		upgrade(UpgradeSocial.class);
 //		upgrade(UpgradeUser.class);
-//		upgrade(UpgradeWiki.class);
+		upgrade(UpgradeWiki.class);
 //		upgrade(UpgradeWikiAttachments.class);
 	}
 
