@@ -188,6 +188,7 @@ public class UpgradeJournal extends BaseUpgradePortletPreferences {
 
 	@Override
 	protected void doUpgrade() throws Exception {
+/*
 		try {
 			runSQL(
 				"alter_column_name JournalFeed feedType feedFormat " +
@@ -201,9 +202,10 @@ public class UpgradeJournal extends BaseUpgradePortletPreferences {
 		}
 
 		updateStructures();
+*/
 		updateTemplates();
 
-		super.doUpgrade();
+		//super.doUpgrade();
 	}
 
 	protected long getDDMStructureId(long groupId, String structureId) {
