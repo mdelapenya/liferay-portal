@@ -40,6 +40,7 @@ public class UpgradeDynamicDataMapping extends UpgradeProcess {
 
 	@Override
 	protected void doUpgrade() throws Exception {
+/*
 		try {
 			runSQL("alter table DDMTemplate add classNameId LONG");
 
@@ -53,12 +54,12 @@ public class UpgradeDynamicDataMapping extends UpgradeProcess {
 				DDMTemplateTable.TABLE_SQL_CREATE,
 				DDMTemplateTable.TABLE_SQL_ADD_INDEXES);
 		}
-
+*/
 		long classNameId = PortalUtil.getClassNameId(DDMStructure.class);
 
 		runSQL("update DDMTemplate set classNameId = " + classNameId);
 
-		updateStructures();
+//		updateStructures();
 	}
 
 	protected void updateMetadataElement(
