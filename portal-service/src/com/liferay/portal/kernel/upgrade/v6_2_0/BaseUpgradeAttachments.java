@@ -297,6 +297,13 @@ public abstract class BaseUpgradeAttachments extends UpgradeProcess {
 
 			return repositoryId;
 		}
+		catch (SQLException sqle) {
+			_log.warn(
+				"Error adding repository for " + portletId + ": " +
+				sqle.getMessage());
+
+			return -1;
+		}
 		finally {
 			DataAccess.cleanUp(con, ps);
 		}
@@ -349,7 +356,7 @@ public abstract class BaseUpgradeAttachments extends UpgradeProcess {
 			String name, boolean hidden)
 		throws Exception {
 
-		if (parentFolderId < 0) {
+		if (repositoryId < 0 || parentFolderId < 0) {
 			return -1;
 		}
 
@@ -444,6 +451,11 @@ public abstract class BaseUpgradeAttachments extends UpgradeProcess {
 			groupId, companyId, userId, userName, createDate,
 			PortalUtil.getClassNameId(_LIFERAY_REPOSITORY_CLASS_NAME),
 			getPortletId());
+
+		if (repositoryId < 0) {
+			return;
+		}
+
 		long containerModelFolderId = getContainerModelFolderId(
 			groupId, companyId, resourcePrimKey, containerModelId, userId,
 			userName, createDate);
