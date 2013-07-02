@@ -33,6 +33,7 @@ import com.liferay.portlet.documentlibrary.store.DLStoreUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 
 /**
@@ -104,6 +105,12 @@ public abstract class BaseUpgradeAttachments extends UpgradeProcess {
 			ps.executeUpdate();
 
 			return fileEntryId;
+		}
+		catch (SQLException sqle) {
+			_log.warn(
+				"Error adding file entry " + name + ": " + sqle.getMessage());
+
+			return -1;
 		}
 		finally {
 			DataAccess.cleanUp(con, ps);
@@ -439,6 +446,10 @@ public abstract class BaseUpgradeAttachments extends UpgradeProcess {
 				groupId, companyId, userId, getClassName(), resourcePrimKey,
 				userName, createDate, repositoryId, containerModelFolderId,
 				name, extension, mimeType, title, size);
+
+			if (fileEntryId < 0) {
+				continue;
+			}
 
 			addDLFileVersion(
 				increment(), groupId, companyId, userId, userName, createDate,
