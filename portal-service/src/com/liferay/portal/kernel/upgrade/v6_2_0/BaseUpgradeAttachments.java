@@ -235,6 +235,12 @@ public abstract class BaseUpgradeAttachments extends UpgradeProcess {
 
 			return folderId;
 		}
+		catch (SQLException sqle) {
+			_log.warn(
+				"Error adding folder for " + name + ": " + sqle.getMessage());
+
+			return -1;
+		}
 		finally {
 			DataAccess.cleanUp(con, ps);
 		}
@@ -251,6 +257,10 @@ public abstract class BaseUpgradeAttachments extends UpgradeProcess {
 			increment(), groupId, companyId, userId, userName, createDate,
 			repositoryId, true, DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
 			portletId, true);
+
+		if (folderId < 0) {
+			return -1;
+		}
 
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -338,6 +348,10 @@ public abstract class BaseUpgradeAttachments extends UpgradeProcess {
 			Timestamp createDate, long repositoryId, long parentFolderId,
 			String name, boolean hidden)
 		throws Exception {
+
+		if (parentFolderId < 0) {
+			return -1;
+		}
 
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -433,6 +447,10 @@ public abstract class BaseUpgradeAttachments extends UpgradeProcess {
 		long containerModelFolderId = getContainerModelFolderId(
 			groupId, companyId, resourcePrimKey, containerModelId, userId,
 			userName, createDate);
+
+		if (containerModelFolderId < 0) {
+			return;
+		}
 
 		for (String attachment : attachments) {
 			String name = String.valueOf(
