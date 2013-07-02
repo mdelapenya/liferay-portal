@@ -171,6 +171,11 @@ public abstract class BaseUpgradeAttachments extends UpgradeProcess {
 
 			ps.executeUpdate();
 		}
+		catch (SQLException sqle) {
+			_log.warn(
+				"Error adding file version for " + title + ": " +
+				sqle.getMessage());
+		}
 		finally {
 			DataAccess.cleanUp(con, ps);
 		}
