@@ -159,7 +159,8 @@ public class VerifyDocumentLibrary extends VerifyProcess {
 				catch (Exception e) {
 					if (_log.isWarnEnabled()) {
 						_log.warn(
-							"Unable to find file entry " + dlFileEntry.getName(),
+							"Unable to find file entry " +
+								dlFileEntry.getName(),
 							e);
 					}
 
