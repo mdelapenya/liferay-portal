@@ -247,6 +247,11 @@ public class VerifyAuditedModel extends VerifyProcess {
 
 			ps.executeUpdate();
 		}
+		catch (SQLException sqle) {
+			if (_log.isWarnEnabled()) {
+				_log.warn("Unable to verify model " + modelName, sqle);
+			}
+		}
 		finally {
 			DataAccess.cleanUp(con, ps);
 		}
