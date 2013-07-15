@@ -85,6 +85,8 @@ public interface DB {
 
 	public String buildSQL(String template) throws IOException;
 
+	public String buildSQLDropDatabase(String databaseName);
+
 	public void buildSQLFile(String sqlDir, String fileName)
 		throws IOException;
 
