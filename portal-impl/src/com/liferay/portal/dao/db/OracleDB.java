@@ -56,6 +56,17 @@ public class OracleDB extends BaseDB {
 	}
 
 	@Override
+	public String buildSQLDropDatabase(String databaseName) {
+		StringBundler sb = new StringBundler(3);
+
+		sb.append("drop user ");
+		sb.append(databaseName);
+		sb.append( "cascade");
+
+		return sb.toString();
+	}
+
+	@Override
 	public void buildSQLFile(String sqlDir, String fileName)
 		throws IOException {
 

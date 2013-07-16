@@ -165,6 +165,16 @@ public abstract class BaseDB implements DB {
 	public abstract String buildSQL(String template) throws IOException;
 
 	@Override
+	public String buildSQLDropDatabase(String databaseName) {
+		StringBundler sb = new StringBundler(2);
+
+		sb.append("drop database ");
+		sb.append(databaseName);
+
+		return sb.toString();
+	}
+
+	@Override
 	public void buildSQLFile(String sqlDir, String fileName)
 		throws IOException {
 
