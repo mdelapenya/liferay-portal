@@ -205,6 +205,8 @@ public interface Portal {
 	 */
 	public String addPreservedParameters(ThemeDisplay themeDisplay, String url);
 
+	public void addUserLocaleOptionsMessage(HttpServletRequest request);
+
 	/**
 	 * Clears the render parameters in the request if the portlet is in the
 	 * action phase.
@@ -241,6 +243,8 @@ public interface Portal {
 	 * @return the generated key
 	 */
 	public String generateRandomKey(HttpServletRequest request, String input);
+
+	public String getAbsoluteURL(HttpServletRequest request, String url);
 
 	public LayoutQueryStringComposite getActualLayoutQueryStringComposite(
 			long groupId, boolean privateLayout, String friendlyURL,
@@ -1048,6 +1052,9 @@ public interface Portal {
 		throws PortalException, SystemException;
 
 	public long[] getSiteAndCompanyGroupIds(ThemeDisplay themeDisplay)
+		throws PortalException, SystemException;
+
+	public Locale getSiteDefaultLocale(long groupId)
 		throws PortalException, SystemException;
 
 	public long getSiteGroupId(long groupId)

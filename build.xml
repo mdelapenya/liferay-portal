@@ -342,12 +342,12 @@ ${app.server.tomcat.dir}, then run "ant -buildfile build-dist.xml unzip-tomcat".
 			<then>
 				<if>
 					<not>
-						<available file="${app.server.dir}/contexts/root.xml" />
+						<available file="${app.server.dir}/webapps/root.xml" />
 					</not>
 					<then>
 						<copy
 							file="tools/servers/jetty/contexts/root.xml"
-							tofile="${app.server.dir}/contexts/root.xml"
+							tofile="${app.server.dir}/webapps/root.xml"
 						/>
 					</then>
 				</if>
@@ -618,7 +618,7 @@ print AdminControl.invoke(appManager, 'startApplication', 'liferay-portal')
 			destdir="${doc.java.dir}"
 			doctitle="Liferay ${lp.version} Public API Documentation"
 			header="&lt;b&gt;Liferay ${lp.version}&lt;/b&gt;"
-			maxmemory="1024m"
+			maxmemory="2048m"
 			noqualifier="java.*"
 			overview="portal-service/src/portal-service-overview.html"
 			stylesheetfile="${project.dir}/tools/javadoc.css"
@@ -659,7 +659,7 @@ print AdminControl.invoke(appManager, 'startApplication', 'liferay-portal')
 			destdir="${doc.java.dir}"
 			doctitle="Liferay ${lp.version} Internal API Documentation"
 			header="&lt;b&gt;Liferay ${lp.version}&lt;/b&gt;"
-			maxmemory="1024m"
+			maxmemory="2048m"
 			noqualifier="java.*"
 			overview="portal-impl/src/portal-impl-overview.html"
 			stylesheetfile="${project.dir}/tools/javadoc.css"

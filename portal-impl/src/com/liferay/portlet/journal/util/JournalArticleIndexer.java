@@ -337,7 +337,7 @@ public class JournalArticleIndexer extends BaseIndexer {
 		String articleDefaultLanguageId = LocalizationUtil.getDefaultLocale(
 			article.getContent());
 
-		Locale defaultLocale = LocaleUtil.getDefault();
+		Locale defaultLocale = LocaleUtil.getSiteDefault();
 
 		String defaultLanguageId = LocaleUtil.toLanguageId(defaultLocale);
 
@@ -473,6 +473,7 @@ public class JournalArticleIndexer extends BaseIndexer {
 
 		if (!article.isIndexable() ||
 			(!article.isApproved() && !article.isInTrash() &&
+			 !article.isExpired() &&
 			 (article.getVersion() !=
 				  JournalArticleConstants.VERSION_DEFAULT)) ||
 			(PortalUtil.getClassNameId(DDMStructure.class) ==

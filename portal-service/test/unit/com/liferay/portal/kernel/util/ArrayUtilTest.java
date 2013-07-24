@@ -28,6 +28,86 @@ import org.junit.Test;
 public class ArrayUtilTest {
 
 	@Test
+	public void testFilterDoubleArray() {
+		double[] array = ArrayUtil.filter(
+			new double[] {0.1, 0.2, 1.2, 1.3}, _doublePredicateFilter);
+
+		Assert.assertEquals(2, array.length);
+		AssertUtils.assertEquals(new double[] {1.2, 1.3}, array);
+	}
+
+	@Test
+	public void testFilterDoubleEmptyArray() {
+		double[] array = ArrayUtil.filter(
+			new double[0], _doublePredicateFilter);
+
+		Assert.assertEquals(0, array.length);
+		AssertUtils.assertEquals(new double[0], array);
+	}
+
+	@Test
+	public void testFilterDoubleNullArray() {
+		double[] array = null;
+
+		double[] filteredArray = ArrayUtil.filter(
+			array, _doublePredicateFilter);
+
+		Assert.assertNull(filteredArray);
+	}
+
+	@Test
+	public void testFilterIntegerArray() {
+		int[] array = ArrayUtil.filter(
+			new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, _integerPredicateFilter);
+
+		Assert.assertEquals(5, array.length);
+		Assert.assertArrayEquals(new int[] {5, 6, 7, 8, 9}, array);
+	}
+
+	@Test
+	public void testFilterIntegerEmptyArray() {
+		int[] array = ArrayUtil.filter(new int[0], _integerPredicateFilter);
+
+		Assert.assertEquals(0, array.length);
+		Assert.assertArrayEquals(new int[] {}, array);
+	}
+
+	@Test
+	public void testFilterIntegerNullArray() {
+		int[] array = null;
+
+		int[] filteredArray = ArrayUtil.filter(array, _integerPredicateFilter);
+
+		Assert.assertNull(filteredArray);
+	}
+
+	@Test
+	public void testFilterUserArray() {
+		User[] array = ArrayUtil.filter(
+			new User[] {new User("james", 17), new User("john", 26)},
+			_userPredicateFilter);
+
+		Assert.assertEquals(1, array.length);
+
+		Assert.assertEquals("john", array[0].getName());
+		Assert.assertEquals(26, array[0].getAge());
+	}
+
+	@Test
+	public void testFilterUserEmptyArray() {
+		User[] array = ArrayUtil.filter(new User[0], _userPredicateFilter);
+
+		Assert.assertEquals(0, array.length);
+	}
+
+	@Test
+	public void testFilterUserNullArray() {
+		User[] array = ArrayUtil.filter(null, _userPredicateFilter);
+
+		Assert.assertNull(array);
+	}
+
+	@Test
 	public void testToDoubleArray() throws Exception {
 		List<Double> list = new ArrayList<Double>();
 
@@ -97,6 +177,56 @@ public class ArrayUtilTest {
 
 			Assert.assertEquals(value.longValue(), array[i]);
 		}
+	}
+
+	private PredicateFilter<Double> _doublePredicateFilter =
+		new PredicateFilter<Double>() {
+
+			@Override
+			public boolean filter(Double d) {
+				return d >= 1.1;
+			}
+
+		};
+
+	private PredicateFilter<Integer> _integerPredicateFilter =
+		new PredicateFilter<Integer>() {
+
+			@Override
+			public boolean filter(Integer i) {
+				return i >= 5;
+			}
+
+		};
+
+	private PredicateFilter<User> _userPredicateFilter =
+		new PredicateFilter<User>() {
+
+			@Override
+			public boolean filter(User user) {
+				return user.getAge() > 18;
+			}
+
+		};
+
+	private class User {
+
+		public User(String name, int age) {
+			_name = name;
+			_age = age;
+		}
+
+		public int getAge() {
+			return _age;
+		}
+
+		public String getName() {
+			return _name;
+		}
+
+		private int _age;
+		private String _name;
+
 	}
 
 }

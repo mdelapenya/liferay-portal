@@ -46,6 +46,7 @@
 		padding: 0.5em 0.75em;
 		padding-right: 30px;
 		position: relative;
+		word-wrap: break-word;
 
 		.keywords {
 			float: none;
@@ -520,14 +521,6 @@
 			.lfr-asset-ratings {
 				margin: 0 0 1em;
 			}
-		}
-	}
-
-	.table-cell .taglib-workflow-status {
-		margin: 0;
-
-		.workflow-status {
-			padding-left: 0;
 		}
 	}
 

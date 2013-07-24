@@ -81,7 +81,6 @@ import com.liferay.portal.util.PrefsPropsUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.SubscriptionSender;
 import com.liferay.portal.webserver.WebServerServletTokenUtil;
-import com.liferay.portlet.asset.NoSuchEntryException;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetLink;
 import com.liferay.portlet.asset.model.AssetLinkConstants;
@@ -103,7 +102,6 @@ import com.liferay.portlet.journal.ArticleTypeException;
 import com.liferay.portlet.journal.ArticleVersionException;
 import com.liferay.portlet.journal.DuplicateArticleIdException;
 import com.liferay.portlet.journal.NoSuchArticleException;
-import com.liferay.portlet.journal.NoSuchArticleResourceException;
 import com.liferay.portlet.journal.StructureXsdException;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleConstants;
@@ -331,7 +329,7 @@ public class JournalArticleLocalServiceImpl
 
 		JournalArticle article = journalArticlePersistence.create(id);
 
-		Locale locale = LocaleUtil.getDefault();
+		Locale locale = LocaleUtil.getSiteDefault();
 
 		String defaultLanguageId = ParamUtil.getString(
 			serviceContext, "defaultLanguageId");
@@ -1056,12 +1054,15 @@ public class JournalArticleLocalServiceImpl
 
 			// Resource
 
-			try {
-				journalArticleResourceLocalService.deleteArticleResource(
+			JournalArticleResource articleResource =
+				journalArticleResourceLocalService.fetchArticleResource(
 					article.getGroupId(), article.getArticleId());
+
+			if (articleResource != null) {
+				journalArticleResourceLocalService.deleteJournalArticleResource(
+					articleResource);
 			}
-			catch (NoSuchArticleResourceException nsare) {
-			}
+
 		}
 
 		// Article
@@ -3198,10 +3199,15 @@ public class JournalArticleLocalServiceImpl
 		socialActivityCounterLocalService.disableActivityCounters(
 			JournalFolder.class.getName(), article.getFolderId());
 
+		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+		extraDataJSONObject.put("title", article.getTitle());
+
 		socialActivityLocalService.addActivity(
 			userId, article.getGroupId(), JournalArticle.class.getName(),
 			article.getResourcePrimKey(),
-			SocialActivityConstants.TYPE_MOVE_TO_TRASH, StringPool.BLANK, 0);
+			SocialActivityConstants.TYPE_MOVE_TO_TRASH,
+			extraDataJSONObject.toString(), 0);
 
 		if (oldStatus == WorkflowConstants.STATUS_PENDING) {
 			workflowInstanceLinkLocalService.deleteWorkflowInstanceLink(
@@ -3365,11 +3371,15 @@ public class JournalArticleLocalServiceImpl
 		socialActivityCounterLocalService.enableActivityCounters(
 			JournalFolder.class.getName(), article.getFolderId());
 
+		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+		extraDataJSONObject.put("title", article.getTitle());
+
 		socialActivityLocalService.addActivity(
 			userId, article.getGroupId(), JournalArticle.class.getName(),
 			article.getResourcePrimKey(),
-			SocialActivityConstants.TYPE_RESTORE_FROM_TRASH, StringPool.BLANK,
-			0);
+			SocialActivityConstants.TYPE_RESTORE_FROM_TRASH,
+			extraDataJSONObject.toString(), 0);
 	}
 
 	/**
@@ -4424,7 +4434,7 @@ public class JournalArticleLocalServiceImpl
 			article.setSmallImageId(latestArticle.getSmallImageId());
 		}
 
-		Locale locale = LocaleUtil.getDefault();
+		Locale locale = LocaleUtil.getSiteDefault();
 
 		String defaultLanguageId = ParamUtil.getString(
 			serviceContext, "defaultLanguageId");
@@ -4930,13 +4940,12 @@ public class JournalArticleLocalServiceImpl
 					(article.getVersion() !=
 						JournalArticleConstants.VERSION_DEFAULT)) {
 
-					AssetEntry draftAssetEntry = null;
-
-					try {
-						draftAssetEntry = assetEntryLocalService.getEntry(
+					AssetEntry draftAssetEntry =
+						assetEntryLocalService.fetchEntry(
 							JournalArticle.class.getName(),
 							article.getPrimaryKey());
 
+					if (draftAssetEntry != null) {
 						long[] assetCategoryIds =
 							draftAssetEntry.getCategoryIds();
 						String[] assetTagNames = draftAssetEntry.getTagNames();
@@ -4972,8 +4981,6 @@ public class JournalArticleLocalServiceImpl
 							JournalArticle.class.getName(),
 							article.getPrimaryKey());
 					}
-					catch (NoSuchEntryException nsee) {
-					}
 				}
 
 				if (article.getClassNameId() ==
@@ -5001,13 +5008,18 @@ public class JournalArticleLocalServiceImpl
 
 				// Social
 
+				JSONObject extraDataJSONObject =
+					JSONFactoryUtil.createJSONObject();
+
+				extraDataJSONObject.put("title", article.getTitle());
+
 				if (serviceContext.isCommandUpdate()) {
 					socialActivityLocalService.addActivity(
 						user.getUserId(), article.getGroupId(),
 						JournalArticle.class.getName(),
 						article.getResourcePrimKey(),
 						JournalActivityKeys.UPDATE_ARTICLE,
-						getExtraDataJSON(article, serviceContext), 0);
+						extraDataJSONObject.toString(), 0);
 				}
 				else {
 					socialActivityLocalService.addUniqueActivity(
@@ -5015,7 +5027,7 @@ public class JournalArticleLocalServiceImpl
 						JournalArticle.class.getName(),
 						article.getResourcePrimKey(),
 						JournalActivityKeys.ADD_ARTICLE,
-						getExtraDataJSON(article, serviceContext), 0);
+						extraDataJSONObject.toString(), 0);
 				}
 
 				// Indexer
@@ -5123,6 +5135,17 @@ public class JournalArticleLocalServiceImpl
 			// Subscriptions
 
 			notifySubscribers(article, serviceContext);
+		}
+
+		if (status == WorkflowConstants.STATUS_EXPIRED) {
+			List<JournalArticle> approvedArticles =
+				journalArticlePersistence.findByG_A_ST(
+					article.getGroupId(), article.getArticleId(),
+					WorkflowConstants.STATUS_APPROVED, 0, 1);
+
+			if (approvedArticles.isEmpty()) {
+				reindex(article);
+			}
 		}
 
 		return article;
@@ -5525,7 +5548,9 @@ public class JournalArticleLocalServiceImpl
 
 				if (Validator.isNull(elLanguage)) {
 					defaultElLanguage =
-						"_" + LocaleUtil.toLanguageId(LocaleUtil.getDefault());
+						"_" +
+							LocaleUtil.toLanguageId(
+								LocaleUtil.getSiteDefault());
 				}
 
 				long defaultImageId =
@@ -5626,7 +5651,7 @@ public class JournalArticleLocalServiceImpl
 
 			if (Validator.isNull(elLanguage)) {
 				defaultElLanguage =
-					"_" + LocaleUtil.toLanguageId(LocaleUtil.getDefault());
+					"_" + LocaleUtil.toLanguageId(LocaleUtil.getSiteDefault());
 			}
 
 			long defaultImageId =
@@ -5748,16 +5773,6 @@ public class JournalArticleLocalServiceImpl
 		dateInterval[1] = latestExpirationDate;
 
 		return dateInterval;
-	}
-
-	protected String getExtraDataJSON(
-		JournalArticle article, ServiceContext serviceContext) {
-
-		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
-
-		jsonObject.put("title", article.getTitle(serviceContext.getLocale()));
-
-		return jsonObject.toString();
 	}
 
 	protected String getUniqueUrlTitle(
@@ -6179,12 +6194,12 @@ public class JournalArticleLocalServiceImpl
 		Locale articleDefaultLocale = LocaleUtil.fromLanguageId(
 			LocalizationUtil.getDefaultLocale(content));
 
-		Locale[] availableLocales = LanguageUtil.getAvailableLocales();
+		Locale[] availableLocales = LanguageUtil.getAvailableLocales(groupId);
 
 		if (!ArrayUtil.contains(availableLocales, articleDefaultLocale)) {
 			LocaleException le = new LocaleException(
 				"The locale " + articleDefaultLocale +
-					" is not available in company " + companyId);
+					" is not available in site with groupId" + groupId);
 
 			Locale[] sourceAvailableLocales = {articleDefaultLocale};
 

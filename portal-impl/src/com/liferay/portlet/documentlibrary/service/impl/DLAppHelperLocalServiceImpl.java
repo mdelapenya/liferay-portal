@@ -17,6 +17,8 @@ package com.liferay.portlet.documentlibrary.service.impl;
 import com.liferay.portal.kernel.dao.orm.QueryDefinition;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.Message;
@@ -28,7 +30,6 @@ import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.transaction.TransactionCommitCallbackRegistryUtil;
 import com.liferay.portal.kernel.util.ListUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -45,7 +46,6 @@ import com.liferay.portal.service.ServiceContextUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.SubscriptionSender;
-import com.liferay.portlet.asset.NoSuchEntryException;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetLink;
 import com.liferay.portlet.asset.model.AssetLinkConstants;
@@ -183,16 +183,12 @@ public class DLAppHelperLocalServiceImpl
 			return;
 		}
 
-		AssetEntry draftAssetEntry = null;
+		AssetEntry draftAssetEntry = assetEntryLocalService.fetchEntry(
+			DLFileEntryConstants.getClassName(),
+			draftFileVersion.getPrimaryKey());
 
-		try {
-			draftAssetEntry = assetEntryLocalService.getEntry(
-				DLFileEntryConstants.getClassName(),
-				draftFileVersion.getPrimaryKey());
-
-			assetEntryLocalService.deleteEntry(draftAssetEntry.getEntryId());
-		}
-		catch (NoSuchEntryException nsee) {
+		if (draftAssetEntry != null) {
+			assetEntryLocalService.deleteEntry(draftAssetEntry);
 		}
 	}
 
@@ -537,10 +533,16 @@ public class DLAppHelperLocalServiceImpl
 
 		// Social
 
+		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+		extraDataJSONObject.put(
+			"title", TrashUtil.getOriginalTitle(dlFileShortcut.getToTitle()));
+
 		socialActivityLocalService.addActivity(
 			userId, dlFileShortcut.getGroupId(), DLFileShortcut.class.getName(),
 			dlFileShortcut.getFileShortcutId(),
-			SocialActivityConstants.TYPE_MOVE_TO_TRASH, StringPool.BLANK, 0);
+			SocialActivityConstants.TYPE_MOVE_TO_TRASH,
+			extraDataJSONObject.toString(), 0);
 
 		// Trash
 
@@ -679,11 +681,15 @@ public class DLAppHelperLocalServiceImpl
 		socialActivityCounterLocalService.enableActivityCounters(
 			DLFileEntryConstants.getClassName(), fileEntry.getFileEntryId());
 
+		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+		extraDataJSONObject.put("title", fileEntry.getTitle());
+
 		socialActivityLocalService.addActivity(
 			userId, fileEntry.getGroupId(), DLFileEntryConstants.getClassName(),
 			fileEntry.getFileEntryId(),
-			SocialActivityConstants.TYPE_RESTORE_FROM_TRASH, StringPool.BLANK,
-			0);
+			SocialActivityConstants.TYPE_RESTORE_FROM_TRASH,
+			extraDataJSONObject.toString(), 0);
 	}
 
 	@Override
@@ -705,11 +711,15 @@ public class DLAppHelperLocalServiceImpl
 		socialActivityCounterLocalService.enableActivityCounters(
 			DLFileShortcut.class.getName(), dlFileShortcut.getFileShortcutId());
 
+		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+		extraDataJSONObject.put("title", dlFileShortcut.getToTitle());
+
 		socialActivityLocalService.addActivity(
 			userId, dlFileShortcut.getGroupId(), DLFileShortcut.class.getName(),
 			dlFileShortcut.getFileShortcutId(),
-			SocialActivityConstants.TYPE_RESTORE_FROM_TRASH, StringPool.BLANK,
-			0);
+			SocialActivityConstants.TYPE_RESTORE_FROM_TRASH,
+			extraDataJSONObject.toString(), 0);
 
 		// Trash
 
@@ -747,11 +757,15 @@ public class DLAppHelperLocalServiceImpl
 		socialActivityCounterLocalService.enableActivityCounters(
 			DLFolderConstants.class.getName(), folder.getFolderId());
 
+		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+		extraDataJSONObject.put("title", folder.getName());
+
 		socialActivityLocalService.addActivity(
 			userId, folder.getGroupId(), DLFolderConstants.getClassName(),
 			folder.getFolderId(),
-			SocialActivityConstants.TYPE_RESTORE_FROM_TRASH, StringPool.BLANK,
-			0);
+			SocialActivityConstants.TYPE_RESTORE_FROM_TRASH,
+			extraDataJSONObject.toString(), 0);
 	}
 
 	@Override
@@ -1174,14 +1188,13 @@ public class DLAppHelperLocalServiceImpl
 				if (!latestFileVersionVersion.equals(
 						DLFileEntryConstants.VERSION_DEFAULT)) {
 
-					AssetEntry draftAssetEntry = null;
-
-					try {
-						long fileEntryTypeId = getFileEntryTypeId(fileEntry);
-
-						draftAssetEntry = assetEntryLocalService.getEntry(
+					AssetEntry draftAssetEntry =
+						assetEntryLocalService.fetchEntry(
 							DLFileEntryConstants.getClassName(),
 							latestFileVersion.getPrimaryKey());
+
+					if (draftAssetEntry != null) {
+						long fileEntryTypeId = getFileEntryTypeId(fileEntry);
 
 						long[] assetCategoryIds =
 							draftAssetEntry.getCategoryIds();
@@ -1214,10 +1227,7 @@ public class DLAppHelperLocalServiceImpl
 							userId, assetEntry.getEntryId(), assetLinkEntryIds,
 							AssetLinkConstants.TYPE_RELATED);
 
-						assetEntryLocalService.deleteEntry(
-							draftAssetEntry.getEntryId());
-					}
-					catch (NoSuchEntryException nsee) {
+						assetEntryLocalService.deleteEntry(draftAssetEntry);
 					}
 				}
 
@@ -1253,12 +1263,17 @@ public class DLAppHelperLocalServiceImpl
 					activityType = DLActivityKeys.ADD_FILE_ENTRY;
 				}
 
+				JSONObject extraDataJSONObject =
+					JSONFactoryUtil.createJSONObject();
+
+				extraDataJSONObject.put("title", fileEntry.getTitle());
+
 				socialActivityLocalService.addUniqueActivity(
 					latestFileVersion.getStatusByUserId(),
 					fileEntry.getGroupId(), activityDate,
 					DLFileEntryConstants.getClassName(),
-					fileEntry.getFileEntryId(), activityType, StringPool.BLANK,
-					0);
+					fileEntry.getFileEntryId(), activityType,
+					extraDataJSONObject.toString(), 0);
 
 				// Subscriptions
 
@@ -1353,11 +1368,15 @@ public class DLAppHelperLocalServiceImpl
 				DLFileEntryConstants.getClassName(),
 				fileEntry.getFileEntryId());
 
+			JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+			extraDataJSONObject.put("title", fileEntry.getTitle());
+
 			socialActivityLocalService.addActivity(
 				userId, fileEntry.getGroupId(),
 				DLFileEntryConstants.getClassName(), fileEntry.getFileEntryId(),
 				SocialActivityConstants.TYPE_RESTORE_FROM_TRASH,
-				StringPool.BLANK, 0);
+				extraDataJSONObject.toString(), 0);
 
 			return fileEntry;
 		}
@@ -1426,10 +1445,16 @@ public class DLAppHelperLocalServiceImpl
 		socialActivityCounterLocalService.disableActivityCounters(
 			DLFileEntryConstants.getClassName(), fileEntry.getFileEntryId());
 
+		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+		extraDataJSONObject.put(
+			"title", TrashUtil.getOriginalTitle(fileEntry.getTitle()));
+
 		socialActivityLocalService.addActivity(
 			userId, fileEntry.getGroupId(), DLFileEntryConstants.getClassName(),
 			fileEntry.getFileEntryId(),
-			SocialActivityConstants.TYPE_MOVE_TO_TRASH, StringPool.BLANK, 0);
+			SocialActivityConstants.TYPE_MOVE_TO_TRASH,
+			extraDataJSONObject.toString(), 0);
 
 		// Workflow
 
@@ -1477,11 +1502,15 @@ public class DLAppHelperLocalServiceImpl
 			socialActivityCounterLocalService.enableActivityCounters(
 				DLFolderConstants.class.getName(), folder.getFolderId());
 
+			JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+			extraDataJSONObject.put("title", folder.getName());
+
 			socialActivityLocalService.addActivity(
 				userId, folder.getGroupId(), DLFolderConstants.class.getName(),
 				folder.getFolderId(),
 				SocialActivityConstants.TYPE_RESTORE_FROM_TRASH,
-				StringPool.BLANK, 0);
+				extraDataJSONObject.toString(), 0);
 		}
 
 		return dlAppLocalService.moveFolder(
@@ -1521,10 +1550,14 @@ public class DLAppHelperLocalServiceImpl
 		socialActivityCounterLocalService.disableActivityCounters(
 			DLFolderConstants.class.getName(), folder.getFolderId());
 
+		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+		extraDataJSONObject.put("title", folder.getName());
+
 		socialActivityLocalService.addActivity(
 			userId, folder.getGroupId(), DLFolderConstants.getClassName(),
 			folder.getFolderId(), SocialActivityConstants.TYPE_MOVE_TO_TRASH,
-			StringPool.BLANK, 0);
+			extraDataJSONObject.toString(), 0);
 
 		return new LiferayFolder(dlFolder);
 	}

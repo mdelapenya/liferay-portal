@@ -92,6 +92,11 @@ public class LayoutStagedModelDataHandler
 		return CLASS_NAMES;
 	}
 
+	@Override
+	public String getDisplayName(Layout layout) {
+		return layout.getNameCurrentValue();
+	}
+
 	protected String[] appendPortletIds(
 		String[] portletIds, String[] newPortletIds, String portletsMergeMode) {
 
@@ -284,7 +289,7 @@ public class LayoutStagedModelDataHandler
 					PortletDataHandlerKeys.
 						LAYOUTS_IMPORT_MODE_MERGE_BY_LAYOUT_NAME)) {
 
-			Locale locale = LocaleUtil.getDefault();
+			Locale locale = LocaleUtil.getSiteDefault();
 
 			String localizedName = layout.getName(locale);
 

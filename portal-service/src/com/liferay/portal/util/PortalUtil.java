@@ -176,6 +176,10 @@ public class PortalUtil {
 		return getPortal().addPreservedParameters(themeDisplay, url);
 	}
 
+	public static void addUserLocaleOptionsMessage(HttpServletRequest request) {
+		getPortal().addUserLocaleOptionsMessage(request);
+	}
+
 	public static void clearRequestParameters(RenderRequest renderRequest) {
 		getPortal().clearRequestParameters(renderRequest);
 	}
@@ -194,6 +198,12 @@ public class PortalUtil {
 		HttpServletRequest request, String input) {
 
 		return getPortal().generateRandomKey(request, input);
+	}
+
+	public static String getAbsoluteURL(
+		HttpServletRequest request, String url) {
+
+		return getPortal().getAbsoluteURL(request, url);
 	}
 
 	public static LayoutQueryStringComposite
@@ -1358,6 +1368,12 @@ public class PortalUtil {
 		throws PortalException, SystemException {
 
 		return getPortal().getSiteAndCompanyGroupIds(themeDisplay);
+	}
+
+	public static Locale getSiteDefaultLocale(long groupId)
+		throws PortalException, SystemException {
+
+		return getPortal().getSiteDefaultLocale(groupId);
 	}
 
 	public static long getSiteGroupId(long scopeGroupId)

@@ -17,6 +17,8 @@
 <%@ include file="/html/portlet/portlet_configuration/init.jsp" %>
 
 <%
+long groupId = ParamUtil.getLong(request, "groupId", themeDisplay.getScopeGroupId());
+
 PortletURL portletURL = currentURLObj;
 
 portletURL.setParameter("tabs3", "all-export-processes");
@@ -42,14 +44,15 @@ OrderByComparator orderByComparator = BackgroundTaskUtil.getBackgroundTaskOrderB
 	orderByCol="<%= orderByCol %>"
 	orderByComparator="<%= orderByComparator %>"
 	orderByType="<%= orderByType %>"
-	total="<%= BackgroundTaskLocalServiceUtil.getBackgroundTasksCount(themeDisplay.getScopeGroupId(), selPortlet.getPortletId(), PortletExportBackgroundTaskExecutor.class.getName()) %>"
+	total="<%= BackgroundTaskLocalServiceUtil.getBackgroundTasksCount(groupId, selPortlet.getPortletId(), PortletExportBackgroundTaskExecutor.class.getName()) %>"
 >
 	<liferay-ui:search-container-results
-		results="<%= BackgroundTaskLocalServiceUtil.getBackgroundTasks(themeDisplay.getScopeGroupId(), selPortlet.getPortletId(), PortletExportBackgroundTaskExecutor.class.getName(), searchContainer.getStart(), searchContainer.getEnd(), searchContainer.getOrderByComparator()) %>"
+		results="<%= BackgroundTaskLocalServiceUtil.getBackgroundTasks(groupId, selPortlet.getPortletId(), PortletExportBackgroundTaskExecutor.class.getName(), searchContainer.getStart(), searchContainer.getEnd(), searchContainer.getOrderByComparator()) %>"
 	/>
 
 	<liferay-ui:search-container-row
 		className="com.liferay.portal.model.BackgroundTask"
+		keyProperty="backgroundTaskId"
 		modelVar="backgroundTask"
 	>
 		<liferay-ui:search-container-column-text

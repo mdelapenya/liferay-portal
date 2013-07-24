@@ -12,15 +12,13 @@
  * details.
  */
 
-package com.liferay.portlet.calendar.social;
+package com.liferay.portal.kernel.util;
 
 /**
- * @author Brian Wing Shun Chan
+ * @author Carlos Sierra Andrés
  */
-public class CalendarActivityKeys {
+public interface PredicateFilter<T> {
 
-	public static final int ADD_EVENT = 1;
-
-	public static final int UPDATE_EVENT = 2;
+	public boolean filter(T t);
 
 }
