@@ -23,6 +23,7 @@ import org.junit.Test;
 
 /**
  * @author Miguel Pastor
+ * @author Manuel de la Peña
  */
 public class DerbyDBTest extends BaseDBTestCase {
 
@@ -35,6 +36,11 @@ public class DerbyDBTest extends BaseDBTestCase {
 	@Override
 	protected DB getDB() {
 		return DerbyDB.getInstance();
+	}
+
+	@Override
+	protected String getJDBCDefaultURL() {
+		return "jdbc:derby:" + DATABASE_NAME;
 	}
 
 }

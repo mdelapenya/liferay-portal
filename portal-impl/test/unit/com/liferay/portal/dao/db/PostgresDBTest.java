@@ -23,6 +23,7 @@ import org.junit.Test;
 
 /**
  * @author Miguel Pastor
+ * @author Manuel de la Peña
  */
 public class PostgresDBTest extends BaseDBTestCase {
 
@@ -35,6 +36,11 @@ public class PostgresDBTest extends BaseDBTestCase {
 	@Override
 	protected DB getDB() {
 		return PostgreSQLDB.getInstance();
+	}
+
+	@Override
+	protected String getJDBCDefaultURL() {
+		return "jdbc:postgresql://localhost:5432/" + DATABASE_NAME;
 	}
 
 }

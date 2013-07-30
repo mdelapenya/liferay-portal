@@ -23,6 +23,7 @@ import org.junit.Test;
 
 /**
  * @author Miguel Pastor
+ * @author Manuel de la Peña
  */
 public class MySQLDBTest extends BaseDBTestCase {
 
@@ -35,6 +36,12 @@ public class MySQLDBTest extends BaseDBTestCase {
 	@Override
 	protected DB getDB() {
 		return MySQLDB.getInstance();
+	}
+
+	@Override
+	protected String getJDBCDefaultURL() {
+		return "jdbc:mysql://localhost/" + DATABASE_NAME +"?useUnicode=true" +
+			"&characterEncoding=UTF-8&useFastDateParsing=false";
 	}
 
 }

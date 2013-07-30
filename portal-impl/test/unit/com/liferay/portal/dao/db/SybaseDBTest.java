@@ -23,6 +23,7 @@ import org.junit.Test;
 
 /**
  * @author Miguel Pastor
+ * @author Manuel de la Peña
  */
 public class SybaseDBTest extends BaseDBTestCase {
 
@@ -35,6 +36,11 @@ public class SybaseDBTest extends BaseDBTestCase {
 	@Override
 	protected DB getDB() {
 		return SybaseDB.getInstance();
+	}
+
+	@Override
+	protected String getJDBCDefaultURL() {
+		return "jdbc:jtds:sybase://localhost:5000/" + DATABASE_NAME;
 	}
 
 }

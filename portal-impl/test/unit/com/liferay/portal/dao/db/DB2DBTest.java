@@ -23,6 +23,7 @@ import org.junit.Test;
 
 /**
  * @author Miguel Pastor
+ * @author Manuel de la Peña
  */
 public class DB2DBTest extends BaseDBTestCase {
 
@@ -35,6 +36,14 @@ public class DB2DBTest extends BaseDBTestCase {
 	@Override
 	protected DB getDB() {
 		return DB2DB.getInstance();
+	}
+
+	@Override
+	protected String getJDBCDefaultURL() {
+		return "jdbc:db2://localhost:50000/" + DATABASE_NAME +
+			":deferPrepares=false;fullyMaterializeInputStreams=true;" +
+			"fullyMaterializeLobData=true;progresssiveLocators=2;" +
+			"progressiveStreaming=2;";
 	}
 
 }

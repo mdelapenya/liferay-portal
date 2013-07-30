@@ -23,6 +23,7 @@ import org.junit.Test;
 
 /**
  * @author Miguel Pastor
+ * @author Manuel de la Peña
  */
 public class HypersonicDBTest extends BaseDBTestCase {
 
@@ -35,6 +36,11 @@ public class HypersonicDBTest extends BaseDBTestCase {
 	@Override
 	protected DB getDB() {
 		return HypersonicDB.getInstance();
+	}
+
+	@Override
+	protected String getJDBCDefaultURL() {
+		return "jdbc:hsqldb:${liferay.home}/data/hsql/" + DATABASE_NAME;
 	}
 
 }

@@ -23,6 +23,7 @@ import org.junit.Test;
 
 /**
  * @author Miguel Pastor
+ * @author Manuel de la Peña
  */
 public class SQLServerDBTest extends BaseDBTestCase {
 
@@ -35,6 +36,10 @@ public class SQLServerDBTest extends BaseDBTestCase {
 	@Override
 	protected DB getDB() {
 		return SQLServerDB.getInstance();
+	}
+
+	protected String getJDBCDefaultURL() {
+		return "jdbc:jtds:sqlserver://localhost/" + DATABASE_NAME;
 	}
 
 }

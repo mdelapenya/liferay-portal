@@ -23,6 +23,7 @@ import org.junit.Test;
 
 /**
  * @author Miguel Pastor
+ * @author Manuel de la Peña
  */
 public class IngresDBTest extends BaseDBTestCase {
 
@@ -35,6 +36,11 @@ public class IngresDBTest extends BaseDBTestCase {
 	@Override
 	protected DB getDB() {
 		return IngresDB.getInstance();
+	}
+
+	@Override
+	protected String getJDBCDefaultURL() {
+		return "jdbc:ingres://localhost:II7/" + DATABASE_NAME;
 	}
 
 }
