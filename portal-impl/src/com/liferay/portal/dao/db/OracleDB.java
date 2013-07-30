@@ -21,6 +21,8 @@ import com.liferay.portal.kernel.io.unsync.UnsyncBufferedReader;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringReader;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 
@@ -121,6 +123,11 @@ public class OracleDB extends BaseDB {
 
 		FileUtil.write(
 			sqlDir + "/" + fileName + "/" + fileName + "-oracle.sql", oracle);
+	}
+
+	@Override
+	public String getDatabaseName(String jdbcDefaultURL) {
+		return PropsUtil.get(PropsKeys.JDBC_DEFAULT_USERNAME);
 	}
 
 	@Override

@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.io.unsync.UnsyncBufferedReader;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringReader;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.IOException;
@@ -57,6 +58,16 @@ public class DB2DB extends BaseDB {
 		template = StringUtil.replace(template, "\\n", "'||CHR(10)||'");
 
 		return template;
+	}
+
+	public String getDatabaseName(String jdbcDefaultURL) {
+		int pos = jdbcDefaultURL.lastIndexOf(StringPool.SLASH);
+
+		String databaseName = jdbcDefaultURL.substring(pos + 1);
+
+		pos = databaseName.lastIndexOf(StringPool.COLON);
+
+		return databaseName.substring(0, pos);
 	}
 
 	@Override

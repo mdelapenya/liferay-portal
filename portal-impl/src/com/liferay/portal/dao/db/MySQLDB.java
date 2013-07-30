@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.dao.jdbc.DataAccess;
 import com.liferay.portal.kernel.io.unsync.UnsyncBufferedReader;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringReader;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.util.PropsValues;
 
@@ -53,6 +54,17 @@ public class MySQLDB extends BaseDB {
 		template = StringUtil.replace(template, "\\'", "''");
 
 		return template;
+	}
+
+	@Override
+	public String getDatabaseName(String jdbcDefaultURL) {
+		int pos = jdbcDefaultURL.indexOf(StringPool.QUESTION);
+
+		String databaseName = jdbcDefaultURL.substring(0, pos);
+
+		pos = databaseName.lastIndexOf(StringPool.SLASH);
+
+		return databaseName.substring(pos + 1);
 	}
 
 	@Override

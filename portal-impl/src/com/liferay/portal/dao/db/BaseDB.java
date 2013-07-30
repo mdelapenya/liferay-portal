@@ -182,6 +182,13 @@ public abstract class BaseDB implements DB {
 	}
 
 	@Override
+	public String getDatabaseName(String jdbcDefaultURL) {
+		int pos = jdbcDefaultURL.lastIndexOf(StringPool.SLASH);
+
+		return jdbcDefaultURL.substring(pos + 1);
+	}
+
+	@Override
 	@SuppressWarnings("unused")
 	public List<Index> getIndexes(Connection con) throws SQLException {
 		return Collections.emptyList();

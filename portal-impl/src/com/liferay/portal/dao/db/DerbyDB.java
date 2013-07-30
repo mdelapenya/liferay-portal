@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.io.unsync.UnsyncStringReader;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.IOException;
@@ -46,6 +47,13 @@ public class DerbyDB extends BaseDB {
 		template = StringUtil.replace(template , "\\'", "''");
 
 		return template;
+	}
+
+	@Override
+	public String getDatabaseName(String jdbcDefaultURL) {
+		int pos = jdbcDefaultURL.lastIndexOf(StringPool.COLON);
+
+		return jdbcDefaultURL.substring(pos + 1);
 	}
 
 	@Override

@@ -91,6 +91,8 @@ public interface DB {
 	public void buildSQLFile(String sqlDir, String fileName)
 		throws IOException;
 
+	public String getDatabaseName(String jdbcDefaultURL);
+
 	public List<Index> getIndexes(Connection con) throws SQLException;
 
 	public String getTemplateFalse();
