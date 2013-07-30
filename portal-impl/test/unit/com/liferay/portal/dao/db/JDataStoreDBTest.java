@@ -23,8 +23,14 @@ import org.junit.Test;
 
 /**
  * @author Miguel Pastor
+ * @author Manuel de la Peña
  */
 public class JDataStoreDBTest extends BaseDBTestCase {
+
+	@Override
+	public void testGetDatabaseName() throws Exception {
+		Assert.assertTrue("This test does not apply", true);
+	}
 
 	@Test
 	public void testRewordRenameTable() throws IOException {
@@ -35,6 +41,11 @@ public class JDataStoreDBTest extends BaseDBTestCase {
 	@Override
 	protected DB getDB() {
 		return JDataStoreDB.getInstance();
+	}
+
+	@Override
+	protected String getJDBCDefaultURL() {
+		return null;
 	}
 
 }
