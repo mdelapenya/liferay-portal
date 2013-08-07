@@ -39,6 +39,11 @@
 
 	<property name="liferay.home" value="${app.server.parent.dir}" />
 
+	<path id="groovy.classpath">
+		<fileset dir="${project.dir}/lib/portal" includes="*.jar" excludes="antlr3*.jar"/>
+		<fileset dir="${project.dir}/lib/development" includes="junit*.jar" />
+	</path>
+
 	<path id="lib.classpath">
 		<fileset dir="${project.dir}/lib/development" includes="*.jar" />
 		<fileset dir="${project.dir}/lib/global" includes="*.jar" />
@@ -473,6 +478,10 @@ Please set the environment variable ANT_OPTS to the recommended value of
 		<if>
 			<available file="test/${test.type}" type="dir" />
 			<then>
+				<taskdef name="groovyc"
+						 classname="org.codehaus.groovy.ant.Groovyc"
+						 classpathref="groovy.classpath"/>
+
 				<mkdir dir="test-classes/${test.type}" />
 				<mkdir dir="test-results/${test.type}" />
 
@@ -492,6 +501,13 @@ Please set the environment variable ANT_OPTS to the recommended value of
 					nowarn="${javac.nowarn}"
 					srcdir="test/${test.type}"
 				/>
+
+				<groovyc
+					srcdir="test/${test.type}"
+					destdir="test-classes/${test.type}"
+					listfiles="true"
+					classpath="${classpath}"/>
+
 			</then>
 		</if>
 	</target>
