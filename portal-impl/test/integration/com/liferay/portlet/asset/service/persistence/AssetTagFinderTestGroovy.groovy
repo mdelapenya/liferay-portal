@@ -67,18 +67,6 @@ import org.junit.runner.RunWith
 @Transactional
 class AssetTagFinderTestGroovy {
 
-	def isEqualsLowerCase = { to -> { x, _ -> assert x == to.toLowerCase() } }
-
-	def isOneMore = { pre, post -> assert (pre + 1) == post }
-	def isTheSame = { pre, post -> assert pre == post }
-	def throwsException = { pre, _ -> assert pre instanceof Exception }
-
-	Group scopeGroup;
-	Group siteGroup;
-
-	String assetTagName;
-
-
 	@Before
 	public void setUp() {
 		scopeGroup = addScopeGroup()
@@ -91,33 +79,22 @@ class AssetTagFinderTestGroovy {
 		long classNameId = PortalUtil.getClassNameId(BlogsEntry.class)
 
 		testWithPermissions(
-			that: isOneMore,
-			when: { AssetTagFinderUtil.filterCountByG_C_N(
-				scopeGroup.groupId, classNameId, assetTagName) },
+			that: [(scopeGroup): incrementsOne, (siteGroup): doesNotIncrement],
+			when: {
+					AssetTagFinderUtil.filterCountByG_C_N(
+						probe.getGroupId(), classNameId, assetTagName)
+			},
 			doing: { addBlogsEntry(scopeGroup.getGroupId(), assetTagName) }
 		)
-
-		testWithPermissions(
-			that: isTheSame,
-			when: { AssetTagFinderUtil.filterCountByG_C_N(
-				siteGroup.getGroupId(), classNameId, assetTagName) },
-			doing: { addBlogsEntry(scopeGroup.getGroupId(), assetTagName) }
-		)
-
 	}
 
 	@Test public void testFilterCountByG_N() {
 		testWithPermissions(
-			that: isOneMore,
-			when: { AssetTagFinderUtil.filterCountByG_N(
-				scopeGroup.getGroupId(), assetTagName) },
-			doing: { addBlogsEntry(scopeGroup.getGroupId(), assetTagName) }
-		)
-
-		testWithPermissions(
-			that: isTheSame,
-			when: { AssetTagFinderUtil.filterCountByG_N(
-				siteGroup.getGroupId(), assetTagName) },
+			that: [(scopeGroup): incrementsOne, (siteGroup): doesNotIncrement],
+			when: {
+					AssetTagFinderUtil.filterCountByG_N(
+						probe.getGroupId(), assetTagName)
+			},
 			doing: { addBlogsEntry(scopeGroup.getGroupId(), assetTagName) }
 		)
 	}
@@ -126,22 +103,13 @@ class AssetTagFinderTestGroovy {
 		String[] assetTagProperties = ["key:value"] as String[]
 
 		testWithPermissions(
-			that: isTheSame,
-			when: { AssetTagFinderUtil.filterCountByG_N_P(
-				scopeGroup.getGroupId(), assetTagName, assetTagProperties) },
+			that: [(scopeGroup): doesNotIncrement, (siteGroup): incrementsOne],
+			when: {
+					AssetTagFinderUtil.filterCountByG_N_P(
+					probe.getGroupId(), assetTagName, assetTagProperties)
+			},
 			doing: { addAssetTag(
 				siteGroup.getGroupId(), assetTagName, assetTagProperties) }
-		)
-
-		String anotherAssetTagName = ServiceTestUtil.randomString();
-
-		testWithPermissions(
-			that: isOneMore,
-			when: { AssetTagFinderUtil.filterCountByG_N_P(
-				siteGroup.getGroupId(), anotherAssetTagName, assetTagProperties) },
-			doing: { addAssetTag(
-				siteGroup.getGroupId(), anotherAssetTagName, assetTagProperties)
-			}
 		)
 	}
 
@@ -149,18 +117,12 @@ class AssetTagFinderTestGroovy {
 		long classNameId = PortalUtil.getClassNameId(BlogsEntry.class)
 
 		testWithPermissions(
-			that: isOneMore,
-			when: { AssetTagFinderUtil.filterFindByG_C_N(
-				scopeGroup.getGroupId(), classNameId, assetTagName,
-				QueryUtil.ALL_POS, QueryUtil.ALL_POS, null).size() },
-			doing: { addBlogsEntry(scopeGroup.getGroupId(), assetTagName) }
-		)
-
-		testWithPermissions(
-			that: isTheSame,
-			when: { AssetTagFinderUtil.filterFindByG_C_N(
-				siteGroup.getGroupId(), classNameId, assetTagName,
-				QueryUtil.ALL_POS, QueryUtil.ALL_POS, null).size() },
+			that: [(scopeGroup): incrementsOne, (siteGroup): doesNotIncrement],
+			when: {
+					AssetTagFinderUtil.filterFindByG_C_N(
+						probe.getGroupId(), classNameId, assetTagName,
+						QueryUtil.ALL_POS, QueryUtil.ALL_POS, null).size()
+			},
 			doing: { addBlogsEntry(scopeGroup.getGroupId(), assetTagName) }
 		)
 	}
@@ -169,16 +131,20 @@ class AssetTagFinderTestGroovy {
 		addAssetTag(siteGroup.getGroupId(), assetTagName, null)
 
 		testWithPermissions(
-			that: throwsException,
-			when: { catchException { AssetTagFinderUtil.filterFindByG_N(
-					scopeGroup.getGroupId(), assetTagName) }
+			that: [(scopeGroup): throwsException ],
+			when: {
+				catchException {
+					AssetTagFinderUtil.filterFindByG_N(
+						probe.getGroupId(), assetTagName)
+				}
 			}
 		)
 
 		testWithPermissions(
-			that: isEqualsLowerCase(assetTagName),
-			when: { AssetTagFinderUtil.filterFindByG_N(
-				siteGroup.getGroupId(), assetTagName).getName()
+			that: [(siteGroup): isEqualsLowerCase(assetTagName)],
+			when: {
+					AssetTagFinderUtil.filterFindByG_N(
+					probe.getGroupId(), assetTagName).getName()
 			}
 		)
 	}
@@ -187,31 +153,30 @@ class AssetTagFinderTestGroovy {
 		String[] assetTagProperties = ["key:value"] as String[]
 
 		testWithPermissions(
-			that: isTheSame,
+			that: [(scopeGroup): doesNotIncrement, (siteGroup): incrementsOne],
 			when: { AssetTagFinderUtil.filterFindByG_N_P(
-				[scopeGroup.getGroupId()] as long[], assetTagName,
-				assetTagProperties, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
-				null).size()
+					[probe.getGroupId()] as long[], assetTagName,
+					assetTagProperties, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+					null).size()
 			},
 			doing: { addAssetTag(
 				siteGroup.getGroupId(), assetTagName, assetTagProperties)
 			}
 		)
-
-		String anotherAssetTagName = ServiceTestUtil.randomString();
-
-		testWithPermissions(
-			that: isOneMore,
-			when: { AssetTagFinderUtil.filterFindByG_N_P(
-				[siteGroup.getGroupId()] as long[], anotherAssetTagName,
-				assetTagProperties, QueryUtil.ALL_POS,
-				QueryUtil.ALL_POS, null).size()
-			},
-			doing: { addAssetTag(
-				siteGroup.getGroupId(), anotherAssetTagName, assetTagProperties)
-			}
-		)
 	}
+
+	protected String assetTagName;
+
+	protected def isEqualsLowerCase =
+		{ to -> { x, _ -> assert x == to.toLowerCase() } }
+
+	protected def incrementsOne = { pre, post -> assert (pre + 1) == post }
+	protected def doesNotIncrement = { pre, post -> assert pre == post }
+	protected def throwsException =
+		{ pre, _ -> assert pre instanceof Exception }
+
+	protected Group scopeGroup;
+	protected Group siteGroup;
 
 	protected void addAssetTag(long groupId, String name, String[] properties)
 		throws Exception {
@@ -261,7 +226,11 @@ class AssetTagFinderTestGroovy {
 	}
 
 	private void testWithPermissions(Map m) {
-		def previous = m.when()
+		def previous = m.that.collect{ probe, assertion ->
+				def localWhen = m.when.clone()
+				localWhen.delegate = [probe: probe]
+				[probe, assertion, localWhen()]
+			}
 
 		if (m.doing) {
 			m.doing()
@@ -278,9 +247,11 @@ class AssetTagFinderTestGroovy {
 
 			PermissionThreadLocal.setPermissionChecker(permissionChecker);
 
-			def posterior = m.when()
-
-			m.that(previous, posterior)
+			previous.each{probe, assertion, prev ->
+				def localWhen = m.when.clone()
+				localWhen.delegate = [probe: probe]
+				assertion(prev, localWhen())
+			}
 		}
 		finally {
 			PermissionThreadLocal.setPermissionChecker(
