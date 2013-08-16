@@ -77,7 +77,7 @@ public class JournalArticleServiceTest {
 	public void testFetchLatestArticleExpiredWithStatusAny() throws Exception {
 		updateArticleAndExpireLastVersion("Version 2");
 
-		fetchLatestArticle(WorkflowConstants.STATUS_ANY);
+		fetchLatestArticle(WorkflowConstants.STATUS_ANY, false);
 
 		Assert.assertNotNull(_latestArticle);
 		Assert.assertTrue(_latestArticle.isExpired());
@@ -92,7 +92,7 @@ public class JournalArticleServiceTest {
 
 		updateArticleAndExpireLastVersion("Version 2");
 
-		fetchLatestArticle(WorkflowConstants.STATUS_APPROVED);
+		fetchLatestArticle(WorkflowConstants.STATUS_APPROVED, true);
 
 		Assert.assertNotNull(_latestArticle);
 		Assert.assertTrue(_latestArticle.isApproved());
@@ -107,7 +107,7 @@ public class JournalArticleServiceTest {
 
 		updateArticleAndExpireLastVersion("Version 2");
 
-		fetchLatestArticle(WorkflowConstants.STATUS_EXPIRED);
+		fetchLatestArticle(WorkflowConstants.STATUS_EXPIRED, false);
 
 		Assert.assertNotNull(_latestArticle);
 		Assert.assertTrue(_latestArticle.isExpired());
@@ -122,7 +122,7 @@ public class JournalArticleServiceTest {
 
 		_article = JournalTestUtil.updateArticle(_article, "Version 2");
 
-		fetchLatestArticle(WorkflowConstants.STATUS_ANY);
+		fetchLatestArticle(WorkflowConstants.STATUS_ANY, false);
 
 		Assert.assertNotNull(_latestArticle);
 		Assert.assertTrue(_latestArticle.isApproved());
@@ -137,7 +137,7 @@ public class JournalArticleServiceTest {
 
 		_article = JournalTestUtil.updateArticle(_article, "Version 2");
 
-		fetchLatestArticle(WorkflowConstants.STATUS_APPROVED);
+		fetchLatestArticle(WorkflowConstants.STATUS_APPROVED, true);
 
 		Assert.assertNotNull(_latestArticle);
 		Assert.assertTrue(_latestArticle.isApproved());
@@ -152,7 +152,7 @@ public class JournalArticleServiceTest {
 
 		_article = JournalTestUtil.updateArticle(_article, "Version 2");
 
-		fetchLatestArticle(WorkflowConstants.STATUS_EXPIRED);
+		fetchLatestArticle(WorkflowConstants.STATUS_EXPIRED, false);
 
 		Assert.assertNull(_latestArticle);
 	}
@@ -165,10 +165,11 @@ public class JournalArticleServiceTest {
 		Assert.assertEquals(1.1, _article.getVersion(), 0);
 	}
 
-	protected void fetchLatestArticle(int status) throws Exception {
+	protected void fetchLatestArticle(int status, boolean preferApproved)
+		throws Exception {
+
 		_latestArticle = JournalArticleLocalServiceUtil.fetchLatestArticle(
-			_article.getResourcePrimKey(), status,
-			status == WorkflowConstants.STATUS_APPROVED);
+			_article.getResourcePrimKey(), status, preferApproved);
 	}
 
 	protected void updateArticleAndExpireLastVersion(String title)
