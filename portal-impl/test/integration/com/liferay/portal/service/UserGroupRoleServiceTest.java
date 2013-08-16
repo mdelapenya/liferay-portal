@@ -23,14 +23,12 @@ import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.PrincipalException;
-import com.liferay.portal.security.permission.PermissionChecker;
-import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
-import com.liferay.portal.security.permission.PermissionThreadLocal;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.TransactionalCallbackAwareExecutionTestListener;
 import com.liferay.portal.util.GroupTestUtil;
 import com.liferay.portal.util.OrganizationTestUtil;
+import com.liferay.portal.util.PermissionCheckerTestUtil;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portal.util.UserTestUtil;
 
@@ -796,10 +794,7 @@ public class UserGroupRoleServiceTest {
 			long groupId, long roleId, User subjectUser, User objectUser)
 		throws Exception {
 
-		PermissionChecker permissionChecker =
-			PermissionCheckerFactoryUtil.create(subjectUser);
-
-		PermissionThreadLocal.setPermissionChecker(permissionChecker);
+		PermissionCheckerTestUtil.setPermissionChecker(objectUser);
 
 		UserGroupRoleServiceUtil.deleteUserGroupRoles(
 			objectUser.getUserId(), groupId, new long[] {roleId});
@@ -809,10 +804,7 @@ public class UserGroupRoleServiceTest {
 			long groupId, long roleId, User subjectUser, User objectUser)
 		throws Exception {
 
-		PermissionChecker permissionChecker =
-			PermissionCheckerFactoryUtil.create(subjectUser);
-
-		PermissionThreadLocal.setPermissionChecker(permissionChecker);
+		PermissionCheckerTestUtil.setPermissionChecker(objectUser);
 
 		UserGroupRoleServiceUtil.deleteUserGroupRoles(
 			new long[] {objectUser.getUserId()}, groupId, roleId);

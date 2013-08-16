@@ -24,14 +24,12 @@ import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.ActionKeys;
-import com.liferay.portal.security.permission.PermissionChecker;
-import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
-import com.liferay.portal.security.permission.PermissionThreadLocal;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
+import com.liferay.portal.util.PermissionCheckerTestUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portal.util.UserTestUtil;
@@ -116,13 +114,6 @@ public class WebServerTrashTest extends BaseWebServerTestCase {
 			MockHttpServletResponse.SC_OK, mockHttpServletResponse.getStatus());
 	}
 
-	protected void resetPermissionThreadLocal() throws Exception {
-		PermissionChecker permissionChecker =
-			PermissionCheckerFactoryUtil.create(TestPropsValues.getUser());
-
-		PermissionThreadLocal.setPermissionChecker(permissionChecker);
-	}
-
 	protected MockHttpServletResponse testRequestFile(
 			FileEntry fileEntry, User user, boolean statusInTrash)
 		throws Exception {
@@ -146,7 +137,7 @@ public class WebServerTrashTest extends BaseWebServerTestCase {
 		MockHttpServletResponse mockHttpServletResponse = service(
 			Method.GET, path, null, params, user, null);
 
-		resetPermissionThreadLocal();
+		PermissionCheckerTestUtil.setPermissionChecker();
 
 		return mockHttpServletResponse;
 	}
