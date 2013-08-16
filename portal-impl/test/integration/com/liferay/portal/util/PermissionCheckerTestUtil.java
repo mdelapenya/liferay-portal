@@ -31,12 +31,20 @@ public class PermissionCheckerTestUtil {
 	public static PermissionChecker getPermissionChecker(User user)
 		throws Exception {
 
+		setPermissionChecker(user);
+
+		return PermissionThreadLocal.getPermissionChecker();
+	}
+
+	public static void setPermissionChecker() throws Exception {
+		setPermissionChecker(TestPropsValues.getUser());
+	}
+
+	public static void setPermissionChecker(User user) throws Exception {
 		PermissionChecker permissionChecker =
 			PermissionCheckerFactoryUtil.create(user);
 
 		PermissionThreadLocal.setPermissionChecker(permissionChecker);
-
-		return PermissionThreadLocal.getPermissionChecker();
 	}
 
 }
