@@ -26,14 +26,12 @@ import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroupRole;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
-import com.liferay.portal.security.permission.PermissionChecker;
-import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
-import com.liferay.portal.security.permission.PermissionThreadLocal;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.TransactionalCallbackAwareExecutionTestListener;
 import com.liferay.portal.util.GroupTestUtil;
 import com.liferay.portal.util.OrganizationTestUtil;
+import com.liferay.portal.util.PermissionCheckerTestUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portal.util.UserTestUtil;
@@ -479,10 +477,7 @@ public class UserServiceTest {
 			long groupId, User subjectUser, User objectUser)
 		throws Exception {
 
-		PermissionChecker permissionChecker =
-			PermissionCheckerFactoryUtil.create(subjectUser);
-
-		PermissionThreadLocal.setPermissionChecker(permissionChecker);
+		PermissionCheckerTestUtil.setPermissionChecker(objectUser);
 
 		ServiceContext serviceContext = new ServiceContext();
 
@@ -494,10 +489,7 @@ public class UserServiceTest {
 			long organizationId, User subjectUser, User objectUser)
 		throws Exception {
 
-		PermissionChecker permissionChecker =
-			PermissionCheckerFactoryUtil.create(subjectUser);
-
-		PermissionThreadLocal.setPermissionChecker(permissionChecker);
+		PermissionCheckerTestUtil.setPermissionChecker(objectUser);
 
 		UserServiceUtil.unsetOrganizationUsers(
 			organizationId, new long[] {objectUser.getUserId()});

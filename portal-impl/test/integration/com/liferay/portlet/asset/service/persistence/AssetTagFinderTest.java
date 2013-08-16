@@ -24,7 +24,6 @@ import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.PermissionChecker;
-import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.security.permission.PermissionThreadLocal;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
@@ -34,6 +33,7 @@ import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.TransactionalExecutionTestListener;
 import com.liferay.portal.util.GroupTestUtil;
 import com.liferay.portal.util.LayoutTestUtil;
+import com.liferay.portal.util.PermissionCheckerTestUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portal.util.UserTestUtil;
@@ -85,10 +85,7 @@ public class AssetTagFinderTest {
 			PermissionThreadLocal.getPermissionChecker();
 
 		try {
-			PermissionChecker permissionChecker =
-				PermissionCheckerFactoryUtil.create(user);
-
-			PermissionThreadLocal.setPermissionChecker(permissionChecker);
+			PermissionCheckerTestUtil.setPermissionChecker(user);
 
 			int scopeGroupAssetTagsCount =
 				AssetTagFinderUtil.filterCountByG_C_N(
@@ -131,10 +128,7 @@ public class AssetTagFinderTest {
 			PermissionThreadLocal.getPermissionChecker();
 
 		try {
-			PermissionChecker permissionChecker =
-				PermissionCheckerFactoryUtil.create(user);
-
-			PermissionThreadLocal.setPermissionChecker(permissionChecker);
+			PermissionCheckerTestUtil.setPermissionChecker(user);
 
 			int scopeGroupAssetTagsCount = AssetTagFinderUtil.filterCountByG_N(
 				scopeGroup.getGroupId(), assetTagName);
@@ -177,10 +171,7 @@ public class AssetTagFinderTest {
 			PermissionThreadLocal.getPermissionChecker();
 
 		try {
-			PermissionChecker permissionChecker =
-				PermissionCheckerFactoryUtil.create(user);
-
-			PermissionThreadLocal.setPermissionChecker(permissionChecker);
+			PermissionCheckerTestUtil.setPermissionChecker(user);
 
 			int scopeGroupAssetTagsCount =
 				AssetTagFinderUtil.filterCountByG_N_P(
@@ -227,10 +218,7 @@ public class AssetTagFinderTest {
 			PermissionThreadLocal.getPermissionChecker();
 
 		try {
-			PermissionChecker permissionChecker =
-				PermissionCheckerFactoryUtil.create(user);
-
-			PermissionThreadLocal.setPermissionChecker(permissionChecker);
+			PermissionCheckerTestUtil.setPermissionChecker(user);
 
 			List<AssetTag> scopeGroupAssetTags =
 				AssetTagFinderUtil.filterFindByG_C_N(
@@ -271,10 +259,7 @@ public class AssetTagFinderTest {
 			PermissionThreadLocal.getPermissionChecker();
 
 		try {
-			PermissionChecker permissionChecker =
-				PermissionCheckerFactoryUtil.create(user);
-
-			PermissionThreadLocal.setPermissionChecker(permissionChecker);
+			PermissionCheckerTestUtil.setPermissionChecker(user);
 
 			try {
 				AssetTagFinderUtil.filterFindByG_N(
@@ -323,10 +308,7 @@ public class AssetTagFinderTest {
 			PermissionThreadLocal.getPermissionChecker();
 
 		try {
-			PermissionChecker permissionChecker =
-				PermissionCheckerFactoryUtil.create(user);
-
-			PermissionThreadLocal.setPermissionChecker(permissionChecker);
+			PermissionCheckerTestUtil.setPermissionChecker(user);
 
 			List<AssetTag> scopeGroupAssetTags =
 				AssetTagFinderUtil.filterFindByG_N_P(
