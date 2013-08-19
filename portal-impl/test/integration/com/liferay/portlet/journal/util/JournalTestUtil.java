@@ -531,6 +531,15 @@ public class JournalTestUtil {
 	}
 
 	public static JournalArticle updateArticle(
+			JournalArticle article, String title)
+		throws Exception {
+
+		return updateArticle(
+			article, title, article.getContent(),
+			ServiceTestUtil.getServiceContext());
+	}
+
+	public static JournalArticle updateArticle(
 			JournalArticle article, String title, String content)
 		throws Exception {
 
