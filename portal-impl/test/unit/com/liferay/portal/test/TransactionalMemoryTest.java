@@ -66,6 +66,7 @@ public class TransactionalMemoryTest {
 		_memoryStorage.reset();
 
 		Assert.assertEquals(0, _memoryStorage.getBasePersistences().size());
+		Assert.assertEquals(0, _memoryStorage.getBasePersistencesList().size());
 	}
 
 	private static TransactionalMemory _memoryStorage;

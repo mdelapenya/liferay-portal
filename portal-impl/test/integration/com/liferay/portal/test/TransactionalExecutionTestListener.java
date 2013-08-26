@@ -28,12 +28,14 @@ import com.liferay.portal.kernel.template.TemplateManagerUtil;
 import com.liferay.portal.kernel.test.AbstractExecutionTestListener;
 import com.liferay.portal.kernel.test.TestContext;
 import com.liferay.portal.service.persistence.BasePersistence;
+import com.liferay.portal.test.persistence.BasePersistenceWrapper;
 import com.liferay.portal.test.persistence.TransactionalPersistenceAdvice;
 import com.liferay.portal.util.PropsValues;
 import org.junit.Assert;
 
 import java.io.Serializable;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -49,21 +51,24 @@ public class TransactionalExecutionTestListener
 	extends AbstractExecutionTestListener {
 
 	public void rollback() {
-		Map<Serializable, BasePersistence<?>> basePersistences =
-			_transactionalPersistenceAdvice.getBasePersistences();
+		List<BasePersistenceWrapper> basePersistencesList =
+			_transactionalPersistenceAdvice.getBasePersistencesList();
 
-		Set<Serializable> primaryKeys = basePersistences.keySet();
+		for (int i = basePersistencesList.size() - 1; i >= 0; i--) {
+			BasePersistenceWrapper basePersistenceWrapper =
+				basePersistencesList.get(i);
 
-		for (Serializable primaryKey : primaryKeys) {
-			BasePersistence<?> basePersistence = basePersistences.get(
-				primaryKey);
+			BasePersistence<?> basePersistence =
+				basePersistenceWrapper.getBasePersistence();
+
+			Serializable key = basePersistenceWrapper.getKey();
 
 			try {
-				basePersistence.remove(primaryKey);
+				basePersistence.remove(key);
 			}
 			catch (Exception e) {
 				if (_log.isDebugEnabled()) {
-					_log.debug("The model with primary key " + primaryKey +
+					_log.debug("The model with primary key " + key +
 						" was already deleted");
 				}
 			}
@@ -105,9 +110,9 @@ public class TransactionalExecutionTestListener
 
 	@Override
 	public void runAfterTest(TestContext testContext) {
-		rollback();
+		/*rollback();
 
-		PropsValues.SPRING_HIBERNATE_SESSION_DELEGATED = true;
+		PropsValues.SPRING_HIBERNATE_SESSION_DELEGATED = true;*/
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(

@@ -19,6 +19,7 @@ import com.liferay.portal.service.persistence.BasePersistence;
 
 import java.io.Serializable;
 
+import java.util.List;
 import java.util.Map;
 
 import org.aopalliance.intercept.MethodInterceptor;
@@ -32,6 +33,10 @@ public class TransactionalPersistenceAdvice implements MethodInterceptor {
 
 	public Map<Serializable, BasePersistence<?>> getBasePersistences() {
 		return _transactionalMemory.getBasePersistences();
+	}
+
+	public List<BasePersistenceWrapper> getBasePersistencesList() {
+		return _transactionalMemory.getBasePersistencesList();
 	}
 
 	@Override

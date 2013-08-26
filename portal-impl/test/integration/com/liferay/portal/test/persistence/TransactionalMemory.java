@@ -18,7 +18,9 @@ import com.liferay.portal.service.persistence.BasePersistence;
 
 import java.io.Serializable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,15 +32,25 @@ public class TransactionalMemory {
 		return _basePersistences;
 	}
 
+	public List<BasePersistenceWrapper> getBasePersistencesList() {
+		return _basePersistencesList;
+	}
+
 	public void put(Serializable key, BasePersistence<?> value) {
 		_basePersistences.put(key, value);
+
+		_basePersistencesList.add(new BasePersistenceWrapper(key, value));
 	}
 
 	public void reset() {
 		_basePersistences.clear();
+		_basePersistencesList.clear();
 	}
 
 	private Map<Serializable, BasePersistence<?>> _basePersistences =
 		new HashMap<Serializable, BasePersistence<?>>();
+
+	private List<BasePersistenceWrapper> _basePersistencesList =
+			new ArrayList<BasePersistenceWrapper>();
 
 }
