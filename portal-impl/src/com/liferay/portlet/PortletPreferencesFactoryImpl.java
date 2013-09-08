@@ -89,6 +89,25 @@ public class PortletPreferencesFactoryImpl
 	}
 
 	@Override
+	public PortalPreferencesImpl fromXML(
+			long ownerId, int ownerType, String xml)
+		throws SystemException {
+
+		try {
+			Map<String, Preference> preferencesMap =
+				new HashMap<String, Preference>();
+
+			populateMap(xml, preferencesMap);
+
+			return new PortalPreferencesImpl(
+				ownerId, ownerType, xml, preferencesMap, false);
+		}
+		catch (SystemException se) {
+			throw se;
+		}
+	}
+
+	@Override
 	public PortletPreferencesImpl fromXML(
 			long companyId, long ownerId, int ownerType, long plid,
 			String portletId, String xml)
@@ -109,23 +128,15 @@ public class PortletPreferencesFactoryImpl
 		}
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #fromXML(long, int, String)}
+	 */
 	@Override
-	public PortalPreferencesImpl fromXML(
+	public PortalPreferences fromXML(
 			long companyId, long ownerId, int ownerType, String xml)
 		throws SystemException {
 
-		try {
-			Map<String, Preference> preferencesMap =
-				new HashMap<String, Preference>();
-
-			populateMap(xml, preferencesMap);
-
-			return new PortalPreferencesImpl(
-				companyId, ownerId, ownerType, xml, preferencesMap, false);
-		}
-		catch (SystemException se) {
-			throw se;
-		}
+		return fromXML(ownerId, ownerType, xml);
 	}
 
 	@Override
@@ -154,13 +165,13 @@ public class PortletPreferencesFactoryImpl
 			WebKeys.THEME_DISPLAY);
 
 		return getPortalPreferences(
-			request.getSession(), themeDisplay.getCompanyId(),
-			themeDisplay.getUserId(), themeDisplay.isSignedIn());
+			request.getSession(), themeDisplay.getUserId(),
+			themeDisplay.isSignedIn());
 	}
 
 	@Override
 	public PortalPreferences getPortalPreferences(
-			HttpSession session, long companyId, long userId, boolean signedIn)
+			HttpSession session, long userId, boolean signedIn)
 		throws SystemException {
 
 		long ownerId = userId;
@@ -172,7 +183,7 @@ public class PortletPreferencesFactoryImpl
 			PortalPreferencesWrapper portalPreferencesWrapper =
 				(PortalPreferencesWrapper)
 					PortalPreferencesLocalServiceUtil.getPreferences(
-						companyId, ownerId, ownerType);
+						ownerId, ownerType);
 
 			portalPreferences =
 				portalPreferencesWrapper.getPortalPreferencesImpl();
@@ -187,7 +198,7 @@ public class PortletPreferencesFactoryImpl
 				PortalPreferencesWrapper portalPreferencesWrapper =
 					(PortalPreferencesWrapper)
 						PortalPreferencesLocalServiceUtil.getPreferences(
-							companyId, ownerId, ownerType);
+							ownerId, ownerType);
 
 				PortalPreferencesImpl portalPreferencesImpl =
 					portalPreferencesWrapper.getPortalPreferencesImpl();
@@ -208,12 +219,35 @@ public class PortletPreferencesFactoryImpl
 		return portalPreferences;
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by
+	 *	{@link #getPortalPreferences(HttpSession, long, boolean)}
+	 */
+	@Override
+	public PortalPreferences getPortalPreferences(
+			HttpSession session, long companyId, long userId, boolean signedIn)
+		throws SystemException {
+
+		return getPortalPreferences(session, userId, signedIn);
+	}
+
+	@Override
+	public PortalPreferences getPortalPreferences(long userId, boolean signedIn)
+		throws SystemException {
+
+		return getPortalPreferences(null, userId, signedIn);
+	}
+
+	/**
+	 * @deprecated As of 6.2.0, replaced by
+	 *	{@link #getPortalPreferences(long, boolean)}
+	 */
 	@Override
 	public PortalPreferences getPortalPreferences(
 			long companyId, long userId, boolean signedIn)
 		throws SystemException {
 
-		return getPortalPreferences(null, companyId, userId, signedIn);
+		return getPortalPreferences(userId, signedIn);
 	}
 
 	@Override
