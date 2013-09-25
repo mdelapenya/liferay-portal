@@ -87,6 +87,7 @@ public class SynchronousDestinationExecutionTestListener
 
 			replaceDestination(DestinationNames.ASYNC_SERVICE);
 			replaceDestination(DestinationNames.BACKGROUND_TASK);
+			replaceDestination(DestinationNames.SCHEDULER_DISPATCH);
 			replaceDestination(DestinationNames.SUBSCRIPTION_SENDER);
 		}
 
