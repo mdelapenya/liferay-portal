@@ -45,6 +45,7 @@ import com.liferay.portlet.asset.service.persistence.AssetCategoryPropertyFinder
 import com.liferay.portlet.asset.service.persistence.AssetCategoryPropertyPersistence;
 import com.liferay.portlet.asset.service.persistence.AssetEntryFinder;
 import com.liferay.portlet.asset.service.persistence.AssetEntryPersistence;
+import com.liferay.portlet.asset.service.persistence.AssetEntryStatsPersistence;
 import com.liferay.portlet.asset.service.persistence.AssetLinkPersistence;
 import com.liferay.portlet.asset.service.persistence.AssetTagFinder;
 import com.liferay.portlet.asset.service.persistence.AssetTagPersistence;
@@ -666,6 +667,44 @@ public abstract class AssetTagLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
+	 * Returns the asset entry stats local service.
+	 *
+	 * @return the asset entry stats local service
+	 */
+	public com.liferay.portlet.asset.service.AssetEntryStatsLocalService getAssetEntryStatsLocalService() {
+		return assetEntryStatsLocalService;
+	}
+
+	/**
+	 * Sets the asset entry stats local service.
+	 *
+	 * @param assetEntryStatsLocalService the asset entry stats local service
+	 */
+	public void setAssetEntryStatsLocalService(
+		com.liferay.portlet.asset.service.AssetEntryStatsLocalService assetEntryStatsLocalService) {
+		this.assetEntryStatsLocalService = assetEntryStatsLocalService;
+	}
+
+	/**
+	 * Returns the asset entry stats persistence.
+	 *
+	 * @return the asset entry stats persistence
+	 */
+	public AssetEntryStatsPersistence getAssetEntryStatsPersistence() {
+		return assetEntryStatsPersistence;
+	}
+
+	/**
+	 * Sets the asset entry stats persistence.
+	 *
+	 * @param assetEntryStatsPersistence the asset entry stats persistence
+	 */
+	public void setAssetEntryStatsPersistence(
+		AssetEntryStatsPersistence assetEntryStatsPersistence) {
+		this.assetEntryStatsPersistence = assetEntryStatsPersistence;
+	}
+
+	/**
 	 * Returns the asset link local service.
 	 *
 	 * @return the asset link local service
@@ -1258,6 +1297,10 @@ public abstract class AssetTagLocalServiceBaseImpl extends BaseLocalServiceImpl
 	protected AssetEntryPersistence assetEntryPersistence;
 	@BeanReference(type = AssetEntryFinder.class)
 	protected AssetEntryFinder assetEntryFinder;
+	@BeanReference(type = com.liferay.portlet.asset.service.AssetEntryStatsLocalService.class)
+	protected com.liferay.portlet.asset.service.AssetEntryStatsLocalService assetEntryStatsLocalService;
+	@BeanReference(type = AssetEntryStatsPersistence.class)
+	protected AssetEntryStatsPersistence assetEntryStatsPersistence;
 	@BeanReference(type = com.liferay.portlet.asset.service.AssetLinkLocalService.class)
 	protected com.liferay.portlet.asset.service.AssetLinkLocalService assetLinkLocalService;
 	@BeanReference(type = AssetLinkPersistence.class)

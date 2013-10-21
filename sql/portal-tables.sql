@@ -148,6 +148,22 @@ create table AssetEntry (
 	viewCount INTEGER
 );
 
+create table AssetEntryStats (
+	entryStatsId LONG not null primary key,
+	groupId LONG,
+	companyId LONG,
+	userId LONG,
+	userName VARCHAR(75) null,
+	createDate DATE null,
+	modifiedDate DATE null,
+	classNameId LONG,
+	classPK LONG,
+	day INTEGER,
+	month INTEGER,
+	year INTEGER,
+	viewCount INTEGER
+);
+
 create table AssetLink (
 	linkId LONG not null primary key,
 	companyId LONG,

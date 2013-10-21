@@ -54,6 +54,11 @@ create index IX_FEC4A201 on AssetEntry (layoutUuid);
 create index IX_2E4E3885 on AssetEntry (publishDate);
 create index IX_9029E15A on AssetEntry (visible);
 
+create unique index IX_10A395AD on AssetEntryStats (classNameId, classPK, day, month, year);
+create index IX_6A692C5C on AssetEntryStats (groupId, day, month, year);
+create index IX_8740983A on AssetEntryStats (groupId, month, year);
+create index IX_B81A88F8 on AssetEntryStats (groupId, year);
+
 create index IX_128516C8 on AssetLink (entryId1);
 create index IX_56E0AB21 on AssetLink (entryId1, entryId2);
 create unique index IX_8F542794 on AssetLink (entryId1, entryId2, type_);
