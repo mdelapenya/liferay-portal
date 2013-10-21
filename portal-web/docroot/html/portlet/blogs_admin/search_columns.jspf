@@ -39,3 +39,14 @@
 	href="<%= rowURL %>"
 	name="status"
 />
+
+<%
+AssetEntry assetEntry = assetRendererFactory.getAssetEntry(
+	entry.getModelClassName(), entry.getPrimaryKey());
+%>
+
+<liferay-ui:search-container-column-text
+	name="visits"
+	title="visits"
+	value="<%= String.valueOf(assetEntry.getViewCount()) %>"
+/>

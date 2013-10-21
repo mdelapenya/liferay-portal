@@ -29,6 +29,7 @@ public class EntrySearchTerms extends EntryDisplayTerms {
 		author = DAOParamUtil.getString(portletRequest, AUTHOR);
 		status = DAOParamUtil.getString(portletRequest, STATUS);
 		title = DAOParamUtil.getString(portletRequest, TITLE);
+		visits = DAOParamUtil.getString(portletRequest, VISITS);
 	}
 
 }

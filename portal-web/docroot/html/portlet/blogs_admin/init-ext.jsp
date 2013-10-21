@@ -13,3 +13,8 @@
  * details.
  */
 --%>
+<%
+AssetRendererFactory assetRendererFactory =
+	AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
+		BlogsEntry.class.getName());
+%>

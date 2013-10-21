@@ -30,12 +30,15 @@ public class EntryDisplayTerms extends DisplayTerms {
 
 	public static final String TITLE = "title";
 
+	public static final String VISITS = "visits";
+
 	public EntryDisplayTerms(PortletRequest portletRequest) {
 		super(portletRequest);
 
 		author = ParamUtil.getString(portletRequest, AUTHOR);
 		status = ParamUtil.getString(portletRequest, STATUS);
 		title = ParamUtil.getString(portletRequest, TITLE);
+		visits = ParamUtil.getString(portletRequest, VISITS);
 	}
 
 	public String getAuthor() {
@@ -50,8 +53,13 @@ public class EntryDisplayTerms extends DisplayTerms {
 		return title;
 	}
 
+	public String getVisits() {
+		return visits;
+	}
+
 	protected String author;
 	protected String status;
 	protected String title;
+	protected String visits;
 
 }

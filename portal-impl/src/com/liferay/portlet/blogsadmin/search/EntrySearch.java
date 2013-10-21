@@ -35,6 +35,7 @@ public class EntrySearch extends SearchContainer<BlogsEntry> {
 		headerNames.add("author");
 		headerNames.add("createDate");
 		headerNames.add("status");
+		headerNames.add("visits");
 	}
 
 	public static final String EMPTY_RESULTS_MESSAGE = "no-entries-were-found";
@@ -53,6 +54,8 @@ public class EntrySearch extends SearchContainer<BlogsEntry> {
 			EntryDisplayTerms.STATUS, String.valueOf(displayTerms.getStatus()));
 		iteratorURL.setParameter(
 			EntryDisplayTerms.TITLE, displayTerms.getTitle());
+		iteratorURL.setParameter(
+			EntryDisplayTerms.VISITS, displayTerms.getVisits());
 	}
 
 }
