@@ -14,8 +14,19 @@
  */
 --%>
 
-<%
-AssetRendererFactory assetRendererFactory =
-	AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
-		BlogsEntry.class.getName());
-%>
+<%@ include file="/html/portlet/blogs_admin/init.jsp" %>
+
+<aui:row>
+	<aui:row>
+		Number of total visits per day/week/year for all blog entries in a site
+	</aui:row>
+	<aui:row>
+		Ranking of the most read blog entries
+	</aui:row>
+	<aui:row>
+		Ranking of the most commented blog entries
+	</aui:row>
+	<aui:row>
+		Ranking of the most active users commenting blog entries
+	</aui:row>
+</aui:row>
