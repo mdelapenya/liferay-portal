@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.facet.AssetEntriesFacet;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.ScopeFacet;
+import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.InstancePool;
 import com.liferay.portal.kernel.util.StringPool;
@@ -45,6 +46,7 @@ import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
 import com.liferay.portlet.asset.NoSuchEntryException;
 import com.liferay.portlet.asset.model.AssetEntry;
+import com.liferay.portlet.asset.model.AssetEntryStats;
 import com.liferay.portlet.asset.model.AssetLink;
 import com.liferay.portlet.asset.model.AssetLinkConstants;
 import com.liferay.portlet.asset.model.AssetRendererFactory;
@@ -61,6 +63,7 @@ import com.liferay.portlet.social.model.SocialActivityConstants;
 import com.liferay.portlet.wiki.model.WikiPage;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -394,6 +397,8 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 		entry.setViewCount(entry.getViewCount() + increment);
 
 		assetEntryPersistence.update(entry);
+
+		updateEntryStats(entry, increment);
 
 		return entry;
 	}
@@ -1014,6 +1019,51 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 		}
 
 		return null;
+	}
+
+	protected void updateEntryStats(AssetEntry entry, int increment)
+		throws SystemException {
+
+		Calendar calendar = CalendarFactoryUtil.getCalendar();
+
+		Date now = new Date();
+
+		calendar.setTime(now);
+
+		int day = calendar.get(Calendar.DAY_OF_MONTH);
+		int month = calendar.get(Calendar.MONTH) + 1;
+		int year = calendar.get(Calendar.YEAR);
+
+		AssetEntryStats entryStats =
+			assetEntryStatsPersistence.fetchByC_C_D_M_Y(
+				entry.getClassNameId(), entry.getClassPK(), day, month, year);
+
+		if (entryStats == null) {
+			long entryStatsId = counterLocalService.increment();
+
+			entryStats = assetEntryStatsPersistence.create(entryStatsId);
+
+			entryStats.setCompanyId(entry.getCompanyId());
+			entryStats.setGroupId(entry.getGroupId());
+			entryStats.setUserId(entry.getUserId());
+			entryStats.setUserName(entry.getUserName());
+			entryStats.setCreateDate(now);
+
+			entryStats.setClassNameId(entry.getClassNameId());
+			entryStats.setClassPK(entry.getClassPK());
+
+			entryStats.setDay(day);
+			entryStats.setMonth(month);
+			entryStats.setYear(year);
+			entryStats.setViewCount(increment);
+		}
+		else {
+			entryStats.setViewCount(entryStats.getViewCount() + increment);
+		}
+
+		entryStats.setModifiedDate(now);
+
+		assetEntryStatsPersistence.update(entryStats);
 	}
 
 	protected void updateVisible(AssetEntry entry, boolean visible)
