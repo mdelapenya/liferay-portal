@@ -88,6 +88,11 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 
 		assetEntryPersistence.remove(entry);
 
+		// Stats
+
+		assetEntryStatsLocalService.removeByC_C(
+			entry.getClassNameId(), entry.getClassPK());
+
 		// System event
 
 		systemEventLocalService.addSystemEvent(
