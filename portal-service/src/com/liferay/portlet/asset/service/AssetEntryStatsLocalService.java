@@ -243,6 +243,13 @@ public interface AssetEntryStatsLocalService extends BaseLocalService,
 	*/
 	public void setBeanIdentifier(java.lang.String beanIdentifier);
 
+	/**
+	* Remove the stats for an asset.
+	*
+	* @param classNameId the primary key of the class to remove its stats
+	* @param classPK the primary of the entity to remove its stats
+	* @throws SystemException
+	*/
 	public void removeByC_C(long classNameId, long classPK)
 		throws com.liferay.portal.kernel.exception.SystemException;
 

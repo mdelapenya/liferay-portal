@@ -27,6 +27,13 @@ import com.liferay.portlet.asset.service.base.AssetEntryStatsLocalServiceBaseImp
 public class AssetEntryStatsLocalServiceImpl
 	extends AssetEntryStatsLocalServiceBaseImpl {
 
+	/**
+	 * Remove the stats for an asset.
+	 *
+	 * @param classNameId the primary key of the class to remove its stats
+	 * @param classPK the primary of the entity to remove its stats
+	 * @throws SystemException
+	 */
 	@Override
 	public void removeByC_C(long classNameId, long classPK)
 		throws SystemException {
