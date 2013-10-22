@@ -14,7 +14,9 @@
 
 package com.liferay.portlet.asset.service.impl;
 
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portlet.asset.model.AssetEntryStats;
 import com.liferay.portlet.asset.service.base.AssetEntryStatsLocalServiceBaseImpl;
 
 /**
@@ -26,6 +28,24 @@ import com.liferay.portlet.asset.service.base.AssetEntryStatsLocalServiceBaseImp
  */
 public class AssetEntryStatsLocalServiceImpl
 	extends AssetEntryStatsLocalServiceBaseImpl {
+
+	@Override
+	public AssetEntryStats fetchByC_C_Date(
+			long classNameId, long classPK, int day, int month, int year)
+		throws SystemException {
+
+		return assetEntryStatsPersistence.fetchByC_C_D_M_Y(
+			classNameId, classPK, day, month, year);
+	}
+
+	@Override
+	public AssetEntryStats findByC_C_Date(
+			long classNameId, long classPK, int day, int month, int year)
+		throws PortalException, SystemException {
+
+		return assetEntryStatsPersistence.findByC_C_D_M_Y(
+			classNameId, classPK, day, month, year);
+	}
 
 	/**
 	 * Remove the stats for an asset.
