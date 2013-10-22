@@ -243,32 +243,137 @@ public interface AssetEntryStatsLocalService extends BaseLocalService,
 	*/
 	public void setBeanIdentifier(java.lang.String beanIdentifier);
 
+	/**
+	* Retrieves the sum of view counts for an asset, in an specific day of a
+	* year.
+	*
+	* @param groupId the primary key of the web content article's group
+	* @param classNameId the primary key of the class to search for
+	* @param classPK the primary key of the entity to search for
+	* @param day the day to search for
+	* @param month the month to search for
+	* @param year the year to search for
+	* @return the sum of all view counts for a classNameId, classPK, in an
+	specific day of a year
+	* @throws SystemException if a system exception occurred
+	*/
 	public long sumByC_C_Date(long groupId, long classNameId, long classPK,
 		int day, int month, int year)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
+	/**
+	* Retrieves the sum of view counts for an asset, in an specific month of a
+	* year.
+	*
+	* @param groupId the primary key of the web content article's group
+	* @param classNameId the primary key of the class to search for
+	* @param classPK the primary key of the entity to search for
+	* @param month the month to search for
+	* @param year the year to search for
+	* @return the sum of all view counts for a classNameId, classPK, in an
+	specific month of a year
+	* @throws SystemException if a system exception occurred
+	*/
 	public long sumByC_C_Month(long groupId, long classNameId, long classPK,
 		int month, int year)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
+	/**
+	* Retrieves the sum of view counts for an asset, in an specific year.
+	*
+	* @param groupId the primary key of the web content article's group
+	* @param classNameId the primary key of the class to search for
+	* @param classPK the primary key of the entity to search for
+	* @param year the year to search for
+	* @return the sum of all view counts for a classNameId, classPK, in an
+	specific year
+	* @throws SystemException if a system exception occurred
+	*/
 	public long sumByC_C_Year(long groupId, long classNameId, long classPK,
 		int year) throws com.liferay.portal.kernel.exception.SystemException;
 
+	/**
+	* Retrieves the sum of view counts for a type of assets, in an specific
+	* day of a year.
+	*
+	* @param groupId the primary key of the web content article's group
+	* @param classNameId the primary key of the class to search for
+	* @param day the day to search for
+	* @param month the month to search for
+	* @param year the year to search for
+	* @return the sum of all view counts for a classNameId, in an specific day
+	of a year
+	* @throws SystemException if a system exception occurred
+	*/
 	public long sumByC_Date(long groupId, long classNameId, int day, int month,
 		int year) throws com.liferay.portal.kernel.exception.SystemException;
 
+	/**
+	* Retrieves the sum of view counts for a type of assets, in an specific
+	* month of a year.
+	*
+	* @param groupId the primary key of the web content article's group
+	* @param classNameId the primary key of the class to search for
+	* @param month the month to search for
+	* @param year the year to search for
+	* @return the sum of all view counts for a classNameId in an specific month
+	of a year
+	* @throws SystemException if a system exception occurred
+	*/
 	public long sumByC_Month(long groupId, long classNameId, int month, int year)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
+	/**
+	* Retrieves the sum of view counts for a type of assets, in an specific
+	* year.
+	*
+	* @param groupId the primary key of the web content article's group
+	* @param classNameId the primary key of the class to search for
+	* @param year the year to search for
+	* @return the sum of all view counts for a classNameId, in an specific year
+	* @throws SystemException if a system exception occurred
+	*/
 	public long sumByC_Year(long groupId, long classNameId, int year)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
+	/**
+	* Retrieves the sum of view counts for all assets in a Group, in an
+	* specific day of a year.
+	*
+	* @param groupId the primary key of the web content article's group
+	* @param day the day to search for
+	* @param month the month to search for
+	* @param year the year to search for
+	* @return the sum of all view counts for a groupId, in an specific
+	day of a year
+	* @throws SystemException if a system exception occurred
+	*/
 	public long sumByDate(long groupId, int day, int month, int year)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
+	/**
+	* Retrieves the sum of view counts for all assets in a Group, in an
+	* specific month of a year.
+	*
+	* @param groupId the primary key of the web content article's group
+	* @param month the month to search for
+	* @param year the year to search for
+	* @return the sum of all view counts for a groupId, in an specific
+	month of a year
+	* @throws SystemException if a system exception occurred
+	*/
 	public long sumByMonth(long groupId, int month, int year)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
+	/**
+	* Retrieves the sum of view counts for all assets in a Group, in an
+	* specific year.
+	*
+	* @param groupId the primary key of the web content article's group
+	* @param year the year to search for
+	* @return the sum of all view counts for a groupId, in an specific year
+	* @throws SystemException if a system exception occurred
+	*/
 	public long sumByYear(long groupId, int year)
 		throws com.liferay.portal.kernel.exception.SystemException;
 }
