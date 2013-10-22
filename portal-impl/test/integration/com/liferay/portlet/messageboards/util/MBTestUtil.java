@@ -100,6 +100,38 @@ public class MBTestUtil {
 			ServiceTestUtil.randomString(), serviceContext);
 	}
 
+	public static MBMessage addDiscussion(
+			long groupId, String className, long classPK,
+			boolean workflowEnabled, boolean approved)
+		throws Exception {
+
+		List<MBMessage> messages = MBMessageLocalServiceUtil.getMessages(
+			className, classPK, WorkflowConstants.STATUS_ANY);
+
+		MBMessage threadMessage = messages.get(0);
+
+		User user = TestPropsValues.getUser();
+
+		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
+			groupId);
+
+		if (workflowEnabled) {
+			serviceContext.setWorkflowAction(
+				WorkflowConstants.ACTION_SAVE_DRAFT);
+
+			if (approved) {
+				serviceContext.setWorkflowAction(
+					WorkflowConstants.ACTION_PUBLISH);
+			}
+		}
+
+		return MBMessageLocalServiceUtil.addDiscussionMessage(
+			user.getUserId(), user.getFullName(),
+			serviceContext.getScopeGroupId(), className, classPK,
+			threadMessage.getThreadId(), threadMessage.getMessageId(),
+			threadMessage.getSubject(), "body", serviceContext);
+	}
+
 	public static MBMessage addMessage(long groupId) throws Exception {
 		return addMessage(
 			groupId, MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID);
