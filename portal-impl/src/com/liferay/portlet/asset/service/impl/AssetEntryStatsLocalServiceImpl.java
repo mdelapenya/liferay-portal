@@ -27,6 +27,7 @@ import com.liferay.portlet.asset.service.base.AssetEntryStatsLocalServiceBaseImp
 public class AssetEntryStatsLocalServiceImpl
 	extends AssetEntryStatsLocalServiceBaseImpl {
 
+	@Override
 	public long sumByC_C_Date(
 			long groupId, long classNameId, long classPK, int day, int month,
 			int year)
@@ -36,6 +37,7 @@ public class AssetEntryStatsLocalServiceImpl
 			groupId, classNameId, classPK, day, month, year);
 	}
 
+	@Override
 	public long sumByC_C_Month(
 			long groupId, long classNameId, long classPK, int month, int year)
 		throws SystemException {
@@ -44,6 +46,7 @@ public class AssetEntryStatsLocalServiceImpl
 			groupId, classNameId, classPK, month, year);
 	}
 
+	@Override
 	public long sumByC_C_Year(
 			long groupId, long classNameId, long classPK, int year)
 		throws SystemException {
@@ -52,6 +55,7 @@ public class AssetEntryStatsLocalServiceImpl
 			groupId, classNameId, classPK, year);
 	}
 
+	@Override
 	public long sumByC_Date(
 			long groupId, long classNameId, int day, int month, int year)
 		throws SystemException {
@@ -60,6 +64,7 @@ public class AssetEntryStatsLocalServiceImpl
 			groupId, classNameId, day, month, year);
 	}
 
+	@Override
 	public long sumByC_Month(long groupId, long classNameId, int month, int year)
 		throws SystemException {
 
@@ -67,24 +72,28 @@ public class AssetEntryStatsLocalServiceImpl
 			groupId, classNameId, month, year);
 	}
 
+	@Override
 	public long sumByC_Year(long groupId, long classNameId, int year)
 		throws SystemException {
 
 		return assetEntryStatsFinder.sumByG_C_Year(groupId, classNameId, year);
 	}
 
+	@Override
 	public long sumByDate(long groupId, int day, int month, int year)
 		throws SystemException {
 
 		return assetEntryStatsFinder.sumByG_Date(groupId, day, month, year);
 	}
 
+	@Override
 	public long sumByMonth(long groupId, int month, int year)
 		throws SystemException {
 
 		return assetEntryStatsFinder.sumByG_Month(groupId, month, year);
 	}
 
+	@Override
 	public long sumByYear(long groupId, int year) throws SystemException {
 		return assetEntryStatsFinder.sumByG_Year(groupId, year);
 	}
