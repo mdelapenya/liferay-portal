@@ -268,6 +268,11 @@ public class AssetEntryStatsLocalServiceUtil {
 		getService().setBeanIdentifier(beanIdentifier);
 	}
 
+	public static void removeByC_C(long classNameId, long classPK)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		getService().removeByC_C(classNameId, classPK);
+	}
+
 	/**
 	* Retrieves the sum of view counts for an asset, in an specific day of a
 	* year.

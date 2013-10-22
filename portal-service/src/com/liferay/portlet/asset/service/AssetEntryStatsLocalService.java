@@ -243,6 +243,9 @@ public interface AssetEntryStatsLocalService extends BaseLocalService,
 	*/
 	public void setBeanIdentifier(java.lang.String beanIdentifier);
 
+	public void removeByC_C(long classNameId, long classPK)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
 	/**
 	* Retrieves the sum of view counts for an asset, in an specific day of a
 	* year.
