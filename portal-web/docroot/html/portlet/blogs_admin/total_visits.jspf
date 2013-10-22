@@ -14,6 +14,101 @@
  */
 --%>
 
+<%
+long classNameId = ClassNameLocalServiceUtil.getClassNameId(BlogsEntry.class);
+%>
+
+<style>
+	#<portlet:namespace/>totalVisitsChartbox {
+		width: 100%;
+		height: 400px;
+	}
+</style>
+
 <div class="content">
-	<p>El ingenioso hidalgo Don Quijote de la Mancha</p>
+	<div id="<portlet:namespace/>totalVisitsChartbox"></div>
 </div>
+
+<aui:script use="charts-legend">
+	var <portlet:namespace/>totalVisitsChartValues = [
+
+		<%
+		for (int i = 30; i >= 0; i--) {
+			Calendar firstCalendar = CalendarFactoryUtil.getCalendar();
+
+			firstCalendar.add(Calendar.DAY_OF_MONTH, -i);
+
+			int day = firstCalendar.get(Calendar.DAY_OF_MONTH);
+			int month = firstCalendar.get(Calendar.MONTH) + 1;
+			int year = firstCalendar.get(Calendar.YEAR);
+
+			long sum = AssetEntryStatsLocalServiceUtil.sumByC_Date(scopeGroupId, classNameId, day, month, year);
+
+			String date = day +"-" + month + "-" + year;
+
+			String line = "{date: '" + date + "', ViewCount: '" + sum + "' }";
+
+			if (i > 0) {
+				line += ",";
+			}
+
+			out.println(line);
+		}
+		%>
+
+	];
+
+	var styleDef = {
+		axes:{
+			date:{
+				label:{
+					rotation:-45,
+					color: "#1273c7"
+				}
+			}
+		},
+		series:{
+			ViewCount:{
+				marker:{
+					fill:{
+						color:"#1273c7"
+					},
+					border:{
+						color:"#00aeff"
+					},
+					over:{
+						fill:{
+							color:"#1273c7"
+						},
+						border:{
+							color:"#00aeff"
+						},
+						width: 12,
+						height: 12
+					}
+				},
+				line:{
+					color:"#1273c7"
+				}
+			}
+		}
+	};
+
+	var <portlet:namespace/>totalVisitsChartbox = new A.Chart({
+		categoryKey: "date",
+		dataProvider: <portlet:namespace/>totalVisitsChartValues,
+		legend: {
+			position: "right",
+			width: 300,
+			height: 300,
+			styles: {
+				hAlign: "center",
+				hSpacing: 4
+			}
+		},
+		seriesKeys:['ViewCount'],
+		styles:styleDef,
+		type: "column",
+		render: "#<portlet:namespace/>totalVisitsChartbox"
+	});
+</aui:script>
