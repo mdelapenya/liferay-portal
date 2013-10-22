@@ -242,4 +242,33 @@ public interface AssetEntryStatsLocalService extends BaseLocalService,
 	* @param beanIdentifier the Spring bean ID for this bean
 	*/
 	public void setBeanIdentifier(java.lang.String beanIdentifier);
+
+	public long sumByC_Date(long groupId, long classNameId, int day, int month,
+		int year) throws com.liferay.portal.kernel.exception.SystemException;
+
+	public long sumByC_Month(long groupId, long classNameId, int month, int year)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	public long sumByC_Year(long groupId, long classNameId, int year)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	public long sumByC_C_Date(long groupId, long classNameId, long classPK,
+		int day, int month, int year)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	public long sumByC_C_Month(long groupId, long classNameId, long classPK,
+		int month, int year)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	public long sumByC_C_Year(long groupId, long classNameId, long classPK,
+		int year) throws com.liferay.portal.kernel.exception.SystemException;
+
+	public long sumByDate(long groupId, int day, int month, int year)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	public long sumByMonth(long groupId, int month, int year)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	public long sumByYear(long groupId, int year)
+		throws com.liferay.portal.kernel.exception.SystemException;
 }

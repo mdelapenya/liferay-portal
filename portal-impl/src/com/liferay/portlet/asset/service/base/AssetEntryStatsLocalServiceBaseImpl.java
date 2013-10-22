@@ -40,6 +40,7 @@ import com.liferay.portlet.asset.service.persistence.AssetCategoryPropertyFinder
 import com.liferay.portlet.asset.service.persistence.AssetCategoryPropertyPersistence;
 import com.liferay.portlet.asset.service.persistence.AssetEntryFinder;
 import com.liferay.portlet.asset.service.persistence.AssetEntryPersistence;
+import com.liferay.portlet.asset.service.persistence.AssetEntryStatsFinder;
 import com.liferay.portlet.asset.service.persistence.AssetEntryStatsPersistence;
 import com.liferay.portlet.asset.service.persistence.AssetLinkPersistence;
 import com.liferay.portlet.asset.service.persistence.AssetTagFinder;
@@ -561,6 +562,25 @@ public abstract class AssetEntryStatsLocalServiceBaseImpl
 	}
 
 	/**
+	 * Returns the asset entry stats finder.
+	 *
+	 * @return the asset entry stats finder
+	 */
+	public AssetEntryStatsFinder getAssetEntryStatsFinder() {
+		return assetEntryStatsFinder;
+	}
+
+	/**
+	 * Sets the asset entry stats finder.
+	 *
+	 * @param assetEntryStatsFinder the asset entry stats finder
+	 */
+	public void setAssetEntryStatsFinder(
+		AssetEntryStatsFinder assetEntryStatsFinder) {
+		this.assetEntryStatsFinder = assetEntryStatsFinder;
+	}
+
+	/**
 	 * Returns the asset link local service.
 	 *
 	 * @return the asset link local service
@@ -1078,6 +1098,8 @@ public abstract class AssetEntryStatsLocalServiceBaseImpl
 	protected com.liferay.portlet.asset.service.AssetEntryStatsLocalService assetEntryStatsLocalService;
 	@BeanReference(type = AssetEntryStatsPersistence.class)
 	protected AssetEntryStatsPersistence assetEntryStatsPersistence;
+	@BeanReference(type = AssetEntryStatsFinder.class)
+	protected AssetEntryStatsFinder assetEntryStatsFinder;
 	@BeanReference(type = com.liferay.portlet.asset.service.AssetLinkLocalService.class)
 	protected com.liferay.portlet.asset.service.AssetLinkLocalService assetLinkLocalService;
 	@BeanReference(type = AssetLinkPersistence.class)

@@ -268,6 +268,58 @@ public class AssetEntryStatsLocalServiceUtil {
 		getService().setBeanIdentifier(beanIdentifier);
 	}
 
+	public static long sumByC_Date(long groupId, long classNameId, int day,
+		int month, int year)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().sumByC_Date(groupId, classNameId, day, month, year);
+	}
+
+	public static long sumByC_Month(long groupId, long classNameId, int month,
+		int year) throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().sumByC_Month(groupId, classNameId, month, year);
+	}
+
+	public static long sumByC_Year(long groupId, long classNameId, int year)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().sumByC_Year(groupId, classNameId, year);
+	}
+
+	public static long sumByC_C_Date(long groupId, long classNameId,
+		long classPK, int day, int month, int year)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .sumByC_C_Date(groupId, classNameId, classPK, day, month,
+			year);
+	}
+
+	public static long sumByC_C_Month(long groupId, long classNameId,
+		long classPK, int month, int year)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .sumByC_C_Month(groupId, classNameId, classPK, month, year);
+	}
+
+	public static long sumByC_C_Year(long groupId, long classNameId,
+		long classPK, int year)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().sumByC_C_Year(groupId, classNameId, classPK, year);
+	}
+
+	public static long sumByDate(long groupId, int day, int month, int year)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().sumByDate(groupId, day, month, year);
+	}
+
+	public static long sumByMonth(long groupId, int month, int year)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().sumByMonth(groupId, month, year);
+	}
+
+	public static long sumByYear(long groupId, int year)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().sumByYear(groupId, year);
+	}
+
 	public static AssetEntryStatsLocalService getService() {
 		if (_service == null) {
 			_service = (AssetEntryStatsLocalService)PortalBeanLocatorUtil.locate(AssetEntryStatsLocalService.class.getName());

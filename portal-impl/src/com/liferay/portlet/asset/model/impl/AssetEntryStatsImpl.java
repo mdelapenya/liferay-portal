@@ -24,7 +24,7 @@ package com.liferay.portlet.asset.model.impl;
  * @author Brian Wing Shun Chan
  */
 public class AssetEntryStatsImpl extends AssetEntryStatsBaseImpl {
-	/*
+	/**
 	 * NOTE FOR DEVELOPERS:
 	 *
 	 * Never reference this class directly. All methods that expect a asset entry stats model instance should use the {@link com.liferay.portlet.asset.model.AssetEntryStats} interface instead.

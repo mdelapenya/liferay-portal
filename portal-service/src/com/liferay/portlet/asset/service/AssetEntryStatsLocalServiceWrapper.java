@@ -281,6 +281,68 @@ public class AssetEntryStatsLocalServiceWrapper
 		_assetEntryStatsLocalService.setBeanIdentifier(beanIdentifier);
 	}
 
+	@Override
+	public long sumByC_Date(long groupId, long classNameId, int day, int month,
+		int year) throws com.liferay.portal.kernel.exception.SystemException {
+		return _assetEntryStatsLocalService.sumByC_Date(groupId, classNameId,
+			day, month, year);
+	}
+
+	@Override
+	public long sumByC_Month(long groupId, long classNameId, int month, int year)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _assetEntryStatsLocalService.sumByC_Month(groupId, classNameId,
+			month, year);
+	}
+
+	@Override
+	public long sumByC_Year(long groupId, long classNameId, int year)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _assetEntryStatsLocalService.sumByC_Year(groupId, classNameId,
+			year);
+	}
+
+	@Override
+	public long sumByC_C_Date(long groupId, long classNameId, long classPK,
+		int day, int month, int year)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _assetEntryStatsLocalService.sumByC_C_Date(groupId, classNameId,
+			classPK, day, month, year);
+	}
+
+	@Override
+	public long sumByC_C_Month(long groupId, long classNameId, long classPK,
+		int month, int year)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _assetEntryStatsLocalService.sumByC_C_Month(groupId,
+			classNameId, classPK, month, year);
+	}
+
+	@Override
+	public long sumByC_C_Year(long groupId, long classNameId, long classPK,
+		int year) throws com.liferay.portal.kernel.exception.SystemException {
+		return _assetEntryStatsLocalService.sumByC_C_Year(groupId, classNameId,
+			classPK, year);
+	}
+
+	@Override
+	public long sumByDate(long groupId, int day, int month, int year)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _assetEntryStatsLocalService.sumByDate(groupId, day, month, year);
+	}
+
+	@Override
+	public long sumByMonth(long groupId, int month, int year)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _assetEntryStatsLocalService.sumByMonth(groupId, month, year);
+	}
+
+	@Override
+	public long sumByYear(long groupId, int year)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _assetEntryStatsLocalService.sumByYear(groupId, year);
+	}
+
 	/**
 	 * @deprecated As of 6.1.0, replaced by {@link #getWrappedService}
 	 */
