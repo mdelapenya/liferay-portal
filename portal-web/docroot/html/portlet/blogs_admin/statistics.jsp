@@ -16,17 +16,39 @@
 
 <%@ include file="/html/portlet/blogs_admin/init.jsp" %>
 
-<aui:row>
-	<aui:row>
-		Number of total visits per day/week/year for all blog entries in a site
-	</aui:row>
-	<aui:row>
-		Ranking of the most read blog entries
-	</aui:row>
-	<aui:row>
-		Ranking of the most commented blog entries
-	</aui:row>
-	<aui:row>
-		Ranking of the most active users commenting blog entries
-	</aui:row>
-</aui:row>
+<liferay-util:include page="/html/portlet/blogs_admin/toolbar.jsp" />
+
+<div id="<portlet:namespace/>statisticsWrapper">
+	<h3 class="header"><liferay-ui:message key="number-of-total-visits-per-period-for-all-blog-entries-in-a-site" /></h3>
+	<div class="content">
+		<%@ include file="/html/portlet/blogs_admin/total_visits.jspf" %>
+	</div>
+
+	<h3 class="header"><liferay-ui:message key="ranking-of-the-most-read-blog-entries" /></h3>
+	<div class="content">
+		<%@ include file="/html/portlet/blogs_admin/most_read.jspf" %>
+	</div>
+
+	<h3 class="header"><liferay-ui:message key="ranking-of-the-most-commented-blog-entries" /></h3>
+	<div class="content">
+		<%@ include file="/html/portlet/blogs_admin/most_commented.jspf" %>
+	</div>
+
+	<h3 class="header"><liferay-ui:message key="ranking-of-the-most-active-users-commenting-blog-entries" /></h3>
+	<div class="content">
+		<%@ include file="/html/portlet/blogs_admin/most_active_users.jspf" %>
+	</div>
+</div>
+
+<aui:script use="aui-toggler">
+	new A.TogglerDelegate(
+		{
+			animated: true,
+			closeAllOnExpand: true,
+			container: '#<portlet:namespace />statisticsWrapper',
+			content: '#<portlet:namespace />statisticsWrapper div .content',
+			expanded: false,
+			header: '#<portlet:namespace />statisticsWrapper h2 .header'
+		}
+	);
+</aui:script>
