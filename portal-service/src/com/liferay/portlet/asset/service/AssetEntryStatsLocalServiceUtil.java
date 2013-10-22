@@ -268,22 +268,6 @@ public class AssetEntryStatsLocalServiceUtil {
 		getService().setBeanIdentifier(beanIdentifier);
 	}
 
-	public static long sumByC_Date(long groupId, long classNameId, int day,
-		int month, int year)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().sumByC_Date(groupId, classNameId, day, month, year);
-	}
-
-	public static long sumByC_Month(long groupId, long classNameId, int month,
-		int year) throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().sumByC_Month(groupId, classNameId, month, year);
-	}
-
-	public static long sumByC_Year(long groupId, long classNameId, int year)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().sumByC_Year(groupId, classNameId, year);
-	}
-
 	public static long sumByC_C_Date(long groupId, long classNameId,
 		long classPK, int day, int month, int year)
 		throws com.liferay.portal.kernel.exception.SystemException {
@@ -303,6 +287,22 @@ public class AssetEntryStatsLocalServiceUtil {
 		long classPK, int year)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return getService().sumByC_C_Year(groupId, classNameId, classPK, year);
+	}
+
+	public static long sumByC_Date(long groupId, long classNameId, int day,
+		int month, int year)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().sumByC_Date(groupId, classNameId, day, month, year);
+	}
+
+	public static long sumByC_Month(long groupId, long classNameId, int month,
+		int year) throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().sumByC_Month(groupId, classNameId, month, year);
+	}
+
+	public static long sumByC_Year(long groupId, long classNameId, int year)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().sumByC_Year(groupId, classNameId, year);
 	}
 
 	public static long sumByDate(long groupId, int day, int month, int year)

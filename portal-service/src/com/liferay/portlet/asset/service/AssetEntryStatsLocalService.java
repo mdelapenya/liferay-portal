@@ -243,15 +243,6 @@ public interface AssetEntryStatsLocalService extends BaseLocalService,
 	*/
 	public void setBeanIdentifier(java.lang.String beanIdentifier);
 
-	public long sumByC_Date(long groupId, long classNameId, int day, int month,
-		int year) throws com.liferay.portal.kernel.exception.SystemException;
-
-	public long sumByC_Month(long groupId, long classNameId, int month, int year)
-		throws com.liferay.portal.kernel.exception.SystemException;
-
-	public long sumByC_Year(long groupId, long classNameId, int year)
-		throws com.liferay.portal.kernel.exception.SystemException;
-
 	public long sumByC_C_Date(long groupId, long classNameId, long classPK,
 		int day, int month, int year)
 		throws com.liferay.portal.kernel.exception.SystemException;
@@ -262,6 +253,15 @@ public interface AssetEntryStatsLocalService extends BaseLocalService,
 
 	public long sumByC_C_Year(long groupId, long classNameId, long classPK,
 		int year) throws com.liferay.portal.kernel.exception.SystemException;
+
+	public long sumByC_Date(long groupId, long classNameId, int day, int month,
+		int year) throws com.liferay.portal.kernel.exception.SystemException;
+
+	public long sumByC_Month(long groupId, long classNameId, int month, int year)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	public long sumByC_Year(long groupId, long classNameId, int year)
+		throws com.liferay.portal.kernel.exception.SystemException;
 
 	public long sumByDate(long groupId, int day, int month, int year)
 		throws com.liferay.portal.kernel.exception.SystemException;

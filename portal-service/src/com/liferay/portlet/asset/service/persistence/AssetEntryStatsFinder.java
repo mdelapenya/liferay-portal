@@ -18,14 +18,16 @@ package com.liferay.portlet.asset.service.persistence;
  * @author Brian Wing Shun Chan
  */
 public interface AssetEntryStatsFinder {
-	public long sumByG_Date(long groupId, int day, int month, int year)
+	public long sumByG_C_C_Date(long groupId, long classNameId, long classPK,
+		int day, int month, int year)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
-	public long sumByG_Month(long groupId, int month, int year)
+	public long sumByG_C_C_Month(long groupId, long classNameId, long classPK,
+		int month, int year)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
-	public long sumByG_Year(long groupId, int year)
-		throws com.liferay.portal.kernel.exception.SystemException;
+	public long sumByG_C_C_Year(long groupId, long classNameId, long classPK,
+		int year) throws com.liferay.portal.kernel.exception.SystemException;
 
 	public long sumByG_C_Date(long groupId, long classNameId, int day,
 		int month, int year)
@@ -37,14 +39,12 @@ public interface AssetEntryStatsFinder {
 	public long sumByG_C_Year(long groupId, long classNameId, int year)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
-	public long sumByG_C_C_Date(long groupId, long classNameId, long classPK,
-		int day, int month, int year)
+	public long sumByG_Date(long groupId, int day, int month, int year)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
-	public long sumByG_C_C_Month(long groupId, long classNameId, long classPK,
-		int month, int year)
+	public long sumByG_Month(long groupId, int month, int year)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
-	public long sumByG_C_C_Year(long groupId, long classNameId, long classPK,
-		int year) throws com.liferay.portal.kernel.exception.SystemException;
+	public long sumByG_Year(long groupId, int year)
+		throws com.liferay.portal.kernel.exception.SystemException;
 }
