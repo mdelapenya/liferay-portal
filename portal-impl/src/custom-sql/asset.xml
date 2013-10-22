@@ -126,6 +126,51 @@
 				([$TAG_ID$])
 		]]>
 	</sql>
+	<sql id="com.liferay.portlet.asset.service.persistence.AssetEntryStatsFinder.sumByG_Date">
+		<![CDATA[
+			SELECT
+				SUM(AssetEntryStats.viewCount) AS SUM
+			FROM
+				AssetEntryStats
+			WHERE
+				(AssetEntryStats.groupId = ?) AND
+				[$WHERE$]
+				(AssetEntryStats.day = ?) AND
+				(AssetEntryStats.month = ?) AND
+				(AssetEntryStats.year = ?)
+			GROUP BY
+				AssetEntryStats.day, AssetEntryStats.month, AssetEntryStats.year
+		]]>
+	</sql>
+	<sql id="com.liferay.portlet.asset.service.persistence.AssetEntryStatsFinder.sumByG_Month">
+		<![CDATA[
+			SELECT
+				SUM(AssetEntryStats.viewCount) AS SUM
+			FROM
+				AssetEntryStats
+			WHERE
+				(AssetEntryStats.groupId = ?) AND
+				[$WHERE$]
+				(AssetEntryStats.month = ?) AND
+				(AssetEntryStats.year = ?)
+			GROUP BY
+				AssetEntryStats.month, AssetEntryStats.year
+		]]>
+	</sql>
+	<sql id="com.liferay.portlet.asset.service.persistence.AssetEntryStatsFinder.sumByG_Year">
+		<![CDATA[
+			SELECT
+				SUM(AssetEntryStats.viewCount) AS SUM
+			FROM
+				AssetEntryStats
+			WHERE
+				(AssetEntryStats.groupId = ?) AND
+				[$WHERE$]
+				(AssetEntryStats.year = ?)
+			GROUP BY
+				AssetEntryStats.year
+		]]>
+	</sql>
 	<sql id="com.liferay.portlet.asset.service.persistence.AssetTagFinder.countByG_N">
 		<![CDATA[
 			SELECT
