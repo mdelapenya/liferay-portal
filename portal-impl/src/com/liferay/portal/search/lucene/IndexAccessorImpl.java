@@ -48,9 +48,6 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.LogMergePolicy;
 import org.apache.lucene.index.MergePolicy;
-import org.apache.lucene.index.MergeScheduler;
-import org.apache.lucene.index.NoMergePolicy;
-import org.apache.lucene.index.NoMergeScheduler;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.MatchAllDocsQuery;
@@ -266,30 +263,13 @@ public class IndexAccessorImpl implements IndexAccessor {
 		}
 	}
 
-	private void _deleteAll() {
-		String path = _getPath();
-
-		try {
-			_indexWriter.deleteAll();
-
-			_indexWriter.commit();
-		}
-		catch (Exception e) {
-			if (_log.isWarnEnabled()) {
-				_log.warn("Unable to delete index in directory " + path);
-			}
-		}
-	}
-
 	private void _deleteDirectory() {
 		if (_log.isDebugEnabled()) {
 			_log.debug("Lucene store type " + PropsValues.LUCENE_STORE_TYPE);
 		}
 
-		if (PropsValues.LUCENE_STORE_TYPE.equals(_LUCENE_STORE_TYPE_FILE) ||
-			PropsValues.LUCENE_STORE_TYPE.equals(_LUCENE_STORE_TYPE_RAM)) {
-
-			_deleteAll();
+		if (PropsValues.LUCENE_STORE_TYPE.equals(_LUCENE_STORE_TYPE_FILE)) {
+			_deleteFile();
 		}
 		else if (PropsValues.LUCENE_STORE_TYPE.equals(
 					_LUCENE_STORE_TYPE_JDBC)) {
@@ -297,10 +277,33 @@ public class IndexAccessorImpl implements IndexAccessor {
 			throw new IllegalArgumentException(
 				"Store type JDBC is no longer supported in favor of SOLR");
 		}
+		else if (PropsValues.LUCENE_STORE_TYPE.equals(_LUCENE_STORE_TYPE_RAM)) {
+			_deleteRam();
+		}
 		else {
 			throw new RuntimeException(
 				"Invalid store type " + PropsValues.LUCENE_STORE_TYPE);
 		}
+	}
+
+	private void _deleteFile() {
+		String path = _getPath();
+
+		try {
+			_indexWriter.deleteAll();
+
+			// Ensuring that all the changes has been applied to the index
+
+			_indexWriter.commit();
+		}
+		catch (Exception e) {
+			if (_log.isWarnEnabled()) {
+				_log.warn("Could not delete index in directory " + path);
+			}
+		}
+	}
+
+	private void _deleteRam() {
 	}
 
 	private void _doCommit() throws IOException {
@@ -363,12 +366,6 @@ public class IndexAccessorImpl implements IndexAccessor {
 	}
 
 	private MergePolicy _getMergePolicy() throws Exception {
-		if (PropsValues.LUCENE_MERGE_POLICY.equals(
-				NoMergePolicy.class.getName())) {
-
-			return NoMergePolicy.NO_COMPOUND_FILES;
-		}
-
 		ClassLoader classLoader = ClassLoaderUtil.getPortalClassLoader();
 
 		MergePolicy mergePolicy = (MergePolicy)InstanceFactory.newInstance(
@@ -381,19 +378,6 @@ public class IndexAccessorImpl implements IndexAccessor {
 		}
 
 		return mergePolicy;
-	}
-
-	private MergeScheduler _getMergeScheduler() throws Exception {
-		if (PropsValues.LUCENE_MERGE_SCHEDULER.equals(
-				NoMergeScheduler.class.getName())) {
-
-			return NoMergeScheduler.INSTANCE;
-		}
-
-		ClassLoader classLoader = ClassLoaderUtil.getPortalClassLoader();
-
-		return (MergeScheduler)InstanceFactory.newInstance(
-			classLoader, PropsValues.LUCENE_MERGE_SCHEDULER);
 	}
 
 	private String _getPath() {
@@ -443,7 +427,6 @@ public class IndexAccessorImpl implements IndexAccessor {
 
 			indexWriterConfig.setIndexDeletionPolicy(_dumpIndexDeletionPolicy);
 			indexWriterConfig.setMergePolicy(_getMergePolicy());
-			indexWriterConfig.setMergeScheduler(_getMergeScheduler());
 			indexWriterConfig.setRAMBufferSizeMB(
 				PropsValues.LUCENE_BUFFER_SIZE);
 
