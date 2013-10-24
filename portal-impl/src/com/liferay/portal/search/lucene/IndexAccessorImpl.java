@@ -263,30 +263,13 @@ public class IndexAccessorImpl implements IndexAccessor {
 		}
 	}
 
-	private void _deleteAll() {
-		String path = _getPath();
-
-		try {
-			_indexWriter.deleteAll();
-
-			_indexWriter.commit();
-		}
-		catch (Exception e) {
-			if (_log.isWarnEnabled()) {
-				_log.warn("Unable to delete index in directory " + path);
-			}
-		}
-	}
-
 	private void _deleteDirectory() {
 		if (_log.isDebugEnabled()) {
 			_log.debug("Lucene store type " + PropsValues.LUCENE_STORE_TYPE);
 		}
 
-		if (PropsValues.LUCENE_STORE_TYPE.equals(_LUCENE_STORE_TYPE_FILE) ||
-			PropsValues.LUCENE_STORE_TYPE.equals(_LUCENE_STORE_TYPE_RAM)) {
-
-			_deleteAll();
+		if (PropsValues.LUCENE_STORE_TYPE.equals(_LUCENE_STORE_TYPE_FILE)) {
+			_deleteFile();
 		}
 		else if (PropsValues.LUCENE_STORE_TYPE.equals(
 					_LUCENE_STORE_TYPE_JDBC)) {
@@ -294,10 +277,33 @@ public class IndexAccessorImpl implements IndexAccessor {
 			throw new IllegalArgumentException(
 				"Store type JDBC is no longer supported in favor of SOLR");
 		}
+		else if (PropsValues.LUCENE_STORE_TYPE.equals(_LUCENE_STORE_TYPE_RAM)) {
+			_deleteRam();
+		}
 		else {
 			throw new RuntimeException(
 				"Invalid store type " + PropsValues.LUCENE_STORE_TYPE);
 		}
+	}
+
+	private void _deleteFile() {
+		String path = _getPath();
+
+		try {
+			_indexWriter.deleteAll();
+
+			// Ensuring that all the changes has been applied to the index
+
+			_indexWriter.commit();
+		}
+		catch (Exception e) {
+			if (_log.isWarnEnabled()) {
+				_log.warn("Could not delete index in directory " + path);
+			}
+		}
+	}
+
+	private void _deleteRam() {
 	}
 
 	private void _doCommit() throws IOException {
