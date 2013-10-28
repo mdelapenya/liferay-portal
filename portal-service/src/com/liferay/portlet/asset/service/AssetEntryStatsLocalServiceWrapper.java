@@ -281,6 +281,23 @@ public class AssetEntryStatsLocalServiceWrapper
 		_assetEntryStatsLocalService.setBeanIdentifier(beanIdentifier);
 	}
 
+	@Override
+	public com.liferay.portlet.asset.model.AssetEntryStats fetchByC_C_Date(
+		long classNameId, long classPK, int day, int month, int year)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _assetEntryStatsLocalService.fetchByC_C_Date(classNameId,
+			classPK, day, month, year);
+	}
+
+	@Override
+	public com.liferay.portlet.asset.model.AssetEntryStats findByC_C_Date(
+		long classNameId, long classPK, int day, int month, int year)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _assetEntryStatsLocalService.findByC_C_Date(classNameId,
+			classPK, day, month, year);
+	}
+
 	/**
 	* Remove the stats for an asset.
 	*
