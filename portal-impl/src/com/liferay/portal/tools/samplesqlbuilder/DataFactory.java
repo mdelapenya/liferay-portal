@@ -15,7 +15,10 @@
 package com.liferay.portal.tools.samplesqlbuilder;
 
 import com.liferay.counter.model.Counter;
-import com.liferay.counter.model.impl.CounterImpl;
+import com.liferay.counter.model.CounterModel;
+import com.liferay.counter.model.impl.CounterModelImpl;
+import com.liferay.portal.kernel.io.unsync.UnsyncBufferedReader;
+import com.liferay.portal.kernel.metadata.RawMetadataProcessor;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
@@ -642,9 +645,9 @@ public class DataFactory {
 
 		_defaultDLFileEntryType.setName(sb.toString());
 
-		_defaultDLDDMStructure = newDDMStructure(
-			_guestGroupId, getDLFileEntryClassNameId(), "TIKARAWMETADATA",
-			_dlDDMStructureContent);
+		_defaultDLDDMStructureModel = newDDMStructureModel(
+			_guestGroupId, getDLFileEntryClassNameId(),
+			RawMetadataProcessor.TIKA_RAW_METADATA, _dlDDMStructureContent);
 	}
 
 	public void initGroups() throws Exception {
