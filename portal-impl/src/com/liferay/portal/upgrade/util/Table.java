@@ -277,7 +277,7 @@ public class Table {
 		String createSQL = getCreateSQL();
 
 		if (Validator.isNotNull(createSQL)) {
-			String createSQLLowerCase = createSQL.toLowerCase();
+			String createSQLLowerCase = StringUtil.lowerCase(createSQL);
 
 			int x = createSQLLowerCase.indexOf("create table ");
 
