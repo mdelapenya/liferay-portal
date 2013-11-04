@@ -15,6 +15,8 @@
 package com.liferay.portal.upgrade.v6_2_0;
 
 import com.liferay.portal.kernel.dao.jdbc.DataAccess;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -58,7 +60,14 @@ public class UpgradeDynamicDataMapping extends UpgradeProcess {
 */
 		long classNameId = PortalUtil.getClassNameId(DDMStructure.class);
 
-		runSQL("update DDMTemplate set classNameId = " + classNameId);
+		try {
+			runSQL("update DDMTemplate set classNameId = " + classNameId);
+		}
+		catch (Exception e) {
+			if (_log.isWarnEnabled()) {
+				_log.warn("Unable to update classNameId ", e);
+			}
+		}
 
 //		updateStructures();
 	}
@@ -105,6 +114,11 @@ public class UpgradeDynamicDataMapping extends UpgradeProcess {
 			ps.setLong(3, structureId);
 
 			ps.executeUpdate();
+		}
+		catch (SQLException sqle) {
+			if (_log.isWarnEnabled()) {
+				_log.warn("Unable to update structure " + structureId, sqle);
+			}
 		}
 		finally {
 			DataAccess.cleanUp(con, ps, rs);
@@ -173,5 +187,8 @@ public class UpgradeDynamicDataMapping extends UpgradeProcess {
 			updateXSDDynamicElement(dynamicElementElement);
 		}
 	}
+
+	private static Log _log = LogFactoryUtil.getLog(
+		UpgradeDynamicDataMapping.class);
 
 }

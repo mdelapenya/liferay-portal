@@ -38,9 +38,10 @@ public class VerifyUUID extends VerifyProcess {
 		try {
 			con = DataAccess.getUpgradeOptimizedConnection();
 
-			ps = con.prepareStatement(
-				"select " + pkColumnName + " from " + modelName +
-					" where uuid_ is null or uuid_ = ''");
+String sql = "select " + pkColumnName + " from " + modelName + " where uuid_ is null or uuid_ = ''";
+System.out.println("************* " + sql);
+
+			ps = con.prepareStatement(sql);
 
 			rs = ps.executeQuery();
 
@@ -63,6 +64,8 @@ public class VerifyUUID extends VerifyProcess {
 
 		DB db = DBFactoryUtil.getDB();
 
+System.out.println("************ pkColumnName: " + pkColumnName + " - modelName: " + modelName + " - pk: " + pk);
+
 		db.runSQL(
 			"update " + modelName + " set uuid_ = '" + uuid + "' where " +
 				pkColumnName + " = " + pk);
@@ -76,6 +79,7 @@ public class VerifyUUID extends VerifyProcess {
 	}
 
 	private static final String[][] _MODELS = new String[][] {
+/*
 		new String[] {
 			"Address", "addressId"
 		},
@@ -133,6 +137,7 @@ public class VerifyUUID extends VerifyProcess {
 		new String[] {
 			"UserGroup", "userGroupId"
 		},
+*/
 		new String[] {
 			"Website", "websiteId"
 		},

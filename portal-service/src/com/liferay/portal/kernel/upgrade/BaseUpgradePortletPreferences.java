@@ -231,6 +231,8 @@ public abstract class BaseUpgradePortletPreferences extends UpgradeProcess {
 
 			String sql = sb.toString();
 
+System.out.println("************     " + sql);
+
 			ps = con.prepareStatement(sql);
 
 			rs = ps.executeQuery();
@@ -242,6 +244,13 @@ public abstract class BaseUpgradePortletPreferences extends UpgradeProcess {
 				long plid = rs.getLong("plid");
 				String portletId = rs.getString("portletId");
 				String preferences = rs.getString("preferences");
+
+System.out.println("************   portletPreferencesId: " + portletPreferencesId);
+System.out.println("************   ownerId: " + ownerId);
+System.out.println("************   ownerType: " + ownerType);
+System.out.println("************   plid: " + plid);
+System.out.println("************   portletId: " + portletId);
+System.out.println("************   preferences: " + preferences);
 
 				long companyId = 0;
 
@@ -265,6 +274,8 @@ public abstract class BaseUpgradePortletPreferences extends UpgradeProcess {
 				else if (ownerType == PortletKeys.PREFS_OWNER_TYPE_USER) {
 					companyId = getCompanyId(ownerId);
 				}
+
+System.out.println("************   companyId: " + companyId);
 
 				if (companyId > 0) {
 					String newPreferences = upgradePreferences(
