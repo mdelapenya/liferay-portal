@@ -983,9 +983,12 @@ public abstract class BaseTrashHandlerTestCase {
 			Assert.assertEquals(0, getTrashEntriesCount(group.getGroupId()));
 
 			try {
-				getBaseModel((Long)baseModel.getPrimaryKeyObj());
+				baseModel = getBaseModel(
+					(Long)baseModel.getPrimaryKeyObj());
 
-				Assert.fail();
+				if (baseModel != null) {
+					Assert.fail();
+				}
 			}
 			catch (NoSuchModelException nsme) {
 			}
@@ -1011,9 +1014,12 @@ public abstract class BaseTrashHandlerTestCase {
 			}
 			else {
 				try {
-					getBaseModel((Long)baseModel.getPrimaryKeyObj());
+					baseModel = getBaseModel(
+						(Long)baseModel.getPrimaryKeyObj());
 
-					Assert.fail();
+					if (baseModel != null) {
+						Assert.fail();
+					}
 				}
 				catch (NoSuchModelException nsme) {
 				}
