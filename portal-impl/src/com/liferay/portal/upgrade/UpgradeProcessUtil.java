@@ -35,6 +35,12 @@ import java.sql.ResultSet;
 public class UpgradeProcessUtil {
 
 	public static String getDefaultLanguageId(long companyId) throws Exception {
+		String languageId = _languageIds.get(companyId);
+
+		if (languageId != null) {
+			return languageId;
+		}
+
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -43,20 +49,28 @@ public class UpgradeProcessUtil {
 			con = DataAccess.getUpgradeOptimizedConnection();
 
 			ps = con.prepareStatement(
-				"select languageId from User_ where defaultUser = TRUE and " +
-					"companyId = " + companyId);
+				"select languageId from User_ where companyId = ? and " +
+					"defaultUser = ?");
+
+			ps.setLong(1, companyId);
+			ps.setBoolean(2, true);
 
 			rs = ps.executeQuery();
 
-			while (rs.next()) {
-				return rs.getString("languageId");
+			if (rs.next()) {
+				String languageId = rs.getString("languageId");
+
+				_languageIds.put(companyId, languageId);
+
+				return languageId;
+			}
+			else {
+				return StringPool.BLANK;
 			}
 		}
 		finally {
 			DataAccess.cleanUp(con, ps, rs);
 		}
-
-		return StringPool.BLANK;
 	}
 
 	public static boolean isCreateIGImageDocumentType() {
@@ -165,5 +179,6 @@ public class UpgradeProcessUtil {
 	private static Log _log = LogFactoryUtil.getLog(UpgradeProcessUtil.class);
 
 	private static boolean _createIGImageDocumentType = false;
+	private static Map<Long, String> _languageIds = new HashMap<Long, String>();
 
 }
