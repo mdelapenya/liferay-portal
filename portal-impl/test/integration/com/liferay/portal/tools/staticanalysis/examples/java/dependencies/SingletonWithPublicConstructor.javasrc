@@ -1,0 +1,19 @@
+package javasource;
+
+public final class SingletonWithPublicConstructor {
+
+	public SingletonWithPublicConstructor() {
+		System.out.println("Public constructor");
+	}
+
+	public static SingletonWithPublicConstructor getInstance() {
+		if (_instance == null) {
+			_instance = new SingletonWithPublicConstructor();
+		}
+
+		return _instance;
+	}
+
+	private static SingletonWithPublicConstructor _instance;
+
+}
