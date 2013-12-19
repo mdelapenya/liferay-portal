@@ -74,6 +74,11 @@ public class PortalApplicationContext extends XmlWebApplicationContext {
 				}
 			}
 		}
+
+		if (PropsValues.MESSAGING_DESTINATIONS_SERIAL) {
+			addBeanFactoryPostProcessor(
+				new SyncDestinationsBeanFactoryPostProcessor());
+		}
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(
