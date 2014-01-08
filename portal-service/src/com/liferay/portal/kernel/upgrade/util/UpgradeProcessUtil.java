@@ -29,6 +29,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import java.util.Map;
+import java.util.HashMap;
+
 /**
  * @author Brian Wing Shun Chan
  * @author Alexander Chow
@@ -60,7 +63,7 @@ public class UpgradeProcessUtil {
 			rs = ps.executeQuery();
 
 			if (rs.next()) {
-				String languageId = rs.getString("languageId");
+				languageId = rs.getString("languageId");
 
 				_languageIds.put(companyId, languageId);
 
