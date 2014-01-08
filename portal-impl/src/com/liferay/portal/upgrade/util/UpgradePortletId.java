@@ -249,9 +249,7 @@ public class UpgradePortletId extends UpgradeProcess {
 		}
 		catch (Exception e) {
 			if (_log.isWarnEnabled()) {
-				_log.warn(
-					"Unable to update layout " + oldPortletId + " with " +
-						newPortletId, e);
+				_log.warn(e, e);
 			}
 		}
 		finally {

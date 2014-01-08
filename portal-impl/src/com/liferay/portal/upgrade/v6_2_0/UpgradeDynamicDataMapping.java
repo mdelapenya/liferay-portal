@@ -65,7 +65,7 @@ public class UpgradeDynamicDataMapping extends UpgradeProcess {
 		}
 		catch (Exception e) {
 			if (_log.isWarnEnabled()) {
-				_log.warn(sqle, sqle);
+				_log.warn(e, e);
 			}
 		}
 
