@@ -65,7 +65,7 @@ public class UpgradeDynamicDataMapping extends UpgradeProcess {
 		}
 		catch (Exception e) {
 			if (_log.isWarnEnabled()) {
-				_log.warn("Unable to update classNameId ", e);
+				_log.warn("Unable to update classNameId " + classNameId, e);
 			}
 		}
 
