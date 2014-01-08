@@ -69,7 +69,9 @@ public class UpgradeDynamicDataMapping extends UpgradeProcess {
 			}
 		}
 
-//		updateStructures();
+		updateStructures();
+
+		updateTemplates();
 	}
 
 	protected void updateMetadataElement(
@@ -133,7 +135,8 @@ public class UpgradeDynamicDataMapping extends UpgradeProcess {
 		try {
 			con = DataAccess.getUpgradeOptimizedConnection();
 
-			ps = con.prepareStatement("select * from DDMStructure");
+			ps = con.prepareStatement(
+				"select structureId, structureKey, xsd from DDMStructure");
 
 			rs = ps.executeQuery();
 
@@ -145,6 +148,61 @@ public class UpgradeDynamicDataMapping extends UpgradeProcess {
 				updateStructure(
 					structureId, StringUtil.upperCase(structureKey.trim()),
 					updateXSD(xsd));
+			}
+		}
+		finally {
+			DataAccess.cleanUp(con, ps, rs);
+		}
+	}
+
+	protected void updateTemplate(
+			long templateId, String templateKey, String script)
+		throws Exception {
+
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			con = DataAccess.getUpgradeOptimizedConnection();
+
+			ps = con.prepareStatement(
+				"update DDMTemplate set templateKey = ?, script = ? where " +
+					"templateId = ?");
+
+			ps.setString(1, templateKey);
+			ps.setString(2, script);
+			ps.setLong(3, templateId);
+
+			ps.executeUpdate();
+		}
+		finally {
+			DataAccess.cleanUp(con, ps, rs);
+		}
+	}
+
+	protected void updateTemplates() throws Exception {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			con = DataAccess.getUpgradeOptimizedConnection();
+
+			ps = con.prepareStatement(
+				"select templateId, templateKey, script from DDMTemplate " +
+					"where language = 'xsd'");
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				long templateId = rs.getLong("templateId");
+				String templateKey = rs.getString("templateKey");
+				String script = rs.getString("script");
+
+				updateTemplate(
+					templateId, StringUtil.toUpperCase(templateKey.trim()),
+					updateXSD(script));
 			}
 		}
 		finally {
@@ -177,7 +235,7 @@ public class UpgradeDynamicDataMapping extends UpgradeProcess {
 				"width",
 			},
 			new String[] {
-				"displayChildLabelAsValue", "fieldCssClass"
+				"displayChildLabelAsValue", "fieldCssClass", "acceptFiles"
 			});
 
 		List<Element> dynamicElementElements = element.elements(
@@ -191,4 +249,3 @@ public class UpgradeDynamicDataMapping extends UpgradeProcess {
 	private static Log _log = LogFactoryUtil.getLog(
 		UpgradeDynamicDataMapping.class);
 
-}
