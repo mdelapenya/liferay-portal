@@ -60,7 +60,7 @@ public class UpgradeDynamicDataMapping extends UpgradeProcess {
 				DDMTemplateTable.TABLE_SQL_CREATE,
 				DDMTemplateTable.TABLE_SQL_ADD_INDEXES);
 		}
-*/
+
 		long classNameId = PortalUtil.getClassNameId(DDMStructure.class);
 
 		try {
@@ -71,7 +71,7 @@ public class UpgradeDynamicDataMapping extends UpgradeProcess {
 				_log.warn(e, e);
 			}
 		}
-
+*/
 		updateStructures();
 
 		updateTemplates();
