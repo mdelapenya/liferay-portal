@@ -166,6 +166,58 @@ public class PasswordTrackerPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUserId() throws Exception {
+		PasswordTracker passwordTracker = addPasswordTracker();
+
+		long userId = passwordTracker.getUserId();
+
+		List<PasswordTracker> passwordTrackers = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(1, passwordTrackers.size());
+
+		Assert.assertEquals(passwordTracker.getPrimaryKey(),
+			passwordTrackers.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUserIdNotFound() throws Exception {
+		addPasswordTracker();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		List<PasswordTracker> passwordTrackers = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(0, passwordTrackers.size());
+	}
+
+	@Test
+	public void testFindByUserIdStartEnd() throws Exception {
+		testFindByUserIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndWrongRange() throws Exception {
+		testFindByUserIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndZeroZero() throws Exception {
+		testFindByUserIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUserIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		PasswordTracker passwordTracker = addPasswordTracker();
+
+		long userId = passwordTracker.getUserId();
+
+		List<PasswordTracker> passwordTrackers = _persistence.findByUserId(userId,
+				start, end);
+
+		Assert.assertEquals(expected, passwordTrackers.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("PasswordTracker",
 			"passwordTrackerId", true, "userId", true, "createDate", true,

@@ -198,6 +198,172 @@ public class PollsChoicePersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		PollsChoice pollsChoice = addPollsChoice();
+
+		String uuid = pollsChoice.getUuid();
+
+		List<PollsChoice> pollsChoices = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, pollsChoices.size());
+
+		Assert.assertEquals(pollsChoice.getPrimaryKey(),
+			pollsChoices.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addPollsChoice();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<PollsChoice> pollsChoices = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, pollsChoices.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		PollsChoice pollsChoice = addPollsChoice();
+
+		String uuid = pollsChoice.getUuid();
+
+		List<PollsChoice> pollsChoices = _persistence.findByUuid(uuid, start,
+				end);
+
+		Assert.assertEquals(expected, pollsChoices.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		PollsChoice pollsChoice = addPollsChoice();
+
+		String uuid = pollsChoice.getUuid();
+
+		long companyId = pollsChoice.getCompanyId();
+
+		List<PollsChoice> pollsChoices = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(1, pollsChoices.size());
+
+		Assert.assertEquals(pollsChoice.getPrimaryKey(),
+			pollsChoices.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addPollsChoice();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<PollsChoice> pollsChoices = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(0, pollsChoices.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		PollsChoice pollsChoice = addPollsChoice();
+
+		String uuid = pollsChoice.getUuid();
+
+		long companyId = pollsChoice.getCompanyId();
+
+		List<PollsChoice> pollsChoices = _persistence.findByUuid_C(uuid,
+				companyId, start, end);
+
+		Assert.assertEquals(expected, pollsChoices.size());
+	}
+
+	@Test
+	public void testFindByQuestionId() throws Exception {
+		PollsChoice pollsChoice = addPollsChoice();
+
+		long questionId = pollsChoice.getQuestionId();
+
+		List<PollsChoice> pollsChoices = _persistence.findByQuestionId(questionId);
+
+		Assert.assertEquals(1, pollsChoices.size());
+
+		Assert.assertEquals(pollsChoice.getPrimaryKey(),
+			pollsChoices.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByQuestionIdNotFound() throws Exception {
+		addPollsChoice();
+
+		long questionId = ServiceTestUtil.nextLong();
+
+		List<PollsChoice> pollsChoices = _persistence.findByQuestionId(questionId);
+
+		Assert.assertEquals(0, pollsChoices.size());
+	}
+
+	@Test
+	public void testFindByQuestionIdStartEnd() throws Exception {
+		testFindByQuestionIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByQuestionIdStartEndWrongRange()
+		throws Exception {
+		testFindByQuestionIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByQuestionIdStartEndZeroZero()
+		throws Exception {
+		testFindByQuestionIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByQuestionIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		PollsChoice pollsChoice = addPollsChoice();
+
+		long questionId = pollsChoice.getQuestionId();
+
+		List<PollsChoice> pollsChoices = _persistence.findByQuestionId(questionId,
+				start, end);
+
+		Assert.assertEquals(expected, pollsChoices.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("PollsChoice", "uuid", true,
 			"choiceId", true, "groupId", true, "companyId", true, "userId",

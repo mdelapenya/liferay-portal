@@ -172,6 +172,58 @@ public class AnnouncementsFlagPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByEntryId() throws Exception {
+		AnnouncementsFlag announcementsFlag = addAnnouncementsFlag();
+
+		long entryId = announcementsFlag.getEntryId();
+
+		List<AnnouncementsFlag> announcementsFlags = _persistence.findByEntryId(entryId);
+
+		Assert.assertEquals(1, announcementsFlags.size());
+
+		Assert.assertEquals(announcementsFlag.getPrimaryKey(),
+			announcementsFlags.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByEntryIdNotFound() throws Exception {
+		addAnnouncementsFlag();
+
+		long entryId = ServiceTestUtil.nextLong();
+
+		List<AnnouncementsFlag> announcementsFlags = _persistence.findByEntryId(entryId);
+
+		Assert.assertEquals(0, announcementsFlags.size());
+	}
+
+	@Test
+	public void testFindByEntryIdStartEnd() throws Exception {
+		testFindByEntryIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByEntryIdStartEndWrongRange() throws Exception {
+		testFindByEntryIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByEntryIdStartEndZeroZero() throws Exception {
+		testFindByEntryIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByEntryIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		AnnouncementsFlag announcementsFlag = addAnnouncementsFlag();
+
+		long entryId = announcementsFlag.getEntryId();
+
+		List<AnnouncementsFlag> announcementsFlags = _persistence.findByEntryId(entryId,
+				start, end);
+
+		Assert.assertEquals(expected, announcementsFlags.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("AnnouncementsFlag",
 			"flagId", true, "userId", true, "createDate", true, "entryId",

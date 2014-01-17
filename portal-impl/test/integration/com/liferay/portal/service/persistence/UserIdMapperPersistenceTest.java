@@ -171,6 +171,58 @@ public class UserIdMapperPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUserId() throws Exception {
+		UserIdMapper userIdMapper = addUserIdMapper();
+
+		long userId = userIdMapper.getUserId();
+
+		List<UserIdMapper> userIdMappers = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(1, userIdMappers.size());
+
+		Assert.assertEquals(userIdMapper.getPrimaryKey(),
+			userIdMappers.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUserIdNotFound() throws Exception {
+		addUserIdMapper();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		List<UserIdMapper> userIdMappers = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(0, userIdMappers.size());
+	}
+
+	@Test
+	public void testFindByUserIdStartEnd() throws Exception {
+		testFindByUserIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndWrongRange() throws Exception {
+		testFindByUserIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndZeroZero() throws Exception {
+		testFindByUserIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUserIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		UserIdMapper userIdMapper = addUserIdMapper();
+
+		long userId = userIdMapper.getUserId();
+
+		List<UserIdMapper> userIdMappers = _persistence.findByUserId(userId,
+				start, end);
+
+		Assert.assertEquals(expected, userIdMappers.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("UserIdMapper",
 			"userIdMapperId", true, "userId", true, "type", true,

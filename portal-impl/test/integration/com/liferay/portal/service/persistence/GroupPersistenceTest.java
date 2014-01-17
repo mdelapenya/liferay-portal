@@ -218,6 +218,585 @@ public class GroupPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		Group group = addGroup();
+
+		String uuid = group.getUuid();
+
+		List<Group> groups = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, groups.size());
+
+		Assert.assertEquals(group.getPrimaryKey(), groups.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addGroup();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<Group> groups = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, groups.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		Group group = addGroup();
+
+		String uuid = group.getUuid();
+
+		List<Group> groups = _persistence.findByUuid(uuid, start, end);
+
+		Assert.assertEquals(expected, groups.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		Group group = addGroup();
+
+		String uuid = group.getUuid();
+
+		long companyId = group.getCompanyId();
+
+		List<Group> groups = _persistence.findByUuid_C(uuid, companyId);
+
+		Assert.assertEquals(1, groups.size());
+
+		Assert.assertEquals(group.getPrimaryKey(), groups.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addGroup();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<Group> groups = _persistence.findByUuid_C(uuid, companyId);
+
+		Assert.assertEquals(0, groups.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		Group group = addGroup();
+
+		String uuid = group.getUuid();
+
+		long companyId = group.getCompanyId();
+
+		List<Group> groups = _persistence.findByUuid_C(uuid, companyId, start,
+				end);
+
+		Assert.assertEquals(expected, groups.size());
+	}
+
+	@Test
+	public void testFindByCompanyId() throws Exception {
+		Group group = addGroup();
+
+		long companyId = group.getCompanyId();
+
+		List<Group> groups = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(1, groups.size());
+
+		Assert.assertEquals(group.getPrimaryKey(), groups.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByCompanyIdNotFound() throws Exception {
+		addGroup();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<Group> groups = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(0, groups.size());
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEnd() throws Exception {
+		testFindByCompanyIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndWrongRange()
+		throws Exception {
+		testFindByCompanyIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndZeroZero() throws Exception {
+		testFindByCompanyIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByCompanyIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		Group group = addGroup();
+
+		long companyId = group.getCompanyId();
+
+		List<Group> groups = _persistence.findByCompanyId(companyId, start, end);
+
+		Assert.assertEquals(expected, groups.size());
+	}
+
+	@Test
+	public void testFindByC_C() throws Exception {
+		Group group = addGroup();
+
+		long companyId = group.getCompanyId();
+
+		long classNameId = group.getClassNameId();
+
+		List<Group> groups = _persistence.findByC_C(companyId, classNameId);
+
+		Assert.assertEquals(1, groups.size());
+
+		Assert.assertEquals(group.getPrimaryKey(), groups.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_CNotFound() throws Exception {
+		addGroup();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		List<Group> groups = _persistence.findByC_C(companyId, classNameId);
+
+		Assert.assertEquals(0, groups.size());
+	}
+
+	@Test
+	public void testFindByC_CStartEnd() throws Exception {
+		testFindByC_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_CStartEndWrongRange() throws Exception {
+		testFindByC_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_CStartEndZeroZero() throws Exception {
+		testFindByC_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		Group group = addGroup();
+
+		long companyId = group.getCompanyId();
+
+		long classNameId = group.getClassNameId();
+
+		List<Group> groups = _persistence.findByC_C(companyId, classNameId,
+				start, end);
+
+		Assert.assertEquals(expected, groups.size());
+	}
+
+	@Test
+	public void testFindByC_P() throws Exception {
+		Group group = addGroup();
+
+		long companyId = group.getCompanyId();
+
+		long parentGroupId = group.getParentGroupId();
+
+		List<Group> groups = _persistence.findByC_P(companyId, parentGroupId);
+
+		Assert.assertEquals(1, groups.size());
+
+		Assert.assertEquals(group.getPrimaryKey(), groups.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_PNotFound() throws Exception {
+		addGroup();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		long parentGroupId = ServiceTestUtil.nextLong();
+
+		List<Group> groups = _persistence.findByC_P(companyId, parentGroupId);
+
+		Assert.assertEquals(0, groups.size());
+	}
+
+	@Test
+	public void testFindByC_PStartEnd() throws Exception {
+		testFindByC_PStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_PStartEndWrongRange() throws Exception {
+		testFindByC_PStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_PStartEndZeroZero() throws Exception {
+		testFindByC_PStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_PStartEnd(int start, int end, int expected)
+		throws Exception {
+		Group group = addGroup();
+
+		long companyId = group.getCompanyId();
+
+		long parentGroupId = group.getParentGroupId();
+
+		List<Group> groups = _persistence.findByC_P(companyId, parentGroupId,
+				start, end);
+
+		Assert.assertEquals(expected, groups.size());
+	}
+
+	@Test
+	public void testFindByC_S() throws Exception {
+		Group group = addGroup();
+
+		long companyId = group.getCompanyId();
+
+		boolean site = group.getSite();
+
+		List<Group> groups = _persistence.findByC_S(companyId, site);
+
+		Assert.assertEquals(1, groups.size());
+
+		Assert.assertEquals(group.getPrimaryKey(), groups.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_SNotFound() throws Exception {
+		addGroup();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		boolean site = ServiceTestUtil.randomBoolean();
+
+		List<Group> groups = _persistence.findByC_S(companyId, site);
+
+		Assert.assertEquals(0, groups.size());
+	}
+
+	@Test
+	public void testFindByC_SStartEnd() throws Exception {
+		testFindByC_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_SStartEndWrongRange() throws Exception {
+		testFindByC_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_SStartEndZeroZero() throws Exception {
+		testFindByC_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		Group group = addGroup();
+
+		long companyId = group.getCompanyId();
+
+		boolean site = group.getSite();
+
+		List<Group> groups = _persistence.findByC_S(companyId, site, start, end);
+
+		Assert.assertEquals(expected, groups.size());
+	}
+
+	@Test
+	public void testFindByT_A() throws Exception {
+		Group group = addGroup();
+
+		int type = group.getType();
+
+		boolean active = group.getActive();
+
+		List<Group> groups = _persistence.findByT_A(type, active);
+
+		Assert.assertEquals(1, groups.size());
+
+		Assert.assertEquals(group.getPrimaryKey(), groups.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByT_ANotFound() throws Exception {
+		addGroup();
+
+		int type = ServiceTestUtil.nextInt();
+
+		boolean active = ServiceTestUtil.randomBoolean();
+
+		List<Group> groups = _persistence.findByT_A(type, active);
+
+		Assert.assertEquals(0, groups.size());
+	}
+
+	@Test
+	public void testFindByT_AStartEnd() throws Exception {
+		testFindByT_AStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByT_AStartEndWrongRange() throws Exception {
+		testFindByT_AStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByT_AStartEndZeroZero() throws Exception {
+		testFindByT_AStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByT_AStartEnd(int start, int end, int expected)
+		throws Exception {
+		Group group = addGroup();
+
+		int type = group.getType();
+
+		boolean active = group.getActive();
+
+		List<Group> groups = _persistence.findByT_A(type, active, start, end);
+
+		Assert.assertEquals(expected, groups.size());
+	}
+
+	@Test
+	public void testFindByG_C_P() throws Exception {
+		Group group = addGroup();
+
+		long groupId = group.getGroupId();
+
+		long companyId = group.getCompanyId();
+
+		long parentGroupId = group.getParentGroupId();
+
+		List<Group> groups = _persistence.findByG_C_P(groupId, companyId,
+				parentGroupId);
+
+		Assert.assertEquals(1, groups.size());
+
+		Assert.assertEquals(group.getPrimaryKey(), groups.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_C_PNotFound() throws Exception {
+		addGroup();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		long parentGroupId = ServiceTestUtil.nextLong();
+
+		List<Group> groups = _persistence.findByG_C_P(groupId, companyId,
+				parentGroupId);
+
+		Assert.assertEquals(0, groups.size());
+	}
+
+	@Test
+	public void testFindByG_C_PStartEnd() throws Exception {
+		testFindByG_C_PStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_C_PStartEndWrongRange() throws Exception {
+		testFindByG_C_PStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_C_PStartEndZeroZero() throws Exception {
+		testFindByG_C_PStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_C_PStartEnd(int start, int end, int expected)
+		throws Exception {
+		Group group = addGroup();
+
+		long groupId = group.getGroupId();
+
+		long companyId = group.getCompanyId();
+
+		long parentGroupId = group.getParentGroupId();
+
+		List<Group> groups = _persistence.findByG_C_P(groupId, companyId,
+				parentGroupId, start, end);
+
+		Assert.assertEquals(expected, groups.size());
+	}
+
+	@Test
+	public void testFindByC_C_P() throws Exception {
+		Group group = addGroup();
+
+		long companyId = group.getCompanyId();
+
+		long classNameId = group.getClassNameId();
+
+		long parentGroupId = group.getParentGroupId();
+
+		List<Group> groups = _persistence.findByC_C_P(companyId, classNameId,
+				parentGroupId);
+
+		Assert.assertEquals(1, groups.size());
+
+		Assert.assertEquals(group.getPrimaryKey(), groups.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_C_PNotFound() throws Exception {
+		addGroup();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		long parentGroupId = ServiceTestUtil.nextLong();
+
+		List<Group> groups = _persistence.findByC_C_P(companyId, classNameId,
+				parentGroupId);
+
+		Assert.assertEquals(0, groups.size());
+	}
+
+	@Test
+	public void testFindByC_C_PStartEnd() throws Exception {
+		testFindByC_C_PStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_C_PStartEndWrongRange() throws Exception {
+		testFindByC_C_PStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_C_PStartEndZeroZero() throws Exception {
+		testFindByC_C_PStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_C_PStartEnd(int start, int end, int expected)
+		throws Exception {
+		Group group = addGroup();
+
+		long companyId = group.getCompanyId();
+
+		long classNameId = group.getClassNameId();
+
+		long parentGroupId = group.getParentGroupId();
+
+		List<Group> groups = _persistence.findByC_C_P(companyId, classNameId,
+				parentGroupId, start, end);
+
+		Assert.assertEquals(expected, groups.size());
+	}
+
+	@Test
+	public void testFindByC_P_S() throws Exception {
+		Group group = addGroup();
+
+		long companyId = group.getCompanyId();
+
+		long parentGroupId = group.getParentGroupId();
+
+		boolean site = group.getSite();
+
+		List<Group> groups = _persistence.findByC_P_S(companyId, parentGroupId,
+				site);
+
+		Assert.assertEquals(1, groups.size());
+
+		Assert.assertEquals(group.getPrimaryKey(), groups.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_P_SNotFound() throws Exception {
+		addGroup();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		long parentGroupId = ServiceTestUtil.nextLong();
+
+		boolean site = ServiceTestUtil.randomBoolean();
+
+		List<Group> groups = _persistence.findByC_P_S(companyId, parentGroupId,
+				site);
+
+		Assert.assertEquals(0, groups.size());
+	}
+
+	@Test
+	public void testFindByC_P_SStartEnd() throws Exception {
+		testFindByC_P_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_P_SStartEndWrongRange() throws Exception {
+		testFindByC_P_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_P_SStartEndZeroZero() throws Exception {
+		testFindByC_P_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_P_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		Group group = addGroup();
+
+		long companyId = group.getCompanyId();
+
+		long parentGroupId = group.getParentGroupId();
+
+		boolean site = group.getSite();
+
+		List<Group> groups = _persistence.findByC_P_S(companyId, parentGroupId,
+				site, start, end);
+
+		Assert.assertEquals(expected, groups.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("Group_", "uuid", true,
 			"groupId", true, "companyId", true, "creatorUserId", true,

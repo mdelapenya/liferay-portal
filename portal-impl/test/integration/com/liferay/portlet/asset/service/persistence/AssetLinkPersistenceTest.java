@@ -187,6 +187,282 @@ public class AssetLinkPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByE1() throws Exception {
+		AssetLink assetLink = addAssetLink();
+
+		long entryId1 = assetLink.getEntryId1();
+
+		List<AssetLink> assetLinks = _persistence.findByE1(entryId1);
+
+		Assert.assertEquals(1, assetLinks.size());
+
+		Assert.assertEquals(assetLink.getPrimaryKey(),
+			assetLinks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByE1NotFound() throws Exception {
+		addAssetLink();
+
+		long entryId1 = ServiceTestUtil.nextLong();
+
+		List<AssetLink> assetLinks = _persistence.findByE1(entryId1);
+
+		Assert.assertEquals(0, assetLinks.size());
+	}
+
+	@Test
+	public void testFindByE1StartEnd() throws Exception {
+		testFindByE1StartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByE1StartEndWrongRange() throws Exception {
+		testFindByE1StartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByE1StartEndZeroZero() throws Exception {
+		testFindByE1StartEnd(0, 0, 0);
+	}
+
+	protected void testFindByE1StartEnd(int start, int end, int expected)
+		throws Exception {
+		AssetLink assetLink = addAssetLink();
+
+		long entryId1 = assetLink.getEntryId1();
+
+		List<AssetLink> assetLinks = _persistence.findByE1(entryId1, start, end);
+
+		Assert.assertEquals(expected, assetLinks.size());
+	}
+
+	@Test
+	public void testFindByE2() throws Exception {
+		AssetLink assetLink = addAssetLink();
+
+		long entryId2 = assetLink.getEntryId2();
+
+		List<AssetLink> assetLinks = _persistence.findByE2(entryId2);
+
+		Assert.assertEquals(1, assetLinks.size());
+
+		Assert.assertEquals(assetLink.getPrimaryKey(),
+			assetLinks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByE2NotFound() throws Exception {
+		addAssetLink();
+
+		long entryId2 = ServiceTestUtil.nextLong();
+
+		List<AssetLink> assetLinks = _persistence.findByE2(entryId2);
+
+		Assert.assertEquals(0, assetLinks.size());
+	}
+
+	@Test
+	public void testFindByE2StartEnd() throws Exception {
+		testFindByE2StartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByE2StartEndWrongRange() throws Exception {
+		testFindByE2StartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByE2StartEndZeroZero() throws Exception {
+		testFindByE2StartEnd(0, 0, 0);
+	}
+
+	protected void testFindByE2StartEnd(int start, int end, int expected)
+		throws Exception {
+		AssetLink assetLink = addAssetLink();
+
+		long entryId2 = assetLink.getEntryId2();
+
+		List<AssetLink> assetLinks = _persistence.findByE2(entryId2, start, end);
+
+		Assert.assertEquals(expected, assetLinks.size());
+	}
+
+	@Test
+	public void testFindByE_E() throws Exception {
+		AssetLink assetLink = addAssetLink();
+
+		long entryId1 = assetLink.getEntryId1();
+
+		long entryId2 = assetLink.getEntryId2();
+
+		List<AssetLink> assetLinks = _persistence.findByE_E(entryId1, entryId2);
+
+		Assert.assertEquals(1, assetLinks.size());
+
+		Assert.assertEquals(assetLink.getPrimaryKey(),
+			assetLinks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByE_ENotFound() throws Exception {
+		addAssetLink();
+
+		long entryId1 = ServiceTestUtil.nextLong();
+
+		long entryId2 = ServiceTestUtil.nextLong();
+
+		List<AssetLink> assetLinks = _persistence.findByE_E(entryId1, entryId2);
+
+		Assert.assertEquals(0, assetLinks.size());
+	}
+
+	@Test
+	public void testFindByE_EStartEnd() throws Exception {
+		testFindByE_EStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByE_EStartEndWrongRange() throws Exception {
+		testFindByE_EStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByE_EStartEndZeroZero() throws Exception {
+		testFindByE_EStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByE_EStartEnd(int start, int end, int expected)
+		throws Exception {
+		AssetLink assetLink = addAssetLink();
+
+		long entryId1 = assetLink.getEntryId1();
+
+		long entryId2 = assetLink.getEntryId2();
+
+		List<AssetLink> assetLinks = _persistence.findByE_E(entryId1, entryId2,
+				start, end);
+
+		Assert.assertEquals(expected, assetLinks.size());
+	}
+
+	@Test
+	public void testFindByE1_T() throws Exception {
+		AssetLink assetLink = addAssetLink();
+
+		long entryId1 = assetLink.getEntryId1();
+
+		int type = assetLink.getType();
+
+		List<AssetLink> assetLinks = _persistence.findByE1_T(entryId1, type);
+
+		Assert.assertEquals(1, assetLinks.size());
+
+		Assert.assertEquals(assetLink.getPrimaryKey(),
+			assetLinks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByE1_TNotFound() throws Exception {
+		addAssetLink();
+
+		long entryId1 = ServiceTestUtil.nextLong();
+
+		int type = ServiceTestUtil.nextInt();
+
+		List<AssetLink> assetLinks = _persistence.findByE1_T(entryId1, type);
+
+		Assert.assertEquals(0, assetLinks.size());
+	}
+
+	@Test
+	public void testFindByE1_TStartEnd() throws Exception {
+		testFindByE1_TStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByE1_TStartEndWrongRange() throws Exception {
+		testFindByE1_TStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByE1_TStartEndZeroZero() throws Exception {
+		testFindByE1_TStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByE1_TStartEnd(int start, int end, int expected)
+		throws Exception {
+		AssetLink assetLink = addAssetLink();
+
+		long entryId1 = assetLink.getEntryId1();
+
+		int type = assetLink.getType();
+
+		List<AssetLink> assetLinks = _persistence.findByE1_T(entryId1, type,
+				start, end);
+
+		Assert.assertEquals(expected, assetLinks.size());
+	}
+
+	@Test
+	public void testFindByE2_T() throws Exception {
+		AssetLink assetLink = addAssetLink();
+
+		long entryId2 = assetLink.getEntryId2();
+
+		int type = assetLink.getType();
+
+		List<AssetLink> assetLinks = _persistence.findByE2_T(entryId2, type);
+
+		Assert.assertEquals(1, assetLinks.size());
+
+		Assert.assertEquals(assetLink.getPrimaryKey(),
+			assetLinks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByE2_TNotFound() throws Exception {
+		addAssetLink();
+
+		long entryId2 = ServiceTestUtil.nextLong();
+
+		int type = ServiceTestUtil.nextInt();
+
+		List<AssetLink> assetLinks = _persistence.findByE2_T(entryId2, type);
+
+		Assert.assertEquals(0, assetLinks.size());
+	}
+
+	@Test
+	public void testFindByE2_TStartEnd() throws Exception {
+		testFindByE2_TStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByE2_TStartEndWrongRange() throws Exception {
+		testFindByE2_TStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByE2_TStartEndZeroZero() throws Exception {
+		testFindByE2_TStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByE2_TStartEnd(int start, int end, int expected)
+		throws Exception {
+		AssetLink assetLink = addAssetLink();
+
+		long entryId2 = assetLink.getEntryId2();
+
+		int type = assetLink.getType();
+
+		List<AssetLink> assetLinks = _persistence.findByE2_T(entryId2, type,
+				start, end);
+
+		Assert.assertEquals(expected, assetLinks.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("AssetLink", "linkId", true,
 			"companyId", true, "userId", true, "userName", true, "createDate",

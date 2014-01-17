@@ -169,6 +169,110 @@ public class JournalArticleResourcePersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		JournalArticleResource journalArticleResource = addJournalArticleResource();
+
+		String uuid = journalArticleResource.getUuid();
+
+		List<JournalArticleResource> journalArticleResources = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, journalArticleResources.size());
+
+		Assert.assertEquals(journalArticleResource.getPrimaryKey(),
+			journalArticleResources.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addJournalArticleResource();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<JournalArticleResource> journalArticleResources = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, journalArticleResources.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		JournalArticleResource journalArticleResource = addJournalArticleResource();
+
+		String uuid = journalArticleResource.getUuid();
+
+		List<JournalArticleResource> journalArticleResources = _persistence.findByUuid(uuid,
+				start, end);
+
+		Assert.assertEquals(expected, journalArticleResources.size());
+	}
+
+	@Test
+	public void testFindByGroupId() throws Exception {
+		JournalArticleResource journalArticleResource = addJournalArticleResource();
+
+		long groupId = journalArticleResource.getGroupId();
+
+		List<JournalArticleResource> journalArticleResources = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(1, journalArticleResources.size());
+
+		Assert.assertEquals(journalArticleResource.getPrimaryKey(),
+			journalArticleResources.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByGroupIdNotFound() throws Exception {
+		addJournalArticleResource();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		List<JournalArticleResource> journalArticleResources = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(0, journalArticleResources.size());
+	}
+
+	@Test
+	public void testFindByGroupIdStartEnd() throws Exception {
+		testFindByGroupIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndWrongRange() throws Exception {
+		testFindByGroupIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndZeroZero() throws Exception {
+		testFindByGroupIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByGroupIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		JournalArticleResource journalArticleResource = addJournalArticleResource();
+
+		long groupId = journalArticleResource.getGroupId();
+
+		List<JournalArticleResource> journalArticleResources = _persistence.findByGroupId(groupId,
+				start, end);
+
+		Assert.assertEquals(expected, journalArticleResources.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("JournalArticleResource",
 			"uuid", true, "resourcePrimKey", true, "groupId", true,

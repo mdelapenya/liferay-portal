@@ -198,6 +198,425 @@ public class RolePersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		Role role = addRole();
+
+		String uuid = role.getUuid();
+
+		List<Role> roles = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, roles.size());
+
+		Assert.assertEquals(role.getPrimaryKey(), roles.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addRole();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<Role> roles = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, roles.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		Role role = addRole();
+
+		String uuid = role.getUuid();
+
+		List<Role> roles = _persistence.findByUuid(uuid, start, end);
+
+		Assert.assertEquals(expected, roles.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		Role role = addRole();
+
+		String uuid = role.getUuid();
+
+		long companyId = role.getCompanyId();
+
+		List<Role> roles = _persistence.findByUuid_C(uuid, companyId);
+
+		Assert.assertEquals(1, roles.size());
+
+		Assert.assertEquals(role.getPrimaryKey(), roles.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addRole();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<Role> roles = _persistence.findByUuid_C(uuid, companyId);
+
+		Assert.assertEquals(0, roles.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		Role role = addRole();
+
+		String uuid = role.getUuid();
+
+		long companyId = role.getCompanyId();
+
+		List<Role> roles = _persistence.findByUuid_C(uuid, companyId, start, end);
+
+		Assert.assertEquals(expected, roles.size());
+	}
+
+	@Test
+	public void testFindByCompanyId() throws Exception {
+		Role role = addRole();
+
+		long companyId = role.getCompanyId();
+
+		List<Role> roles = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(1, roles.size());
+
+		Assert.assertEquals(role.getPrimaryKey(), roles.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByCompanyIdNotFound() throws Exception {
+		addRole();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<Role> roles = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(0, roles.size());
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEnd() throws Exception {
+		testFindByCompanyIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndWrongRange()
+		throws Exception {
+		testFindByCompanyIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndZeroZero() throws Exception {
+		testFindByCompanyIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByCompanyIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		Role role = addRole();
+
+		long companyId = role.getCompanyId();
+
+		List<Role> roles = _persistence.findByCompanyId(companyId, start, end);
+
+		Assert.assertEquals(expected, roles.size());
+	}
+
+	@Test
+	public void testFindByName() throws Exception {
+		Role role = addRole();
+
+		String name = role.getName();
+
+		List<Role> roles = _persistence.findByName(name);
+
+		Assert.assertEquals(1, roles.size());
+
+		Assert.assertEquals(role.getPrimaryKey(), roles.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByNameNotFound() throws Exception {
+		addRole();
+
+		String name = ServiceTestUtil.randomString();
+
+		List<Role> roles = _persistence.findByName(name);
+
+		Assert.assertEquals(0, roles.size());
+	}
+
+	@Test
+	public void testFindByNameStartEnd() throws Exception {
+		testFindByNameStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByNameStartEndWrongRange() throws Exception {
+		testFindByNameStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByNameStartEndZeroZero() throws Exception {
+		testFindByNameStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByNameStartEnd(int start, int end, int expected)
+		throws Exception {
+		Role role = addRole();
+
+		String name = role.getName();
+
+		List<Role> roles = _persistence.findByName(name, start, end);
+
+		Assert.assertEquals(expected, roles.size());
+	}
+
+	@Test
+	public void testFindByType() throws Exception {
+		Role role = addRole();
+
+		int type = role.getType();
+
+		List<Role> roles = _persistence.findByType(type);
+
+		Assert.assertEquals(1, roles.size());
+
+		Assert.assertEquals(role.getPrimaryKey(), roles.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByTypeNotFound() throws Exception {
+		addRole();
+
+		int type = ServiceTestUtil.nextInt();
+
+		List<Role> roles = _persistence.findByType(type);
+
+		Assert.assertEquals(0, roles.size());
+	}
+
+	@Test
+	public void testFindByTypeStartEnd() throws Exception {
+		testFindByTypeStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByTypeStartEndWrongRange() throws Exception {
+		testFindByTypeStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByTypeStartEndZeroZero() throws Exception {
+		testFindByTypeStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByTypeStartEnd(int start, int end, int expected)
+		throws Exception {
+		Role role = addRole();
+
+		int type = role.getType();
+
+		List<Role> roles = _persistence.findByType(type, start, end);
+
+		Assert.assertEquals(expected, roles.size());
+	}
+
+	@Test
+	public void testFindBySubtype() throws Exception {
+		Role role = addRole();
+
+		String subtype = role.getSubtype();
+
+		List<Role> roles = _persistence.findBySubtype(subtype);
+
+		Assert.assertEquals(1, roles.size());
+
+		Assert.assertEquals(role.getPrimaryKey(), roles.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindBySubtypeNotFound() throws Exception {
+		addRole();
+
+		String subtype = ServiceTestUtil.randomString();
+
+		List<Role> roles = _persistence.findBySubtype(subtype);
+
+		Assert.assertEquals(0, roles.size());
+	}
+
+	@Test
+	public void testFindBySubtypeStartEnd() throws Exception {
+		testFindBySubtypeStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindBySubtypeStartEndWrongRange() throws Exception {
+		testFindBySubtypeStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindBySubtypeStartEndZeroZero() throws Exception {
+		testFindBySubtypeStartEnd(0, 0, 0);
+	}
+
+	protected void testFindBySubtypeStartEnd(int start, int end, int expected)
+		throws Exception {
+		Role role = addRole();
+
+		String subtype = role.getSubtype();
+
+		List<Role> roles = _persistence.findBySubtype(subtype, start, end);
+
+		Assert.assertEquals(expected, roles.size());
+	}
+
+	@Test
+	public void testFindByC_T() throws Exception {
+		Role role = addRole();
+
+		long companyId = role.getCompanyId();
+
+		int type = role.getType();
+
+		List<Role> roles = _persistence.findByC_T(companyId, type);
+
+		Assert.assertEquals(1, roles.size());
+
+		Assert.assertEquals(role.getPrimaryKey(), roles.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_TNotFound() throws Exception {
+		addRole();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		int type = ServiceTestUtil.nextInt();
+
+		List<Role> roles = _persistence.findByC_T(companyId, type);
+
+		Assert.assertEquals(0, roles.size());
+	}
+
+	@Test
+	public void testFindByC_TStartEnd() throws Exception {
+		testFindByC_TStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_TStartEndWrongRange() throws Exception {
+		testFindByC_TStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_TStartEndZeroZero() throws Exception {
+		testFindByC_TStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_TStartEnd(int start, int end, int expected)
+		throws Exception {
+		Role role = addRole();
+
+		long companyId = role.getCompanyId();
+
+		int type = role.getType();
+
+		List<Role> roles = _persistence.findByC_T(companyId, type, start, end);
+
+		Assert.assertEquals(expected, roles.size());
+	}
+
+	@Test
+	public void testFindByT_S() throws Exception {
+		Role role = addRole();
+
+		int type = role.getType();
+
+		String subtype = role.getSubtype();
+
+		List<Role> roles = _persistence.findByT_S(type, subtype);
+
+		Assert.assertEquals(1, roles.size());
+
+		Assert.assertEquals(role.getPrimaryKey(), roles.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByT_SNotFound() throws Exception {
+		addRole();
+
+		int type = ServiceTestUtil.nextInt();
+
+		String subtype = ServiceTestUtil.randomString();
+
+		List<Role> roles = _persistence.findByT_S(type, subtype);
+
+		Assert.assertEquals(0, roles.size());
+	}
+
+	@Test
+	public void testFindByT_SStartEnd() throws Exception {
+		testFindByT_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByT_SStartEndWrongRange() throws Exception {
+		testFindByT_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByT_SStartEndZeroZero() throws Exception {
+		testFindByT_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByT_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		Role role = addRole();
+
+		int type = role.getType();
+
+		String subtype = role.getSubtype();
+
+		List<Role> roles = _persistence.findByT_S(type, subtype, start, end);
+
+		Assert.assertEquals(expected, roles.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("Role_", "uuid", true,
 			"roleId", true, "companyId", true, "userId", true, "userName",

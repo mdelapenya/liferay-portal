@@ -179,6 +179,220 @@ public class DLFileEntryMetadataPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		DLFileEntryMetadata dlFileEntryMetadata = addDLFileEntryMetadata();
+
+		String uuid = dlFileEntryMetadata.getUuid();
+
+		List<DLFileEntryMetadata> dlFileEntryMetadatas = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, dlFileEntryMetadatas.size());
+
+		Assert.assertEquals(dlFileEntryMetadata.getPrimaryKey(),
+			dlFileEntryMetadatas.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addDLFileEntryMetadata();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<DLFileEntryMetadata> dlFileEntryMetadatas = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, dlFileEntryMetadatas.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		DLFileEntryMetadata dlFileEntryMetadata = addDLFileEntryMetadata();
+
+		String uuid = dlFileEntryMetadata.getUuid();
+
+		List<DLFileEntryMetadata> dlFileEntryMetadatas = _persistence.findByUuid(uuid,
+				start, end);
+
+		Assert.assertEquals(expected, dlFileEntryMetadatas.size());
+	}
+
+	@Test
+	public void testFindByFileEntryTypeId() throws Exception {
+		DLFileEntryMetadata dlFileEntryMetadata = addDLFileEntryMetadata();
+
+		long fileEntryTypeId = dlFileEntryMetadata.getFileEntryTypeId();
+
+		List<DLFileEntryMetadata> dlFileEntryMetadatas = _persistence.findByFileEntryTypeId(fileEntryTypeId);
+
+		Assert.assertEquals(1, dlFileEntryMetadatas.size());
+
+		Assert.assertEquals(dlFileEntryMetadata.getPrimaryKey(),
+			dlFileEntryMetadatas.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByFileEntryTypeIdNotFound() throws Exception {
+		addDLFileEntryMetadata();
+
+		long fileEntryTypeId = ServiceTestUtil.nextLong();
+
+		List<DLFileEntryMetadata> dlFileEntryMetadatas = _persistence.findByFileEntryTypeId(fileEntryTypeId);
+
+		Assert.assertEquals(0, dlFileEntryMetadatas.size());
+	}
+
+	@Test
+	public void testFindByFileEntryTypeIdStartEnd() throws Exception {
+		testFindByFileEntryTypeIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByFileEntryTypeIdStartEndWrongRange()
+		throws Exception {
+		testFindByFileEntryTypeIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByFileEntryTypeIdStartEndZeroZero()
+		throws Exception {
+		testFindByFileEntryTypeIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByFileEntryTypeIdStartEnd(int start, int end,
+		int expected) throws Exception {
+		DLFileEntryMetadata dlFileEntryMetadata = addDLFileEntryMetadata();
+
+		long fileEntryTypeId = dlFileEntryMetadata.getFileEntryTypeId();
+
+		List<DLFileEntryMetadata> dlFileEntryMetadatas = _persistence.findByFileEntryTypeId(fileEntryTypeId,
+				start, end);
+
+		Assert.assertEquals(expected, dlFileEntryMetadatas.size());
+	}
+
+	@Test
+	public void testFindByFileEntryId() throws Exception {
+		DLFileEntryMetadata dlFileEntryMetadata = addDLFileEntryMetadata();
+
+		long fileEntryId = dlFileEntryMetadata.getFileEntryId();
+
+		List<DLFileEntryMetadata> dlFileEntryMetadatas = _persistence.findByFileEntryId(fileEntryId);
+
+		Assert.assertEquals(1, dlFileEntryMetadatas.size());
+
+		Assert.assertEquals(dlFileEntryMetadata.getPrimaryKey(),
+			dlFileEntryMetadatas.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByFileEntryIdNotFound() throws Exception {
+		addDLFileEntryMetadata();
+
+		long fileEntryId = ServiceTestUtil.nextLong();
+
+		List<DLFileEntryMetadata> dlFileEntryMetadatas = _persistence.findByFileEntryId(fileEntryId);
+
+		Assert.assertEquals(0, dlFileEntryMetadatas.size());
+	}
+
+	@Test
+	public void testFindByFileEntryIdStartEnd() throws Exception {
+		testFindByFileEntryIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByFileEntryIdStartEndWrongRange()
+		throws Exception {
+		testFindByFileEntryIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByFileEntryIdStartEndZeroZero()
+		throws Exception {
+		testFindByFileEntryIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByFileEntryIdStartEnd(int start, int end,
+		int expected) throws Exception {
+		DLFileEntryMetadata dlFileEntryMetadata = addDLFileEntryMetadata();
+
+		long fileEntryId = dlFileEntryMetadata.getFileEntryId();
+
+		List<DLFileEntryMetadata> dlFileEntryMetadatas = _persistence.findByFileEntryId(fileEntryId,
+				start, end);
+
+		Assert.assertEquals(expected, dlFileEntryMetadatas.size());
+	}
+
+	@Test
+	public void testFindByFileVersionId() throws Exception {
+		DLFileEntryMetadata dlFileEntryMetadata = addDLFileEntryMetadata();
+
+		long fileVersionId = dlFileEntryMetadata.getFileVersionId();
+
+		List<DLFileEntryMetadata> dlFileEntryMetadatas = _persistence.findByFileVersionId(fileVersionId);
+
+		Assert.assertEquals(1, dlFileEntryMetadatas.size());
+
+		Assert.assertEquals(dlFileEntryMetadata.getPrimaryKey(),
+			dlFileEntryMetadatas.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByFileVersionIdNotFound() throws Exception {
+		addDLFileEntryMetadata();
+
+		long fileVersionId = ServiceTestUtil.nextLong();
+
+		List<DLFileEntryMetadata> dlFileEntryMetadatas = _persistence.findByFileVersionId(fileVersionId);
+
+		Assert.assertEquals(0, dlFileEntryMetadatas.size());
+	}
+
+	@Test
+	public void testFindByFileVersionIdStartEnd() throws Exception {
+		testFindByFileVersionIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByFileVersionIdStartEndWrongRange()
+		throws Exception {
+		testFindByFileVersionIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByFileVersionIdStartEndZeroZero()
+		throws Exception {
+		testFindByFileVersionIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByFileVersionIdStartEnd(int start, int end,
+		int expected) throws Exception {
+		DLFileEntryMetadata dlFileEntryMetadata = addDLFileEntryMetadata();
+
+		long fileVersionId = dlFileEntryMetadata.getFileVersionId();
+
+		List<DLFileEntryMetadata> dlFileEntryMetadatas = _persistence.findByFileVersionId(fileVersionId,
+				start, end);
+
+		Assert.assertEquals(expected, dlFileEntryMetadatas.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("DLFileEntryMetadata",
 			"uuid", true, "fileEntryMetadataId", true, "DDMStorageId", true,

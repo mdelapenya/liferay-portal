@@ -200,6 +200,118 @@ public class DLFileEntryTypePersistenceTest {
 	}
 
 	@Test
+	public void testFindByUuid() throws Exception {
+		DLFileEntryType dlFileEntryType = addDLFileEntryType();
+
+		String uuid = dlFileEntryType.getUuid();
+
+		List<DLFileEntryType> dlFileEntryTypes = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, dlFileEntryTypes.size());
+
+		Assert.assertEquals(dlFileEntryType.getPrimaryKey(),
+			dlFileEntryTypes.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addDLFileEntryType();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<DLFileEntryType> dlFileEntryTypes = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, dlFileEntryTypes.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		DLFileEntryType dlFileEntryType = addDLFileEntryType();
+
+		String uuid = dlFileEntryType.getUuid();
+
+		List<DLFileEntryType> dlFileEntryTypes = _persistence.findByUuid(uuid,
+				start, end);
+
+		Assert.assertEquals(expected, dlFileEntryTypes.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		DLFileEntryType dlFileEntryType = addDLFileEntryType();
+
+		String uuid = dlFileEntryType.getUuid();
+
+		long companyId = dlFileEntryType.getCompanyId();
+
+		List<DLFileEntryType> dlFileEntryTypes = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(1, dlFileEntryTypes.size());
+
+		Assert.assertEquals(dlFileEntryType.getPrimaryKey(),
+			dlFileEntryTypes.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addDLFileEntryType();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<DLFileEntryType> dlFileEntryTypes = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(0, dlFileEntryTypes.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		DLFileEntryType dlFileEntryType = addDLFileEntryType();
+
+		String uuid = dlFileEntryType.getUuid();
+
+		long companyId = dlFileEntryType.getCompanyId();
+
+		List<DLFileEntryType> dlFileEntryTypes = _persistence.findByUuid_C(uuid,
+				companyId, start, end);
+
+		Assert.assertEquals(expected, dlFileEntryTypes.size());
+	}
+
+	@Test
 	public void testFilterFindByGroupId() throws Exception {
 		try {
 			_persistence.filterFindByGroupId(0, QueryUtil.ALL_POS,

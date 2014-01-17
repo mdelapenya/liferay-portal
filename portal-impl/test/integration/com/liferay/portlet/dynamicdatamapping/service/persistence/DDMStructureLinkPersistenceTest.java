@@ -167,6 +167,114 @@ public class DDMStructureLinkPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByClassNameId() throws Exception {
+		DDMStructureLink ddmStructureLink = addDDMStructureLink();
+
+		long classNameId = ddmStructureLink.getClassNameId();
+
+		List<DDMStructureLink> ddmStructureLinks = _persistence.findByClassNameId(classNameId);
+
+		Assert.assertEquals(1, ddmStructureLinks.size());
+
+		Assert.assertEquals(ddmStructureLink.getPrimaryKey(),
+			ddmStructureLinks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByClassNameIdNotFound() throws Exception {
+		addDDMStructureLink();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		List<DDMStructureLink> ddmStructureLinks = _persistence.findByClassNameId(classNameId);
+
+		Assert.assertEquals(0, ddmStructureLinks.size());
+	}
+
+	@Test
+	public void testFindByClassNameIdStartEnd() throws Exception {
+		testFindByClassNameIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByClassNameIdStartEndWrongRange()
+		throws Exception {
+		testFindByClassNameIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByClassNameIdStartEndZeroZero()
+		throws Exception {
+		testFindByClassNameIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByClassNameIdStartEnd(int start, int end,
+		int expected) throws Exception {
+		DDMStructureLink ddmStructureLink = addDDMStructureLink();
+
+		long classNameId = ddmStructureLink.getClassNameId();
+
+		List<DDMStructureLink> ddmStructureLinks = _persistence.findByClassNameId(classNameId,
+				start, end);
+
+		Assert.assertEquals(expected, ddmStructureLinks.size());
+	}
+
+	@Test
+	public void testFindByStructureId() throws Exception {
+		DDMStructureLink ddmStructureLink = addDDMStructureLink();
+
+		long structureId = ddmStructureLink.getStructureId();
+
+		List<DDMStructureLink> ddmStructureLinks = _persistence.findByStructureId(structureId);
+
+		Assert.assertEquals(1, ddmStructureLinks.size());
+
+		Assert.assertEquals(ddmStructureLink.getPrimaryKey(),
+			ddmStructureLinks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByStructureIdNotFound() throws Exception {
+		addDDMStructureLink();
+
+		long structureId = ServiceTestUtil.nextLong();
+
+		List<DDMStructureLink> ddmStructureLinks = _persistence.findByStructureId(structureId);
+
+		Assert.assertEquals(0, ddmStructureLinks.size());
+	}
+
+	@Test
+	public void testFindByStructureIdStartEnd() throws Exception {
+		testFindByStructureIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByStructureIdStartEndWrongRange()
+		throws Exception {
+		testFindByStructureIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByStructureIdStartEndZeroZero()
+		throws Exception {
+		testFindByStructureIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByStructureIdStartEnd(int start, int end,
+		int expected) throws Exception {
+		DDMStructureLink ddmStructureLink = addDDMStructureLink();
+
+		long structureId = ddmStructureLink.getStructureId();
+
+		List<DDMStructureLink> ddmStructureLinks = _persistence.findByStructureId(structureId,
+				start, end);
+
+		Assert.assertEquals(expected, ddmStructureLinks.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("DDMStructureLink",
 			"structureLinkId", true, "classNameId", true, "classPK", true,

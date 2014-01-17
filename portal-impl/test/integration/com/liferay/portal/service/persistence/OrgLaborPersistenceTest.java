@@ -215,6 +215,60 @@ public class OrgLaborPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByOrganizationId() throws Exception {
+		OrgLabor orgLabor = addOrgLabor();
+
+		long organizationId = orgLabor.getOrganizationId();
+
+		List<OrgLabor> orgLabors = _persistence.findByOrganizationId(organizationId);
+
+		Assert.assertEquals(1, orgLabors.size());
+
+		Assert.assertEquals(orgLabor.getPrimaryKey(),
+			orgLabors.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByOrganizationIdNotFound() throws Exception {
+		addOrgLabor();
+
+		long organizationId = ServiceTestUtil.nextLong();
+
+		List<OrgLabor> orgLabors = _persistence.findByOrganizationId(organizationId);
+
+		Assert.assertEquals(0, orgLabors.size());
+	}
+
+	@Test
+	public void testFindByOrganizationIdStartEnd() throws Exception {
+		testFindByOrganizationIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByOrganizationIdStartEndWrongRange()
+		throws Exception {
+		testFindByOrganizationIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByOrganizationIdStartEndZeroZero()
+		throws Exception {
+		testFindByOrganizationIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByOrganizationIdStartEnd(int start, int end,
+		int expected) throws Exception {
+		OrgLabor orgLabor = addOrgLabor();
+
+		long organizationId = orgLabor.getOrganizationId();
+
+		List<OrgLabor> orgLabors = _persistence.findByOrganizationId(organizationId,
+				start, end);
+
+		Assert.assertEquals(expected, orgLabors.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("OrgLabor", "orgLaborId",
 			true, "organizationId", true, "typeId", true, "sunOpen", true,

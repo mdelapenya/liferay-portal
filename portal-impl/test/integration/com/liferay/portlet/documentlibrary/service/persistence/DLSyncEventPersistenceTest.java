@@ -170,6 +170,60 @@ public class DLSyncEventPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByModifiedTime() throws Exception {
+		DLSyncEvent dlSyncEvent = addDLSyncEvent();
+
+		long modifiedTime = dlSyncEvent.getModifiedTime();
+
+		List<DLSyncEvent> dlSyncEvents = _persistence.findByModifiedTime(modifiedTime);
+
+		Assert.assertEquals(1, dlSyncEvents.size());
+
+		Assert.assertEquals(dlSyncEvent.getPrimaryKey(),
+			dlSyncEvents.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByModifiedTimeNotFound() throws Exception {
+		addDLSyncEvent();
+
+		long modifiedTime = ServiceTestUtil.nextLong();
+
+		List<DLSyncEvent> dlSyncEvents = _persistence.findByModifiedTime(modifiedTime);
+
+		Assert.assertEquals(0, dlSyncEvents.size());
+	}
+
+	@Test
+	public void testFindByModifiedTimeStartEnd() throws Exception {
+		testFindByModifiedTimeStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByModifiedTimeStartEndWrongRange()
+		throws Exception {
+		testFindByModifiedTimeStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByModifiedTimeStartEndZeroZero()
+		throws Exception {
+		testFindByModifiedTimeStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByModifiedTimeStartEnd(int start, int end,
+		int expected) throws Exception {
+		DLSyncEvent dlSyncEvent = addDLSyncEvent();
+
+		long modifiedTime = dlSyncEvent.getModifiedTime();
+
+		List<DLSyncEvent> dlSyncEvents = _persistence.findByModifiedTime(modifiedTime,
+				start, end);
+
+		Assert.assertEquals(expected, dlSyncEvents.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("DLSyncEvent",
 			"syncEventId", true, "modifiedTime", true, "event", true, "type",

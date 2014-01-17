@@ -199,6 +199,172 @@ public class MBDiscussionPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		MBDiscussion mbDiscussion = addMBDiscussion();
+
+		String uuid = mbDiscussion.getUuid();
+
+		List<MBDiscussion> mbDiscussions = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, mbDiscussions.size());
+
+		Assert.assertEquals(mbDiscussion.getPrimaryKey(),
+			mbDiscussions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addMBDiscussion();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<MBDiscussion> mbDiscussions = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, mbDiscussions.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		MBDiscussion mbDiscussion = addMBDiscussion();
+
+		String uuid = mbDiscussion.getUuid();
+
+		List<MBDiscussion> mbDiscussions = _persistence.findByUuid(uuid, start,
+				end);
+
+		Assert.assertEquals(expected, mbDiscussions.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		MBDiscussion mbDiscussion = addMBDiscussion();
+
+		String uuid = mbDiscussion.getUuid();
+
+		long companyId = mbDiscussion.getCompanyId();
+
+		List<MBDiscussion> mbDiscussions = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(1, mbDiscussions.size());
+
+		Assert.assertEquals(mbDiscussion.getPrimaryKey(),
+			mbDiscussions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addMBDiscussion();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<MBDiscussion> mbDiscussions = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(0, mbDiscussions.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		MBDiscussion mbDiscussion = addMBDiscussion();
+
+		String uuid = mbDiscussion.getUuid();
+
+		long companyId = mbDiscussion.getCompanyId();
+
+		List<MBDiscussion> mbDiscussions = _persistence.findByUuid_C(uuid,
+				companyId, start, end);
+
+		Assert.assertEquals(expected, mbDiscussions.size());
+	}
+
+	@Test
+	public void testFindByClassNameId() throws Exception {
+		MBDiscussion mbDiscussion = addMBDiscussion();
+
+		long classNameId = mbDiscussion.getClassNameId();
+
+		List<MBDiscussion> mbDiscussions = _persistence.findByClassNameId(classNameId);
+
+		Assert.assertEquals(1, mbDiscussions.size());
+
+		Assert.assertEquals(mbDiscussion.getPrimaryKey(),
+			mbDiscussions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByClassNameIdNotFound() throws Exception {
+		addMBDiscussion();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		List<MBDiscussion> mbDiscussions = _persistence.findByClassNameId(classNameId);
+
+		Assert.assertEquals(0, mbDiscussions.size());
+	}
+
+	@Test
+	public void testFindByClassNameIdStartEnd() throws Exception {
+		testFindByClassNameIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByClassNameIdStartEndWrongRange()
+		throws Exception {
+		testFindByClassNameIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByClassNameIdStartEndZeroZero()
+		throws Exception {
+		testFindByClassNameIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByClassNameIdStartEnd(int start, int end,
+		int expected) throws Exception {
+		MBDiscussion mbDiscussion = addMBDiscussion();
+
+		long classNameId = mbDiscussion.getClassNameId();
+
+		List<MBDiscussion> mbDiscussions = _persistence.findByClassNameId(classNameId,
+				start, end);
+
+		Assert.assertEquals(expected, mbDiscussions.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("MBDiscussion", "uuid",
 			true, "discussionId", true, "groupId", true, "companyId", true,

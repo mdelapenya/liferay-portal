@@ -209,6 +209,280 @@ public class DDLRecordPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		DDLRecord ddlRecord = addDDLRecord();
+
+		String uuid = ddlRecord.getUuid();
+
+		List<DDLRecord> ddlRecords = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, ddlRecords.size());
+
+		Assert.assertEquals(ddlRecord.getPrimaryKey(),
+			ddlRecords.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addDDLRecord();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<DDLRecord> ddlRecords = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, ddlRecords.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		DDLRecord ddlRecord = addDDLRecord();
+
+		String uuid = ddlRecord.getUuid();
+
+		List<DDLRecord> ddlRecords = _persistence.findByUuid(uuid, start, end);
+
+		Assert.assertEquals(expected, ddlRecords.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		DDLRecord ddlRecord = addDDLRecord();
+
+		String uuid = ddlRecord.getUuid();
+
+		long companyId = ddlRecord.getCompanyId();
+
+		List<DDLRecord> ddlRecords = _persistence.findByUuid_C(uuid, companyId);
+
+		Assert.assertEquals(1, ddlRecords.size());
+
+		Assert.assertEquals(ddlRecord.getPrimaryKey(),
+			ddlRecords.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addDDLRecord();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<DDLRecord> ddlRecords = _persistence.findByUuid_C(uuid, companyId);
+
+		Assert.assertEquals(0, ddlRecords.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		DDLRecord ddlRecord = addDDLRecord();
+
+		String uuid = ddlRecord.getUuid();
+
+		long companyId = ddlRecord.getCompanyId();
+
+		List<DDLRecord> ddlRecords = _persistence.findByUuid_C(uuid, companyId,
+				start, end);
+
+		Assert.assertEquals(expected, ddlRecords.size());
+	}
+
+	@Test
+	public void testFindByCompanyId() throws Exception {
+		DDLRecord ddlRecord = addDDLRecord();
+
+		long companyId = ddlRecord.getCompanyId();
+
+		List<DDLRecord> ddlRecords = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(1, ddlRecords.size());
+
+		Assert.assertEquals(ddlRecord.getPrimaryKey(),
+			ddlRecords.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByCompanyIdNotFound() throws Exception {
+		addDDLRecord();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<DDLRecord> ddlRecords = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(0, ddlRecords.size());
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEnd() throws Exception {
+		testFindByCompanyIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndWrongRange()
+		throws Exception {
+		testFindByCompanyIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndZeroZero() throws Exception {
+		testFindByCompanyIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByCompanyIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		DDLRecord ddlRecord = addDDLRecord();
+
+		long companyId = ddlRecord.getCompanyId();
+
+		List<DDLRecord> ddlRecords = _persistence.findByCompanyId(companyId,
+				start, end);
+
+		Assert.assertEquals(expected, ddlRecords.size());
+	}
+
+	@Test
+	public void testFindByRecordSetId() throws Exception {
+		DDLRecord ddlRecord = addDDLRecord();
+
+		long recordSetId = ddlRecord.getRecordSetId();
+
+		List<DDLRecord> ddlRecords = _persistence.findByRecordSetId(recordSetId);
+
+		Assert.assertEquals(1, ddlRecords.size());
+
+		Assert.assertEquals(ddlRecord.getPrimaryKey(),
+			ddlRecords.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByRecordSetIdNotFound() throws Exception {
+		addDDLRecord();
+
+		long recordSetId = ServiceTestUtil.nextLong();
+
+		List<DDLRecord> ddlRecords = _persistence.findByRecordSetId(recordSetId);
+
+		Assert.assertEquals(0, ddlRecords.size());
+	}
+
+	@Test
+	public void testFindByRecordSetIdStartEnd() throws Exception {
+		testFindByRecordSetIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByRecordSetIdStartEndWrongRange()
+		throws Exception {
+		testFindByRecordSetIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByRecordSetIdStartEndZeroZero()
+		throws Exception {
+		testFindByRecordSetIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByRecordSetIdStartEnd(int start, int end,
+		int expected) throws Exception {
+		DDLRecord ddlRecord = addDDLRecord();
+
+		long recordSetId = ddlRecord.getRecordSetId();
+
+		List<DDLRecord> ddlRecords = _persistence.findByRecordSetId(recordSetId,
+				start, end);
+
+		Assert.assertEquals(expected, ddlRecords.size());
+	}
+
+	@Test
+	public void testFindByR_U() throws Exception {
+		DDLRecord ddlRecord = addDDLRecord();
+
+		long recordSetId = ddlRecord.getRecordSetId();
+
+		long userId = ddlRecord.getUserId();
+
+		List<DDLRecord> ddlRecords = _persistence.findByR_U(recordSetId, userId);
+
+		Assert.assertEquals(1, ddlRecords.size());
+
+		Assert.assertEquals(ddlRecord.getPrimaryKey(),
+			ddlRecords.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByR_UNotFound() throws Exception {
+		addDDLRecord();
+
+		long recordSetId = ServiceTestUtil.nextLong();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		List<DDLRecord> ddlRecords = _persistence.findByR_U(recordSetId, userId);
+
+		Assert.assertEquals(0, ddlRecords.size());
+	}
+
+	@Test
+	public void testFindByR_UStartEnd() throws Exception {
+		testFindByR_UStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByR_UStartEndWrongRange() throws Exception {
+		testFindByR_UStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByR_UStartEndZeroZero() throws Exception {
+		testFindByR_UStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByR_UStartEnd(int start, int end, int expected)
+		throws Exception {
+		DDLRecord ddlRecord = addDDLRecord();
+
+		long recordSetId = ddlRecord.getRecordSetId();
+
+		long userId = ddlRecord.getUserId();
+
+		List<DDLRecord> ddlRecords = _persistence.findByR_U(recordSetId,
+				userId, start, end);
+
+		Assert.assertEquals(expected, ddlRecords.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("DDLRecord", "uuid", true,
 			"recordId", true, "groupId", true, "companyId", true, "userId",

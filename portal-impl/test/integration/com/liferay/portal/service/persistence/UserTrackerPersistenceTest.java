@@ -182,6 +182,164 @@ public class UserTrackerPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByCompanyId() throws Exception {
+		UserTracker userTracker = addUserTracker();
+
+		long companyId = userTracker.getCompanyId();
+
+		List<UserTracker> userTrackers = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(1, userTrackers.size());
+
+		Assert.assertEquals(userTracker.getPrimaryKey(),
+			userTrackers.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByCompanyIdNotFound() throws Exception {
+		addUserTracker();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<UserTracker> userTrackers = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(0, userTrackers.size());
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEnd() throws Exception {
+		testFindByCompanyIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndWrongRange()
+		throws Exception {
+		testFindByCompanyIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndZeroZero() throws Exception {
+		testFindByCompanyIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByCompanyIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		UserTracker userTracker = addUserTracker();
+
+		long companyId = userTracker.getCompanyId();
+
+		List<UserTracker> userTrackers = _persistence.findByCompanyId(companyId,
+				start, end);
+
+		Assert.assertEquals(expected, userTrackers.size());
+	}
+
+	@Test
+	public void testFindByUserId() throws Exception {
+		UserTracker userTracker = addUserTracker();
+
+		long userId = userTracker.getUserId();
+
+		List<UserTracker> userTrackers = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(1, userTrackers.size());
+
+		Assert.assertEquals(userTracker.getPrimaryKey(),
+			userTrackers.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUserIdNotFound() throws Exception {
+		addUserTracker();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		List<UserTracker> userTrackers = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(0, userTrackers.size());
+	}
+
+	@Test
+	public void testFindByUserIdStartEnd() throws Exception {
+		testFindByUserIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndWrongRange() throws Exception {
+		testFindByUserIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndZeroZero() throws Exception {
+		testFindByUserIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUserIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		UserTracker userTracker = addUserTracker();
+
+		long userId = userTracker.getUserId();
+
+		List<UserTracker> userTrackers = _persistence.findByUserId(userId,
+				start, end);
+
+		Assert.assertEquals(expected, userTrackers.size());
+	}
+
+	@Test
+	public void testFindBySessionId() throws Exception {
+		UserTracker userTracker = addUserTracker();
+
+		String sessionId = userTracker.getSessionId();
+
+		List<UserTracker> userTrackers = _persistence.findBySessionId(sessionId);
+
+		Assert.assertEquals(1, userTrackers.size());
+
+		Assert.assertEquals(userTracker.getPrimaryKey(),
+			userTrackers.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindBySessionIdNotFound() throws Exception {
+		addUserTracker();
+
+		String sessionId = ServiceTestUtil.randomString();
+
+		List<UserTracker> userTrackers = _persistence.findBySessionId(sessionId);
+
+		Assert.assertEquals(0, userTrackers.size());
+	}
+
+	@Test
+	public void testFindBySessionIdStartEnd() throws Exception {
+		testFindBySessionIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindBySessionIdStartEndWrongRange()
+		throws Exception {
+		testFindBySessionIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindBySessionIdStartEndZeroZero() throws Exception {
+		testFindBySessionIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindBySessionIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		UserTracker userTracker = addUserTracker();
+
+		String sessionId = userTracker.getSessionId();
+
+		List<UserTracker> userTrackers = _persistence.findBySessionId(sessionId,
+				start, end);
+
+		Assert.assertEquals(expected, userTrackers.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("UserTracker",
 			"userTrackerId", true, "companyId", true, "userId", true,

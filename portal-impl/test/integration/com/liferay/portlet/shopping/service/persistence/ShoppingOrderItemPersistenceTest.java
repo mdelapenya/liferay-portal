@@ -191,6 +191,58 @@ public class ShoppingOrderItemPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByOrderId() throws Exception {
+		ShoppingOrderItem shoppingOrderItem = addShoppingOrderItem();
+
+		long orderId = shoppingOrderItem.getOrderId();
+
+		List<ShoppingOrderItem> shoppingOrderItems = _persistence.findByOrderId(orderId);
+
+		Assert.assertEquals(1, shoppingOrderItems.size());
+
+		Assert.assertEquals(shoppingOrderItem.getPrimaryKey(),
+			shoppingOrderItems.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByOrderIdNotFound() throws Exception {
+		addShoppingOrderItem();
+
+		long orderId = ServiceTestUtil.nextLong();
+
+		List<ShoppingOrderItem> shoppingOrderItems = _persistence.findByOrderId(orderId);
+
+		Assert.assertEquals(0, shoppingOrderItems.size());
+	}
+
+	@Test
+	public void testFindByOrderIdStartEnd() throws Exception {
+		testFindByOrderIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByOrderIdStartEndWrongRange() throws Exception {
+		testFindByOrderIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByOrderIdStartEndZeroZero() throws Exception {
+		testFindByOrderIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByOrderIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		ShoppingOrderItem shoppingOrderItem = addShoppingOrderItem();
+
+		long orderId = shoppingOrderItem.getOrderId();
+
+		List<ShoppingOrderItem> shoppingOrderItems = _persistence.findByOrderId(orderId,
+				start, end);
+
+		Assert.assertEquals(expected, shoppingOrderItems.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("ShoppingOrderItem",
 			"orderItemId", true, "orderId", true, "itemId", true, "sku", true,

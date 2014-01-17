@@ -203,6 +203,615 @@ public class SocialRequestPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		SocialRequest socialRequest = addSocialRequest();
+
+		String uuid = socialRequest.getUuid();
+
+		List<SocialRequest> socialRequests = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, socialRequests.size());
+
+		Assert.assertEquals(socialRequest.getPrimaryKey(),
+			socialRequests.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addSocialRequest();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<SocialRequest> socialRequests = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, socialRequests.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		SocialRequest socialRequest = addSocialRequest();
+
+		String uuid = socialRequest.getUuid();
+
+		List<SocialRequest> socialRequests = _persistence.findByUuid(uuid,
+				start, end);
+
+		Assert.assertEquals(expected, socialRequests.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		SocialRequest socialRequest = addSocialRequest();
+
+		String uuid = socialRequest.getUuid();
+
+		long companyId = socialRequest.getCompanyId();
+
+		List<SocialRequest> socialRequests = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(1, socialRequests.size());
+
+		Assert.assertEquals(socialRequest.getPrimaryKey(),
+			socialRequests.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addSocialRequest();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<SocialRequest> socialRequests = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(0, socialRequests.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		SocialRequest socialRequest = addSocialRequest();
+
+		String uuid = socialRequest.getUuid();
+
+		long companyId = socialRequest.getCompanyId();
+
+		List<SocialRequest> socialRequests = _persistence.findByUuid_C(uuid,
+				companyId, start, end);
+
+		Assert.assertEquals(expected, socialRequests.size());
+	}
+
+	@Test
+	public void testFindByCompanyId() throws Exception {
+		SocialRequest socialRequest = addSocialRequest();
+
+		long companyId = socialRequest.getCompanyId();
+
+		List<SocialRequest> socialRequests = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(1, socialRequests.size());
+
+		Assert.assertEquals(socialRequest.getPrimaryKey(),
+			socialRequests.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByCompanyIdNotFound() throws Exception {
+		addSocialRequest();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<SocialRequest> socialRequests = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(0, socialRequests.size());
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEnd() throws Exception {
+		testFindByCompanyIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndWrongRange()
+		throws Exception {
+		testFindByCompanyIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndZeroZero() throws Exception {
+		testFindByCompanyIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByCompanyIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		SocialRequest socialRequest = addSocialRequest();
+
+		long companyId = socialRequest.getCompanyId();
+
+		List<SocialRequest> socialRequests = _persistence.findByCompanyId(companyId,
+				start, end);
+
+		Assert.assertEquals(expected, socialRequests.size());
+	}
+
+	@Test
+	public void testFindByUserId() throws Exception {
+		SocialRequest socialRequest = addSocialRequest();
+
+		long userId = socialRequest.getUserId();
+
+		List<SocialRequest> socialRequests = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(1, socialRequests.size());
+
+		Assert.assertEquals(socialRequest.getPrimaryKey(),
+			socialRequests.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUserIdNotFound() throws Exception {
+		addSocialRequest();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		List<SocialRequest> socialRequests = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(0, socialRequests.size());
+	}
+
+	@Test
+	public void testFindByUserIdStartEnd() throws Exception {
+		testFindByUserIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndWrongRange() throws Exception {
+		testFindByUserIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndZeroZero() throws Exception {
+		testFindByUserIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUserIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		SocialRequest socialRequest = addSocialRequest();
+
+		long userId = socialRequest.getUserId();
+
+		List<SocialRequest> socialRequests = _persistence.findByUserId(userId,
+				start, end);
+
+		Assert.assertEquals(expected, socialRequests.size());
+	}
+
+	@Test
+	public void testFindByReceiverUserId() throws Exception {
+		SocialRequest socialRequest = addSocialRequest();
+
+		long receiverUserId = socialRequest.getReceiverUserId();
+
+		List<SocialRequest> socialRequests = _persistence.findByReceiverUserId(receiverUserId);
+
+		Assert.assertEquals(1, socialRequests.size());
+
+		Assert.assertEquals(socialRequest.getPrimaryKey(),
+			socialRequests.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByReceiverUserIdNotFound() throws Exception {
+		addSocialRequest();
+
+		long receiverUserId = ServiceTestUtil.nextLong();
+
+		List<SocialRequest> socialRequests = _persistence.findByReceiverUserId(receiverUserId);
+
+		Assert.assertEquals(0, socialRequests.size());
+	}
+
+	@Test
+	public void testFindByReceiverUserIdStartEnd() throws Exception {
+		testFindByReceiverUserIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByReceiverUserIdStartEndWrongRange()
+		throws Exception {
+		testFindByReceiverUserIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByReceiverUserIdStartEndZeroZero()
+		throws Exception {
+		testFindByReceiverUserIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByReceiverUserIdStartEnd(int start, int end,
+		int expected) throws Exception {
+		SocialRequest socialRequest = addSocialRequest();
+
+		long receiverUserId = socialRequest.getReceiverUserId();
+
+		List<SocialRequest> socialRequests = _persistence.findByReceiverUserId(receiverUserId,
+				start, end);
+
+		Assert.assertEquals(expected, socialRequests.size());
+	}
+
+	@Test
+	public void testFindByU_S() throws Exception {
+		SocialRequest socialRequest = addSocialRequest();
+
+		long userId = socialRequest.getUserId();
+
+		int status = socialRequest.getStatus();
+
+		List<SocialRequest> socialRequests = _persistence.findByU_S(userId,
+				status);
+
+		Assert.assertEquals(1, socialRequests.size());
+
+		Assert.assertEquals(socialRequest.getPrimaryKey(),
+			socialRequests.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByU_SNotFound() throws Exception {
+		addSocialRequest();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<SocialRequest> socialRequests = _persistence.findByU_S(userId,
+				status);
+
+		Assert.assertEquals(0, socialRequests.size());
+	}
+
+	@Test
+	public void testFindByU_SStartEnd() throws Exception {
+		testFindByU_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByU_SStartEndWrongRange() throws Exception {
+		testFindByU_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByU_SStartEndZeroZero() throws Exception {
+		testFindByU_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByU_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		SocialRequest socialRequest = addSocialRequest();
+
+		long userId = socialRequest.getUserId();
+
+		int status = socialRequest.getStatus();
+
+		List<SocialRequest> socialRequests = _persistence.findByU_S(userId,
+				status, start, end);
+
+		Assert.assertEquals(expected, socialRequests.size());
+	}
+
+	@Test
+	public void testFindByC_C() throws Exception {
+		SocialRequest socialRequest = addSocialRequest();
+
+		long classNameId = socialRequest.getClassNameId();
+
+		long classPK = socialRequest.getClassPK();
+
+		List<SocialRequest> socialRequests = _persistence.findByC_C(classNameId,
+				classPK);
+
+		Assert.assertEquals(1, socialRequests.size());
+
+		Assert.assertEquals(socialRequest.getPrimaryKey(),
+			socialRequests.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_CNotFound() throws Exception {
+		addSocialRequest();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		long classPK = ServiceTestUtil.nextLong();
+
+		List<SocialRequest> socialRequests = _persistence.findByC_C(classNameId,
+				classPK);
+
+		Assert.assertEquals(0, socialRequests.size());
+	}
+
+	@Test
+	public void testFindByC_CStartEnd() throws Exception {
+		testFindByC_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_CStartEndWrongRange() throws Exception {
+		testFindByC_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_CStartEndZeroZero() throws Exception {
+		testFindByC_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		SocialRequest socialRequest = addSocialRequest();
+
+		long classNameId = socialRequest.getClassNameId();
+
+		long classPK = socialRequest.getClassPK();
+
+		List<SocialRequest> socialRequests = _persistence.findByC_C(classNameId,
+				classPK, start, end);
+
+		Assert.assertEquals(expected, socialRequests.size());
+	}
+
+	@Test
+	public void testFindByR_S() throws Exception {
+		SocialRequest socialRequest = addSocialRequest();
+
+		long receiverUserId = socialRequest.getReceiverUserId();
+
+		int status = socialRequest.getStatus();
+
+		List<SocialRequest> socialRequests = _persistence.findByR_S(receiverUserId,
+				status);
+
+		Assert.assertEquals(1, socialRequests.size());
+
+		Assert.assertEquals(socialRequest.getPrimaryKey(),
+			socialRequests.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByR_SNotFound() throws Exception {
+		addSocialRequest();
+
+		long receiverUserId = ServiceTestUtil.nextLong();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<SocialRequest> socialRequests = _persistence.findByR_S(receiverUserId,
+				status);
+
+		Assert.assertEquals(0, socialRequests.size());
+	}
+
+	@Test
+	public void testFindByR_SStartEnd() throws Exception {
+		testFindByR_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByR_SStartEndWrongRange() throws Exception {
+		testFindByR_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByR_SStartEndZeroZero() throws Exception {
+		testFindByR_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByR_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		SocialRequest socialRequest = addSocialRequest();
+
+		long receiverUserId = socialRequest.getReceiverUserId();
+
+		int status = socialRequest.getStatus();
+
+		List<SocialRequest> socialRequests = _persistence.findByR_S(receiverUserId,
+				status, start, end);
+
+		Assert.assertEquals(expected, socialRequests.size());
+	}
+
+	@Test
+	public void testFindByU_C_C_T_S() throws Exception {
+		SocialRequest socialRequest = addSocialRequest();
+
+		long userId = socialRequest.getUserId();
+
+		long classNameId = socialRequest.getClassNameId();
+
+		long classPK = socialRequest.getClassPK();
+
+		int type = socialRequest.getType();
+
+		int status = socialRequest.getStatus();
+
+		List<SocialRequest> socialRequests = _persistence.findByU_C_C_T_S(userId,
+				classNameId, classPK, type, status);
+
+		Assert.assertEquals(1, socialRequests.size());
+
+		Assert.assertEquals(socialRequest.getPrimaryKey(),
+			socialRequests.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByU_C_C_T_SNotFound() throws Exception {
+		addSocialRequest();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		long classPK = ServiceTestUtil.nextLong();
+
+		int type = ServiceTestUtil.nextInt();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<SocialRequest> socialRequests = _persistence.findByU_C_C_T_S(userId,
+				classNameId, classPK, type, status);
+
+		Assert.assertEquals(0, socialRequests.size());
+	}
+
+	@Test
+	public void testFindByU_C_C_T_SStartEnd() throws Exception {
+		testFindByU_C_C_T_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByU_C_C_T_SStartEndWrongRange()
+		throws Exception {
+		testFindByU_C_C_T_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByU_C_C_T_SStartEndZeroZero() throws Exception {
+		testFindByU_C_C_T_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByU_C_C_T_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		SocialRequest socialRequest = addSocialRequest();
+
+		long userId = socialRequest.getUserId();
+
+		long classNameId = socialRequest.getClassNameId();
+
+		long classPK = socialRequest.getClassPK();
+
+		int type = socialRequest.getType();
+
+		int status = socialRequest.getStatus();
+
+		List<SocialRequest> socialRequests = _persistence.findByU_C_C_T_S(userId,
+				classNameId, classPK, type, status, start, end);
+
+		Assert.assertEquals(expected, socialRequests.size());
+	}
+
+	@Test
+	public void testFindByC_C_T_R_S() throws Exception {
+		SocialRequest socialRequest = addSocialRequest();
+
+		long classNameId = socialRequest.getClassNameId();
+
+		long classPK = socialRequest.getClassPK();
+
+		int type = socialRequest.getType();
+
+		long receiverUserId = socialRequest.getReceiverUserId();
+
+		int status = socialRequest.getStatus();
+
+		List<SocialRequest> socialRequests = _persistence.findByC_C_T_R_S(classNameId,
+				classPK, type, receiverUserId, status);
+
+		Assert.assertEquals(1, socialRequests.size());
+
+		Assert.assertEquals(socialRequest.getPrimaryKey(),
+			socialRequests.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_C_T_R_SNotFound() throws Exception {
+		addSocialRequest();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		long classPK = ServiceTestUtil.nextLong();
+
+		int type = ServiceTestUtil.nextInt();
+
+		long receiverUserId = ServiceTestUtil.nextLong();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<SocialRequest> socialRequests = _persistence.findByC_C_T_R_S(classNameId,
+				classPK, type, receiverUserId, status);
+
+		Assert.assertEquals(0, socialRequests.size());
+	}
+
+	@Test
+	public void testFindByC_C_T_R_SStartEnd() throws Exception {
+		testFindByC_C_T_R_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_C_T_R_SStartEndWrongRange()
+		throws Exception {
+		testFindByC_C_T_R_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_C_T_R_SStartEndZeroZero() throws Exception {
+		testFindByC_C_T_R_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_C_T_R_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		SocialRequest socialRequest = addSocialRequest();
+
+		long classNameId = socialRequest.getClassNameId();
+
+		long classPK = socialRequest.getClassPK();
+
+		int type = socialRequest.getType();
+
+		long receiverUserId = socialRequest.getReceiverUserId();
+
+		int status = socialRequest.getStatus();
+
+		List<SocialRequest> socialRequests = _persistence.findByC_C_T_R_S(classNameId,
+				classPK, type, receiverUserId, status, start, end);
+
+		Assert.assertEquals(expected, socialRequests.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("SocialRequest", "uuid",
 			true, "requestId", true, "groupId", true, "companyId", true,

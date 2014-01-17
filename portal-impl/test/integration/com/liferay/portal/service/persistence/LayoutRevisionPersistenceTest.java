@@ -274,6 +274,608 @@ public class LayoutRevisionPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByLayoutSetBranchId() throws Exception {
+		LayoutRevision layoutRevision = addLayoutRevision();
+
+		long layoutSetBranchId = layoutRevision.getLayoutSetBranchId();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByLayoutSetBranchId(layoutSetBranchId);
+
+		Assert.assertEquals(1, layoutRevisions.size());
+
+		Assert.assertEquals(layoutRevision.getPrimaryKey(),
+			layoutRevisions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByLayoutSetBranchIdNotFound() throws Exception {
+		addLayoutRevision();
+
+		long layoutSetBranchId = ServiceTestUtil.nextLong();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByLayoutSetBranchId(layoutSetBranchId);
+
+		Assert.assertEquals(0, layoutRevisions.size());
+	}
+
+	@Test
+	public void testFindByLayoutSetBranchIdStartEnd() throws Exception {
+		testFindByLayoutSetBranchIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByLayoutSetBranchIdStartEndWrongRange()
+		throws Exception {
+		testFindByLayoutSetBranchIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByLayoutSetBranchIdStartEndZeroZero()
+		throws Exception {
+		testFindByLayoutSetBranchIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByLayoutSetBranchIdStartEnd(int start, int end,
+		int expected) throws Exception {
+		LayoutRevision layoutRevision = addLayoutRevision();
+
+		long layoutSetBranchId = layoutRevision.getLayoutSetBranchId();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByLayoutSetBranchId(layoutSetBranchId,
+				start, end);
+
+		Assert.assertEquals(expected, layoutRevisions.size());
+	}
+
+	@Test
+	public void testFindByPlid() throws Exception {
+		LayoutRevision layoutRevision = addLayoutRevision();
+
+		long plid = layoutRevision.getPlid();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByPlid(plid);
+
+		Assert.assertEquals(1, layoutRevisions.size());
+
+		Assert.assertEquals(layoutRevision.getPrimaryKey(),
+			layoutRevisions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByPlidNotFound() throws Exception {
+		addLayoutRevision();
+
+		long plid = ServiceTestUtil.nextLong();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByPlid(plid);
+
+		Assert.assertEquals(0, layoutRevisions.size());
+	}
+
+	@Test
+	public void testFindByPlidStartEnd() throws Exception {
+		testFindByPlidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByPlidStartEndWrongRange() throws Exception {
+		testFindByPlidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByPlidStartEndZeroZero() throws Exception {
+		testFindByPlidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByPlidStartEnd(int start, int end, int expected)
+		throws Exception {
+		LayoutRevision layoutRevision = addLayoutRevision();
+
+		long plid = layoutRevision.getPlid();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByPlid(plid,
+				start, end);
+
+		Assert.assertEquals(expected, layoutRevisions.size());
+	}
+
+	@Test
+	public void testFindByL_H() throws Exception {
+		LayoutRevision layoutRevision = addLayoutRevision();
+
+		long layoutSetBranchId = layoutRevision.getLayoutSetBranchId();
+
+		boolean head = layoutRevision.getHead();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByL_H(layoutSetBranchId,
+				head);
+
+		Assert.assertEquals(1, layoutRevisions.size());
+
+		Assert.assertEquals(layoutRevision.getPrimaryKey(),
+			layoutRevisions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByL_HNotFound() throws Exception {
+		addLayoutRevision();
+
+		long layoutSetBranchId = ServiceTestUtil.nextLong();
+
+		boolean head = ServiceTestUtil.randomBoolean();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByL_H(layoutSetBranchId,
+				head);
+
+		Assert.assertEquals(0, layoutRevisions.size());
+	}
+
+	@Test
+	public void testFindByL_HStartEnd() throws Exception {
+		testFindByL_HStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByL_HStartEndWrongRange() throws Exception {
+		testFindByL_HStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByL_HStartEndZeroZero() throws Exception {
+		testFindByL_HStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByL_HStartEnd(int start, int end, int expected)
+		throws Exception {
+		LayoutRevision layoutRevision = addLayoutRevision();
+
+		long layoutSetBranchId = layoutRevision.getLayoutSetBranchId();
+
+		boolean head = layoutRevision.getHead();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByL_H(layoutSetBranchId,
+				head, start, end);
+
+		Assert.assertEquals(expected, layoutRevisions.size());
+	}
+
+	@Test
+	public void testFindByL_P() throws Exception {
+		LayoutRevision layoutRevision = addLayoutRevision();
+
+		long layoutSetBranchId = layoutRevision.getLayoutSetBranchId();
+
+		long plid = layoutRevision.getPlid();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByL_P(layoutSetBranchId,
+				plid);
+
+		Assert.assertEquals(1, layoutRevisions.size());
+
+		Assert.assertEquals(layoutRevision.getPrimaryKey(),
+			layoutRevisions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByL_PNotFound() throws Exception {
+		addLayoutRevision();
+
+		long layoutSetBranchId = ServiceTestUtil.nextLong();
+
+		long plid = ServiceTestUtil.nextLong();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByL_P(layoutSetBranchId,
+				plid);
+
+		Assert.assertEquals(0, layoutRevisions.size());
+	}
+
+	@Test
+	public void testFindByL_PStartEnd() throws Exception {
+		testFindByL_PStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByL_PStartEndWrongRange() throws Exception {
+		testFindByL_PStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByL_PStartEndZeroZero() throws Exception {
+		testFindByL_PStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByL_PStartEnd(int start, int end, int expected)
+		throws Exception {
+		LayoutRevision layoutRevision = addLayoutRevision();
+
+		long layoutSetBranchId = layoutRevision.getLayoutSetBranchId();
+
+		long plid = layoutRevision.getPlid();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByL_P(layoutSetBranchId,
+				plid, start, end);
+
+		Assert.assertEquals(expected, layoutRevisions.size());
+	}
+
+	@Test
+	public void testFindByL_S() throws Exception {
+		LayoutRevision layoutRevision = addLayoutRevision();
+
+		long layoutSetBranchId = layoutRevision.getLayoutSetBranchId();
+
+		int status = layoutRevision.getStatus();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByL_S(layoutSetBranchId,
+				status);
+
+		Assert.assertEquals(1, layoutRevisions.size());
+
+		Assert.assertEquals(layoutRevision.getPrimaryKey(),
+			layoutRevisions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByL_SNotFound() throws Exception {
+		addLayoutRevision();
+
+		long layoutSetBranchId = ServiceTestUtil.nextLong();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByL_S(layoutSetBranchId,
+				status);
+
+		Assert.assertEquals(0, layoutRevisions.size());
+	}
+
+	@Test
+	public void testFindByL_SStartEnd() throws Exception {
+		testFindByL_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByL_SStartEndWrongRange() throws Exception {
+		testFindByL_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByL_SStartEndZeroZero() throws Exception {
+		testFindByL_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByL_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		LayoutRevision layoutRevision = addLayoutRevision();
+
+		long layoutSetBranchId = layoutRevision.getLayoutSetBranchId();
+
+		int status = layoutRevision.getStatus();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByL_S(layoutSetBranchId,
+				status, start, end);
+
+		Assert.assertEquals(expected, layoutRevisions.size());
+	}
+
+	@Test
+	public void testFindByH_P() throws Exception {
+		LayoutRevision layoutRevision = addLayoutRevision();
+
+		boolean head = layoutRevision.getHead();
+
+		long plid = layoutRevision.getPlid();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByH_P(head, plid);
+
+		Assert.assertEquals(1, layoutRevisions.size());
+
+		Assert.assertEquals(layoutRevision.getPrimaryKey(),
+			layoutRevisions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByH_PNotFound() throws Exception {
+		addLayoutRevision();
+
+		boolean head = ServiceTestUtil.randomBoolean();
+
+		long plid = ServiceTestUtil.nextLong();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByH_P(head, plid);
+
+		Assert.assertEquals(0, layoutRevisions.size());
+	}
+
+	@Test
+	public void testFindByH_PStartEnd() throws Exception {
+		testFindByH_PStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByH_PStartEndWrongRange() throws Exception {
+		testFindByH_PStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByH_PStartEndZeroZero() throws Exception {
+		testFindByH_PStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByH_PStartEnd(int start, int end, int expected)
+		throws Exception {
+		LayoutRevision layoutRevision = addLayoutRevision();
+
+		boolean head = layoutRevision.getHead();
+
+		long plid = layoutRevision.getPlid();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByH_P(head,
+				plid, start, end);
+
+		Assert.assertEquals(expected, layoutRevisions.size());
+	}
+
+	@Test
+	public void testFindByP_NotS() throws Exception {
+		LayoutRevision layoutRevision = addLayoutRevision();
+
+		long plid = layoutRevision.getPlid();
+
+		int status = layoutRevision.getStatus();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByP_NotS(plid,
+				status);
+
+		Assert.assertEquals(1, layoutRevisions.size());
+
+		Assert.assertEquals(layoutRevision.getPrimaryKey(),
+			layoutRevisions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByP_NotSNotFound() throws Exception {
+		addLayoutRevision();
+
+		long plid = ServiceTestUtil.nextLong();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByP_NotS(plid,
+				status);
+
+		Assert.assertEquals(0, layoutRevisions.size());
+	}
+
+	@Test
+	public void testFindByP_NotSStartEnd() throws Exception {
+		testFindByP_NotSStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByP_NotSStartEndWrongRange() throws Exception {
+		testFindByP_NotSStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByP_NotSStartEndZeroZero() throws Exception {
+		testFindByP_NotSStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByP_NotSStartEnd(int start, int end, int expected)
+		throws Exception {
+		LayoutRevision layoutRevision = addLayoutRevision();
+
+		long plid = layoutRevision.getPlid();
+
+		int status = layoutRevision.getStatus();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByP_NotS(plid,
+				status, start, end);
+
+		Assert.assertEquals(expected, layoutRevisions.size());
+	}
+
+	@Test
+	public void testFindByL_L_P() throws Exception {
+		LayoutRevision layoutRevision = addLayoutRevision();
+
+		long layoutSetBranchId = layoutRevision.getLayoutSetBranchId();
+
+		long layoutBranchId = layoutRevision.getLayoutBranchId();
+
+		long plid = layoutRevision.getPlid();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByL_L_P(layoutSetBranchId,
+				layoutBranchId, plid);
+
+		Assert.assertEquals(1, layoutRevisions.size());
+
+		Assert.assertEquals(layoutRevision.getPrimaryKey(),
+			layoutRevisions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByL_L_PNotFound() throws Exception {
+		addLayoutRevision();
+
+		long layoutSetBranchId = ServiceTestUtil.nextLong();
+
+		long layoutBranchId = ServiceTestUtil.nextLong();
+
+		long plid = ServiceTestUtil.nextLong();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByL_L_P(layoutSetBranchId,
+				layoutBranchId, plid);
+
+		Assert.assertEquals(0, layoutRevisions.size());
+	}
+
+	@Test
+	public void testFindByL_L_PStartEnd() throws Exception {
+		testFindByL_L_PStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByL_L_PStartEndWrongRange() throws Exception {
+		testFindByL_L_PStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByL_L_PStartEndZeroZero() throws Exception {
+		testFindByL_L_PStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByL_L_PStartEnd(int start, int end, int expected)
+		throws Exception {
+		LayoutRevision layoutRevision = addLayoutRevision();
+
+		long layoutSetBranchId = layoutRevision.getLayoutSetBranchId();
+
+		long layoutBranchId = layoutRevision.getLayoutBranchId();
+
+		long plid = layoutRevision.getPlid();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByL_L_P(layoutSetBranchId,
+				layoutBranchId, plid, start, end);
+
+		Assert.assertEquals(expected, layoutRevisions.size());
+	}
+
+	@Test
+	public void testFindByL_P_P() throws Exception {
+		LayoutRevision layoutRevision = addLayoutRevision();
+
+		long layoutSetBranchId = layoutRevision.getLayoutSetBranchId();
+
+		long parentLayoutRevisionId = layoutRevision.getParentLayoutRevisionId();
+
+		long plid = layoutRevision.getPlid();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByL_P_P(layoutSetBranchId,
+				parentLayoutRevisionId, plid);
+
+		Assert.assertEquals(1, layoutRevisions.size());
+
+		Assert.assertEquals(layoutRevision.getPrimaryKey(),
+			layoutRevisions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByL_P_PNotFound() throws Exception {
+		addLayoutRevision();
+
+		long layoutSetBranchId = ServiceTestUtil.nextLong();
+
+		long parentLayoutRevisionId = ServiceTestUtil.nextLong();
+
+		long plid = ServiceTestUtil.nextLong();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByL_P_P(layoutSetBranchId,
+				parentLayoutRevisionId, plid);
+
+		Assert.assertEquals(0, layoutRevisions.size());
+	}
+
+	@Test
+	public void testFindByL_P_PStartEnd() throws Exception {
+		testFindByL_P_PStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByL_P_PStartEndWrongRange() throws Exception {
+		testFindByL_P_PStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByL_P_PStartEndZeroZero() throws Exception {
+		testFindByL_P_PStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByL_P_PStartEnd(int start, int end, int expected)
+		throws Exception {
+		LayoutRevision layoutRevision = addLayoutRevision();
+
+		long layoutSetBranchId = layoutRevision.getLayoutSetBranchId();
+
+		long parentLayoutRevisionId = layoutRevision.getParentLayoutRevisionId();
+
+		long plid = layoutRevision.getPlid();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByL_P_P(layoutSetBranchId,
+				parentLayoutRevisionId, plid, start, end);
+
+		Assert.assertEquals(expected, layoutRevisions.size());
+	}
+
+	@Test
+	public void testFindByL_P_S() throws Exception {
+		LayoutRevision layoutRevision = addLayoutRevision();
+
+		long layoutSetBranchId = layoutRevision.getLayoutSetBranchId();
+
+		long plid = layoutRevision.getPlid();
+
+		int status = layoutRevision.getStatus();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByL_P_S(layoutSetBranchId,
+				plid, status);
+
+		Assert.assertEquals(1, layoutRevisions.size());
+
+		Assert.assertEquals(layoutRevision.getPrimaryKey(),
+			layoutRevisions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByL_P_SNotFound() throws Exception {
+		addLayoutRevision();
+
+		long layoutSetBranchId = ServiceTestUtil.nextLong();
+
+		long plid = ServiceTestUtil.nextLong();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByL_P_S(layoutSetBranchId,
+				plid, status);
+
+		Assert.assertEquals(0, layoutRevisions.size());
+	}
+
+	@Test
+	public void testFindByL_P_SStartEnd() throws Exception {
+		testFindByL_P_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByL_P_SStartEndWrongRange() throws Exception {
+		testFindByL_P_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByL_P_SStartEndZeroZero() throws Exception {
+		testFindByL_P_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByL_P_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		LayoutRevision layoutRevision = addLayoutRevision();
+
+		long layoutSetBranchId = layoutRevision.getLayoutSetBranchId();
+
+		long plid = layoutRevision.getPlid();
+
+		int status = layoutRevision.getStatus();
+
+		List<LayoutRevision> layoutRevisions = _persistence.findByL_P_S(layoutSetBranchId,
+				plid, status, start, end);
+
+		Assert.assertEquals(expected, layoutRevisions.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("LayoutRevision",
 			"layoutRevisionId", true, "groupId", true, "companyId", true,

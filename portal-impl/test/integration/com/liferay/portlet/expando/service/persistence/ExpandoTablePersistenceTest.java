@@ -167,6 +167,66 @@ public class ExpandoTablePersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByC_C() throws Exception {
+		ExpandoTable expandoTable = addExpandoTable();
+
+		long companyId = expandoTable.getCompanyId();
+
+		long classNameId = expandoTable.getClassNameId();
+
+		List<ExpandoTable> expandoTables = _persistence.findByC_C(companyId,
+				classNameId);
+
+		Assert.assertEquals(1, expandoTables.size());
+
+		Assert.assertEquals(expandoTable.getPrimaryKey(),
+			expandoTables.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_CNotFound() throws Exception {
+		addExpandoTable();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		List<ExpandoTable> expandoTables = _persistence.findByC_C(companyId,
+				classNameId);
+
+		Assert.assertEquals(0, expandoTables.size());
+	}
+
+	@Test
+	public void testFindByC_CStartEnd() throws Exception {
+		testFindByC_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_CStartEndWrongRange() throws Exception {
+		testFindByC_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_CStartEndZeroZero() throws Exception {
+		testFindByC_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		ExpandoTable expandoTable = addExpandoTable();
+
+		long companyId = expandoTable.getCompanyId();
+
+		long classNameId = expandoTable.getClassNameId();
+
+		List<ExpandoTable> expandoTables = _persistence.findByC_C(companyId,
+				classNameId, start, end);
+
+		Assert.assertEquals(expected, expandoTables.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("ExpandoTable", "tableId",
 			true, "companyId", true, "classNameId", true, "name", true);

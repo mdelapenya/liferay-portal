@@ -172,6 +172,178 @@ public class MBStatsUserPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByGroupId() throws Exception {
+		MBStatsUser mbStatsUser = addMBStatsUser();
+
+		long groupId = mbStatsUser.getGroupId();
+
+		List<MBStatsUser> mbStatsUsers = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(1, mbStatsUsers.size());
+
+		Assert.assertEquals(mbStatsUser.getPrimaryKey(),
+			mbStatsUsers.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByGroupIdNotFound() throws Exception {
+		addMBStatsUser();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		List<MBStatsUser> mbStatsUsers = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(0, mbStatsUsers.size());
+	}
+
+	@Test
+	public void testFindByGroupIdStartEnd() throws Exception {
+		testFindByGroupIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndWrongRange() throws Exception {
+		testFindByGroupIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndZeroZero() throws Exception {
+		testFindByGroupIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByGroupIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		MBStatsUser mbStatsUser = addMBStatsUser();
+
+		long groupId = mbStatsUser.getGroupId();
+
+		List<MBStatsUser> mbStatsUsers = _persistence.findByGroupId(groupId,
+				start, end);
+
+		Assert.assertEquals(expected, mbStatsUsers.size());
+	}
+
+	@Test
+	public void testFindByUserId() throws Exception {
+		MBStatsUser mbStatsUser = addMBStatsUser();
+
+		long userId = mbStatsUser.getUserId();
+
+		List<MBStatsUser> mbStatsUsers = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(1, mbStatsUsers.size());
+
+		Assert.assertEquals(mbStatsUser.getPrimaryKey(),
+			mbStatsUsers.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUserIdNotFound() throws Exception {
+		addMBStatsUser();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		List<MBStatsUser> mbStatsUsers = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(0, mbStatsUsers.size());
+	}
+
+	@Test
+	public void testFindByUserIdStartEnd() throws Exception {
+		testFindByUserIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndWrongRange() throws Exception {
+		testFindByUserIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndZeroZero() throws Exception {
+		testFindByUserIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUserIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		MBStatsUser mbStatsUser = addMBStatsUser();
+
+		long userId = mbStatsUser.getUserId();
+
+		List<MBStatsUser> mbStatsUsers = _persistence.findByUserId(userId,
+				start, end);
+
+		Assert.assertEquals(expected, mbStatsUsers.size());
+	}
+
+	@Test
+	public void testFindByG_NotU_NotM() throws Exception {
+		MBStatsUser mbStatsUser = addMBStatsUser();
+
+		long groupId = mbStatsUser.getGroupId();
+
+		long userId = mbStatsUser.getUserId();
+
+		int messageCount = mbStatsUser.getMessageCount();
+
+		List<MBStatsUser> mbStatsUsers = _persistence.findByG_NotU_NotM(groupId,
+				userId, messageCount);
+
+		Assert.assertEquals(1, mbStatsUsers.size());
+
+		Assert.assertEquals(mbStatsUser.getPrimaryKey(),
+			mbStatsUsers.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_NotU_NotMNotFound() throws Exception {
+		addMBStatsUser();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		int messageCount = ServiceTestUtil.nextInt();
+
+		List<MBStatsUser> mbStatsUsers = _persistence.findByG_NotU_NotM(groupId,
+				userId, messageCount);
+
+		Assert.assertEquals(0, mbStatsUsers.size());
+	}
+
+	@Test
+	public void testFindByG_NotU_NotMStartEnd() throws Exception {
+		testFindByG_NotU_NotMStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_NotU_NotMStartEndWrongRange()
+		throws Exception {
+		testFindByG_NotU_NotMStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_NotU_NotMStartEndZeroZero()
+		throws Exception {
+		testFindByG_NotU_NotMStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_NotU_NotMStartEnd(int start, int end,
+		int expected) throws Exception {
+		MBStatsUser mbStatsUser = addMBStatsUser();
+
+		long groupId = mbStatsUser.getGroupId();
+
+		long userId = mbStatsUser.getUserId();
+
+		int messageCount = mbStatsUser.getMessageCount();
+
+		List<MBStatsUser> mbStatsUsers = _persistence.findByG_NotU_NotM(groupId,
+				userId, messageCount, start, end);
+
+		Assert.assertEquals(expected, mbStatsUsers.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("MBStatsUser",
 			"statsUserId", true, "groupId", true, "userId", true,

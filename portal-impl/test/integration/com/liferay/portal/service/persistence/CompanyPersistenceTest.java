@@ -184,6 +184,57 @@ public class CompanyPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindBySystem() throws Exception {
+		Company company = addCompany();
+
+		boolean system = company.getSystem();
+
+		List<Company> companies = _persistence.findBySystem(system);
+
+		Assert.assertEquals(1, companies.size());
+
+		Assert.assertEquals(company.getPrimaryKey(),
+			companies.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindBySystemNotFound() throws Exception {
+		addCompany();
+
+		boolean system = ServiceTestUtil.randomBoolean();
+
+		List<Company> companies = _persistence.findBySystem(system);
+
+		Assert.assertEquals(0, companies.size());
+	}
+
+	@Test
+	public void testFindBySystemStartEnd() throws Exception {
+		testFindBySystemStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindBySystemStartEndWrongRange() throws Exception {
+		testFindBySystemStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindBySystemStartEndZeroZero() throws Exception {
+		testFindBySystemStartEnd(0, 0, 0);
+	}
+
+	protected void testFindBySystemStartEnd(int start, int end, int expected)
+		throws Exception {
+		Company company = addCompany();
+
+		boolean system = company.getSystem();
+
+		List<Company> companies = _persistence.findBySystem(system, start, end);
+
+		Assert.assertEquals(expected, companies.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("Company", "companyId",
 			true, "accountId", true, "webId", true, "key", true, "mx", true,

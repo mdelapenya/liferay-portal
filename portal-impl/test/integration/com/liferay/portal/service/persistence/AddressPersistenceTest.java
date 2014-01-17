@@ -221,6 +221,487 @@ public class AddressPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		Address address = addAddress();
+
+		String uuid = address.getUuid();
+
+		List<Address> addresses = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, addresses.size());
+
+		Assert.assertEquals(address.getPrimaryKey(),
+			addresses.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addAddress();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<Address> addresses = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, addresses.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		Address address = addAddress();
+
+		String uuid = address.getUuid();
+
+		List<Address> addresses = _persistence.findByUuid(uuid, start, end);
+
+		Assert.assertEquals(expected, addresses.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		Address address = addAddress();
+
+		String uuid = address.getUuid();
+
+		long companyId = address.getCompanyId();
+
+		List<Address> addresses = _persistence.findByUuid_C(uuid, companyId);
+
+		Assert.assertEquals(1, addresses.size());
+
+		Assert.assertEquals(address.getPrimaryKey(),
+			addresses.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addAddress();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<Address> addresses = _persistence.findByUuid_C(uuid, companyId);
+
+		Assert.assertEquals(0, addresses.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		Address address = addAddress();
+
+		String uuid = address.getUuid();
+
+		long companyId = address.getCompanyId();
+
+		List<Address> addresses = _persistence.findByUuid_C(uuid, companyId,
+				start, end);
+
+		Assert.assertEquals(expected, addresses.size());
+	}
+
+	@Test
+	public void testFindByCompanyId() throws Exception {
+		Address address = addAddress();
+
+		long companyId = address.getCompanyId();
+
+		List<Address> addresses = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(1, addresses.size());
+
+		Assert.assertEquals(address.getPrimaryKey(),
+			addresses.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByCompanyIdNotFound() throws Exception {
+		addAddress();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<Address> addresses = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(0, addresses.size());
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEnd() throws Exception {
+		testFindByCompanyIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndWrongRange()
+		throws Exception {
+		testFindByCompanyIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndZeroZero() throws Exception {
+		testFindByCompanyIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByCompanyIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		Address address = addAddress();
+
+		long companyId = address.getCompanyId();
+
+		List<Address> addresses = _persistence.findByCompanyId(companyId,
+				start, end);
+
+		Assert.assertEquals(expected, addresses.size());
+	}
+
+	@Test
+	public void testFindByUserId() throws Exception {
+		Address address = addAddress();
+
+		long userId = address.getUserId();
+
+		List<Address> addresses = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(1, addresses.size());
+
+		Assert.assertEquals(address.getPrimaryKey(),
+			addresses.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUserIdNotFound() throws Exception {
+		addAddress();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		List<Address> addresses = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(0, addresses.size());
+	}
+
+	@Test
+	public void testFindByUserIdStartEnd() throws Exception {
+		testFindByUserIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndWrongRange() throws Exception {
+		testFindByUserIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndZeroZero() throws Exception {
+		testFindByUserIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUserIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		Address address = addAddress();
+
+		long userId = address.getUserId();
+
+		List<Address> addresses = _persistence.findByUserId(userId, start, end);
+
+		Assert.assertEquals(expected, addresses.size());
+	}
+
+	@Test
+	public void testFindByC_C() throws Exception {
+		Address address = addAddress();
+
+		long companyId = address.getCompanyId();
+
+		long classNameId = address.getClassNameId();
+
+		List<Address> addresses = _persistence.findByC_C(companyId, classNameId);
+
+		Assert.assertEquals(1, addresses.size());
+
+		Assert.assertEquals(address.getPrimaryKey(),
+			addresses.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_CNotFound() throws Exception {
+		addAddress();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		List<Address> addresses = _persistence.findByC_C(companyId, classNameId);
+
+		Assert.assertEquals(0, addresses.size());
+	}
+
+	@Test
+	public void testFindByC_CStartEnd() throws Exception {
+		testFindByC_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_CStartEndWrongRange() throws Exception {
+		testFindByC_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_CStartEndZeroZero() throws Exception {
+		testFindByC_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		Address address = addAddress();
+
+		long companyId = address.getCompanyId();
+
+		long classNameId = address.getClassNameId();
+
+		List<Address> addresses = _persistence.findByC_C(companyId,
+				classNameId, start, end);
+
+		Assert.assertEquals(expected, addresses.size());
+	}
+
+	@Test
+	public void testFindByC_C_C() throws Exception {
+		Address address = addAddress();
+
+		long companyId = address.getCompanyId();
+
+		long classNameId = address.getClassNameId();
+
+		long classPK = address.getClassPK();
+
+		List<Address> addresses = _persistence.findByC_C_C(companyId,
+				classNameId, classPK);
+
+		Assert.assertEquals(1, addresses.size());
+
+		Assert.assertEquals(address.getPrimaryKey(),
+			addresses.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_C_CNotFound() throws Exception {
+		addAddress();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		long classPK = ServiceTestUtil.nextLong();
+
+		List<Address> addresses = _persistence.findByC_C_C(companyId,
+				classNameId, classPK);
+
+		Assert.assertEquals(0, addresses.size());
+	}
+
+	@Test
+	public void testFindByC_C_CStartEnd() throws Exception {
+		testFindByC_C_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_C_CStartEndWrongRange() throws Exception {
+		testFindByC_C_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_C_CStartEndZeroZero() throws Exception {
+		testFindByC_C_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_C_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		Address address = addAddress();
+
+		long companyId = address.getCompanyId();
+
+		long classNameId = address.getClassNameId();
+
+		long classPK = address.getClassPK();
+
+		List<Address> addresses = _persistence.findByC_C_C(companyId,
+				classNameId, classPK, start, end);
+
+		Assert.assertEquals(expected, addresses.size());
+	}
+
+	@Test
+	public void testFindByC_C_C_M() throws Exception {
+		Address address = addAddress();
+
+		long companyId = address.getCompanyId();
+
+		long classNameId = address.getClassNameId();
+
+		long classPK = address.getClassPK();
+
+		boolean mailing = address.getMailing();
+
+		List<Address> addresses = _persistence.findByC_C_C_M(companyId,
+				classNameId, classPK, mailing);
+
+		Assert.assertEquals(1, addresses.size());
+
+		Assert.assertEquals(address.getPrimaryKey(),
+			addresses.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_C_C_MNotFound() throws Exception {
+		addAddress();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		long classPK = ServiceTestUtil.nextLong();
+
+		boolean mailing = ServiceTestUtil.randomBoolean();
+
+		List<Address> addresses = _persistence.findByC_C_C_M(companyId,
+				classNameId, classPK, mailing);
+
+		Assert.assertEquals(0, addresses.size());
+	}
+
+	@Test
+	public void testFindByC_C_C_MStartEnd() throws Exception {
+		testFindByC_C_C_MStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_C_C_MStartEndWrongRange() throws Exception {
+		testFindByC_C_C_MStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_C_C_MStartEndZeroZero() throws Exception {
+		testFindByC_C_C_MStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_C_C_MStartEnd(int start, int end, int expected)
+		throws Exception {
+		Address address = addAddress();
+
+		long companyId = address.getCompanyId();
+
+		long classNameId = address.getClassNameId();
+
+		long classPK = address.getClassPK();
+
+		boolean mailing = address.getMailing();
+
+		List<Address> addresses = _persistence.findByC_C_C_M(companyId,
+				classNameId, classPK, mailing, start, end);
+
+		Assert.assertEquals(expected, addresses.size());
+	}
+
+	@Test
+	public void testFindByC_C_C_P() throws Exception {
+		Address address = addAddress();
+
+		long companyId = address.getCompanyId();
+
+		long classNameId = address.getClassNameId();
+
+		long classPK = address.getClassPK();
+
+		boolean primary = address.getPrimary();
+
+		List<Address> addresses = _persistence.findByC_C_C_P(companyId,
+				classNameId, classPK, primary);
+
+		Assert.assertEquals(1, addresses.size());
+
+		Assert.assertEquals(address.getPrimaryKey(),
+			addresses.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_C_C_PNotFound() throws Exception {
+		addAddress();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		long classPK = ServiceTestUtil.nextLong();
+
+		boolean primary = ServiceTestUtil.randomBoolean();
+
+		List<Address> addresses = _persistence.findByC_C_C_P(companyId,
+				classNameId, classPK, primary);
+
+		Assert.assertEquals(0, addresses.size());
+	}
+
+	@Test
+	public void testFindByC_C_C_PStartEnd() throws Exception {
+		testFindByC_C_C_PStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_C_C_PStartEndWrongRange() throws Exception {
+		testFindByC_C_C_PStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_C_C_PStartEndZeroZero() throws Exception {
+		testFindByC_C_C_PStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_C_C_PStartEnd(int start, int end, int expected)
+		throws Exception {
+		Address address = addAddress();
+
+		long companyId = address.getCompanyId();
+
+		long classNameId = address.getClassNameId();
+
+		long classPK = address.getClassPK();
+
+		boolean primary = address.getPrimary();
+
+		List<Address> addresses = _persistence.findByC_C_C_P(companyId,
+				classNameId, classPK, primary, start, end);
+
+		Assert.assertEquals(expected, addresses.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("Address", "uuid", true,
 			"addressId", true, "companyId", true, "userId", true, "userName",

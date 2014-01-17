@@ -205,6 +205,190 @@ public class SocialActivityCounterPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByGroupId() throws Exception {
+		SocialActivityCounter socialActivityCounter = addSocialActivityCounter();
+
+		long groupId = socialActivityCounter.getGroupId();
+
+		List<SocialActivityCounter> socialActivityCounters = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(1, socialActivityCounters.size());
+
+		Assert.assertEquals(socialActivityCounter.getPrimaryKey(),
+			socialActivityCounters.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByGroupIdNotFound() throws Exception {
+		addSocialActivityCounter();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		List<SocialActivityCounter> socialActivityCounters = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(0, socialActivityCounters.size());
+	}
+
+	@Test
+	public void testFindByGroupIdStartEnd() throws Exception {
+		testFindByGroupIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndWrongRange() throws Exception {
+		testFindByGroupIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndZeroZero() throws Exception {
+		testFindByGroupIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByGroupIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		SocialActivityCounter socialActivityCounter = addSocialActivityCounter();
+
+		long groupId = socialActivityCounter.getGroupId();
+
+		List<SocialActivityCounter> socialActivityCounters = _persistence.findByGroupId(groupId,
+				start, end);
+
+		Assert.assertEquals(expected, socialActivityCounters.size());
+	}
+
+	@Test
+	public void testFindByC_C() throws Exception {
+		SocialActivityCounter socialActivityCounter = addSocialActivityCounter();
+
+		long classNameId = socialActivityCounter.getClassNameId();
+
+		long classPK = socialActivityCounter.getClassPK();
+
+		List<SocialActivityCounter> socialActivityCounters = _persistence.findByC_C(classNameId,
+				classPK);
+
+		Assert.assertEquals(1, socialActivityCounters.size());
+
+		Assert.assertEquals(socialActivityCounter.getPrimaryKey(),
+			socialActivityCounters.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_CNotFound() throws Exception {
+		addSocialActivityCounter();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		long classPK = ServiceTestUtil.nextLong();
+
+		List<SocialActivityCounter> socialActivityCounters = _persistence.findByC_C(classNameId,
+				classPK);
+
+		Assert.assertEquals(0, socialActivityCounters.size());
+	}
+
+	@Test
+	public void testFindByC_CStartEnd() throws Exception {
+		testFindByC_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_CStartEndWrongRange() throws Exception {
+		testFindByC_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_CStartEndZeroZero() throws Exception {
+		testFindByC_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		SocialActivityCounter socialActivityCounter = addSocialActivityCounter();
+
+		long classNameId = socialActivityCounter.getClassNameId();
+
+		long classPK = socialActivityCounter.getClassPK();
+
+		List<SocialActivityCounter> socialActivityCounters = _persistence.findByC_C(classNameId,
+				classPK, start, end);
+
+		Assert.assertEquals(expected, socialActivityCounters.size());
+	}
+
+	@Test
+	public void testFindByG_C_C_O() throws Exception {
+		SocialActivityCounter socialActivityCounter = addSocialActivityCounter();
+
+		long groupId = socialActivityCounter.getGroupId();
+
+		long classNameId = socialActivityCounter.getClassNameId();
+
+		long classPK = socialActivityCounter.getClassPK();
+
+		int ownerType = socialActivityCounter.getOwnerType();
+
+		List<SocialActivityCounter> socialActivityCounters = _persistence.findByG_C_C_O(groupId,
+				classNameId, classPK, ownerType);
+
+		Assert.assertEquals(1, socialActivityCounters.size());
+
+		Assert.assertEquals(socialActivityCounter.getPrimaryKey(),
+			socialActivityCounters.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_C_C_ONotFound() throws Exception {
+		addSocialActivityCounter();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		long classPK = ServiceTestUtil.nextLong();
+
+		int ownerType = ServiceTestUtil.nextInt();
+
+		List<SocialActivityCounter> socialActivityCounters = _persistence.findByG_C_C_O(groupId,
+				classNameId, classPK, ownerType);
+
+		Assert.assertEquals(0, socialActivityCounters.size());
+	}
+
+	@Test
+	public void testFindByG_C_C_OStartEnd() throws Exception {
+		testFindByG_C_C_OStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_C_C_OStartEndWrongRange() throws Exception {
+		testFindByG_C_C_OStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_C_C_OStartEndZeroZero() throws Exception {
+		testFindByG_C_C_OStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_C_C_OStartEnd(int start, int end, int expected)
+		throws Exception {
+		SocialActivityCounter socialActivityCounter = addSocialActivityCounter();
+
+		long groupId = socialActivityCounter.getGroupId();
+
+		long classNameId = socialActivityCounter.getClassNameId();
+
+		long classPK = socialActivityCounter.getClassPK();
+
+		int ownerType = socialActivityCounter.getOwnerType();
+
+		List<SocialActivityCounter> socialActivityCounters = _persistence.findByG_C_C_O(groupId,
+				classNameId, classPK, ownerType, start, end);
+
+		Assert.assertEquals(expected, socialActivityCounters.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("SocialActivityCounter",
 			"activityCounterId", true, "groupId", true, "companyId", true,

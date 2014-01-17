@@ -166,6 +166,168 @@ public class RegionPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByCountryId() throws Exception {
+		Region region = addRegion();
+
+		long countryId = region.getCountryId();
+
+		List<Region> regions = _persistence.findByCountryId(countryId);
+
+		Assert.assertEquals(1, regions.size());
+
+		Assert.assertEquals(region.getPrimaryKey(),
+			regions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByCountryIdNotFound() throws Exception {
+		addRegion();
+
+		long countryId = ServiceTestUtil.nextLong();
+
+		List<Region> regions = _persistence.findByCountryId(countryId);
+
+		Assert.assertEquals(0, regions.size());
+	}
+
+	@Test
+	public void testFindByCountryIdStartEnd() throws Exception {
+		testFindByCountryIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByCountryIdStartEndWrongRange()
+		throws Exception {
+		testFindByCountryIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByCountryIdStartEndZeroZero() throws Exception {
+		testFindByCountryIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByCountryIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		Region region = addRegion();
+
+		long countryId = region.getCountryId();
+
+		List<Region> regions = _persistence.findByCountryId(countryId, start,
+				end);
+
+		Assert.assertEquals(expected, regions.size());
+	}
+
+	@Test
+	public void testFindByActive() throws Exception {
+		Region region = addRegion();
+
+		boolean active = region.getActive();
+
+		List<Region> regions = _persistence.findByActive(active);
+
+		Assert.assertEquals(1, regions.size());
+
+		Assert.assertEquals(region.getPrimaryKey(),
+			regions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByActiveNotFound() throws Exception {
+		addRegion();
+
+		boolean active = ServiceTestUtil.randomBoolean();
+
+		List<Region> regions = _persistence.findByActive(active);
+
+		Assert.assertEquals(0, regions.size());
+	}
+
+	@Test
+	public void testFindByActiveStartEnd() throws Exception {
+		testFindByActiveStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByActiveStartEndWrongRange() throws Exception {
+		testFindByActiveStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByActiveStartEndZeroZero() throws Exception {
+		testFindByActiveStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByActiveStartEnd(int start, int end, int expected)
+		throws Exception {
+		Region region = addRegion();
+
+		boolean active = region.getActive();
+
+		List<Region> regions = _persistence.findByActive(active, start, end);
+
+		Assert.assertEquals(expected, regions.size());
+	}
+
+	@Test
+	public void testFindByC_A() throws Exception {
+		Region region = addRegion();
+
+		long countryId = region.getCountryId();
+
+		boolean active = region.getActive();
+
+		List<Region> regions = _persistence.findByC_A(countryId, active);
+
+		Assert.assertEquals(1, regions.size());
+
+		Assert.assertEquals(region.getPrimaryKey(),
+			regions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_ANotFound() throws Exception {
+		addRegion();
+
+		long countryId = ServiceTestUtil.nextLong();
+
+		boolean active = ServiceTestUtil.randomBoolean();
+
+		List<Region> regions = _persistence.findByC_A(countryId, active);
+
+		Assert.assertEquals(0, regions.size());
+	}
+
+	@Test
+	public void testFindByC_AStartEnd() throws Exception {
+		testFindByC_AStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_AStartEndWrongRange() throws Exception {
+		testFindByC_AStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_AStartEndZeroZero() throws Exception {
+		testFindByC_AStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_AStartEnd(int start, int end, int expected)
+		throws Exception {
+		Region region = addRegion();
+
+		long countryId = region.getCountryId();
+
+		boolean active = region.getActive();
+
+		List<Region> regions = _persistence.findByC_A(countryId, active, start,
+				end);
+
+		Assert.assertEquals(expected, regions.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("Region", "regionId", true,
 			"countryId", true, "regionCode", true, "name", true, "active", true);

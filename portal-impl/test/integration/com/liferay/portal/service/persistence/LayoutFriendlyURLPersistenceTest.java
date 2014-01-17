@@ -202,6 +202,401 @@ public class LayoutFriendlyURLPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		LayoutFriendlyURL layoutFriendlyURL = addLayoutFriendlyURL();
+
+		String uuid = layoutFriendlyURL.getUuid();
+
+		List<LayoutFriendlyURL> layoutFriendlyURLs = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, layoutFriendlyURLs.size());
+
+		Assert.assertEquals(layoutFriendlyURL.getPrimaryKey(),
+			layoutFriendlyURLs.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addLayoutFriendlyURL();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<LayoutFriendlyURL> layoutFriendlyURLs = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, layoutFriendlyURLs.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		LayoutFriendlyURL layoutFriendlyURL = addLayoutFriendlyURL();
+
+		String uuid = layoutFriendlyURL.getUuid();
+
+		List<LayoutFriendlyURL> layoutFriendlyURLs = _persistence.findByUuid(uuid,
+				start, end);
+
+		Assert.assertEquals(expected, layoutFriendlyURLs.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		LayoutFriendlyURL layoutFriendlyURL = addLayoutFriendlyURL();
+
+		String uuid = layoutFriendlyURL.getUuid();
+
+		long companyId = layoutFriendlyURL.getCompanyId();
+
+		List<LayoutFriendlyURL> layoutFriendlyURLs = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(1, layoutFriendlyURLs.size());
+
+		Assert.assertEquals(layoutFriendlyURL.getPrimaryKey(),
+			layoutFriendlyURLs.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addLayoutFriendlyURL();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<LayoutFriendlyURL> layoutFriendlyURLs = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(0, layoutFriendlyURLs.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		LayoutFriendlyURL layoutFriendlyURL = addLayoutFriendlyURL();
+
+		String uuid = layoutFriendlyURL.getUuid();
+
+		long companyId = layoutFriendlyURL.getCompanyId();
+
+		List<LayoutFriendlyURL> layoutFriendlyURLs = _persistence.findByUuid_C(uuid,
+				companyId, start, end);
+
+		Assert.assertEquals(expected, layoutFriendlyURLs.size());
+	}
+
+	@Test
+	public void testFindByGroupId() throws Exception {
+		LayoutFriendlyURL layoutFriendlyURL = addLayoutFriendlyURL();
+
+		long groupId = layoutFriendlyURL.getGroupId();
+
+		List<LayoutFriendlyURL> layoutFriendlyURLs = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(1, layoutFriendlyURLs.size());
+
+		Assert.assertEquals(layoutFriendlyURL.getPrimaryKey(),
+			layoutFriendlyURLs.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByGroupIdNotFound() throws Exception {
+		addLayoutFriendlyURL();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		List<LayoutFriendlyURL> layoutFriendlyURLs = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(0, layoutFriendlyURLs.size());
+	}
+
+	@Test
+	public void testFindByGroupIdStartEnd() throws Exception {
+		testFindByGroupIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndWrongRange() throws Exception {
+		testFindByGroupIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndZeroZero() throws Exception {
+		testFindByGroupIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByGroupIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		LayoutFriendlyURL layoutFriendlyURL = addLayoutFriendlyURL();
+
+		long groupId = layoutFriendlyURL.getGroupId();
+
+		List<LayoutFriendlyURL> layoutFriendlyURLs = _persistence.findByGroupId(groupId,
+				start, end);
+
+		Assert.assertEquals(expected, layoutFriendlyURLs.size());
+	}
+
+	@Test
+	public void testFindByCompanyId() throws Exception {
+		LayoutFriendlyURL layoutFriendlyURL = addLayoutFriendlyURL();
+
+		long companyId = layoutFriendlyURL.getCompanyId();
+
+		List<LayoutFriendlyURL> layoutFriendlyURLs = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(1, layoutFriendlyURLs.size());
+
+		Assert.assertEquals(layoutFriendlyURL.getPrimaryKey(),
+			layoutFriendlyURLs.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByCompanyIdNotFound() throws Exception {
+		addLayoutFriendlyURL();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<LayoutFriendlyURL> layoutFriendlyURLs = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(0, layoutFriendlyURLs.size());
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEnd() throws Exception {
+		testFindByCompanyIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndWrongRange()
+		throws Exception {
+		testFindByCompanyIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndZeroZero() throws Exception {
+		testFindByCompanyIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByCompanyIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		LayoutFriendlyURL layoutFriendlyURL = addLayoutFriendlyURL();
+
+		long companyId = layoutFriendlyURL.getCompanyId();
+
+		List<LayoutFriendlyURL> layoutFriendlyURLs = _persistence.findByCompanyId(companyId,
+				start, end);
+
+		Assert.assertEquals(expected, layoutFriendlyURLs.size());
+	}
+
+	@Test
+	public void testFindByPlid() throws Exception {
+		LayoutFriendlyURL layoutFriendlyURL = addLayoutFriendlyURL();
+
+		long plid = layoutFriendlyURL.getPlid();
+
+		List<LayoutFriendlyURL> layoutFriendlyURLs = _persistence.findByPlid(plid);
+
+		Assert.assertEquals(1, layoutFriendlyURLs.size());
+
+		Assert.assertEquals(layoutFriendlyURL.getPrimaryKey(),
+			layoutFriendlyURLs.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByPlidNotFound() throws Exception {
+		addLayoutFriendlyURL();
+
+		long plid = ServiceTestUtil.nextLong();
+
+		List<LayoutFriendlyURL> layoutFriendlyURLs = _persistence.findByPlid(plid);
+
+		Assert.assertEquals(0, layoutFriendlyURLs.size());
+	}
+
+	@Test
+	public void testFindByPlidStartEnd() throws Exception {
+		testFindByPlidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByPlidStartEndWrongRange() throws Exception {
+		testFindByPlidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByPlidStartEndZeroZero() throws Exception {
+		testFindByPlidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByPlidStartEnd(int start, int end, int expected)
+		throws Exception {
+		LayoutFriendlyURL layoutFriendlyURL = addLayoutFriendlyURL();
+
+		long plid = layoutFriendlyURL.getPlid();
+
+		List<LayoutFriendlyURL> layoutFriendlyURLs = _persistence.findByPlid(plid,
+				start, end);
+
+		Assert.assertEquals(expected, layoutFriendlyURLs.size());
+	}
+
+	@Test
+	public void testFindByP_F() throws Exception {
+		LayoutFriendlyURL layoutFriendlyURL = addLayoutFriendlyURL();
+
+		long plid = layoutFriendlyURL.getPlid();
+
+		String friendlyURL = layoutFriendlyURL.getFriendlyURL();
+
+		List<LayoutFriendlyURL> layoutFriendlyURLs = _persistence.findByP_F(plid,
+				friendlyURL);
+
+		Assert.assertEquals(1, layoutFriendlyURLs.size());
+
+		Assert.assertEquals(layoutFriendlyURL.getPrimaryKey(),
+			layoutFriendlyURLs.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByP_FNotFound() throws Exception {
+		addLayoutFriendlyURL();
+
+		long plid = ServiceTestUtil.nextLong();
+
+		String friendlyURL = ServiceTestUtil.randomString();
+
+		List<LayoutFriendlyURL> layoutFriendlyURLs = _persistence.findByP_F(plid,
+				friendlyURL);
+
+		Assert.assertEquals(0, layoutFriendlyURLs.size());
+	}
+
+	@Test
+	public void testFindByP_FStartEnd() throws Exception {
+		testFindByP_FStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByP_FStartEndWrongRange() throws Exception {
+		testFindByP_FStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByP_FStartEndZeroZero() throws Exception {
+		testFindByP_FStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByP_FStartEnd(int start, int end, int expected)
+		throws Exception {
+		LayoutFriendlyURL layoutFriendlyURL = addLayoutFriendlyURL();
+
+		long plid = layoutFriendlyURL.getPlid();
+
+		String friendlyURL = layoutFriendlyURL.getFriendlyURL();
+
+		List<LayoutFriendlyURL> layoutFriendlyURLs = _persistence.findByP_F(plid,
+				friendlyURL, start, end);
+
+		Assert.assertEquals(expected, layoutFriendlyURLs.size());
+	}
+
+	@Test
+	public void testFindByG_P_F() throws Exception {
+		LayoutFriendlyURL layoutFriendlyURL = addLayoutFriendlyURL();
+
+		long groupId = layoutFriendlyURL.getGroupId();
+
+		boolean privateLayout = layoutFriendlyURL.getPrivateLayout();
+
+		String friendlyURL = layoutFriendlyURL.getFriendlyURL();
+
+		List<LayoutFriendlyURL> layoutFriendlyURLs = _persistence.findByG_P_F(groupId,
+				privateLayout, friendlyURL);
+
+		Assert.assertEquals(1, layoutFriendlyURLs.size());
+
+		Assert.assertEquals(layoutFriendlyURL.getPrimaryKey(),
+			layoutFriendlyURLs.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_P_FNotFound() throws Exception {
+		addLayoutFriendlyURL();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		boolean privateLayout = ServiceTestUtil.randomBoolean();
+
+		String friendlyURL = ServiceTestUtil.randomString();
+
+		List<LayoutFriendlyURL> layoutFriendlyURLs = _persistence.findByG_P_F(groupId,
+				privateLayout, friendlyURL);
+
+		Assert.assertEquals(0, layoutFriendlyURLs.size());
+	}
+
+	@Test
+	public void testFindByG_P_FStartEnd() throws Exception {
+		testFindByG_P_FStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_P_FStartEndWrongRange() throws Exception {
+		testFindByG_P_FStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_P_FStartEndZeroZero() throws Exception {
+		testFindByG_P_FStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_P_FStartEnd(int start, int end, int expected)
+		throws Exception {
+		LayoutFriendlyURL layoutFriendlyURL = addLayoutFriendlyURL();
+
+		long groupId = layoutFriendlyURL.getGroupId();
+
+		boolean privateLayout = layoutFriendlyURL.getPrivateLayout();
+
+		String friendlyURL = layoutFriendlyURL.getFriendlyURL();
+
+		List<LayoutFriendlyURL> layoutFriendlyURLs = _persistence.findByG_P_F(groupId,
+				privateLayout, friendlyURL, start, end);
+
+		Assert.assertEquals(expected, layoutFriendlyURLs.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("LayoutFriendlyURL", "uuid",
 			true, "layoutFriendlyURLId", true, "groupId", true, "companyId",

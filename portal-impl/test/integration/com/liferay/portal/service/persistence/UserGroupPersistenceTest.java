@@ -195,6 +195,228 @@ public class UserGroupPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		UserGroup userGroup = addUserGroup();
+
+		String uuid = userGroup.getUuid();
+
+		List<UserGroup> userGroups = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, userGroups.size());
+
+		Assert.assertEquals(userGroup.getPrimaryKey(),
+			userGroups.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addUserGroup();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<UserGroup> userGroups = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, userGroups.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		UserGroup userGroup = addUserGroup();
+
+		String uuid = userGroup.getUuid();
+
+		List<UserGroup> userGroups = _persistence.findByUuid(uuid, start, end);
+
+		Assert.assertEquals(expected, userGroups.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		UserGroup userGroup = addUserGroup();
+
+		String uuid = userGroup.getUuid();
+
+		long companyId = userGroup.getCompanyId();
+
+		List<UserGroup> userGroups = _persistence.findByUuid_C(uuid, companyId);
+
+		Assert.assertEquals(1, userGroups.size());
+
+		Assert.assertEquals(userGroup.getPrimaryKey(),
+			userGroups.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addUserGroup();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<UserGroup> userGroups = _persistence.findByUuid_C(uuid, companyId);
+
+		Assert.assertEquals(0, userGroups.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		UserGroup userGroup = addUserGroup();
+
+		String uuid = userGroup.getUuid();
+
+		long companyId = userGroup.getCompanyId();
+
+		List<UserGroup> userGroups = _persistence.findByUuid_C(uuid, companyId,
+				start, end);
+
+		Assert.assertEquals(expected, userGroups.size());
+	}
+
+	@Test
+	public void testFindByCompanyId() throws Exception {
+		UserGroup userGroup = addUserGroup();
+
+		long companyId = userGroup.getCompanyId();
+
+		List<UserGroup> userGroups = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(1, userGroups.size());
+
+		Assert.assertEquals(userGroup.getPrimaryKey(),
+			userGroups.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByCompanyIdNotFound() throws Exception {
+		addUserGroup();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<UserGroup> userGroups = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(0, userGroups.size());
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEnd() throws Exception {
+		testFindByCompanyIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndWrongRange()
+		throws Exception {
+		testFindByCompanyIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndZeroZero() throws Exception {
+		testFindByCompanyIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByCompanyIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		UserGroup userGroup = addUserGroup();
+
+		long companyId = userGroup.getCompanyId();
+
+		List<UserGroup> userGroups = _persistence.findByCompanyId(companyId,
+				start, end);
+
+		Assert.assertEquals(expected, userGroups.size());
+	}
+
+	@Test
+	public void testFindByC_P() throws Exception {
+		UserGroup userGroup = addUserGroup();
+
+		long companyId = userGroup.getCompanyId();
+
+		long parentUserGroupId = userGroup.getParentUserGroupId();
+
+		List<UserGroup> userGroups = _persistence.findByC_P(companyId,
+				parentUserGroupId);
+
+		Assert.assertEquals(1, userGroups.size());
+
+		Assert.assertEquals(userGroup.getPrimaryKey(),
+			userGroups.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_PNotFound() throws Exception {
+		addUserGroup();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		long parentUserGroupId = ServiceTestUtil.nextLong();
+
+		List<UserGroup> userGroups = _persistence.findByC_P(companyId,
+				parentUserGroupId);
+
+		Assert.assertEquals(0, userGroups.size());
+	}
+
+	@Test
+	public void testFindByC_PStartEnd() throws Exception {
+		testFindByC_PStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_PStartEndWrongRange() throws Exception {
+		testFindByC_PStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_PStartEndZeroZero() throws Exception {
+		testFindByC_PStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_PStartEnd(int start, int end, int expected)
+		throws Exception {
+		UserGroup userGroup = addUserGroup();
+
+		long companyId = userGroup.getCompanyId();
+
+		long parentUserGroupId = userGroup.getParentUserGroupId();
+
+		List<UserGroup> userGroups = _persistence.findByC_P(companyId,
+				parentUserGroupId, start, end);
+
+		Assert.assertEquals(expected, userGroups.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("UserGroup", "uuid", true,
 			"userGroupId", true, "companyId", true, "userId", true, "userName",

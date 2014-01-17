@@ -194,6 +194,132 @@ public class PortletItemPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByG_C() throws Exception {
+		PortletItem portletItem = addPortletItem();
+
+		long groupId = portletItem.getGroupId();
+
+		long classNameId = portletItem.getClassNameId();
+
+		List<PortletItem> portletItems = _persistence.findByG_C(groupId,
+				classNameId);
+
+		Assert.assertEquals(1, portletItems.size());
+
+		Assert.assertEquals(portletItem.getPrimaryKey(),
+			portletItems.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_CNotFound() throws Exception {
+		addPortletItem();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		List<PortletItem> portletItems = _persistence.findByG_C(groupId,
+				classNameId);
+
+		Assert.assertEquals(0, portletItems.size());
+	}
+
+	@Test
+	public void testFindByG_CStartEnd() throws Exception {
+		testFindByG_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_CStartEndWrongRange() throws Exception {
+		testFindByG_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_CStartEndZeroZero() throws Exception {
+		testFindByG_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		PortletItem portletItem = addPortletItem();
+
+		long groupId = portletItem.getGroupId();
+
+		long classNameId = portletItem.getClassNameId();
+
+		List<PortletItem> portletItems = _persistence.findByG_C(groupId,
+				classNameId, start, end);
+
+		Assert.assertEquals(expected, portletItems.size());
+	}
+
+	@Test
+	public void testFindByG_P_C() throws Exception {
+		PortletItem portletItem = addPortletItem();
+
+		long groupId = portletItem.getGroupId();
+
+		String portletId = portletItem.getPortletId();
+
+		long classNameId = portletItem.getClassNameId();
+
+		List<PortletItem> portletItems = _persistence.findByG_P_C(groupId,
+				portletId, classNameId);
+
+		Assert.assertEquals(1, portletItems.size());
+
+		Assert.assertEquals(portletItem.getPrimaryKey(),
+			portletItems.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_P_CNotFound() throws Exception {
+		addPortletItem();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		String portletId = ServiceTestUtil.randomString();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		List<PortletItem> portletItems = _persistence.findByG_P_C(groupId,
+				portletId, classNameId);
+
+		Assert.assertEquals(0, portletItems.size());
+	}
+
+	@Test
+	public void testFindByG_P_CStartEnd() throws Exception {
+		testFindByG_P_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_P_CStartEndWrongRange() throws Exception {
+		testFindByG_P_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_P_CStartEndZeroZero() throws Exception {
+		testFindByG_P_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_P_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		PortletItem portletItem = addPortletItem();
+
+		long groupId = portletItem.getGroupId();
+
+		String portletId = portletItem.getPortletId();
+
+		long classNameId = portletItem.getClassNameId();
+
+		List<PortletItem> portletItems = _persistence.findByG_P_C(groupId,
+				portletId, classNameId, start, end);
+
+		Assert.assertEquals(expected, portletItems.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("PortletItem",
 			"portletItemId", true, "groupId", true, "companyId", true,

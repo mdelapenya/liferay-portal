@@ -220,6 +220,118 @@ public class JournalFolderPersistenceTest {
 	}
 
 	@Test
+	public void testFindByUuid() throws Exception {
+		JournalFolder journalFolder = addJournalFolder();
+
+		String uuid = journalFolder.getUuid();
+
+		List<JournalFolder> journalFolders = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, journalFolders.size());
+
+		Assert.assertEquals(journalFolder.getPrimaryKey(),
+			journalFolders.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addJournalFolder();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<JournalFolder> journalFolders = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, journalFolders.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		JournalFolder journalFolder = addJournalFolder();
+
+		String uuid = journalFolder.getUuid();
+
+		List<JournalFolder> journalFolders = _persistence.findByUuid(uuid,
+				start, end);
+
+		Assert.assertEquals(expected, journalFolders.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		JournalFolder journalFolder = addJournalFolder();
+
+		String uuid = journalFolder.getUuid();
+
+		long companyId = journalFolder.getCompanyId();
+
+		List<JournalFolder> journalFolders = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(1, journalFolders.size());
+
+		Assert.assertEquals(journalFolder.getPrimaryKey(),
+			journalFolders.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addJournalFolder();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<JournalFolder> journalFolders = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(0, journalFolders.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		JournalFolder journalFolder = addJournalFolder();
+
+		String uuid = journalFolder.getUuid();
+
+		long companyId = journalFolder.getCompanyId();
+
+		List<JournalFolder> journalFolders = _persistence.findByUuid_C(uuid,
+				companyId, start, end);
+
+		Assert.assertEquals(expected, journalFolders.size());
+	}
+
+	@Test
 	public void testFilterFindByGroupId() throws Exception {
 		try {
 			_persistence.filterFindByGroupId(0, QueryUtil.ALL_POS,

@@ -290,6 +290,171 @@ public class PasswordPolicyPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		PasswordPolicy passwordPolicy = addPasswordPolicy();
+
+		String uuid = passwordPolicy.getUuid();
+
+		List<PasswordPolicy> passwordPolicies = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, passwordPolicies.size());
+
+		Assert.assertEquals(passwordPolicy.getPrimaryKey(),
+			passwordPolicies.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addPasswordPolicy();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<PasswordPolicy> passwordPolicies = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, passwordPolicies.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		PasswordPolicy passwordPolicy = addPasswordPolicy();
+
+		String uuid = passwordPolicy.getUuid();
+
+		List<PasswordPolicy> passwordPolicies = _persistence.findByUuid(uuid,
+				start, end);
+
+		Assert.assertEquals(expected, passwordPolicies.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		PasswordPolicy passwordPolicy = addPasswordPolicy();
+
+		String uuid = passwordPolicy.getUuid();
+
+		long companyId = passwordPolicy.getCompanyId();
+
+		List<PasswordPolicy> passwordPolicies = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(1, passwordPolicies.size());
+
+		Assert.assertEquals(passwordPolicy.getPrimaryKey(),
+			passwordPolicies.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addPasswordPolicy();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<PasswordPolicy> passwordPolicies = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(0, passwordPolicies.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		PasswordPolicy passwordPolicy = addPasswordPolicy();
+
+		String uuid = passwordPolicy.getUuid();
+
+		long companyId = passwordPolicy.getCompanyId();
+
+		List<PasswordPolicy> passwordPolicies = _persistence.findByUuid_C(uuid,
+				companyId, start, end);
+
+		Assert.assertEquals(expected, passwordPolicies.size());
+	}
+
+	@Test
+	public void testFindByCompanyId() throws Exception {
+		PasswordPolicy passwordPolicy = addPasswordPolicy();
+
+		long companyId = passwordPolicy.getCompanyId();
+
+		List<PasswordPolicy> passwordPolicies = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(1, passwordPolicies.size());
+
+		Assert.assertEquals(passwordPolicy.getPrimaryKey(),
+			passwordPolicies.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByCompanyIdNotFound() throws Exception {
+		addPasswordPolicy();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<PasswordPolicy> passwordPolicies = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(0, passwordPolicies.size());
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEnd() throws Exception {
+		testFindByCompanyIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndWrongRange()
+		throws Exception {
+		testFindByCompanyIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndZeroZero() throws Exception {
+		testFindByCompanyIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByCompanyIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		PasswordPolicy passwordPolicy = addPasswordPolicy();
+
+		long companyId = passwordPolicy.getCompanyId();
+
+		List<PasswordPolicy> passwordPolicies = _persistence.findByCompanyId(companyId,
+				start, end);
+
+		Assert.assertEquals(expected, passwordPolicies.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("PasswordPolicy", "uuid",
 			true, "passwordPolicyId", true, "companyId", true, "userId", true,

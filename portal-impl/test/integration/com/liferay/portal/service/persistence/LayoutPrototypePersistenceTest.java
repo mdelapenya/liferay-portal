@@ -195,6 +195,231 @@ public class LayoutPrototypePersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		LayoutPrototype layoutPrototype = addLayoutPrototype();
+
+		String uuid = layoutPrototype.getUuid();
+
+		List<LayoutPrototype> layoutPrototypes = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, layoutPrototypes.size());
+
+		Assert.assertEquals(layoutPrototype.getPrimaryKey(),
+			layoutPrototypes.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addLayoutPrototype();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<LayoutPrototype> layoutPrototypes = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, layoutPrototypes.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		LayoutPrototype layoutPrototype = addLayoutPrototype();
+
+		String uuid = layoutPrototype.getUuid();
+
+		List<LayoutPrototype> layoutPrototypes = _persistence.findByUuid(uuid,
+				start, end);
+
+		Assert.assertEquals(expected, layoutPrototypes.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		LayoutPrototype layoutPrototype = addLayoutPrototype();
+
+		String uuid = layoutPrototype.getUuid();
+
+		long companyId = layoutPrototype.getCompanyId();
+
+		List<LayoutPrototype> layoutPrototypes = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(1, layoutPrototypes.size());
+
+		Assert.assertEquals(layoutPrototype.getPrimaryKey(),
+			layoutPrototypes.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addLayoutPrototype();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<LayoutPrototype> layoutPrototypes = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(0, layoutPrototypes.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		LayoutPrototype layoutPrototype = addLayoutPrototype();
+
+		String uuid = layoutPrototype.getUuid();
+
+		long companyId = layoutPrototype.getCompanyId();
+
+		List<LayoutPrototype> layoutPrototypes = _persistence.findByUuid_C(uuid,
+				companyId, start, end);
+
+		Assert.assertEquals(expected, layoutPrototypes.size());
+	}
+
+	@Test
+	public void testFindByCompanyId() throws Exception {
+		LayoutPrototype layoutPrototype = addLayoutPrototype();
+
+		long companyId = layoutPrototype.getCompanyId();
+
+		List<LayoutPrototype> layoutPrototypes = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(1, layoutPrototypes.size());
+
+		Assert.assertEquals(layoutPrototype.getPrimaryKey(),
+			layoutPrototypes.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByCompanyIdNotFound() throws Exception {
+		addLayoutPrototype();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<LayoutPrototype> layoutPrototypes = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(0, layoutPrototypes.size());
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEnd() throws Exception {
+		testFindByCompanyIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndWrongRange()
+		throws Exception {
+		testFindByCompanyIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndZeroZero() throws Exception {
+		testFindByCompanyIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByCompanyIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		LayoutPrototype layoutPrototype = addLayoutPrototype();
+
+		long companyId = layoutPrototype.getCompanyId();
+
+		List<LayoutPrototype> layoutPrototypes = _persistence.findByCompanyId(companyId,
+				start, end);
+
+		Assert.assertEquals(expected, layoutPrototypes.size());
+	}
+
+	@Test
+	public void testFindByC_A() throws Exception {
+		LayoutPrototype layoutPrototype = addLayoutPrototype();
+
+		long companyId = layoutPrototype.getCompanyId();
+
+		boolean active = layoutPrototype.getActive();
+
+		List<LayoutPrototype> layoutPrototypes = _persistence.findByC_A(companyId,
+				active);
+
+		Assert.assertEquals(1, layoutPrototypes.size());
+
+		Assert.assertEquals(layoutPrototype.getPrimaryKey(),
+			layoutPrototypes.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_ANotFound() throws Exception {
+		addLayoutPrototype();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		boolean active = ServiceTestUtil.randomBoolean();
+
+		List<LayoutPrototype> layoutPrototypes = _persistence.findByC_A(companyId,
+				active);
+
+		Assert.assertEquals(0, layoutPrototypes.size());
+	}
+
+	@Test
+	public void testFindByC_AStartEnd() throws Exception {
+		testFindByC_AStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_AStartEndWrongRange() throws Exception {
+		testFindByC_AStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_AStartEndZeroZero() throws Exception {
+		testFindByC_AStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_AStartEnd(int start, int end, int expected)
+		throws Exception {
+		LayoutPrototype layoutPrototype = addLayoutPrototype();
+
+		long companyId = layoutPrototype.getCompanyId();
+
+		boolean active = layoutPrototype.getActive();
+
+		List<LayoutPrototype> layoutPrototypes = _persistence.findByC_A(companyId,
+				active, start, end);
+
+		Assert.assertEquals(expected, layoutPrototypes.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("LayoutPrototype", "uuid",
 			true, "layoutPrototypeId", true, "companyId", true, "userId", true,

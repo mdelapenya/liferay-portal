@@ -245,6 +245,1925 @@ public class WikiPagePersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		String uuid = wikiPage.getUuid();
+
+		List<WikiPage> wikiPages = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addWikiPage();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<WikiPage> wikiPages = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		String uuid = wikiPage.getUuid();
+
+		List<WikiPage> wikiPages = _persistence.findByUuid(uuid, start, end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		String uuid = wikiPage.getUuid();
+
+		long companyId = wikiPage.getCompanyId();
+
+		List<WikiPage> wikiPages = _persistence.findByUuid_C(uuid, companyId);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addWikiPage();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<WikiPage> wikiPages = _persistence.findByUuid_C(uuid, companyId);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		String uuid = wikiPage.getUuid();
+
+		long companyId = wikiPage.getCompanyId();
+
+		List<WikiPage> wikiPages = _persistence.findByUuid_C(uuid, companyId,
+				start, end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByResourcePrimKey() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long resourcePrimKey = wikiPage.getResourcePrimKey();
+
+		List<WikiPage> wikiPages = _persistence.findByResourcePrimKey(resourcePrimKey);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByResourcePrimKeyNotFound() throws Exception {
+		addWikiPage();
+
+		long resourcePrimKey = ServiceTestUtil.nextLong();
+
+		List<WikiPage> wikiPages = _persistence.findByResourcePrimKey(resourcePrimKey);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByResourcePrimKeyStartEnd() throws Exception {
+		testFindByResourcePrimKeyStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByResourcePrimKeyStartEndWrongRange()
+		throws Exception {
+		testFindByResourcePrimKeyStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByResourcePrimKeyStartEndZeroZero()
+		throws Exception {
+		testFindByResourcePrimKeyStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByResourcePrimKeyStartEnd(int start, int end,
+		int expected) throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long resourcePrimKey = wikiPage.getResourcePrimKey();
+
+		List<WikiPage> wikiPages = _persistence.findByResourcePrimKey(resourcePrimKey,
+				start, end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByNodeId() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		List<WikiPage> wikiPages = _persistence.findByNodeId(nodeId);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByNodeIdNotFound() throws Exception {
+		addWikiPage();
+
+		long nodeId = ServiceTestUtil.nextLong();
+
+		List<WikiPage> wikiPages = _persistence.findByNodeId(nodeId);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByNodeIdStartEnd() throws Exception {
+		testFindByNodeIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByNodeIdStartEndWrongRange() throws Exception {
+		testFindByNodeIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByNodeIdStartEndZeroZero() throws Exception {
+		testFindByNodeIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByNodeIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		List<WikiPage> wikiPages = _persistence.findByNodeId(nodeId, start, end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByFormat() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		String format = wikiPage.getFormat();
+
+		List<WikiPage> wikiPages = _persistence.findByFormat(format);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByFormatNotFound() throws Exception {
+		addWikiPage();
+
+		String format = ServiceTestUtil.randomString();
+
+		List<WikiPage> wikiPages = _persistence.findByFormat(format);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByFormatStartEnd() throws Exception {
+		testFindByFormatStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByFormatStartEndWrongRange() throws Exception {
+		testFindByFormatStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByFormatStartEndZeroZero() throws Exception {
+		testFindByFormatStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByFormatStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		String format = wikiPage.getFormat();
+
+		List<WikiPage> wikiPages = _persistence.findByFormat(format, start, end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByR_N() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long resourcePrimKey = wikiPage.getResourcePrimKey();
+
+		long nodeId = wikiPage.getNodeId();
+
+		List<WikiPage> wikiPages = _persistence.findByR_N(resourcePrimKey,
+				nodeId);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByR_NNotFound() throws Exception {
+		addWikiPage();
+
+		long resourcePrimKey = ServiceTestUtil.nextLong();
+
+		long nodeId = ServiceTestUtil.nextLong();
+
+		List<WikiPage> wikiPages = _persistence.findByR_N(resourcePrimKey,
+				nodeId);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByR_NStartEnd() throws Exception {
+		testFindByR_NStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByR_NStartEndWrongRange() throws Exception {
+		testFindByR_NStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByR_NStartEndZeroZero() throws Exception {
+		testFindByR_NStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByR_NStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long resourcePrimKey = wikiPage.getResourcePrimKey();
+
+		long nodeId = wikiPage.getNodeId();
+
+		List<WikiPage> wikiPages = _persistence.findByR_N(resourcePrimKey,
+				nodeId, start, end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByR_S() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long resourcePrimKey = wikiPage.getResourcePrimKey();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByR_S(resourcePrimKey,
+				status);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByR_SNotFound() throws Exception {
+		addWikiPage();
+
+		long resourcePrimKey = ServiceTestUtil.nextLong();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<WikiPage> wikiPages = _persistence.findByR_S(resourcePrimKey,
+				status);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByR_SStartEnd() throws Exception {
+		testFindByR_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByR_SStartEndWrongRange() throws Exception {
+		testFindByR_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByR_SStartEndZeroZero() throws Exception {
+		testFindByR_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByR_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long resourcePrimKey = wikiPage.getResourcePrimKey();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByR_S(resourcePrimKey,
+				status, start, end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByN_T() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		String title = wikiPage.getTitle();
+
+		List<WikiPage> wikiPages = _persistence.findByN_T(nodeId, title);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByN_TNotFound() throws Exception {
+		addWikiPage();
+
+		long nodeId = ServiceTestUtil.nextLong();
+
+		String title = ServiceTestUtil.randomString();
+
+		List<WikiPage> wikiPages = _persistence.findByN_T(nodeId, title);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByN_TStartEnd() throws Exception {
+		testFindByN_TStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByN_TStartEndWrongRange() throws Exception {
+		testFindByN_TStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByN_TStartEndZeroZero() throws Exception {
+		testFindByN_TStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByN_TStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		String title = wikiPage.getTitle();
+
+		List<WikiPage> wikiPages = _persistence.findByN_T(nodeId, title, start,
+				end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByN_H() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		boolean head = wikiPage.getHead();
+
+		List<WikiPage> wikiPages = _persistence.findByN_H(nodeId, head);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByN_HNotFound() throws Exception {
+		addWikiPage();
+
+		long nodeId = ServiceTestUtil.nextLong();
+
+		boolean head = ServiceTestUtil.randomBoolean();
+
+		List<WikiPage> wikiPages = _persistence.findByN_H(nodeId, head);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByN_HStartEnd() throws Exception {
+		testFindByN_HStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByN_HStartEndWrongRange() throws Exception {
+		testFindByN_HStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByN_HStartEndZeroZero() throws Exception {
+		testFindByN_HStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByN_HStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		boolean head = wikiPage.getHead();
+
+		List<WikiPage> wikiPages = _persistence.findByN_H(nodeId, head, start,
+				end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByN_P() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		String parentTitle = wikiPage.getParentTitle();
+
+		List<WikiPage> wikiPages = _persistence.findByN_P(nodeId, parentTitle);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByN_PNotFound() throws Exception {
+		addWikiPage();
+
+		long nodeId = ServiceTestUtil.nextLong();
+
+		String parentTitle = ServiceTestUtil.randomString();
+
+		List<WikiPage> wikiPages = _persistence.findByN_P(nodeId, parentTitle);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByN_PStartEnd() throws Exception {
+		testFindByN_PStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByN_PStartEndWrongRange() throws Exception {
+		testFindByN_PStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByN_PStartEndZeroZero() throws Exception {
+		testFindByN_PStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByN_PStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		String parentTitle = wikiPage.getParentTitle();
+
+		List<WikiPage> wikiPages = _persistence.findByN_P(nodeId, parentTitle,
+				start, end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByN_R() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		String redirectTitle = wikiPage.getRedirectTitle();
+
+		List<WikiPage> wikiPages = _persistence.findByN_R(nodeId, redirectTitle);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByN_RNotFound() throws Exception {
+		addWikiPage();
+
+		long nodeId = ServiceTestUtil.nextLong();
+
+		String redirectTitle = ServiceTestUtil.randomString();
+
+		List<WikiPage> wikiPages = _persistence.findByN_R(nodeId, redirectTitle);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByN_RStartEnd() throws Exception {
+		testFindByN_RStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByN_RStartEndWrongRange() throws Exception {
+		testFindByN_RStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByN_RStartEndZeroZero() throws Exception {
+		testFindByN_RStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByN_RStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		String redirectTitle = wikiPage.getRedirectTitle();
+
+		List<WikiPage> wikiPages = _persistence.findByN_R(nodeId,
+				redirectTitle, start, end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByN_S() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByN_S(nodeId, status);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByN_SNotFound() throws Exception {
+		addWikiPage();
+
+		long nodeId = ServiceTestUtil.nextLong();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<WikiPage> wikiPages = _persistence.findByN_S(nodeId, status);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByN_SStartEnd() throws Exception {
+		testFindByN_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByN_SStartEndWrongRange() throws Exception {
+		testFindByN_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByN_SStartEndZeroZero() throws Exception {
+		testFindByN_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByN_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByN_S(nodeId, status,
+				start, end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByR_N_H() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long resourcePrimKey = wikiPage.getResourcePrimKey();
+
+		long nodeId = wikiPage.getNodeId();
+
+		boolean head = wikiPage.getHead();
+
+		List<WikiPage> wikiPages = _persistence.findByR_N_H(resourcePrimKey,
+				nodeId, head);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByR_N_HNotFound() throws Exception {
+		addWikiPage();
+
+		long resourcePrimKey = ServiceTestUtil.nextLong();
+
+		long nodeId = ServiceTestUtil.nextLong();
+
+		boolean head = ServiceTestUtil.randomBoolean();
+
+		List<WikiPage> wikiPages = _persistence.findByR_N_H(resourcePrimKey,
+				nodeId, head);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByR_N_HStartEnd() throws Exception {
+		testFindByR_N_HStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByR_N_HStartEndWrongRange() throws Exception {
+		testFindByR_N_HStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByR_N_HStartEndZeroZero() throws Exception {
+		testFindByR_N_HStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByR_N_HStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long resourcePrimKey = wikiPage.getResourcePrimKey();
+
+		long nodeId = wikiPage.getNodeId();
+
+		boolean head = wikiPage.getHead();
+
+		List<WikiPage> wikiPages = _persistence.findByR_N_H(resourcePrimKey,
+				nodeId, head, start, end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByR_N_S() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long resourcePrimKey = wikiPage.getResourcePrimKey();
+
+		long nodeId = wikiPage.getNodeId();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByR_N_S(resourcePrimKey,
+				nodeId, status);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByR_N_SNotFound() throws Exception {
+		addWikiPage();
+
+		long resourcePrimKey = ServiceTestUtil.nextLong();
+
+		long nodeId = ServiceTestUtil.nextLong();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<WikiPage> wikiPages = _persistence.findByR_N_S(resourcePrimKey,
+				nodeId, status);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByR_N_SStartEnd() throws Exception {
+		testFindByR_N_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByR_N_SStartEndWrongRange() throws Exception {
+		testFindByR_N_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByR_N_SStartEndZeroZero() throws Exception {
+		testFindByR_N_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByR_N_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long resourcePrimKey = wikiPage.getResourcePrimKey();
+
+		long nodeId = wikiPage.getNodeId();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByR_N_S(resourcePrimKey,
+				nodeId, status, start, end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByG_N_H() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long groupId = wikiPage.getGroupId();
+
+		long nodeId = wikiPage.getNodeId();
+
+		boolean head = wikiPage.getHead();
+
+		List<WikiPage> wikiPages = _persistence.findByG_N_H(groupId, nodeId,
+				head);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_N_HNotFound() throws Exception {
+		addWikiPage();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		long nodeId = ServiceTestUtil.nextLong();
+
+		boolean head = ServiceTestUtil.randomBoolean();
+
+		List<WikiPage> wikiPages = _persistence.findByG_N_H(groupId, nodeId,
+				head);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByG_N_HStartEnd() throws Exception {
+		testFindByG_N_HStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_N_HStartEndWrongRange() throws Exception {
+		testFindByG_N_HStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_N_HStartEndZeroZero() throws Exception {
+		testFindByG_N_HStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_N_HStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long groupId = wikiPage.getGroupId();
+
+		long nodeId = wikiPage.getNodeId();
+
+		boolean head = wikiPage.getHead();
+
+		List<WikiPage> wikiPages = _persistence.findByG_N_H(groupId, nodeId,
+				head, start, end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByG_N_S() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long groupId = wikiPage.getGroupId();
+
+		long nodeId = wikiPage.getNodeId();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByG_N_S(groupId, nodeId,
+				status);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_N_SNotFound() throws Exception {
+		addWikiPage();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		long nodeId = ServiceTestUtil.nextLong();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<WikiPage> wikiPages = _persistence.findByG_N_S(groupId, nodeId,
+				status);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByG_N_SStartEnd() throws Exception {
+		testFindByG_N_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_N_SStartEndWrongRange() throws Exception {
+		testFindByG_N_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_N_SStartEndZeroZero() throws Exception {
+		testFindByG_N_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_N_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long groupId = wikiPage.getGroupId();
+
+		long nodeId = wikiPage.getNodeId();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByG_N_S(groupId, nodeId,
+				status, start, end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByU_N_S() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long userId = wikiPage.getUserId();
+
+		long nodeId = wikiPage.getNodeId();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByU_N_S(userId, nodeId,
+				status);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByU_N_SNotFound() throws Exception {
+		addWikiPage();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		long nodeId = ServiceTestUtil.nextLong();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<WikiPage> wikiPages = _persistence.findByU_N_S(userId, nodeId,
+				status);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByU_N_SStartEnd() throws Exception {
+		testFindByU_N_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByU_N_SStartEndWrongRange() throws Exception {
+		testFindByU_N_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByU_N_SStartEndZeroZero() throws Exception {
+		testFindByU_N_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByU_N_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long userId = wikiPage.getUserId();
+
+		long nodeId = wikiPage.getNodeId();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByU_N_S(userId, nodeId,
+				status, start, end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByN_T_H() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		String title = wikiPage.getTitle();
+
+		boolean head = wikiPage.getHead();
+
+		List<WikiPage> wikiPages = _persistence.findByN_T_H(nodeId, title, head);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByN_T_HNotFound() throws Exception {
+		addWikiPage();
+
+		long nodeId = ServiceTestUtil.nextLong();
+
+		String title = ServiceTestUtil.randomString();
+
+		boolean head = ServiceTestUtil.randomBoolean();
+
+		List<WikiPage> wikiPages = _persistence.findByN_T_H(nodeId, title, head);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByN_T_HStartEnd() throws Exception {
+		testFindByN_T_HStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByN_T_HStartEndWrongRange() throws Exception {
+		testFindByN_T_HStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByN_T_HStartEndZeroZero() throws Exception {
+		testFindByN_T_HStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByN_T_HStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		String title = wikiPage.getTitle();
+
+		boolean head = wikiPage.getHead();
+
+		List<WikiPage> wikiPages = _persistence.findByN_T_H(nodeId, title,
+				head, start, end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByN_T_S() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		String title = wikiPage.getTitle();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByN_T_S(nodeId, title,
+				status);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByN_T_SNotFound() throws Exception {
+		addWikiPage();
+
+		long nodeId = ServiceTestUtil.nextLong();
+
+		String title = ServiceTestUtil.randomString();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<WikiPage> wikiPages = _persistence.findByN_T_S(nodeId, title,
+				status);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByN_T_SStartEnd() throws Exception {
+		testFindByN_T_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByN_T_SStartEndWrongRange() throws Exception {
+		testFindByN_T_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByN_T_SStartEndZeroZero() throws Exception {
+		testFindByN_T_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByN_T_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		String title = wikiPage.getTitle();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByN_T_S(nodeId, title,
+				status, start, end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByN_H_P() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		boolean head = wikiPage.getHead();
+
+		String parentTitle = wikiPage.getParentTitle();
+
+		List<WikiPage> wikiPages = _persistence.findByN_H_P(nodeId, head,
+				parentTitle);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByN_H_PNotFound() throws Exception {
+		addWikiPage();
+
+		long nodeId = ServiceTestUtil.nextLong();
+
+		boolean head = ServiceTestUtil.randomBoolean();
+
+		String parentTitle = ServiceTestUtil.randomString();
+
+		List<WikiPage> wikiPages = _persistence.findByN_H_P(nodeId, head,
+				parentTitle);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByN_H_PStartEnd() throws Exception {
+		testFindByN_H_PStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByN_H_PStartEndWrongRange() throws Exception {
+		testFindByN_H_PStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByN_H_PStartEndZeroZero() throws Exception {
+		testFindByN_H_PStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByN_H_PStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		boolean head = wikiPage.getHead();
+
+		String parentTitle = wikiPage.getParentTitle();
+
+		List<WikiPage> wikiPages = _persistence.findByN_H_P(nodeId, head,
+				parentTitle, start, end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByN_H_S() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		boolean head = wikiPage.getHead();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByN_H_S(nodeId, head, status);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByN_H_SNotFound() throws Exception {
+		addWikiPage();
+
+		long nodeId = ServiceTestUtil.nextLong();
+
+		boolean head = ServiceTestUtil.randomBoolean();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<WikiPage> wikiPages = _persistence.findByN_H_S(nodeId, head, status);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByN_H_SStartEnd() throws Exception {
+		testFindByN_H_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByN_H_SStartEndWrongRange() throws Exception {
+		testFindByN_H_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByN_H_SStartEndZeroZero() throws Exception {
+		testFindByN_H_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByN_H_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		boolean head = wikiPage.getHead();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByN_H_S(nodeId, head,
+				status, start, end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByN_H_NotS() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		boolean head = wikiPage.getHead();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByN_H_NotS(nodeId, head,
+				status);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByN_H_NotSNotFound() throws Exception {
+		addWikiPage();
+
+		long nodeId = ServiceTestUtil.nextLong();
+
+		boolean head = ServiceTestUtil.randomBoolean();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<WikiPage> wikiPages = _persistence.findByN_H_NotS(nodeId, head,
+				status);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByN_H_NotSStartEnd() throws Exception {
+		testFindByN_H_NotSStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByN_H_NotSStartEndWrongRange()
+		throws Exception {
+		testFindByN_H_NotSStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByN_H_NotSStartEndZeroZero() throws Exception {
+		testFindByN_H_NotSStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByN_H_NotSStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		boolean head = wikiPage.getHead();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByN_H_NotS(nodeId, head,
+				status, start, end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByG_U_N_S() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long groupId = wikiPage.getGroupId();
+
+		long userId = wikiPage.getUserId();
+
+		long nodeId = wikiPage.getNodeId();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByG_U_N_S(groupId, userId,
+				nodeId, status);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_U_N_SNotFound() throws Exception {
+		addWikiPage();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		long nodeId = ServiceTestUtil.nextLong();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<WikiPage> wikiPages = _persistence.findByG_U_N_S(groupId, userId,
+				nodeId, status);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByG_U_N_SStartEnd() throws Exception {
+		testFindByG_U_N_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_U_N_SStartEndWrongRange() throws Exception {
+		testFindByG_U_N_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_U_N_SStartEndZeroZero() throws Exception {
+		testFindByG_U_N_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_U_N_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long groupId = wikiPage.getGroupId();
+
+		long userId = wikiPage.getUserId();
+
+		long nodeId = wikiPage.getNodeId();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByG_U_N_S(groupId, userId,
+				nodeId, status, start, end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByG_N_T_H() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long groupId = wikiPage.getGroupId();
+
+		long nodeId = wikiPage.getNodeId();
+
+		String title = wikiPage.getTitle();
+
+		boolean head = wikiPage.getHead();
+
+		List<WikiPage> wikiPages = _persistence.findByG_N_T_H(groupId, nodeId,
+				title, head);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_N_T_HNotFound() throws Exception {
+		addWikiPage();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		long nodeId = ServiceTestUtil.nextLong();
+
+		String title = ServiceTestUtil.randomString();
+
+		boolean head = ServiceTestUtil.randomBoolean();
+
+		List<WikiPage> wikiPages = _persistence.findByG_N_T_H(groupId, nodeId,
+				title, head);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByG_N_T_HStartEnd() throws Exception {
+		testFindByG_N_T_HStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_N_T_HStartEndWrongRange() throws Exception {
+		testFindByG_N_T_HStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_N_T_HStartEndZeroZero() throws Exception {
+		testFindByG_N_T_HStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_N_T_HStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long groupId = wikiPage.getGroupId();
+
+		long nodeId = wikiPage.getNodeId();
+
+		String title = wikiPage.getTitle();
+
+		boolean head = wikiPage.getHead();
+
+		List<WikiPage> wikiPages = _persistence.findByG_N_T_H(groupId, nodeId,
+				title, head, start, end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByG_N_H_S() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long groupId = wikiPage.getGroupId();
+
+		long nodeId = wikiPage.getNodeId();
+
+		boolean head = wikiPage.getHead();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByG_N_H_S(groupId, nodeId,
+				head, status);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_N_H_SNotFound() throws Exception {
+		addWikiPage();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		long nodeId = ServiceTestUtil.nextLong();
+
+		boolean head = ServiceTestUtil.randomBoolean();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<WikiPage> wikiPages = _persistence.findByG_N_H_S(groupId, nodeId,
+				head, status);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByG_N_H_SStartEnd() throws Exception {
+		testFindByG_N_H_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_N_H_SStartEndWrongRange() throws Exception {
+		testFindByG_N_H_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_N_H_SStartEndZeroZero() throws Exception {
+		testFindByG_N_H_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_N_H_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long groupId = wikiPage.getGroupId();
+
+		long nodeId = wikiPage.getNodeId();
+
+		boolean head = wikiPage.getHead();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByG_N_H_S(groupId, nodeId,
+				head, status, start, end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByN_H_P_S() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		boolean head = wikiPage.getHead();
+
+		String parentTitle = wikiPage.getParentTitle();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByN_H_P_S(nodeId, head,
+				parentTitle, status);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByN_H_P_SNotFound() throws Exception {
+		addWikiPage();
+
+		long nodeId = ServiceTestUtil.nextLong();
+
+		boolean head = ServiceTestUtil.randomBoolean();
+
+		String parentTitle = ServiceTestUtil.randomString();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<WikiPage> wikiPages = _persistence.findByN_H_P_S(nodeId, head,
+				parentTitle, status);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByN_H_P_SStartEnd() throws Exception {
+		testFindByN_H_P_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByN_H_P_SStartEndWrongRange() throws Exception {
+		testFindByN_H_P_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByN_H_P_SStartEndZeroZero() throws Exception {
+		testFindByN_H_P_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByN_H_P_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		boolean head = wikiPage.getHead();
+
+		String parentTitle = wikiPage.getParentTitle();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByN_H_P_S(nodeId, head,
+				parentTitle, status, start, end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByN_H_P_NotS() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		boolean head = wikiPage.getHead();
+
+		String parentTitle = wikiPage.getParentTitle();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByN_H_P_NotS(nodeId, head,
+				parentTitle, status);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByN_H_P_NotSNotFound() throws Exception {
+		addWikiPage();
+
+		long nodeId = ServiceTestUtil.nextLong();
+
+		boolean head = ServiceTestUtil.randomBoolean();
+
+		String parentTitle = ServiceTestUtil.randomString();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<WikiPage> wikiPages = _persistence.findByN_H_P_NotS(nodeId, head,
+				parentTitle, status);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByN_H_P_NotSStartEnd() throws Exception {
+		testFindByN_H_P_NotSStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByN_H_P_NotSStartEndWrongRange()
+		throws Exception {
+		testFindByN_H_P_NotSStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByN_H_P_NotSStartEndZeroZero()
+		throws Exception {
+		testFindByN_H_P_NotSStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByN_H_P_NotSStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		boolean head = wikiPage.getHead();
+
+		String parentTitle = wikiPage.getParentTitle();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByN_H_P_NotS(nodeId, head,
+				parentTitle, status, start, end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByN_H_R_S() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		boolean head = wikiPage.getHead();
+
+		String redirectTitle = wikiPage.getRedirectTitle();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByN_H_R_S(nodeId, head,
+				redirectTitle, status);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByN_H_R_SNotFound() throws Exception {
+		addWikiPage();
+
+		long nodeId = ServiceTestUtil.nextLong();
+
+		boolean head = ServiceTestUtil.randomBoolean();
+
+		String redirectTitle = ServiceTestUtil.randomString();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<WikiPage> wikiPages = _persistence.findByN_H_R_S(nodeId, head,
+				redirectTitle, status);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByN_H_R_SStartEnd() throws Exception {
+		testFindByN_H_R_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByN_H_R_SStartEndWrongRange() throws Exception {
+		testFindByN_H_R_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByN_H_R_SStartEndZeroZero() throws Exception {
+		testFindByN_H_R_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByN_H_R_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		boolean head = wikiPage.getHead();
+
+		String redirectTitle = wikiPage.getRedirectTitle();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByN_H_R_S(nodeId, head,
+				redirectTitle, status, start, end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByN_H_R_NotS() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		boolean head = wikiPage.getHead();
+
+		String redirectTitle = wikiPage.getRedirectTitle();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByN_H_R_NotS(nodeId, head,
+				redirectTitle, status);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByN_H_R_NotSNotFound() throws Exception {
+		addWikiPage();
+
+		long nodeId = ServiceTestUtil.nextLong();
+
+		boolean head = ServiceTestUtil.randomBoolean();
+
+		String redirectTitle = ServiceTestUtil.randomString();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<WikiPage> wikiPages = _persistence.findByN_H_R_NotS(nodeId, head,
+				redirectTitle, status);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByN_H_R_NotSStartEnd() throws Exception {
+		testFindByN_H_R_NotSStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByN_H_R_NotSStartEndWrongRange()
+		throws Exception {
+		testFindByN_H_R_NotSStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByN_H_R_NotSStartEndZeroZero()
+		throws Exception {
+		testFindByN_H_R_NotSStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByN_H_R_NotSStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long nodeId = wikiPage.getNodeId();
+
+		boolean head = wikiPage.getHead();
+
+		String redirectTitle = wikiPage.getRedirectTitle();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByN_H_R_NotS(nodeId, head,
+				redirectTitle, status, start, end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByG_N_H_P_S() throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long groupId = wikiPage.getGroupId();
+
+		long nodeId = wikiPage.getNodeId();
+
+		boolean head = wikiPage.getHead();
+
+		String parentTitle = wikiPage.getParentTitle();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByG_N_H_P_S(groupId,
+				nodeId, head, parentTitle, status);
+
+		Assert.assertEquals(1, wikiPages.size());
+
+		Assert.assertEquals(wikiPage.getPrimaryKey(),
+			wikiPages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_N_H_P_SNotFound() throws Exception {
+		addWikiPage();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		long nodeId = ServiceTestUtil.nextLong();
+
+		boolean head = ServiceTestUtil.randomBoolean();
+
+		String parentTitle = ServiceTestUtil.randomString();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<WikiPage> wikiPages = _persistence.findByG_N_H_P_S(groupId,
+				nodeId, head, parentTitle, status);
+
+		Assert.assertEquals(0, wikiPages.size());
+	}
+
+	@Test
+	public void testFindByG_N_H_P_SStartEnd() throws Exception {
+		testFindByG_N_H_P_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_N_H_P_SStartEndWrongRange()
+		throws Exception {
+		testFindByG_N_H_P_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_N_H_P_SStartEndZeroZero() throws Exception {
+		testFindByG_N_H_P_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_N_H_P_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPage wikiPage = addWikiPage();
+
+		long groupId = wikiPage.getGroupId();
+
+		long nodeId = wikiPage.getNodeId();
+
+		boolean head = wikiPage.getHead();
+
+		String parentTitle = wikiPage.getParentTitle();
+
+		int status = wikiPage.getStatus();
+
+		List<WikiPage> wikiPages = _persistence.findByG_N_H_P_S(groupId,
+				nodeId, head, parentTitle, status, start, end);
+
+		Assert.assertEquals(expected, wikiPages.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("WikiPage", "uuid", true,
 			"pageId", true, "resourcePrimKey", true, "groupId", true,

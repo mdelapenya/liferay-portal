@@ -185,6 +185,177 @@ public class JournalArticleImagePersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByGroupId() throws Exception {
+		JournalArticleImage journalArticleImage = addJournalArticleImage();
+
+		long groupId = journalArticleImage.getGroupId();
+
+		List<JournalArticleImage> journalArticleImages = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(1, journalArticleImages.size());
+
+		Assert.assertEquals(journalArticleImage.getPrimaryKey(),
+			journalArticleImages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByGroupIdNotFound() throws Exception {
+		addJournalArticleImage();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		List<JournalArticleImage> journalArticleImages = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(0, journalArticleImages.size());
+	}
+
+	@Test
+	public void testFindByGroupIdStartEnd() throws Exception {
+		testFindByGroupIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndWrongRange() throws Exception {
+		testFindByGroupIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndZeroZero() throws Exception {
+		testFindByGroupIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByGroupIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		JournalArticleImage journalArticleImage = addJournalArticleImage();
+
+		long groupId = journalArticleImage.getGroupId();
+
+		List<JournalArticleImage> journalArticleImages = _persistence.findByGroupId(groupId,
+				start, end);
+
+		Assert.assertEquals(expected, journalArticleImages.size());
+	}
+
+	@Test
+	public void testFindByTempImage() throws Exception {
+		JournalArticleImage journalArticleImage = addJournalArticleImage();
+
+		boolean tempImage = journalArticleImage.getTempImage();
+
+		List<JournalArticleImage> journalArticleImages = _persistence.findByTempImage(tempImage);
+
+		Assert.assertEquals(1, journalArticleImages.size());
+
+		Assert.assertEquals(journalArticleImage.getPrimaryKey(),
+			journalArticleImages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByTempImageNotFound() throws Exception {
+		addJournalArticleImage();
+
+		boolean tempImage = ServiceTestUtil.randomBoolean();
+
+		List<JournalArticleImage> journalArticleImages = _persistence.findByTempImage(tempImage);
+
+		Assert.assertEquals(0, journalArticleImages.size());
+	}
+
+	@Test
+	public void testFindByTempImageStartEnd() throws Exception {
+		testFindByTempImageStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByTempImageStartEndWrongRange()
+		throws Exception {
+		testFindByTempImageStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByTempImageStartEndZeroZero() throws Exception {
+		testFindByTempImageStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByTempImageStartEnd(int start, int end, int expected)
+		throws Exception {
+		JournalArticleImage journalArticleImage = addJournalArticleImage();
+
+		boolean tempImage = journalArticleImage.getTempImage();
+
+		List<JournalArticleImage> journalArticleImages = _persistence.findByTempImage(tempImage,
+				start, end);
+
+		Assert.assertEquals(expected, journalArticleImages.size());
+	}
+
+	@Test
+	public void testFindByG_A_V() throws Exception {
+		JournalArticleImage journalArticleImage = addJournalArticleImage();
+
+		long groupId = journalArticleImage.getGroupId();
+
+		String articleId = journalArticleImage.getArticleId();
+
+		double version = journalArticleImage.getVersion();
+
+		List<JournalArticleImage> journalArticleImages = _persistence.findByG_A_V(groupId,
+				articleId, version);
+
+		Assert.assertEquals(1, journalArticleImages.size());
+
+		Assert.assertEquals(journalArticleImage.getPrimaryKey(),
+			journalArticleImages.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_A_VNotFound() throws Exception {
+		addJournalArticleImage();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		String articleId = ServiceTestUtil.randomString();
+
+		double version = ServiceTestUtil.nextDouble();
+
+		List<JournalArticleImage> journalArticleImages = _persistence.findByG_A_V(groupId,
+				articleId, version);
+
+		Assert.assertEquals(0, journalArticleImages.size());
+	}
+
+	@Test
+	public void testFindByG_A_VStartEnd() throws Exception {
+		testFindByG_A_VStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_A_VStartEndWrongRange() throws Exception {
+		testFindByG_A_VStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_A_VStartEndZeroZero() throws Exception {
+		testFindByG_A_VStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_A_VStartEnd(int start, int end, int expected)
+		throws Exception {
+		JournalArticleImage journalArticleImage = addJournalArticleImage();
+
+		long groupId = journalArticleImage.getGroupId();
+
+		String articleId = journalArticleImage.getArticleId();
+
+		double version = journalArticleImage.getVersion();
+
+		List<JournalArticleImage> journalArticleImages = _persistence.findByG_A_V(groupId,
+				articleId, version, start, end);
+
+		Assert.assertEquals(expected, journalArticleImages.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("JournalArticleImage",
 			"articleImageId", true, "groupId", true, "articleId", true,

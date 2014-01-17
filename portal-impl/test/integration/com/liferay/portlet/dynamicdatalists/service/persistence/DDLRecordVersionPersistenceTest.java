@@ -213,6 +213,119 @@ public class DDLRecordVersionPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByRecordId() throws Exception {
+		DDLRecordVersion ddlRecordVersion = addDDLRecordVersion();
+
+		long recordId = ddlRecordVersion.getRecordId();
+
+		List<DDLRecordVersion> ddlRecordVersions = _persistence.findByRecordId(recordId);
+
+		Assert.assertEquals(1, ddlRecordVersions.size());
+
+		Assert.assertEquals(ddlRecordVersion.getPrimaryKey(),
+			ddlRecordVersions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByRecordIdNotFound() throws Exception {
+		addDDLRecordVersion();
+
+		long recordId = ServiceTestUtil.nextLong();
+
+		List<DDLRecordVersion> ddlRecordVersions = _persistence.findByRecordId(recordId);
+
+		Assert.assertEquals(0, ddlRecordVersions.size());
+	}
+
+	@Test
+	public void testFindByRecordIdStartEnd() throws Exception {
+		testFindByRecordIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByRecordIdStartEndWrongRange()
+		throws Exception {
+		testFindByRecordIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByRecordIdStartEndZeroZero() throws Exception {
+		testFindByRecordIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByRecordIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		DDLRecordVersion ddlRecordVersion = addDDLRecordVersion();
+
+		long recordId = ddlRecordVersion.getRecordId();
+
+		List<DDLRecordVersion> ddlRecordVersions = _persistence.findByRecordId(recordId,
+				start, end);
+
+		Assert.assertEquals(expected, ddlRecordVersions.size());
+	}
+
+	@Test
+	public void testFindByR_S() throws Exception {
+		DDLRecordVersion ddlRecordVersion = addDDLRecordVersion();
+
+		long recordId = ddlRecordVersion.getRecordId();
+
+		int status = ddlRecordVersion.getStatus();
+
+		List<DDLRecordVersion> ddlRecordVersions = _persistence.findByR_S(recordId,
+				status);
+
+		Assert.assertEquals(1, ddlRecordVersions.size());
+
+		Assert.assertEquals(ddlRecordVersion.getPrimaryKey(),
+			ddlRecordVersions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByR_SNotFound() throws Exception {
+		addDDLRecordVersion();
+
+		long recordId = ServiceTestUtil.nextLong();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<DDLRecordVersion> ddlRecordVersions = _persistence.findByR_S(recordId,
+				status);
+
+		Assert.assertEquals(0, ddlRecordVersions.size());
+	}
+
+	@Test
+	public void testFindByR_SStartEnd() throws Exception {
+		testFindByR_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByR_SStartEndWrongRange() throws Exception {
+		testFindByR_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByR_SStartEndZeroZero() throws Exception {
+		testFindByR_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByR_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		DDLRecordVersion ddlRecordVersion = addDDLRecordVersion();
+
+		long recordId = ddlRecordVersion.getRecordId();
+
+		int status = ddlRecordVersion.getStatus();
+
+		List<DDLRecordVersion> ddlRecordVersions = _persistence.findByR_S(recordId,
+				status, start, end);
+
+		Assert.assertEquals(expected, ddlRecordVersions.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("DDLRecordVersion",
 			"recordVersionId", true, "groupId", true, "companyId", true,

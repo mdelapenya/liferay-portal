@@ -259,6 +259,170 @@ public class MBMailingListPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		MBMailingList mbMailingList = addMBMailingList();
+
+		String uuid = mbMailingList.getUuid();
+
+		List<MBMailingList> mbMailingLists = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, mbMailingLists.size());
+
+		Assert.assertEquals(mbMailingList.getPrimaryKey(),
+			mbMailingLists.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addMBMailingList();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<MBMailingList> mbMailingLists = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, mbMailingLists.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		MBMailingList mbMailingList = addMBMailingList();
+
+		String uuid = mbMailingList.getUuid();
+
+		List<MBMailingList> mbMailingLists = _persistence.findByUuid(uuid,
+				start, end);
+
+		Assert.assertEquals(expected, mbMailingLists.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		MBMailingList mbMailingList = addMBMailingList();
+
+		String uuid = mbMailingList.getUuid();
+
+		long companyId = mbMailingList.getCompanyId();
+
+		List<MBMailingList> mbMailingLists = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(1, mbMailingLists.size());
+
+		Assert.assertEquals(mbMailingList.getPrimaryKey(),
+			mbMailingLists.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addMBMailingList();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<MBMailingList> mbMailingLists = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(0, mbMailingLists.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		MBMailingList mbMailingList = addMBMailingList();
+
+		String uuid = mbMailingList.getUuid();
+
+		long companyId = mbMailingList.getCompanyId();
+
+		List<MBMailingList> mbMailingLists = _persistence.findByUuid_C(uuid,
+				companyId, start, end);
+
+		Assert.assertEquals(expected, mbMailingLists.size());
+	}
+
+	@Test
+	public void testFindByActive() throws Exception {
+		MBMailingList mbMailingList = addMBMailingList();
+
+		boolean active = mbMailingList.getActive();
+
+		List<MBMailingList> mbMailingLists = _persistence.findByActive(active);
+
+		Assert.assertEquals(1, mbMailingLists.size());
+
+		Assert.assertEquals(mbMailingList.getPrimaryKey(),
+			mbMailingLists.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByActiveNotFound() throws Exception {
+		addMBMailingList();
+
+		boolean active = ServiceTestUtil.randomBoolean();
+
+		List<MBMailingList> mbMailingLists = _persistence.findByActive(active);
+
+		Assert.assertEquals(0, mbMailingLists.size());
+	}
+
+	@Test
+	public void testFindByActiveStartEnd() throws Exception {
+		testFindByActiveStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByActiveStartEndWrongRange() throws Exception {
+		testFindByActiveStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByActiveStartEndZeroZero() throws Exception {
+		testFindByActiveStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByActiveStartEnd(int start, int end, int expected)
+		throws Exception {
+		MBMailingList mbMailingList = addMBMailingList();
+
+		boolean active = mbMailingList.getActive();
+
+		List<MBMailingList> mbMailingLists = _persistence.findByActive(active,
+				start, end);
+
+		Assert.assertEquals(expected, mbMailingLists.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("MBMailingList", "uuid",
 			true, "mailingListId", true, "groupId", true, "companyId", true,

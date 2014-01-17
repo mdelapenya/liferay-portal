@@ -182,6 +182,467 @@ public class ExpandoValuePersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByTableId() throws Exception {
+		ExpandoValue expandoValue = addExpandoValue();
+
+		long tableId = expandoValue.getTableId();
+
+		List<ExpandoValue> expandoValues = _persistence.findByTableId(tableId);
+
+		Assert.assertEquals(1, expandoValues.size());
+
+		Assert.assertEquals(expandoValue.getPrimaryKey(),
+			expandoValues.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByTableIdNotFound() throws Exception {
+		addExpandoValue();
+
+		long tableId = ServiceTestUtil.nextLong();
+
+		List<ExpandoValue> expandoValues = _persistence.findByTableId(tableId);
+
+		Assert.assertEquals(0, expandoValues.size());
+	}
+
+	@Test
+	public void testFindByTableIdStartEnd() throws Exception {
+		testFindByTableIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByTableIdStartEndWrongRange() throws Exception {
+		testFindByTableIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByTableIdStartEndZeroZero() throws Exception {
+		testFindByTableIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByTableIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		ExpandoValue expandoValue = addExpandoValue();
+
+		long tableId = expandoValue.getTableId();
+
+		List<ExpandoValue> expandoValues = _persistence.findByTableId(tableId,
+				start, end);
+
+		Assert.assertEquals(expected, expandoValues.size());
+	}
+
+	@Test
+	public void testFindByColumnId() throws Exception {
+		ExpandoValue expandoValue = addExpandoValue();
+
+		long columnId = expandoValue.getColumnId();
+
+		List<ExpandoValue> expandoValues = _persistence.findByColumnId(columnId);
+
+		Assert.assertEquals(1, expandoValues.size());
+
+		Assert.assertEquals(expandoValue.getPrimaryKey(),
+			expandoValues.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByColumnIdNotFound() throws Exception {
+		addExpandoValue();
+
+		long columnId = ServiceTestUtil.nextLong();
+
+		List<ExpandoValue> expandoValues = _persistence.findByColumnId(columnId);
+
+		Assert.assertEquals(0, expandoValues.size());
+	}
+
+	@Test
+	public void testFindByColumnIdStartEnd() throws Exception {
+		testFindByColumnIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByColumnIdStartEndWrongRange()
+		throws Exception {
+		testFindByColumnIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByColumnIdStartEndZeroZero() throws Exception {
+		testFindByColumnIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByColumnIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		ExpandoValue expandoValue = addExpandoValue();
+
+		long columnId = expandoValue.getColumnId();
+
+		List<ExpandoValue> expandoValues = _persistence.findByColumnId(columnId,
+				start, end);
+
+		Assert.assertEquals(expected, expandoValues.size());
+	}
+
+	@Test
+	public void testFindByRowId() throws Exception {
+		ExpandoValue expandoValue = addExpandoValue();
+
+		long rowId = expandoValue.getRowId();
+
+		List<ExpandoValue> expandoValues = _persistence.findByRowId(rowId);
+
+		Assert.assertEquals(1, expandoValues.size());
+
+		Assert.assertEquals(expandoValue.getPrimaryKey(),
+			expandoValues.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByRowIdNotFound() throws Exception {
+		addExpandoValue();
+
+		long rowId = ServiceTestUtil.nextLong();
+
+		List<ExpandoValue> expandoValues = _persistence.findByRowId(rowId);
+
+		Assert.assertEquals(0, expandoValues.size());
+	}
+
+	@Test
+	public void testFindByRowIdStartEnd() throws Exception {
+		testFindByRowIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByRowIdStartEndWrongRange() throws Exception {
+		testFindByRowIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByRowIdStartEndZeroZero() throws Exception {
+		testFindByRowIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByRowIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		ExpandoValue expandoValue = addExpandoValue();
+
+		long rowId = expandoValue.getRowId();
+
+		List<ExpandoValue> expandoValues = _persistence.findByRowId(rowId,
+				start, end);
+
+		Assert.assertEquals(expected, expandoValues.size());
+	}
+
+	@Test
+	public void testFindByT_C() throws Exception {
+		ExpandoValue expandoValue = addExpandoValue();
+
+		long tableId = expandoValue.getTableId();
+
+		long columnId = expandoValue.getColumnId();
+
+		List<ExpandoValue> expandoValues = _persistence.findByT_C(tableId,
+				columnId);
+
+		Assert.assertEquals(1, expandoValues.size());
+
+		Assert.assertEquals(expandoValue.getPrimaryKey(),
+			expandoValues.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByT_CNotFound() throws Exception {
+		addExpandoValue();
+
+		long tableId = ServiceTestUtil.nextLong();
+
+		long columnId = ServiceTestUtil.nextLong();
+
+		List<ExpandoValue> expandoValues = _persistence.findByT_C(tableId,
+				columnId);
+
+		Assert.assertEquals(0, expandoValues.size());
+	}
+
+	@Test
+	public void testFindByT_CStartEnd() throws Exception {
+		testFindByT_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByT_CStartEndWrongRange() throws Exception {
+		testFindByT_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByT_CStartEndZeroZero() throws Exception {
+		testFindByT_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByT_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		ExpandoValue expandoValue = addExpandoValue();
+
+		long tableId = expandoValue.getTableId();
+
+		long columnId = expandoValue.getColumnId();
+
+		List<ExpandoValue> expandoValues = _persistence.findByT_C(tableId,
+				columnId, start, end);
+
+		Assert.assertEquals(expected, expandoValues.size());
+	}
+
+	@Test
+	public void testFindByT_CPK() throws Exception {
+		ExpandoValue expandoValue = addExpandoValue();
+
+		long tableId = expandoValue.getTableId();
+
+		long classPK = expandoValue.getClassPK();
+
+		List<ExpandoValue> expandoValues = _persistence.findByT_CPK(tableId,
+				classPK);
+
+		Assert.assertEquals(1, expandoValues.size());
+
+		Assert.assertEquals(expandoValue.getPrimaryKey(),
+			expandoValues.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByT_CPKNotFound() throws Exception {
+		addExpandoValue();
+
+		long tableId = ServiceTestUtil.nextLong();
+
+		long classPK = ServiceTestUtil.nextLong();
+
+		List<ExpandoValue> expandoValues = _persistence.findByT_CPK(tableId,
+				classPK);
+
+		Assert.assertEquals(0, expandoValues.size());
+	}
+
+	@Test
+	public void testFindByT_CPKStartEnd() throws Exception {
+		testFindByT_CPKStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByT_CPKStartEndWrongRange() throws Exception {
+		testFindByT_CPKStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByT_CPKStartEndZeroZero() throws Exception {
+		testFindByT_CPKStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByT_CPKStartEnd(int start, int end, int expected)
+		throws Exception {
+		ExpandoValue expandoValue = addExpandoValue();
+
+		long tableId = expandoValue.getTableId();
+
+		long classPK = expandoValue.getClassPK();
+
+		List<ExpandoValue> expandoValues = _persistence.findByT_CPK(tableId,
+				classPK, start, end);
+
+		Assert.assertEquals(expected, expandoValues.size());
+	}
+
+	@Test
+	public void testFindByT_R() throws Exception {
+		ExpandoValue expandoValue = addExpandoValue();
+
+		long tableId = expandoValue.getTableId();
+
+		long rowId = expandoValue.getRowId();
+
+		List<ExpandoValue> expandoValues = _persistence.findByT_R(tableId, rowId);
+
+		Assert.assertEquals(1, expandoValues.size());
+
+		Assert.assertEquals(expandoValue.getPrimaryKey(),
+			expandoValues.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByT_RNotFound() throws Exception {
+		addExpandoValue();
+
+		long tableId = ServiceTestUtil.nextLong();
+
+		long rowId = ServiceTestUtil.nextLong();
+
+		List<ExpandoValue> expandoValues = _persistence.findByT_R(tableId, rowId);
+
+		Assert.assertEquals(0, expandoValues.size());
+	}
+
+	@Test
+	public void testFindByT_RStartEnd() throws Exception {
+		testFindByT_RStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByT_RStartEndWrongRange() throws Exception {
+		testFindByT_RStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByT_RStartEndZeroZero() throws Exception {
+		testFindByT_RStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByT_RStartEnd(int start, int end, int expected)
+		throws Exception {
+		ExpandoValue expandoValue = addExpandoValue();
+
+		long tableId = expandoValue.getTableId();
+
+		long rowId = expandoValue.getRowId();
+
+		List<ExpandoValue> expandoValues = _persistence.findByT_R(tableId,
+				rowId, start, end);
+
+		Assert.assertEquals(expected, expandoValues.size());
+	}
+
+	@Test
+	public void testFindByC_C() throws Exception {
+		ExpandoValue expandoValue = addExpandoValue();
+
+		long classNameId = expandoValue.getClassNameId();
+
+		long classPK = expandoValue.getClassPK();
+
+		List<ExpandoValue> expandoValues = _persistence.findByC_C(classNameId,
+				classPK);
+
+		Assert.assertEquals(1, expandoValues.size());
+
+		Assert.assertEquals(expandoValue.getPrimaryKey(),
+			expandoValues.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_CNotFound() throws Exception {
+		addExpandoValue();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		long classPK = ServiceTestUtil.nextLong();
+
+		List<ExpandoValue> expandoValues = _persistence.findByC_C(classNameId,
+				classPK);
+
+		Assert.assertEquals(0, expandoValues.size());
+	}
+
+	@Test
+	public void testFindByC_CStartEnd() throws Exception {
+		testFindByC_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_CStartEndWrongRange() throws Exception {
+		testFindByC_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_CStartEndZeroZero() throws Exception {
+		testFindByC_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		ExpandoValue expandoValue = addExpandoValue();
+
+		long classNameId = expandoValue.getClassNameId();
+
+		long classPK = expandoValue.getClassPK();
+
+		List<ExpandoValue> expandoValues = _persistence.findByC_C(classNameId,
+				classPK, start, end);
+
+		Assert.assertEquals(expected, expandoValues.size());
+	}
+
+	@Test
+	public void testFindByT_C_D() throws Exception {
+		ExpandoValue expandoValue = addExpandoValue();
+
+		long tableId = expandoValue.getTableId();
+
+		long columnId = expandoValue.getColumnId();
+
+		String data = expandoValue.getData();
+
+		List<ExpandoValue> expandoValues = _persistence.findByT_C_D(tableId,
+				columnId, data);
+
+		Assert.assertEquals(1, expandoValues.size());
+
+		Assert.assertEquals(expandoValue.getPrimaryKey(),
+			expandoValues.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByT_C_DNotFound() throws Exception {
+		addExpandoValue();
+
+		long tableId = ServiceTestUtil.nextLong();
+
+		long columnId = ServiceTestUtil.nextLong();
+
+		String data = ServiceTestUtil.randomString();
+
+		List<ExpandoValue> expandoValues = _persistence.findByT_C_D(tableId,
+				columnId, data);
+
+		Assert.assertEquals(0, expandoValues.size());
+	}
+
+	@Test
+	public void testFindByT_C_DStartEnd() throws Exception {
+		testFindByT_C_DStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByT_C_DStartEndWrongRange() throws Exception {
+		testFindByT_C_DStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByT_C_DStartEndZeroZero() throws Exception {
+		testFindByT_C_DStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByT_C_DStartEnd(int start, int end, int expected)
+		throws Exception {
+		ExpandoValue expandoValue = addExpandoValue();
+
+		long tableId = expandoValue.getTableId();
+
+		long columnId = expandoValue.getColumnId();
+
+		String data = expandoValue.getData();
+
+		List<ExpandoValue> expandoValues = _persistence.findByT_C_D(tableId,
+				columnId, data, start, end);
+
+		Assert.assertEquals(expected, expandoValues.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("ExpandoValue", "valueId",
 			true, "companyId", true, "tableId", true, "columnId", true,

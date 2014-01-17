@@ -175,6 +175,132 @@ public class ResourceBlockPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByC_N() throws Exception {
+		ResourceBlock resourceBlock = addResourceBlock();
+
+		long companyId = resourceBlock.getCompanyId();
+
+		String name = resourceBlock.getName();
+
+		List<ResourceBlock> resourceBlocks = _persistence.findByC_N(companyId,
+				name);
+
+		Assert.assertEquals(1, resourceBlocks.size());
+
+		Assert.assertEquals(resourceBlock.getPrimaryKey(),
+			resourceBlocks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_NNotFound() throws Exception {
+		addResourceBlock();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		String name = ServiceTestUtil.randomString();
+
+		List<ResourceBlock> resourceBlocks = _persistence.findByC_N(companyId,
+				name);
+
+		Assert.assertEquals(0, resourceBlocks.size());
+	}
+
+	@Test
+	public void testFindByC_NStartEnd() throws Exception {
+		testFindByC_NStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_NStartEndWrongRange() throws Exception {
+		testFindByC_NStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_NStartEndZeroZero() throws Exception {
+		testFindByC_NStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_NStartEnd(int start, int end, int expected)
+		throws Exception {
+		ResourceBlock resourceBlock = addResourceBlock();
+
+		long companyId = resourceBlock.getCompanyId();
+
+		String name = resourceBlock.getName();
+
+		List<ResourceBlock> resourceBlocks = _persistence.findByC_N(companyId,
+				name, start, end);
+
+		Assert.assertEquals(expected, resourceBlocks.size());
+	}
+
+	@Test
+	public void testFindByC_G_N() throws Exception {
+		ResourceBlock resourceBlock = addResourceBlock();
+
+		long companyId = resourceBlock.getCompanyId();
+
+		long groupId = resourceBlock.getGroupId();
+
+		String name = resourceBlock.getName();
+
+		List<ResourceBlock> resourceBlocks = _persistence.findByC_G_N(companyId,
+				groupId, name);
+
+		Assert.assertEquals(1, resourceBlocks.size());
+
+		Assert.assertEquals(resourceBlock.getPrimaryKey(),
+			resourceBlocks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_G_NNotFound() throws Exception {
+		addResourceBlock();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		String name = ServiceTestUtil.randomString();
+
+		List<ResourceBlock> resourceBlocks = _persistence.findByC_G_N(companyId,
+				groupId, name);
+
+		Assert.assertEquals(0, resourceBlocks.size());
+	}
+
+	@Test
+	public void testFindByC_G_NStartEnd() throws Exception {
+		testFindByC_G_NStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_G_NStartEndWrongRange() throws Exception {
+		testFindByC_G_NStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_G_NStartEndZeroZero() throws Exception {
+		testFindByC_G_NStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_G_NStartEnd(int start, int end, int expected)
+		throws Exception {
+		ResourceBlock resourceBlock = addResourceBlock();
+
+		long companyId = resourceBlock.getCompanyId();
+
+		long groupId = resourceBlock.getGroupId();
+
+		String name = resourceBlock.getName();
+
+		List<ResourceBlock> resourceBlocks = _persistence.findByC_G_N(companyId,
+				groupId, name, start, end);
+
+		Assert.assertEquals(expected, resourceBlocks.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("ResourceBlock",
 			"resourceBlockId", true, "companyId", true, "groupId", true,

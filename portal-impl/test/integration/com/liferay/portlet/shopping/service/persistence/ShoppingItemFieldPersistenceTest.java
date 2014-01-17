@@ -168,6 +168,58 @@ public class ShoppingItemFieldPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByItemId() throws Exception {
+		ShoppingItemField shoppingItemField = addShoppingItemField();
+
+		long itemId = shoppingItemField.getItemId();
+
+		List<ShoppingItemField> shoppingItemFields = _persistence.findByItemId(itemId);
+
+		Assert.assertEquals(1, shoppingItemFields.size());
+
+		Assert.assertEquals(shoppingItemField.getPrimaryKey(),
+			shoppingItemFields.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByItemIdNotFound() throws Exception {
+		addShoppingItemField();
+
+		long itemId = ServiceTestUtil.nextLong();
+
+		List<ShoppingItemField> shoppingItemFields = _persistence.findByItemId(itemId);
+
+		Assert.assertEquals(0, shoppingItemFields.size());
+	}
+
+	@Test
+	public void testFindByItemIdStartEnd() throws Exception {
+		testFindByItemIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByItemIdStartEndWrongRange() throws Exception {
+		testFindByItemIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByItemIdStartEndZeroZero() throws Exception {
+		testFindByItemIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByItemIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		ShoppingItemField shoppingItemField = addShoppingItemField();
+
+		long itemId = shoppingItemField.getItemId();
+
+		List<ShoppingItemField> shoppingItemFields = _persistence.findByItemId(itemId,
+				start, end);
+
+		Assert.assertEquals(expected, shoppingItemFields.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("ShoppingItemField",
 			"itemFieldId", true, "itemId", true, "name", true, "values", true,

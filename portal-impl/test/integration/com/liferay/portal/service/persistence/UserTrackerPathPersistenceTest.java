@@ -166,6 +166,60 @@ public class UserTrackerPathPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUserTrackerId() throws Exception {
+		UserTrackerPath userTrackerPath = addUserTrackerPath();
+
+		long userTrackerId = userTrackerPath.getUserTrackerId();
+
+		List<UserTrackerPath> userTrackerPaths = _persistence.findByUserTrackerId(userTrackerId);
+
+		Assert.assertEquals(1, userTrackerPaths.size());
+
+		Assert.assertEquals(userTrackerPath.getPrimaryKey(),
+			userTrackerPaths.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUserTrackerIdNotFound() throws Exception {
+		addUserTrackerPath();
+
+		long userTrackerId = ServiceTestUtil.nextLong();
+
+		List<UserTrackerPath> userTrackerPaths = _persistence.findByUserTrackerId(userTrackerId);
+
+		Assert.assertEquals(0, userTrackerPaths.size());
+	}
+
+	@Test
+	public void testFindByUserTrackerIdStartEnd() throws Exception {
+		testFindByUserTrackerIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUserTrackerIdStartEndWrongRange()
+		throws Exception {
+		testFindByUserTrackerIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUserTrackerIdStartEndZeroZero()
+		throws Exception {
+		testFindByUserTrackerIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUserTrackerIdStartEnd(int start, int end,
+		int expected) throws Exception {
+		UserTrackerPath userTrackerPath = addUserTrackerPath();
+
+		long userTrackerId = userTrackerPath.getUserTrackerId();
+
+		List<UserTrackerPath> userTrackerPaths = _persistence.findByUserTrackerId(userTrackerId,
+				start, end);
+
+		Assert.assertEquals(expected, userTrackerPaths.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("UserTrackerPath",
 			"userTrackerPathId", true, "userTrackerId", true, "path", true,

@@ -222,6 +222,410 @@ public class OrganizationPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		Organization organization = addOrganization();
+
+		String uuid = organization.getUuid();
+
+		List<Organization> organizations = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, organizations.size());
+
+		Assert.assertEquals(organization.getPrimaryKey(),
+			organizations.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addOrganization();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<Organization> organizations = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, organizations.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		Organization organization = addOrganization();
+
+		String uuid = organization.getUuid();
+
+		List<Organization> organizations = _persistence.findByUuid(uuid, start,
+				end);
+
+		Assert.assertEquals(expected, organizations.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		Organization organization = addOrganization();
+
+		String uuid = organization.getUuid();
+
+		long companyId = organization.getCompanyId();
+
+		List<Organization> organizations = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(1, organizations.size());
+
+		Assert.assertEquals(organization.getPrimaryKey(),
+			organizations.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addOrganization();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<Organization> organizations = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(0, organizations.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		Organization organization = addOrganization();
+
+		String uuid = organization.getUuid();
+
+		long companyId = organization.getCompanyId();
+
+		List<Organization> organizations = _persistence.findByUuid_C(uuid,
+				companyId, start, end);
+
+		Assert.assertEquals(expected, organizations.size());
+	}
+
+	@Test
+	public void testFindByCompanyId() throws Exception {
+		Organization organization = addOrganization();
+
+		long companyId = organization.getCompanyId();
+
+		List<Organization> organizations = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(1, organizations.size());
+
+		Assert.assertEquals(organization.getPrimaryKey(),
+			organizations.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByCompanyIdNotFound() throws Exception {
+		addOrganization();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<Organization> organizations = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(0, organizations.size());
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEnd() throws Exception {
+		testFindByCompanyIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndWrongRange()
+		throws Exception {
+		testFindByCompanyIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndZeroZero() throws Exception {
+		testFindByCompanyIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByCompanyIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		Organization organization = addOrganization();
+
+		long companyId = organization.getCompanyId();
+
+		List<Organization> organizations = _persistence.findByCompanyId(companyId,
+				start, end);
+
+		Assert.assertEquals(expected, organizations.size());
+	}
+
+	@Test
+	public void testFindByLocations() throws Exception {
+		Organization organization = addOrganization();
+
+		long companyId = organization.getCompanyId();
+
+		List<Organization> organizations = _persistence.findByLocations(companyId);
+
+		Assert.assertEquals(1, organizations.size());
+
+		Assert.assertEquals(organization.getPrimaryKey(),
+			organizations.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByLocationsNotFound() throws Exception {
+		addOrganization();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<Organization> organizations = _persistence.findByLocations(companyId);
+
+		Assert.assertEquals(0, organizations.size());
+	}
+
+	@Test
+	public void testFindByLocationsStartEnd() throws Exception {
+		testFindByLocationsStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByLocationsStartEndWrongRange()
+		throws Exception {
+		testFindByLocationsStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByLocationsStartEndZeroZero() throws Exception {
+		testFindByLocationsStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByLocationsStartEnd(int start, int end, int expected)
+		throws Exception {
+		Organization organization = addOrganization();
+
+		long companyId = organization.getCompanyId();
+
+		List<Organization> organizations = _persistence.findByLocations(companyId,
+				start, end);
+
+		Assert.assertEquals(expected, organizations.size());
+	}
+
+	@Test
+	public void testFindByC_P() throws Exception {
+		Organization organization = addOrganization();
+
+		long companyId = organization.getCompanyId();
+
+		long parentOrganizationId = organization.getParentOrganizationId();
+
+		List<Organization> organizations = _persistence.findByC_P(companyId,
+				parentOrganizationId);
+
+		Assert.assertEquals(1, organizations.size());
+
+		Assert.assertEquals(organization.getPrimaryKey(),
+			organizations.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_PNotFound() throws Exception {
+		addOrganization();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		long parentOrganizationId = ServiceTestUtil.nextLong();
+
+		List<Organization> organizations = _persistence.findByC_P(companyId,
+				parentOrganizationId);
+
+		Assert.assertEquals(0, organizations.size());
+	}
+
+	@Test
+	public void testFindByC_PStartEnd() throws Exception {
+		testFindByC_PStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_PStartEndWrongRange() throws Exception {
+		testFindByC_PStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_PStartEndZeroZero() throws Exception {
+		testFindByC_PStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_PStartEnd(int start, int end, int expected)
+		throws Exception {
+		Organization organization = addOrganization();
+
+		long companyId = organization.getCompanyId();
+
+		long parentOrganizationId = organization.getParentOrganizationId();
+
+		List<Organization> organizations = _persistence.findByC_P(companyId,
+				parentOrganizationId, start, end);
+
+		Assert.assertEquals(expected, organizations.size());
+	}
+
+	@Test
+	public void testFindByC_T() throws Exception {
+		Organization organization = addOrganization();
+
+		long companyId = organization.getCompanyId();
+
+		String treePath = organization.getTreePath();
+
+		List<Organization> organizations = _persistence.findByC_T(companyId,
+				treePath);
+
+		Assert.assertEquals(1, organizations.size());
+
+		Assert.assertEquals(organization.getPrimaryKey(),
+			organizations.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_TNotFound() throws Exception {
+		addOrganization();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		String treePath = ServiceTestUtil.randomString();
+
+		List<Organization> organizations = _persistence.findByC_T(companyId,
+				treePath);
+
+		Assert.assertEquals(0, organizations.size());
+	}
+
+	@Test
+	public void testFindByC_TStartEnd() throws Exception {
+		testFindByC_TStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_TStartEndWrongRange() throws Exception {
+		testFindByC_TStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_TStartEndZeroZero() throws Exception {
+		testFindByC_TStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_TStartEnd(int start, int end, int expected)
+		throws Exception {
+		Organization organization = addOrganization();
+
+		long companyId = organization.getCompanyId();
+
+		String treePath = organization.getTreePath();
+
+		List<Organization> organizations = _persistence.findByC_T(companyId,
+				treePath, start, end);
+
+		Assert.assertEquals(expected, organizations.size());
+	}
+
+	@Test
+	public void testFindByO_C_P() throws Exception {
+		Organization organization = addOrganization();
+
+		long organizationId = organization.getOrganizationId();
+
+		long companyId = organization.getCompanyId();
+
+		long parentOrganizationId = organization.getParentOrganizationId();
+
+		List<Organization> organizations = _persistence.findByO_C_P(organizationId,
+				companyId, parentOrganizationId);
+
+		Assert.assertEquals(1, organizations.size());
+
+		Assert.assertEquals(organization.getPrimaryKey(),
+			organizations.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByO_C_PNotFound() throws Exception {
+		addOrganization();
+
+		long organizationId = ServiceTestUtil.nextLong();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		long parentOrganizationId = ServiceTestUtil.nextLong();
+
+		List<Organization> organizations = _persistence.findByO_C_P(organizationId,
+				companyId, parentOrganizationId);
+
+		Assert.assertEquals(0, organizations.size());
+	}
+
+	@Test
+	public void testFindByO_C_PStartEnd() throws Exception {
+		testFindByO_C_PStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByO_C_PStartEndWrongRange() throws Exception {
+		testFindByO_C_PStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByO_C_PStartEndZeroZero() throws Exception {
+		testFindByO_C_PStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByO_C_PStartEnd(int start, int end, int expected)
+		throws Exception {
+		Organization organization = addOrganization();
+
+		long organizationId = organization.getOrganizationId();
+
+		long companyId = organization.getCompanyId();
+
+		long parentOrganizationId = organization.getParentOrganizationId();
+
+		List<Organization> organizations = _persistence.findByO_C_P(organizationId,
+				companyId, parentOrganizationId, start, end);
+
+		Assert.assertEquals(expected, organizations.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("Organization_", "uuid",
 			true, "organizationId", true, "companyId", true, "userId", true,

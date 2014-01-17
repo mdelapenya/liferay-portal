@@ -168,6 +168,56 @@ public class ImagePersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByLtSize() throws Exception {
+		Image image = addImage();
+
+		int size = image.getSize();
+
+		List<Image> images = _persistence.findByLtSize(size);
+
+		Assert.assertEquals(1, images.size());
+
+		Assert.assertEquals(image.getPrimaryKey(), images.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByLtSizeNotFound() throws Exception {
+		addImage();
+
+		int size = ServiceTestUtil.nextInt();
+
+		List<Image> images = _persistence.findByLtSize(size);
+
+		Assert.assertEquals(0, images.size());
+	}
+
+	@Test
+	public void testFindByLtSizeStartEnd() throws Exception {
+		testFindByLtSizeStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByLtSizeStartEndWrongRange() throws Exception {
+		testFindByLtSizeStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByLtSizeStartEndZeroZero() throws Exception {
+		testFindByLtSizeStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByLtSizeStartEnd(int start, int end, int expected)
+		throws Exception {
+		Image image = addImage();
+
+		int size = image.getSize();
+
+		List<Image> images = _persistence.findByLtSize(size, start, end);
+
+		Assert.assertEquals(expected, images.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("Image", "imageId", true,
 			"modifiedDate", true, "type", true, "height", true, "width", true,

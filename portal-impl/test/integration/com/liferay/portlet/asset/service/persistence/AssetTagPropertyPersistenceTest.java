@@ -191,6 +191,171 @@ public class AssetTagPropertyPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByCompanyId() throws Exception {
+		AssetTagProperty assetTagProperty = addAssetTagProperty();
+
+		long companyId = assetTagProperty.getCompanyId();
+
+		List<AssetTagProperty> assetTagProperties = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(1, assetTagProperties.size());
+
+		Assert.assertEquals(assetTagProperty.getPrimaryKey(),
+			assetTagProperties.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByCompanyIdNotFound() throws Exception {
+		addAssetTagProperty();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<AssetTagProperty> assetTagProperties = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(0, assetTagProperties.size());
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEnd() throws Exception {
+		testFindByCompanyIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndWrongRange()
+		throws Exception {
+		testFindByCompanyIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndZeroZero() throws Exception {
+		testFindByCompanyIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByCompanyIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		AssetTagProperty assetTagProperty = addAssetTagProperty();
+
+		long companyId = assetTagProperty.getCompanyId();
+
+		List<AssetTagProperty> assetTagProperties = _persistence.findByCompanyId(companyId,
+				start, end);
+
+		Assert.assertEquals(expected, assetTagProperties.size());
+	}
+
+	@Test
+	public void testFindByTagId() throws Exception {
+		AssetTagProperty assetTagProperty = addAssetTagProperty();
+
+		long tagId = assetTagProperty.getTagId();
+
+		List<AssetTagProperty> assetTagProperties = _persistence.findByTagId(tagId);
+
+		Assert.assertEquals(1, assetTagProperties.size());
+
+		Assert.assertEquals(assetTagProperty.getPrimaryKey(),
+			assetTagProperties.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByTagIdNotFound() throws Exception {
+		addAssetTagProperty();
+
+		long tagId = ServiceTestUtil.nextLong();
+
+		List<AssetTagProperty> assetTagProperties = _persistence.findByTagId(tagId);
+
+		Assert.assertEquals(0, assetTagProperties.size());
+	}
+
+	@Test
+	public void testFindByTagIdStartEnd() throws Exception {
+		testFindByTagIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByTagIdStartEndWrongRange() throws Exception {
+		testFindByTagIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByTagIdStartEndZeroZero() throws Exception {
+		testFindByTagIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByTagIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		AssetTagProperty assetTagProperty = addAssetTagProperty();
+
+		long tagId = assetTagProperty.getTagId();
+
+		List<AssetTagProperty> assetTagProperties = _persistence.findByTagId(tagId,
+				start, end);
+
+		Assert.assertEquals(expected, assetTagProperties.size());
+	}
+
+	@Test
+	public void testFindByC_K() throws Exception {
+		AssetTagProperty assetTagProperty = addAssetTagProperty();
+
+		long companyId = assetTagProperty.getCompanyId();
+
+		String key = assetTagProperty.getKey();
+
+		List<AssetTagProperty> assetTagProperties = _persistence.findByC_K(companyId,
+				key);
+
+		Assert.assertEquals(1, assetTagProperties.size());
+
+		Assert.assertEquals(assetTagProperty.getPrimaryKey(),
+			assetTagProperties.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_KNotFound() throws Exception {
+		addAssetTagProperty();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		String key = ServiceTestUtil.randomString();
+
+		List<AssetTagProperty> assetTagProperties = _persistence.findByC_K(companyId,
+				key);
+
+		Assert.assertEquals(0, assetTagProperties.size());
+	}
+
+	@Test
+	public void testFindByC_KStartEnd() throws Exception {
+		testFindByC_KStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_KStartEndWrongRange() throws Exception {
+		testFindByC_KStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_KStartEndZeroZero() throws Exception {
+		testFindByC_KStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_KStartEnd(int start, int end, int expected)
+		throws Exception {
+		AssetTagProperty assetTagProperty = addAssetTagProperty();
+
+		long companyId = assetTagProperty.getCompanyId();
+
+		String key = assetTagProperty.getKey();
+
+		List<AssetTagProperty> assetTagProperties = _persistence.findByC_K(companyId,
+				key, start, end);
+
+		Assert.assertEquals(expected, assetTagProperties.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("AssetTagProperty",
 			"tagPropertyId", true, "companyId", true, "userId", true,

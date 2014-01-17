@@ -176,6 +176,124 @@ public class ResourceTypePermissionPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByRoleId() throws Exception {
+		ResourceTypePermission resourceTypePermission = addResourceTypePermission();
+
+		long roleId = resourceTypePermission.getRoleId();
+
+		List<ResourceTypePermission> resourceTypePermissions = _persistence.findByRoleId(roleId);
+
+		Assert.assertEquals(1, resourceTypePermissions.size());
+
+		Assert.assertEquals(resourceTypePermission.getPrimaryKey(),
+			resourceTypePermissions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByRoleIdNotFound() throws Exception {
+		addResourceTypePermission();
+
+		long roleId = ServiceTestUtil.nextLong();
+
+		List<ResourceTypePermission> resourceTypePermissions = _persistence.findByRoleId(roleId);
+
+		Assert.assertEquals(0, resourceTypePermissions.size());
+	}
+
+	@Test
+	public void testFindByRoleIdStartEnd() throws Exception {
+		testFindByRoleIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByRoleIdStartEndWrongRange() throws Exception {
+		testFindByRoleIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByRoleIdStartEndZeroZero() throws Exception {
+		testFindByRoleIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByRoleIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		ResourceTypePermission resourceTypePermission = addResourceTypePermission();
+
+		long roleId = resourceTypePermission.getRoleId();
+
+		List<ResourceTypePermission> resourceTypePermissions = _persistence.findByRoleId(roleId,
+				start, end);
+
+		Assert.assertEquals(expected, resourceTypePermissions.size());
+	}
+
+	@Test
+	public void testFindByC_N_R() throws Exception {
+		ResourceTypePermission resourceTypePermission = addResourceTypePermission();
+
+		long companyId = resourceTypePermission.getCompanyId();
+
+		String name = resourceTypePermission.getName();
+
+		long roleId = resourceTypePermission.getRoleId();
+
+		List<ResourceTypePermission> resourceTypePermissions = _persistence.findByC_N_R(companyId,
+				name, roleId);
+
+		Assert.assertEquals(1, resourceTypePermissions.size());
+
+		Assert.assertEquals(resourceTypePermission.getPrimaryKey(),
+			resourceTypePermissions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_N_RNotFound() throws Exception {
+		addResourceTypePermission();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		String name = ServiceTestUtil.randomString();
+
+		long roleId = ServiceTestUtil.nextLong();
+
+		List<ResourceTypePermission> resourceTypePermissions = _persistence.findByC_N_R(companyId,
+				name, roleId);
+
+		Assert.assertEquals(0, resourceTypePermissions.size());
+	}
+
+	@Test
+	public void testFindByC_N_RStartEnd() throws Exception {
+		testFindByC_N_RStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_N_RStartEndWrongRange() throws Exception {
+		testFindByC_N_RStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_N_RStartEndZeroZero() throws Exception {
+		testFindByC_N_RStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_N_RStartEnd(int start, int end, int expected)
+		throws Exception {
+		ResourceTypePermission resourceTypePermission = addResourceTypePermission();
+
+		long companyId = resourceTypePermission.getCompanyId();
+
+		String name = resourceTypePermission.getName();
+
+		long roleId = resourceTypePermission.getRoleId();
+
+		List<ResourceTypePermission> resourceTypePermissions = _persistence.findByC_N_R(companyId,
+				name, roleId, start, end);
+
+		Assert.assertEquals(expected, resourceTypePermissions.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("ResourceTypePermission",
 			"resourceTypePermissionId", true, "companyId", true, "groupId",

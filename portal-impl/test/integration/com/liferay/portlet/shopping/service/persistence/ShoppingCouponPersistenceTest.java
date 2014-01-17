@@ -229,6 +229,58 @@ public class ShoppingCouponPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByGroupId() throws Exception {
+		ShoppingCoupon shoppingCoupon = addShoppingCoupon();
+
+		long groupId = shoppingCoupon.getGroupId();
+
+		List<ShoppingCoupon> shoppingCoupons = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(1, shoppingCoupons.size());
+
+		Assert.assertEquals(shoppingCoupon.getPrimaryKey(),
+			shoppingCoupons.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByGroupIdNotFound() throws Exception {
+		addShoppingCoupon();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		List<ShoppingCoupon> shoppingCoupons = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(0, shoppingCoupons.size());
+	}
+
+	@Test
+	public void testFindByGroupIdStartEnd() throws Exception {
+		testFindByGroupIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndWrongRange() throws Exception {
+		testFindByGroupIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndZeroZero() throws Exception {
+		testFindByGroupIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByGroupIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		ShoppingCoupon shoppingCoupon = addShoppingCoupon();
+
+		long groupId = shoppingCoupon.getGroupId();
+
+		List<ShoppingCoupon> shoppingCoupons = _persistence.findByGroupId(groupId,
+				start, end);
+
+		Assert.assertEquals(expected, shoppingCoupons.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("ShoppingCoupon",
 			"couponId", true, "groupId", true, "companyId", true, "userId",

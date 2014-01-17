@@ -174,6 +174,118 @@ public class TrashVersionPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByEntryId() throws Exception {
+		TrashVersion trashVersion = addTrashVersion();
+
+		long entryId = trashVersion.getEntryId();
+
+		List<TrashVersion> trashVersions = _persistence.findByEntryId(entryId);
+
+		Assert.assertEquals(1, trashVersions.size());
+
+		Assert.assertEquals(trashVersion.getPrimaryKey(),
+			trashVersions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByEntryIdNotFound() throws Exception {
+		addTrashVersion();
+
+		long entryId = ServiceTestUtil.nextLong();
+
+		List<TrashVersion> trashVersions = _persistence.findByEntryId(entryId);
+
+		Assert.assertEquals(0, trashVersions.size());
+	}
+
+	@Test
+	public void testFindByEntryIdStartEnd() throws Exception {
+		testFindByEntryIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByEntryIdStartEndWrongRange() throws Exception {
+		testFindByEntryIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByEntryIdStartEndZeroZero() throws Exception {
+		testFindByEntryIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByEntryIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		TrashVersion trashVersion = addTrashVersion();
+
+		long entryId = trashVersion.getEntryId();
+
+		List<TrashVersion> trashVersions = _persistence.findByEntryId(entryId,
+				start, end);
+
+		Assert.assertEquals(expected, trashVersions.size());
+	}
+
+	@Test
+	public void testFindByE_C() throws Exception {
+		TrashVersion trashVersion = addTrashVersion();
+
+		long entryId = trashVersion.getEntryId();
+
+		long classNameId = trashVersion.getClassNameId();
+
+		List<TrashVersion> trashVersions = _persistence.findByE_C(entryId,
+				classNameId);
+
+		Assert.assertEquals(1, trashVersions.size());
+
+		Assert.assertEquals(trashVersion.getPrimaryKey(),
+			trashVersions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByE_CNotFound() throws Exception {
+		addTrashVersion();
+
+		long entryId = ServiceTestUtil.nextLong();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		List<TrashVersion> trashVersions = _persistence.findByE_C(entryId,
+				classNameId);
+
+		Assert.assertEquals(0, trashVersions.size());
+	}
+
+	@Test
+	public void testFindByE_CStartEnd() throws Exception {
+		testFindByE_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByE_CStartEndWrongRange() throws Exception {
+		testFindByE_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByE_CStartEndZeroZero() throws Exception {
+		testFindByE_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByE_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		TrashVersion trashVersion = addTrashVersion();
+
+		long entryId = trashVersion.getEntryId();
+
+		long classNameId = trashVersion.getClassNameId();
+
+		List<TrashVersion> trashVersions = _persistence.findByE_C(entryId,
+				classNameId, start, end);
+
+		Assert.assertEquals(expected, trashVersions.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("TrashVersion", "versionId",
 			true, "entryId", true, "classNameId", true, "classPK", true,

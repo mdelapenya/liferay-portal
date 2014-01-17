@@ -179,6 +179,60 @@ public class SCProductScreenshotPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByProductEntryId() throws Exception {
+		SCProductScreenshot scProductScreenshot = addSCProductScreenshot();
+
+		long productEntryId = scProductScreenshot.getProductEntryId();
+
+		List<SCProductScreenshot> scProductScreenshots = _persistence.findByProductEntryId(productEntryId);
+
+		Assert.assertEquals(1, scProductScreenshots.size());
+
+		Assert.assertEquals(scProductScreenshot.getPrimaryKey(),
+			scProductScreenshots.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByProductEntryIdNotFound() throws Exception {
+		addSCProductScreenshot();
+
+		long productEntryId = ServiceTestUtil.nextLong();
+
+		List<SCProductScreenshot> scProductScreenshots = _persistence.findByProductEntryId(productEntryId);
+
+		Assert.assertEquals(0, scProductScreenshots.size());
+	}
+
+	@Test
+	public void testFindByProductEntryIdStartEnd() throws Exception {
+		testFindByProductEntryIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByProductEntryIdStartEndWrongRange()
+		throws Exception {
+		testFindByProductEntryIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByProductEntryIdStartEndZeroZero()
+		throws Exception {
+		testFindByProductEntryIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByProductEntryIdStartEnd(int start, int end,
+		int expected) throws Exception {
+		SCProductScreenshot scProductScreenshot = addSCProductScreenshot();
+
+		long productEntryId = scProductScreenshot.getProductEntryId();
+
+		List<SCProductScreenshot> scProductScreenshots = _persistence.findByProductEntryId(productEntryId,
+				start, end);
+
+		Assert.assertEquals(expected, scProductScreenshots.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("SCProductScreenshot",
 			"productScreenshotId", true, "companyId", true, "groupId", true,

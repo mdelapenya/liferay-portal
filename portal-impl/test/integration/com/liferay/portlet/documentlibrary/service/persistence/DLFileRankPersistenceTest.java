@@ -180,6 +180,236 @@ public class DLFileRankPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUserId() throws Exception {
+		DLFileRank dlFileRank = addDLFileRank();
+
+		long userId = dlFileRank.getUserId();
+
+		List<DLFileRank> dlFileRanks = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(1, dlFileRanks.size());
+
+		Assert.assertEquals(dlFileRank.getPrimaryKey(),
+			dlFileRanks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUserIdNotFound() throws Exception {
+		addDLFileRank();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		List<DLFileRank> dlFileRanks = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(0, dlFileRanks.size());
+	}
+
+	@Test
+	public void testFindByUserIdStartEnd() throws Exception {
+		testFindByUserIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndWrongRange() throws Exception {
+		testFindByUserIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndZeroZero() throws Exception {
+		testFindByUserIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUserIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		DLFileRank dlFileRank = addDLFileRank();
+
+		long userId = dlFileRank.getUserId();
+
+		List<DLFileRank> dlFileRanks = _persistence.findByUserId(userId, start,
+				end);
+
+		Assert.assertEquals(expected, dlFileRanks.size());
+	}
+
+	@Test
+	public void testFindByFileEntryId() throws Exception {
+		DLFileRank dlFileRank = addDLFileRank();
+
+		long fileEntryId = dlFileRank.getFileEntryId();
+
+		List<DLFileRank> dlFileRanks = _persistence.findByFileEntryId(fileEntryId);
+
+		Assert.assertEquals(1, dlFileRanks.size());
+
+		Assert.assertEquals(dlFileRank.getPrimaryKey(),
+			dlFileRanks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByFileEntryIdNotFound() throws Exception {
+		addDLFileRank();
+
+		long fileEntryId = ServiceTestUtil.nextLong();
+
+		List<DLFileRank> dlFileRanks = _persistence.findByFileEntryId(fileEntryId);
+
+		Assert.assertEquals(0, dlFileRanks.size());
+	}
+
+	@Test
+	public void testFindByFileEntryIdStartEnd() throws Exception {
+		testFindByFileEntryIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByFileEntryIdStartEndWrongRange()
+		throws Exception {
+		testFindByFileEntryIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByFileEntryIdStartEndZeroZero()
+		throws Exception {
+		testFindByFileEntryIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByFileEntryIdStartEnd(int start, int end,
+		int expected) throws Exception {
+		DLFileRank dlFileRank = addDLFileRank();
+
+		long fileEntryId = dlFileRank.getFileEntryId();
+
+		List<DLFileRank> dlFileRanks = _persistence.findByFileEntryId(fileEntryId,
+				start, end);
+
+		Assert.assertEquals(expected, dlFileRanks.size());
+	}
+
+	@Test
+	public void testFindByG_U() throws Exception {
+		DLFileRank dlFileRank = addDLFileRank();
+
+		long groupId = dlFileRank.getGroupId();
+
+		long userId = dlFileRank.getUserId();
+
+		List<DLFileRank> dlFileRanks = _persistence.findByG_U(groupId, userId);
+
+		Assert.assertEquals(1, dlFileRanks.size());
+
+		Assert.assertEquals(dlFileRank.getPrimaryKey(),
+			dlFileRanks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_UNotFound() throws Exception {
+		addDLFileRank();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		List<DLFileRank> dlFileRanks = _persistence.findByG_U(groupId, userId);
+
+		Assert.assertEquals(0, dlFileRanks.size());
+	}
+
+	@Test
+	public void testFindByG_UStartEnd() throws Exception {
+		testFindByG_UStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_UStartEndWrongRange() throws Exception {
+		testFindByG_UStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_UStartEndZeroZero() throws Exception {
+		testFindByG_UStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_UStartEnd(int start, int end, int expected)
+		throws Exception {
+		DLFileRank dlFileRank = addDLFileRank();
+
+		long groupId = dlFileRank.getGroupId();
+
+		long userId = dlFileRank.getUserId();
+
+		List<DLFileRank> dlFileRanks = _persistence.findByG_U(groupId, userId,
+				start, end);
+
+		Assert.assertEquals(expected, dlFileRanks.size());
+	}
+
+	@Test
+	public void testFindByG_U_A() throws Exception {
+		DLFileRank dlFileRank = addDLFileRank();
+
+		long groupId = dlFileRank.getGroupId();
+
+		long userId = dlFileRank.getUserId();
+
+		boolean active = dlFileRank.getActive();
+
+		List<DLFileRank> dlFileRanks = _persistence.findByG_U_A(groupId,
+				userId, active);
+
+		Assert.assertEquals(1, dlFileRanks.size());
+
+		Assert.assertEquals(dlFileRank.getPrimaryKey(),
+			dlFileRanks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_U_ANotFound() throws Exception {
+		addDLFileRank();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		boolean active = ServiceTestUtil.randomBoolean();
+
+		List<DLFileRank> dlFileRanks = _persistence.findByG_U_A(groupId,
+				userId, active);
+
+		Assert.assertEquals(0, dlFileRanks.size());
+	}
+
+	@Test
+	public void testFindByG_U_AStartEnd() throws Exception {
+		testFindByG_U_AStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_U_AStartEndWrongRange() throws Exception {
+		testFindByG_U_AStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_U_AStartEndZeroZero() throws Exception {
+		testFindByG_U_AStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_U_AStartEnd(int start, int end, int expected)
+		throws Exception {
+		DLFileRank dlFileRank = addDLFileRank();
+
+		long groupId = dlFileRank.getGroupId();
+
+		long userId = dlFileRank.getUserId();
+
+		boolean active = dlFileRank.getActive();
+
+		List<DLFileRank> dlFileRanks = _persistence.findByG_U_A(groupId,
+				userId, active, start, end);
+
+		Assert.assertEquals(expected, dlFileRanks.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("DLFileRank", "fileRankId",
 			true, "groupId", true, "companyId", true, "userId", true,

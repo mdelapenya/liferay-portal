@@ -221,6 +221,296 @@ public class AnnouncementsEntryPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		AnnouncementsEntry announcementsEntry = addAnnouncementsEntry();
+
+		String uuid = announcementsEntry.getUuid();
+
+		List<AnnouncementsEntry> announcementsEntries = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, announcementsEntries.size());
+
+		Assert.assertEquals(announcementsEntry.getPrimaryKey(),
+			announcementsEntries.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addAnnouncementsEntry();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<AnnouncementsEntry> announcementsEntries = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, announcementsEntries.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		AnnouncementsEntry announcementsEntry = addAnnouncementsEntry();
+
+		String uuid = announcementsEntry.getUuid();
+
+		List<AnnouncementsEntry> announcementsEntries = _persistence.findByUuid(uuid,
+				start, end);
+
+		Assert.assertEquals(expected, announcementsEntries.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		AnnouncementsEntry announcementsEntry = addAnnouncementsEntry();
+
+		String uuid = announcementsEntry.getUuid();
+
+		long companyId = announcementsEntry.getCompanyId();
+
+		List<AnnouncementsEntry> announcementsEntries = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(1, announcementsEntries.size());
+
+		Assert.assertEquals(announcementsEntry.getPrimaryKey(),
+			announcementsEntries.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addAnnouncementsEntry();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<AnnouncementsEntry> announcementsEntries = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(0, announcementsEntries.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		AnnouncementsEntry announcementsEntry = addAnnouncementsEntry();
+
+		String uuid = announcementsEntry.getUuid();
+
+		long companyId = announcementsEntry.getCompanyId();
+
+		List<AnnouncementsEntry> announcementsEntries = _persistence.findByUuid_C(uuid,
+				companyId, start, end);
+
+		Assert.assertEquals(expected, announcementsEntries.size());
+	}
+
+	@Test
+	public void testFindByUserId() throws Exception {
+		AnnouncementsEntry announcementsEntry = addAnnouncementsEntry();
+
+		long userId = announcementsEntry.getUserId();
+
+		List<AnnouncementsEntry> announcementsEntries = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(1, announcementsEntries.size());
+
+		Assert.assertEquals(announcementsEntry.getPrimaryKey(),
+			announcementsEntries.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUserIdNotFound() throws Exception {
+		addAnnouncementsEntry();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		List<AnnouncementsEntry> announcementsEntries = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(0, announcementsEntries.size());
+	}
+
+	@Test
+	public void testFindByUserIdStartEnd() throws Exception {
+		testFindByUserIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndWrongRange() throws Exception {
+		testFindByUserIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndZeroZero() throws Exception {
+		testFindByUserIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUserIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		AnnouncementsEntry announcementsEntry = addAnnouncementsEntry();
+
+		long userId = announcementsEntry.getUserId();
+
+		List<AnnouncementsEntry> announcementsEntries = _persistence.findByUserId(userId,
+				start, end);
+
+		Assert.assertEquals(expected, announcementsEntries.size());
+	}
+
+	@Test
+	public void testFindByC_C() throws Exception {
+		AnnouncementsEntry announcementsEntry = addAnnouncementsEntry();
+
+		long classNameId = announcementsEntry.getClassNameId();
+
+		long classPK = announcementsEntry.getClassPK();
+
+		List<AnnouncementsEntry> announcementsEntries = _persistence.findByC_C(classNameId,
+				classPK);
+
+		Assert.assertEquals(1, announcementsEntries.size());
+
+		Assert.assertEquals(announcementsEntry.getPrimaryKey(),
+			announcementsEntries.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_CNotFound() throws Exception {
+		addAnnouncementsEntry();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		long classPK = ServiceTestUtil.nextLong();
+
+		List<AnnouncementsEntry> announcementsEntries = _persistence.findByC_C(classNameId,
+				classPK);
+
+		Assert.assertEquals(0, announcementsEntries.size());
+	}
+
+	@Test
+	public void testFindByC_CStartEnd() throws Exception {
+		testFindByC_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_CStartEndWrongRange() throws Exception {
+		testFindByC_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_CStartEndZeroZero() throws Exception {
+		testFindByC_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		AnnouncementsEntry announcementsEntry = addAnnouncementsEntry();
+
+		long classNameId = announcementsEntry.getClassNameId();
+
+		long classPK = announcementsEntry.getClassPK();
+
+		List<AnnouncementsEntry> announcementsEntries = _persistence.findByC_C(classNameId,
+				classPK, start, end);
+
+		Assert.assertEquals(expected, announcementsEntries.size());
+	}
+
+	@Test
+	public void testFindByC_C_A() throws Exception {
+		AnnouncementsEntry announcementsEntry = addAnnouncementsEntry();
+
+		long classNameId = announcementsEntry.getClassNameId();
+
+		long classPK = announcementsEntry.getClassPK();
+
+		boolean alert = announcementsEntry.getAlert();
+
+		List<AnnouncementsEntry> announcementsEntries = _persistence.findByC_C_A(classNameId,
+				classPK, alert);
+
+		Assert.assertEquals(1, announcementsEntries.size());
+
+		Assert.assertEquals(announcementsEntry.getPrimaryKey(),
+			announcementsEntries.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_C_ANotFound() throws Exception {
+		addAnnouncementsEntry();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		long classPK = ServiceTestUtil.nextLong();
+
+		boolean alert = ServiceTestUtil.randomBoolean();
+
+		List<AnnouncementsEntry> announcementsEntries = _persistence.findByC_C_A(classNameId,
+				classPK, alert);
+
+		Assert.assertEquals(0, announcementsEntries.size());
+	}
+
+	@Test
+	public void testFindByC_C_AStartEnd() throws Exception {
+		testFindByC_C_AStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_C_AStartEndWrongRange() throws Exception {
+		testFindByC_C_AStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_C_AStartEndZeroZero() throws Exception {
+		testFindByC_C_AStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_C_AStartEnd(int start, int end, int expected)
+		throws Exception {
+		AnnouncementsEntry announcementsEntry = addAnnouncementsEntry();
+
+		long classNameId = announcementsEntry.getClassNameId();
+
+		long classPK = announcementsEntry.getClassPK();
+
+		boolean alert = announcementsEntry.getAlert();
+
+		List<AnnouncementsEntry> announcementsEntries = _persistence.findByC_C_A(classNameId,
+				classPK, alert, start, end);
+
+		Assert.assertEquals(expected, announcementsEntries.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("AnnouncementsEntry",
 			"uuid", true, "entryId", true, "companyId", true, "userId", true,

@@ -179,6 +179,58 @@ public class ExpandoColumnPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByTableId() throws Exception {
+		ExpandoColumn expandoColumn = addExpandoColumn();
+
+		long tableId = expandoColumn.getTableId();
+
+		List<ExpandoColumn> expandoColumns = _persistence.findByTableId(tableId);
+
+		Assert.assertEquals(1, expandoColumns.size());
+
+		Assert.assertEquals(expandoColumn.getPrimaryKey(),
+			expandoColumns.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByTableIdNotFound() throws Exception {
+		addExpandoColumn();
+
+		long tableId = ServiceTestUtil.nextLong();
+
+		List<ExpandoColumn> expandoColumns = _persistence.findByTableId(tableId);
+
+		Assert.assertEquals(0, expandoColumns.size());
+	}
+
+	@Test
+	public void testFindByTableIdStartEnd() throws Exception {
+		testFindByTableIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByTableIdStartEndWrongRange() throws Exception {
+		testFindByTableIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByTableIdStartEndZeroZero() throws Exception {
+		testFindByTableIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByTableIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		ExpandoColumn expandoColumn = addExpandoColumn();
+
+		long tableId = expandoColumn.getTableId();
+
+		List<ExpandoColumn> expandoColumns = _persistence.findByTableId(tableId,
+				start, end);
+
+		Assert.assertEquals(expected, expandoColumns.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("ExpandoColumn", "columnId",
 			true, "companyId", true, "tableId", true, "name", true, "type",

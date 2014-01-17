@@ -224,6 +224,483 @@ public class DLFileShortcutPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		DLFileShortcut dlFileShortcut = addDLFileShortcut();
+
+		String uuid = dlFileShortcut.getUuid();
+
+		List<DLFileShortcut> dlFileShortcuts = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, dlFileShortcuts.size());
+
+		Assert.assertEquals(dlFileShortcut.getPrimaryKey(),
+			dlFileShortcuts.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addDLFileShortcut();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<DLFileShortcut> dlFileShortcuts = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, dlFileShortcuts.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		DLFileShortcut dlFileShortcut = addDLFileShortcut();
+
+		String uuid = dlFileShortcut.getUuid();
+
+		List<DLFileShortcut> dlFileShortcuts = _persistence.findByUuid(uuid,
+				start, end);
+
+		Assert.assertEquals(expected, dlFileShortcuts.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		DLFileShortcut dlFileShortcut = addDLFileShortcut();
+
+		String uuid = dlFileShortcut.getUuid();
+
+		long companyId = dlFileShortcut.getCompanyId();
+
+		List<DLFileShortcut> dlFileShortcuts = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(1, dlFileShortcuts.size());
+
+		Assert.assertEquals(dlFileShortcut.getPrimaryKey(),
+			dlFileShortcuts.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addDLFileShortcut();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<DLFileShortcut> dlFileShortcuts = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(0, dlFileShortcuts.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		DLFileShortcut dlFileShortcut = addDLFileShortcut();
+
+		String uuid = dlFileShortcut.getUuid();
+
+		long companyId = dlFileShortcut.getCompanyId();
+
+		List<DLFileShortcut> dlFileShortcuts = _persistence.findByUuid_C(uuid,
+				companyId, start, end);
+
+		Assert.assertEquals(expected, dlFileShortcuts.size());
+	}
+
+	@Test
+	public void testFindByCompanyId() throws Exception {
+		DLFileShortcut dlFileShortcut = addDLFileShortcut();
+
+		long companyId = dlFileShortcut.getCompanyId();
+
+		List<DLFileShortcut> dlFileShortcuts = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(1, dlFileShortcuts.size());
+
+		Assert.assertEquals(dlFileShortcut.getPrimaryKey(),
+			dlFileShortcuts.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByCompanyIdNotFound() throws Exception {
+		addDLFileShortcut();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<DLFileShortcut> dlFileShortcuts = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(0, dlFileShortcuts.size());
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEnd() throws Exception {
+		testFindByCompanyIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndWrongRange()
+		throws Exception {
+		testFindByCompanyIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndZeroZero() throws Exception {
+		testFindByCompanyIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByCompanyIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		DLFileShortcut dlFileShortcut = addDLFileShortcut();
+
+		long companyId = dlFileShortcut.getCompanyId();
+
+		List<DLFileShortcut> dlFileShortcuts = _persistence.findByCompanyId(companyId,
+				start, end);
+
+		Assert.assertEquals(expected, dlFileShortcuts.size());
+	}
+
+	@Test
+	public void testFindByToFileEntryId() throws Exception {
+		DLFileShortcut dlFileShortcut = addDLFileShortcut();
+
+		long toFileEntryId = dlFileShortcut.getToFileEntryId();
+
+		List<DLFileShortcut> dlFileShortcuts = _persistence.findByToFileEntryId(toFileEntryId);
+
+		Assert.assertEquals(1, dlFileShortcuts.size());
+
+		Assert.assertEquals(dlFileShortcut.getPrimaryKey(),
+			dlFileShortcuts.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByToFileEntryIdNotFound() throws Exception {
+		addDLFileShortcut();
+
+		long toFileEntryId = ServiceTestUtil.nextLong();
+
+		List<DLFileShortcut> dlFileShortcuts = _persistence.findByToFileEntryId(toFileEntryId);
+
+		Assert.assertEquals(0, dlFileShortcuts.size());
+	}
+
+	@Test
+	public void testFindByToFileEntryIdStartEnd() throws Exception {
+		testFindByToFileEntryIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByToFileEntryIdStartEndWrongRange()
+		throws Exception {
+		testFindByToFileEntryIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByToFileEntryIdStartEndZeroZero()
+		throws Exception {
+		testFindByToFileEntryIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByToFileEntryIdStartEnd(int start, int end,
+		int expected) throws Exception {
+		DLFileShortcut dlFileShortcut = addDLFileShortcut();
+
+		long toFileEntryId = dlFileShortcut.getToFileEntryId();
+
+		List<DLFileShortcut> dlFileShortcuts = _persistence.findByToFileEntryId(toFileEntryId,
+				start, end);
+
+		Assert.assertEquals(expected, dlFileShortcuts.size());
+	}
+
+	@Test
+	public void testFindByG_F() throws Exception {
+		DLFileShortcut dlFileShortcut = addDLFileShortcut();
+
+		long groupId = dlFileShortcut.getGroupId();
+
+		long folderId = dlFileShortcut.getFolderId();
+
+		List<DLFileShortcut> dlFileShortcuts = _persistence.findByG_F(groupId,
+				folderId);
+
+		Assert.assertEquals(1, dlFileShortcuts.size());
+
+		Assert.assertEquals(dlFileShortcut.getPrimaryKey(),
+			dlFileShortcuts.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_FNotFound() throws Exception {
+		addDLFileShortcut();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		long folderId = ServiceTestUtil.nextLong();
+
+		List<DLFileShortcut> dlFileShortcuts = _persistence.findByG_F(groupId,
+				folderId);
+
+		Assert.assertEquals(0, dlFileShortcuts.size());
+	}
+
+	@Test
+	public void testFindByG_FStartEnd() throws Exception {
+		testFindByG_FStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_FStartEndWrongRange() throws Exception {
+		testFindByG_FStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_FStartEndZeroZero() throws Exception {
+		testFindByG_FStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_FStartEnd(int start, int end, int expected)
+		throws Exception {
+		DLFileShortcut dlFileShortcut = addDLFileShortcut();
+
+		long groupId = dlFileShortcut.getGroupId();
+
+		long folderId = dlFileShortcut.getFolderId();
+
+		List<DLFileShortcut> dlFileShortcuts = _persistence.findByG_F(groupId,
+				folderId, start, end);
+
+		Assert.assertEquals(expected, dlFileShortcuts.size());
+	}
+
+	@Test
+	public void testFindByC_NotS() throws Exception {
+		DLFileShortcut dlFileShortcut = addDLFileShortcut();
+
+		long companyId = dlFileShortcut.getCompanyId();
+
+		int status = dlFileShortcut.getStatus();
+
+		List<DLFileShortcut> dlFileShortcuts = _persistence.findByC_NotS(companyId,
+				status);
+
+		Assert.assertEquals(1, dlFileShortcuts.size());
+
+		Assert.assertEquals(dlFileShortcut.getPrimaryKey(),
+			dlFileShortcuts.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_NotSNotFound() throws Exception {
+		addDLFileShortcut();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<DLFileShortcut> dlFileShortcuts = _persistence.findByC_NotS(companyId,
+				status);
+
+		Assert.assertEquals(0, dlFileShortcuts.size());
+	}
+
+	@Test
+	public void testFindByC_NotSStartEnd() throws Exception {
+		testFindByC_NotSStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_NotSStartEndWrongRange() throws Exception {
+		testFindByC_NotSStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_NotSStartEndZeroZero() throws Exception {
+		testFindByC_NotSStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_NotSStartEnd(int start, int end, int expected)
+		throws Exception {
+		DLFileShortcut dlFileShortcut = addDLFileShortcut();
+
+		long companyId = dlFileShortcut.getCompanyId();
+
+		int status = dlFileShortcut.getStatus();
+
+		List<DLFileShortcut> dlFileShortcuts = _persistence.findByC_NotS(companyId,
+				status, start, end);
+
+		Assert.assertEquals(expected, dlFileShortcuts.size());
+	}
+
+	@Test
+	public void testFindByG_F_A() throws Exception {
+		DLFileShortcut dlFileShortcut = addDLFileShortcut();
+
+		long groupId = dlFileShortcut.getGroupId();
+
+		long folderId = dlFileShortcut.getFolderId();
+
+		boolean active = dlFileShortcut.getActive();
+
+		List<DLFileShortcut> dlFileShortcuts = _persistence.findByG_F_A(groupId,
+				folderId, active);
+
+		Assert.assertEquals(1, dlFileShortcuts.size());
+
+		Assert.assertEquals(dlFileShortcut.getPrimaryKey(),
+			dlFileShortcuts.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_F_ANotFound() throws Exception {
+		addDLFileShortcut();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		long folderId = ServiceTestUtil.nextLong();
+
+		boolean active = ServiceTestUtil.randomBoolean();
+
+		List<DLFileShortcut> dlFileShortcuts = _persistence.findByG_F_A(groupId,
+				folderId, active);
+
+		Assert.assertEquals(0, dlFileShortcuts.size());
+	}
+
+	@Test
+	public void testFindByG_F_AStartEnd() throws Exception {
+		testFindByG_F_AStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_F_AStartEndWrongRange() throws Exception {
+		testFindByG_F_AStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_F_AStartEndZeroZero() throws Exception {
+		testFindByG_F_AStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_F_AStartEnd(int start, int end, int expected)
+		throws Exception {
+		DLFileShortcut dlFileShortcut = addDLFileShortcut();
+
+		long groupId = dlFileShortcut.getGroupId();
+
+		long folderId = dlFileShortcut.getFolderId();
+
+		boolean active = dlFileShortcut.getActive();
+
+		List<DLFileShortcut> dlFileShortcuts = _persistence.findByG_F_A(groupId,
+				folderId, active, start, end);
+
+		Assert.assertEquals(expected, dlFileShortcuts.size());
+	}
+
+	@Test
+	public void testFindByG_F_A_S() throws Exception {
+		DLFileShortcut dlFileShortcut = addDLFileShortcut();
+
+		long groupId = dlFileShortcut.getGroupId();
+
+		long folderId = dlFileShortcut.getFolderId();
+
+		boolean active = dlFileShortcut.getActive();
+
+		int status = dlFileShortcut.getStatus();
+
+		List<DLFileShortcut> dlFileShortcuts = _persistence.findByG_F_A_S(groupId,
+				folderId, active, status);
+
+		Assert.assertEquals(1, dlFileShortcuts.size());
+
+		Assert.assertEquals(dlFileShortcut.getPrimaryKey(),
+			dlFileShortcuts.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_F_A_SNotFound() throws Exception {
+		addDLFileShortcut();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		long folderId = ServiceTestUtil.nextLong();
+
+		boolean active = ServiceTestUtil.randomBoolean();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<DLFileShortcut> dlFileShortcuts = _persistence.findByG_F_A_S(groupId,
+				folderId, active, status);
+
+		Assert.assertEquals(0, dlFileShortcuts.size());
+	}
+
+	@Test
+	public void testFindByG_F_A_SStartEnd() throws Exception {
+		testFindByG_F_A_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_F_A_SStartEndWrongRange() throws Exception {
+		testFindByG_F_A_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_F_A_SStartEndZeroZero() throws Exception {
+		testFindByG_F_A_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_F_A_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		DLFileShortcut dlFileShortcut = addDLFileShortcut();
+
+		long groupId = dlFileShortcut.getGroupId();
+
+		long folderId = dlFileShortcut.getFolderId();
+
+		boolean active = dlFileShortcut.getActive();
+
+		int status = dlFileShortcut.getStatus();
+
+		List<DLFileShortcut> dlFileShortcuts = _persistence.findByG_F_A_S(groupId,
+				folderId, active, status, start, end);
+
+		Assert.assertEquals(expected, dlFileShortcuts.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("DLFileShortcut", "uuid",
 			true, "fileShortcutId", true, "groupId", true, "companyId", true,
