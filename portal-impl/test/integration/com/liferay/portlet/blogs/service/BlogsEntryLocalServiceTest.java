@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.User;
+import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
@@ -86,6 +87,13 @@ public class BlogsEntryLocalServiceTest {
 	public void testAddEntryResourcesEntry() throws Exception {
 		User user = TestPropsValues.getUser();
 
+		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
+			group.getGroupId());
+
+		serviceContext.setGroupPermissions(
+			new String[] {ActionKeys.ADD_DISCUSSION});
+		serviceContext.setGuestPermissions(new String[] {ActionKeys.VIEW});
+
 		BlogsEntry blogsEntry = BlogsTestUtil.addEntry(
 			TestPropsValues.getUserId(), group, true);
 
@@ -95,6 +103,13 @@ public class BlogsEntryLocalServiceTest {
 	@Test
 	public void testAddEntryResourcesEntryId() throws Exception {
 		User user = TestPropsValues.getUser();
+
+		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
+			group.getGroupId());
+
+		serviceContext.setGroupPermissions(
+			new String[] {ActionKeys.ADD_DISCUSSION});
+		serviceContext.setGuestPermissions(new String[] {ActionKeys.VIEW});
 
 		BlogsEntry blogsEntry = BlogsTestUtil.addEntry(
 			TestPropsValues.getUserId(), group, true);
@@ -129,8 +144,20 @@ public class BlogsEntryLocalServiceTest {
 			TestPropsValues.getUserId(), group, true);
 
 		BlogsEntryLocalServiceUtil.addEntryResources(
-			blogsEntry, serviceContext.getGroupPermissions(),
-			serviceContext.getGuestPermissions());
+			blogsEntry, new String[] {ActionKeys.ADD_DISCUSSION},
+			new String[] {ActionKeys.VIEW});
+	}
+
+	@Test
+	public void testAUpdateResources() throws Exception {
+		User user = TestPropsValues.getUser();
+
+		BlogsEntry blogsEntry = BlogsTestUtil.addEntry(
+			TestPropsValues.getUserId(), group, true);
+
+		BlogsEntryLocalServiceUtil.updateEntryResources(
+			blogsEntry, new String[] {ActionKeys.ADD_DISCUSSION},
+			null);
 	}
 
 	@Test
