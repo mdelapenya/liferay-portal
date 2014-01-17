@@ -166,6 +166,60 @@ public class PasswordPolicyRelPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByPasswordPolicyId() throws Exception {
+		PasswordPolicyRel passwordPolicyRel = addPasswordPolicyRel();
+
+		long passwordPolicyId = passwordPolicyRel.getPasswordPolicyId();
+
+		List<PasswordPolicyRel> passwordPolicyRels = _persistence.findByPasswordPolicyId(passwordPolicyId);
+
+		Assert.assertEquals(1, passwordPolicyRels.size());
+
+		Assert.assertEquals(passwordPolicyRel.getPrimaryKey(),
+			passwordPolicyRels.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByPasswordPolicyIdNotFound() throws Exception {
+		addPasswordPolicyRel();
+
+		long passwordPolicyId = ServiceTestUtil.nextLong();
+
+		List<PasswordPolicyRel> passwordPolicyRels = _persistence.findByPasswordPolicyId(passwordPolicyId);
+
+		Assert.assertEquals(0, passwordPolicyRels.size());
+	}
+
+	@Test
+	public void testFindByPasswordPolicyIdStartEnd() throws Exception {
+		testFindByPasswordPolicyIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByPasswordPolicyIdStartEndWrongRange()
+		throws Exception {
+		testFindByPasswordPolicyIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByPasswordPolicyIdStartEndZeroZero()
+		throws Exception {
+		testFindByPasswordPolicyIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByPasswordPolicyIdStartEnd(int start, int end,
+		int expected) throws Exception {
+		PasswordPolicyRel passwordPolicyRel = addPasswordPolicyRel();
+
+		long passwordPolicyId = passwordPolicyRel.getPasswordPolicyId();
+
+		List<PasswordPolicyRel> passwordPolicyRels = _persistence.findByPasswordPolicyId(passwordPolicyId,
+				start, end);
+
+		Assert.assertEquals(expected, passwordPolicyRels.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("PasswordPolicyRel",
 			"passwordPolicyRelId", true, "passwordPolicyId", true,

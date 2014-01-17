@@ -172,6 +172,110 @@ public class ExpandoRowPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByTableId() throws Exception {
+		ExpandoRow expandoRow = addExpandoRow();
+
+		long tableId = expandoRow.getTableId();
+
+		List<ExpandoRow> expandoRows = _persistence.findByTableId(tableId);
+
+		Assert.assertEquals(1, expandoRows.size());
+
+		Assert.assertEquals(expandoRow.getPrimaryKey(),
+			expandoRows.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByTableIdNotFound() throws Exception {
+		addExpandoRow();
+
+		long tableId = ServiceTestUtil.nextLong();
+
+		List<ExpandoRow> expandoRows = _persistence.findByTableId(tableId);
+
+		Assert.assertEquals(0, expandoRows.size());
+	}
+
+	@Test
+	public void testFindByTableIdStartEnd() throws Exception {
+		testFindByTableIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByTableIdStartEndWrongRange() throws Exception {
+		testFindByTableIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByTableIdStartEndZeroZero() throws Exception {
+		testFindByTableIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByTableIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		ExpandoRow expandoRow = addExpandoRow();
+
+		long tableId = expandoRow.getTableId();
+
+		List<ExpandoRow> expandoRows = _persistence.findByTableId(tableId,
+				start, end);
+
+		Assert.assertEquals(expected, expandoRows.size());
+	}
+
+	@Test
+	public void testFindByClassPK() throws Exception {
+		ExpandoRow expandoRow = addExpandoRow();
+
+		long classPK = expandoRow.getClassPK();
+
+		List<ExpandoRow> expandoRows = _persistence.findByClassPK(classPK);
+
+		Assert.assertEquals(1, expandoRows.size());
+
+		Assert.assertEquals(expandoRow.getPrimaryKey(),
+			expandoRows.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByClassPKNotFound() throws Exception {
+		addExpandoRow();
+
+		long classPK = ServiceTestUtil.nextLong();
+
+		List<ExpandoRow> expandoRows = _persistence.findByClassPK(classPK);
+
+		Assert.assertEquals(0, expandoRows.size());
+	}
+
+	@Test
+	public void testFindByClassPKStartEnd() throws Exception {
+		testFindByClassPKStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByClassPKStartEndWrongRange() throws Exception {
+		testFindByClassPKStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByClassPKStartEndZeroZero() throws Exception {
+		testFindByClassPKStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByClassPKStartEnd(int start, int end, int expected)
+		throws Exception {
+		ExpandoRow expandoRow = addExpandoRow();
+
+		long classPK = expandoRow.getClassPK();
+
+		List<ExpandoRow> expandoRows = _persistence.findByClassPK(classPK,
+				start, end);
+
+		Assert.assertEquals(expected, expandoRows.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("ExpandoRow", "rowId", true,
 			"companyId", true, "modifiedDate", true, "tableId", true,

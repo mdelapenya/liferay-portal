@@ -167,6 +167,58 @@ public class ResourceActionPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByName() throws Exception {
+		ResourceAction resourceAction = addResourceAction();
+
+		String name = resourceAction.getName();
+
+		List<ResourceAction> resourceActions = _persistence.findByName(name);
+
+		Assert.assertEquals(1, resourceActions.size());
+
+		Assert.assertEquals(resourceAction.getPrimaryKey(),
+			resourceActions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByNameNotFound() throws Exception {
+		addResourceAction();
+
+		String name = ServiceTestUtil.randomString();
+
+		List<ResourceAction> resourceActions = _persistence.findByName(name);
+
+		Assert.assertEquals(0, resourceActions.size());
+	}
+
+	@Test
+	public void testFindByNameStartEnd() throws Exception {
+		testFindByNameStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByNameStartEndWrongRange() throws Exception {
+		testFindByNameStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByNameStartEndZeroZero() throws Exception {
+		testFindByNameStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByNameStartEnd(int start, int end, int expected)
+		throws Exception {
+		ResourceAction resourceAction = addResourceAction();
+
+		String name = resourceAction.getName();
+
+		List<ResourceAction> resourceActions = _persistence.findByName(name,
+				start, end);
+
+		Assert.assertEquals(expected, resourceActions.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("ResourceAction",
 			"resourceActionId", true, "name", true, "actionId", true,

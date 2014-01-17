@@ -190,6 +190,132 @@ public class RatingsEntryPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByC_C() throws Exception {
+		RatingsEntry ratingsEntry = addRatingsEntry();
+
+		long classNameId = ratingsEntry.getClassNameId();
+
+		long classPK = ratingsEntry.getClassPK();
+
+		List<RatingsEntry> ratingsEntries = _persistence.findByC_C(classNameId,
+				classPK);
+
+		Assert.assertEquals(1, ratingsEntries.size());
+
+		Assert.assertEquals(ratingsEntry.getPrimaryKey(),
+			ratingsEntries.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_CNotFound() throws Exception {
+		addRatingsEntry();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		long classPK = ServiceTestUtil.nextLong();
+
+		List<RatingsEntry> ratingsEntries = _persistence.findByC_C(classNameId,
+				classPK);
+
+		Assert.assertEquals(0, ratingsEntries.size());
+	}
+
+	@Test
+	public void testFindByC_CStartEnd() throws Exception {
+		testFindByC_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_CStartEndWrongRange() throws Exception {
+		testFindByC_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_CStartEndZeroZero() throws Exception {
+		testFindByC_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		RatingsEntry ratingsEntry = addRatingsEntry();
+
+		long classNameId = ratingsEntry.getClassNameId();
+
+		long classPK = ratingsEntry.getClassPK();
+
+		List<RatingsEntry> ratingsEntries = _persistence.findByC_C(classNameId,
+				classPK, start, end);
+
+		Assert.assertEquals(expected, ratingsEntries.size());
+	}
+
+	@Test
+	public void testFindByC_C_S() throws Exception {
+		RatingsEntry ratingsEntry = addRatingsEntry();
+
+		long classNameId = ratingsEntry.getClassNameId();
+
+		long classPK = ratingsEntry.getClassPK();
+
+		double score = ratingsEntry.getScore();
+
+		List<RatingsEntry> ratingsEntries = _persistence.findByC_C_S(classNameId,
+				classPK, score);
+
+		Assert.assertEquals(1, ratingsEntries.size());
+
+		Assert.assertEquals(ratingsEntry.getPrimaryKey(),
+			ratingsEntries.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_C_SNotFound() throws Exception {
+		addRatingsEntry();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		long classPK = ServiceTestUtil.nextLong();
+
+		double score = ServiceTestUtil.nextDouble();
+
+		List<RatingsEntry> ratingsEntries = _persistence.findByC_C_S(classNameId,
+				classPK, score);
+
+		Assert.assertEquals(0, ratingsEntries.size());
+	}
+
+	@Test
+	public void testFindByC_C_SStartEnd() throws Exception {
+		testFindByC_C_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_C_SStartEndWrongRange() throws Exception {
+		testFindByC_C_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_C_SStartEndZeroZero() throws Exception {
+		testFindByC_C_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_C_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		RatingsEntry ratingsEntry = addRatingsEntry();
+
+		long classNameId = ratingsEntry.getClassNameId();
+
+		long classPK = ratingsEntry.getClassPK();
+
+		double score = ratingsEntry.getScore();
+
+		List<RatingsEntry> ratingsEntries = _persistence.findByC_C_S(classNameId,
+				classPK, score, start, end);
+
+		Assert.assertEquals(expected, ratingsEntries.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("RatingsEntry", "entryId",
 			true, "companyId", true, "userId", true, "userName", true,

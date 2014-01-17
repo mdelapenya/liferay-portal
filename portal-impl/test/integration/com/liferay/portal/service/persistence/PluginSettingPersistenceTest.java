@@ -175,6 +175,59 @@ public class PluginSettingPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByCompanyId() throws Exception {
+		PluginSetting pluginSetting = addPluginSetting();
+
+		long companyId = pluginSetting.getCompanyId();
+
+		List<PluginSetting> pluginSettings = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(1, pluginSettings.size());
+
+		Assert.assertEquals(pluginSetting.getPrimaryKey(),
+			pluginSettings.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByCompanyIdNotFound() throws Exception {
+		addPluginSetting();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<PluginSetting> pluginSettings = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(0, pluginSettings.size());
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEnd() throws Exception {
+		testFindByCompanyIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndWrongRange()
+		throws Exception {
+		testFindByCompanyIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndZeroZero() throws Exception {
+		testFindByCompanyIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByCompanyIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		PluginSetting pluginSetting = addPluginSetting();
+
+		long companyId = pluginSetting.getCompanyId();
+
+		List<PluginSetting> pluginSettings = _persistence.findByCompanyId(companyId,
+				start, end);
+
+		Assert.assertEquals(expected, pluginSettings.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("PluginSetting",
 			"pluginSettingId", true, "companyId", true, "pluginId", true,

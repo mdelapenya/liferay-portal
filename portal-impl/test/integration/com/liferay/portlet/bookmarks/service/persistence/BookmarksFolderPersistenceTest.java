@@ -224,6 +224,172 @@ public class BookmarksFolderPersistenceTest {
 	}
 
 	@Test
+	public void testFindByResourceBlockId() throws Exception {
+		BookmarksFolder bookmarksFolder = addBookmarksFolder();
+
+		long resourceBlockId = bookmarksFolder.getResourceBlockId();
+
+		List<BookmarksFolder> bookmarksFolders = _persistence.findByResourceBlockId(resourceBlockId);
+
+		Assert.assertEquals(1, bookmarksFolders.size());
+
+		Assert.assertEquals(bookmarksFolder.getPrimaryKey(),
+			bookmarksFolders.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByResourceBlockIdNotFound() throws Exception {
+		addBookmarksFolder();
+
+		long resourceBlockId = ServiceTestUtil.nextLong();
+
+		List<BookmarksFolder> bookmarksFolders = _persistence.findByResourceBlockId(resourceBlockId);
+
+		Assert.assertEquals(0, bookmarksFolders.size());
+	}
+
+	@Test
+	public void testFindByResourceBlockIdStartEnd() throws Exception {
+		testFindByResourceBlockIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByResourceBlockIdStartEndWrongRange()
+		throws Exception {
+		testFindByResourceBlockIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByResourceBlockIdStartEndZeroZero()
+		throws Exception {
+		testFindByResourceBlockIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByResourceBlockIdStartEnd(int start, int end,
+		int expected) throws Exception {
+		BookmarksFolder bookmarksFolder = addBookmarksFolder();
+
+		long resourceBlockId = bookmarksFolder.getResourceBlockId();
+
+		List<BookmarksFolder> bookmarksFolders = _persistence.findByResourceBlockId(resourceBlockId,
+				start, end);
+
+		Assert.assertEquals(expected, bookmarksFolders.size());
+	}
+
+	@Test
+	public void testFindByUuid() throws Exception {
+		BookmarksFolder bookmarksFolder = addBookmarksFolder();
+
+		String uuid = bookmarksFolder.getUuid();
+
+		List<BookmarksFolder> bookmarksFolders = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, bookmarksFolders.size());
+
+		Assert.assertEquals(bookmarksFolder.getPrimaryKey(),
+			bookmarksFolders.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addBookmarksFolder();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<BookmarksFolder> bookmarksFolders = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, bookmarksFolders.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		BookmarksFolder bookmarksFolder = addBookmarksFolder();
+
+		String uuid = bookmarksFolder.getUuid();
+
+		List<BookmarksFolder> bookmarksFolders = _persistence.findByUuid(uuid,
+				start, end);
+
+		Assert.assertEquals(expected, bookmarksFolders.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		BookmarksFolder bookmarksFolder = addBookmarksFolder();
+
+		String uuid = bookmarksFolder.getUuid();
+
+		long companyId = bookmarksFolder.getCompanyId();
+
+		List<BookmarksFolder> bookmarksFolders = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(1, bookmarksFolders.size());
+
+		Assert.assertEquals(bookmarksFolder.getPrimaryKey(),
+			bookmarksFolders.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addBookmarksFolder();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<BookmarksFolder> bookmarksFolders = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(0, bookmarksFolders.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		BookmarksFolder bookmarksFolder = addBookmarksFolder();
+
+		String uuid = bookmarksFolder.getUuid();
+
+		long companyId = bookmarksFolder.getCompanyId();
+
+		List<BookmarksFolder> bookmarksFolders = _persistence.findByUuid_C(uuid,
+				companyId, start, end);
+
+		Assert.assertEquals(expected, bookmarksFolders.size());
+	}
+
+	@Test
 	public void testFilterFindByGroupId() throws Exception {
 		try {
 			_persistence.filterFindByGroupId(0, QueryUtil.ALL_POS,

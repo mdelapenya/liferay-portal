@@ -199,6 +199,421 @@ public class EmailAddressPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		EmailAddress emailAddress = addEmailAddress();
+
+		String uuid = emailAddress.getUuid();
+
+		List<EmailAddress> emailAddresses = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, emailAddresses.size());
+
+		Assert.assertEquals(emailAddress.getPrimaryKey(),
+			emailAddresses.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addEmailAddress();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<EmailAddress> emailAddresses = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, emailAddresses.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		EmailAddress emailAddress = addEmailAddress();
+
+		String uuid = emailAddress.getUuid();
+
+		List<EmailAddress> emailAddresses = _persistence.findByUuid(uuid,
+				start, end);
+
+		Assert.assertEquals(expected, emailAddresses.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		EmailAddress emailAddress = addEmailAddress();
+
+		String uuid = emailAddress.getUuid();
+
+		long companyId = emailAddress.getCompanyId();
+
+		List<EmailAddress> emailAddresses = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(1, emailAddresses.size());
+
+		Assert.assertEquals(emailAddress.getPrimaryKey(),
+			emailAddresses.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addEmailAddress();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<EmailAddress> emailAddresses = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(0, emailAddresses.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		EmailAddress emailAddress = addEmailAddress();
+
+		String uuid = emailAddress.getUuid();
+
+		long companyId = emailAddress.getCompanyId();
+
+		List<EmailAddress> emailAddresses = _persistence.findByUuid_C(uuid,
+				companyId, start, end);
+
+		Assert.assertEquals(expected, emailAddresses.size());
+	}
+
+	@Test
+	public void testFindByCompanyId() throws Exception {
+		EmailAddress emailAddress = addEmailAddress();
+
+		long companyId = emailAddress.getCompanyId();
+
+		List<EmailAddress> emailAddresses = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(1, emailAddresses.size());
+
+		Assert.assertEquals(emailAddress.getPrimaryKey(),
+			emailAddresses.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByCompanyIdNotFound() throws Exception {
+		addEmailAddress();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<EmailAddress> emailAddresses = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(0, emailAddresses.size());
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEnd() throws Exception {
+		testFindByCompanyIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndWrongRange()
+		throws Exception {
+		testFindByCompanyIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndZeroZero() throws Exception {
+		testFindByCompanyIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByCompanyIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		EmailAddress emailAddress = addEmailAddress();
+
+		long companyId = emailAddress.getCompanyId();
+
+		List<EmailAddress> emailAddresses = _persistence.findByCompanyId(companyId,
+				start, end);
+
+		Assert.assertEquals(expected, emailAddresses.size());
+	}
+
+	@Test
+	public void testFindByUserId() throws Exception {
+		EmailAddress emailAddress = addEmailAddress();
+
+		long userId = emailAddress.getUserId();
+
+		List<EmailAddress> emailAddresses = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(1, emailAddresses.size());
+
+		Assert.assertEquals(emailAddress.getPrimaryKey(),
+			emailAddresses.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUserIdNotFound() throws Exception {
+		addEmailAddress();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		List<EmailAddress> emailAddresses = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(0, emailAddresses.size());
+	}
+
+	@Test
+	public void testFindByUserIdStartEnd() throws Exception {
+		testFindByUserIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndWrongRange() throws Exception {
+		testFindByUserIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndZeroZero() throws Exception {
+		testFindByUserIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUserIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		EmailAddress emailAddress = addEmailAddress();
+
+		long userId = emailAddress.getUserId();
+
+		List<EmailAddress> emailAddresses = _persistence.findByUserId(userId,
+				start, end);
+
+		Assert.assertEquals(expected, emailAddresses.size());
+	}
+
+	@Test
+	public void testFindByC_C() throws Exception {
+		EmailAddress emailAddress = addEmailAddress();
+
+		long companyId = emailAddress.getCompanyId();
+
+		long classNameId = emailAddress.getClassNameId();
+
+		List<EmailAddress> emailAddresses = _persistence.findByC_C(companyId,
+				classNameId);
+
+		Assert.assertEquals(1, emailAddresses.size());
+
+		Assert.assertEquals(emailAddress.getPrimaryKey(),
+			emailAddresses.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_CNotFound() throws Exception {
+		addEmailAddress();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		List<EmailAddress> emailAddresses = _persistence.findByC_C(companyId,
+				classNameId);
+
+		Assert.assertEquals(0, emailAddresses.size());
+	}
+
+	@Test
+	public void testFindByC_CStartEnd() throws Exception {
+		testFindByC_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_CStartEndWrongRange() throws Exception {
+		testFindByC_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_CStartEndZeroZero() throws Exception {
+		testFindByC_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		EmailAddress emailAddress = addEmailAddress();
+
+		long companyId = emailAddress.getCompanyId();
+
+		long classNameId = emailAddress.getClassNameId();
+
+		List<EmailAddress> emailAddresses = _persistence.findByC_C(companyId,
+				classNameId, start, end);
+
+		Assert.assertEquals(expected, emailAddresses.size());
+	}
+
+	@Test
+	public void testFindByC_C_C() throws Exception {
+		EmailAddress emailAddress = addEmailAddress();
+
+		long companyId = emailAddress.getCompanyId();
+
+		long classNameId = emailAddress.getClassNameId();
+
+		long classPK = emailAddress.getClassPK();
+
+		List<EmailAddress> emailAddresses = _persistence.findByC_C_C(companyId,
+				classNameId, classPK);
+
+		Assert.assertEquals(1, emailAddresses.size());
+
+		Assert.assertEquals(emailAddress.getPrimaryKey(),
+			emailAddresses.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_C_CNotFound() throws Exception {
+		addEmailAddress();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		long classPK = ServiceTestUtil.nextLong();
+
+		List<EmailAddress> emailAddresses = _persistence.findByC_C_C(companyId,
+				classNameId, classPK);
+
+		Assert.assertEquals(0, emailAddresses.size());
+	}
+
+	@Test
+	public void testFindByC_C_CStartEnd() throws Exception {
+		testFindByC_C_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_C_CStartEndWrongRange() throws Exception {
+		testFindByC_C_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_C_CStartEndZeroZero() throws Exception {
+		testFindByC_C_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_C_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		EmailAddress emailAddress = addEmailAddress();
+
+		long companyId = emailAddress.getCompanyId();
+
+		long classNameId = emailAddress.getClassNameId();
+
+		long classPK = emailAddress.getClassPK();
+
+		List<EmailAddress> emailAddresses = _persistence.findByC_C_C(companyId,
+				classNameId, classPK, start, end);
+
+		Assert.assertEquals(expected, emailAddresses.size());
+	}
+
+	@Test
+	public void testFindByC_C_C_P() throws Exception {
+		EmailAddress emailAddress = addEmailAddress();
+
+		long companyId = emailAddress.getCompanyId();
+
+		long classNameId = emailAddress.getClassNameId();
+
+		long classPK = emailAddress.getClassPK();
+
+		boolean primary = emailAddress.getPrimary();
+
+		List<EmailAddress> emailAddresses = _persistence.findByC_C_C_P(companyId,
+				classNameId, classPK, primary);
+
+		Assert.assertEquals(1, emailAddresses.size());
+
+		Assert.assertEquals(emailAddress.getPrimaryKey(),
+			emailAddresses.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_C_C_PNotFound() throws Exception {
+		addEmailAddress();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		long classPK = ServiceTestUtil.nextLong();
+
+		boolean primary = ServiceTestUtil.randomBoolean();
+
+		List<EmailAddress> emailAddresses = _persistence.findByC_C_C_P(companyId,
+				classNameId, classPK, primary);
+
+		Assert.assertEquals(0, emailAddresses.size());
+	}
+
+	@Test
+	public void testFindByC_C_C_PStartEnd() throws Exception {
+		testFindByC_C_C_PStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_C_C_PStartEndWrongRange() throws Exception {
+		testFindByC_C_C_PStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_C_C_PStartEndZeroZero() throws Exception {
+		testFindByC_C_C_PStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_C_C_PStartEnd(int start, int end, int expected)
+		throws Exception {
+		EmailAddress emailAddress = addEmailAddress();
+
+		long companyId = emailAddress.getCompanyId();
+
+		long classNameId = emailAddress.getClassNameId();
+
+		long classPK = emailAddress.getClassPK();
+
+		boolean primary = emailAddress.getPrimary();
+
+		List<EmailAddress> emailAddresses = _persistence.findByC_C_C_P(companyId,
+				classNameId, classPK, primary, start, end);
+
+		Assert.assertEquals(expected, emailAddresses.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("EmailAddress", "uuid",
 			true, "emailAddressId", true, "companyId", true, "userId", true,

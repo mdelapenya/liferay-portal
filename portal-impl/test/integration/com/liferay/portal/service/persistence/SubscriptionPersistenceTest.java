@@ -189,6 +189,184 @@ public class SubscriptionPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUserId() throws Exception {
+		Subscription subscription = addSubscription();
+
+		long userId = subscription.getUserId();
+
+		List<Subscription> subscriptions = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(1, subscriptions.size());
+
+		Assert.assertEquals(subscription.getPrimaryKey(),
+			subscriptions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUserIdNotFound() throws Exception {
+		addSubscription();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		List<Subscription> subscriptions = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(0, subscriptions.size());
+	}
+
+	@Test
+	public void testFindByUserIdStartEnd() throws Exception {
+		testFindByUserIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndWrongRange() throws Exception {
+		testFindByUserIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndZeroZero() throws Exception {
+		testFindByUserIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUserIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		Subscription subscription = addSubscription();
+
+		long userId = subscription.getUserId();
+
+		List<Subscription> subscriptions = _persistence.findByUserId(userId,
+				start, end);
+
+		Assert.assertEquals(expected, subscriptions.size());
+	}
+
+	@Test
+	public void testFindByU_C() throws Exception {
+		Subscription subscription = addSubscription();
+
+		long userId = subscription.getUserId();
+
+		long classNameId = subscription.getClassNameId();
+
+		List<Subscription> subscriptions = _persistence.findByU_C(userId,
+				classNameId);
+
+		Assert.assertEquals(1, subscriptions.size());
+
+		Assert.assertEquals(subscription.getPrimaryKey(),
+			subscriptions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByU_CNotFound() throws Exception {
+		addSubscription();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		List<Subscription> subscriptions = _persistence.findByU_C(userId,
+				classNameId);
+
+		Assert.assertEquals(0, subscriptions.size());
+	}
+
+	@Test
+	public void testFindByU_CStartEnd() throws Exception {
+		testFindByU_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByU_CStartEndWrongRange() throws Exception {
+		testFindByU_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByU_CStartEndZeroZero() throws Exception {
+		testFindByU_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByU_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		Subscription subscription = addSubscription();
+
+		long userId = subscription.getUserId();
+
+		long classNameId = subscription.getClassNameId();
+
+		List<Subscription> subscriptions = _persistence.findByU_C(userId,
+				classNameId, start, end);
+
+		Assert.assertEquals(expected, subscriptions.size());
+	}
+
+	@Test
+	public void testFindByC_C_C() throws Exception {
+		Subscription subscription = addSubscription();
+
+		long companyId = subscription.getCompanyId();
+
+		long classNameId = subscription.getClassNameId();
+
+		long classPK = subscription.getClassPK();
+
+		List<Subscription> subscriptions = _persistence.findByC_C_C(companyId,
+				classNameId, classPK);
+
+		Assert.assertEquals(1, subscriptions.size());
+
+		Assert.assertEquals(subscription.getPrimaryKey(),
+			subscriptions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_C_CNotFound() throws Exception {
+		addSubscription();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		long classPK = ServiceTestUtil.nextLong();
+
+		List<Subscription> subscriptions = _persistence.findByC_C_C(companyId,
+				classNameId, classPK);
+
+		Assert.assertEquals(0, subscriptions.size());
+	}
+
+	@Test
+	public void testFindByC_C_CStartEnd() throws Exception {
+		testFindByC_C_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_C_CStartEndWrongRange() throws Exception {
+		testFindByC_C_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_C_CStartEndZeroZero() throws Exception {
+		testFindByC_C_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_C_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		Subscription subscription = addSubscription();
+
+		long companyId = subscription.getCompanyId();
+
+		long classNameId = subscription.getClassNameId();
+
+		long classPK = subscription.getClassPK();
+
+		List<Subscription> subscriptions = _persistence.findByC_C_C(companyId,
+				classNameId, classPK, start, end);
+
+		Assert.assertEquals(expected, subscriptions.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("Subscription",
 			"subscriptionId", true, "companyId", true, "userId", true,

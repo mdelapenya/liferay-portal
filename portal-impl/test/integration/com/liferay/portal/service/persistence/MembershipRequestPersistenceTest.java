@@ -191,6 +191,236 @@ public class MembershipRequestPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByGroupId() throws Exception {
+		MembershipRequest membershipRequest = addMembershipRequest();
+
+		long groupId = membershipRequest.getGroupId();
+
+		List<MembershipRequest> membershipRequests = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(1, membershipRequests.size());
+
+		Assert.assertEquals(membershipRequest.getPrimaryKey(),
+			membershipRequests.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByGroupIdNotFound() throws Exception {
+		addMembershipRequest();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		List<MembershipRequest> membershipRequests = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(0, membershipRequests.size());
+	}
+
+	@Test
+	public void testFindByGroupIdStartEnd() throws Exception {
+		testFindByGroupIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndWrongRange() throws Exception {
+		testFindByGroupIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndZeroZero() throws Exception {
+		testFindByGroupIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByGroupIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		MembershipRequest membershipRequest = addMembershipRequest();
+
+		long groupId = membershipRequest.getGroupId();
+
+		List<MembershipRequest> membershipRequests = _persistence.findByGroupId(groupId,
+				start, end);
+
+		Assert.assertEquals(expected, membershipRequests.size());
+	}
+
+	@Test
+	public void testFindByUserId() throws Exception {
+		MembershipRequest membershipRequest = addMembershipRequest();
+
+		long userId = membershipRequest.getUserId();
+
+		List<MembershipRequest> membershipRequests = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(1, membershipRequests.size());
+
+		Assert.assertEquals(membershipRequest.getPrimaryKey(),
+			membershipRequests.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUserIdNotFound() throws Exception {
+		addMembershipRequest();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		List<MembershipRequest> membershipRequests = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(0, membershipRequests.size());
+	}
+
+	@Test
+	public void testFindByUserIdStartEnd() throws Exception {
+		testFindByUserIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndWrongRange() throws Exception {
+		testFindByUserIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndZeroZero() throws Exception {
+		testFindByUserIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUserIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		MembershipRequest membershipRequest = addMembershipRequest();
+
+		long userId = membershipRequest.getUserId();
+
+		List<MembershipRequest> membershipRequests = _persistence.findByUserId(userId,
+				start, end);
+
+		Assert.assertEquals(expected, membershipRequests.size());
+	}
+
+	@Test
+	public void testFindByG_S() throws Exception {
+		MembershipRequest membershipRequest = addMembershipRequest();
+
+		long groupId = membershipRequest.getGroupId();
+
+		int statusId = membershipRequest.getStatusId();
+
+		List<MembershipRequest> membershipRequests = _persistence.findByG_S(groupId,
+				statusId);
+
+		Assert.assertEquals(1, membershipRequests.size());
+
+		Assert.assertEquals(membershipRequest.getPrimaryKey(),
+			membershipRequests.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_SNotFound() throws Exception {
+		addMembershipRequest();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		int statusId = ServiceTestUtil.nextInt();
+
+		List<MembershipRequest> membershipRequests = _persistence.findByG_S(groupId,
+				statusId);
+
+		Assert.assertEquals(0, membershipRequests.size());
+	}
+
+	@Test
+	public void testFindByG_SStartEnd() throws Exception {
+		testFindByG_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_SStartEndWrongRange() throws Exception {
+		testFindByG_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_SStartEndZeroZero() throws Exception {
+		testFindByG_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		MembershipRequest membershipRequest = addMembershipRequest();
+
+		long groupId = membershipRequest.getGroupId();
+
+		int statusId = membershipRequest.getStatusId();
+
+		List<MembershipRequest> membershipRequests = _persistence.findByG_S(groupId,
+				statusId, start, end);
+
+		Assert.assertEquals(expected, membershipRequests.size());
+	}
+
+	@Test
+	public void testFindByG_U_S() throws Exception {
+		MembershipRequest membershipRequest = addMembershipRequest();
+
+		long groupId = membershipRequest.getGroupId();
+
+		long userId = membershipRequest.getUserId();
+
+		int statusId = membershipRequest.getStatusId();
+
+		List<MembershipRequest> membershipRequests = _persistence.findByG_U_S(groupId,
+				userId, statusId);
+
+		Assert.assertEquals(1, membershipRequests.size());
+
+		Assert.assertEquals(membershipRequest.getPrimaryKey(),
+			membershipRequests.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_U_SNotFound() throws Exception {
+		addMembershipRequest();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		int statusId = ServiceTestUtil.nextInt();
+
+		List<MembershipRequest> membershipRequests = _persistence.findByG_U_S(groupId,
+				userId, statusId);
+
+		Assert.assertEquals(0, membershipRequests.size());
+	}
+
+	@Test
+	public void testFindByG_U_SStartEnd() throws Exception {
+		testFindByG_U_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_U_SStartEndWrongRange() throws Exception {
+		testFindByG_U_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_U_SStartEndZeroZero() throws Exception {
+		testFindByG_U_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_U_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		MembershipRequest membershipRequest = addMembershipRequest();
+
+		long groupId = membershipRequest.getGroupId();
+
+		long userId = membershipRequest.getUserId();
+
+		int statusId = membershipRequest.getStatusId();
+
+		List<MembershipRequest> membershipRequests = _persistence.findByG_U_S(groupId,
+				userId, statusId, start, end);
+
+		Assert.assertEquals(expected, membershipRequests.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("MembershipRequest",
 			"membershipRequestId", true, "groupId", true, "companyId", true,

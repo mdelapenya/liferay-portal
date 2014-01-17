@@ -170,6 +170,116 @@ public class SCLicensePersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByActive() throws Exception {
+		SCLicense scLicense = addSCLicense();
+
+		boolean active = scLicense.getActive();
+
+		List<SCLicense> scLicenses = _persistence.findByActive(active);
+
+		Assert.assertEquals(1, scLicenses.size());
+
+		Assert.assertEquals(scLicense.getPrimaryKey(),
+			scLicenses.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByActiveNotFound() throws Exception {
+		addSCLicense();
+
+		boolean active = ServiceTestUtil.randomBoolean();
+
+		List<SCLicense> scLicenses = _persistence.findByActive(active);
+
+		Assert.assertEquals(0, scLicenses.size());
+	}
+
+	@Test
+	public void testFindByActiveStartEnd() throws Exception {
+		testFindByActiveStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByActiveStartEndWrongRange() throws Exception {
+		testFindByActiveStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByActiveStartEndZeroZero() throws Exception {
+		testFindByActiveStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByActiveStartEnd(int start, int end, int expected)
+		throws Exception {
+		SCLicense scLicense = addSCLicense();
+
+		boolean active = scLicense.getActive();
+
+		List<SCLicense> scLicenses = _persistence.findByActive(active, start,
+				end);
+
+		Assert.assertEquals(expected, scLicenses.size());
+	}
+
+	@Test
+	public void testFindByA_R() throws Exception {
+		SCLicense scLicense = addSCLicense();
+
+		boolean active = scLicense.getActive();
+
+		boolean recommended = scLicense.getRecommended();
+
+		List<SCLicense> scLicenses = _persistence.findByA_R(active, recommended);
+
+		Assert.assertEquals(1, scLicenses.size());
+
+		Assert.assertEquals(scLicense.getPrimaryKey(),
+			scLicenses.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByA_RNotFound() throws Exception {
+		addSCLicense();
+
+		boolean active = ServiceTestUtil.randomBoolean();
+
+		boolean recommended = ServiceTestUtil.randomBoolean();
+
+		List<SCLicense> scLicenses = _persistence.findByA_R(active, recommended);
+
+		Assert.assertEquals(0, scLicenses.size());
+	}
+
+	@Test
+	public void testFindByA_RStartEnd() throws Exception {
+		testFindByA_RStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByA_RStartEndWrongRange() throws Exception {
+		testFindByA_RStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByA_RStartEndZeroZero() throws Exception {
+		testFindByA_RStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByA_RStartEnd(int start, int end, int expected)
+		throws Exception {
+		SCLicense scLicense = addSCLicense();
+
+		boolean active = scLicense.getActive();
+
+		boolean recommended = scLicense.getRecommended();
+
+		List<SCLicense> scLicenses = _persistence.findByA_R(active,
+				recommended, start, end);
+
+		Assert.assertEquals(expected, scLicenses.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("SCLicense", "licenseId",
 			true, "name", true, "url", true, "openSource", true, "active",

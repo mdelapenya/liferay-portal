@@ -171,6 +171,112 @@ public class DDMStorageLinkPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		DDMStorageLink ddmStorageLink = addDDMStorageLink();
+
+		String uuid = ddmStorageLink.getUuid();
+
+		List<DDMStorageLink> ddmStorageLinks = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, ddmStorageLinks.size());
+
+		Assert.assertEquals(ddmStorageLink.getPrimaryKey(),
+			ddmStorageLinks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addDDMStorageLink();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<DDMStorageLink> ddmStorageLinks = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, ddmStorageLinks.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		DDMStorageLink ddmStorageLink = addDDMStorageLink();
+
+		String uuid = ddmStorageLink.getUuid();
+
+		List<DDMStorageLink> ddmStorageLinks = _persistence.findByUuid(uuid,
+				start, end);
+
+		Assert.assertEquals(expected, ddmStorageLinks.size());
+	}
+
+	@Test
+	public void testFindByStructureId() throws Exception {
+		DDMStorageLink ddmStorageLink = addDDMStorageLink();
+
+		long structureId = ddmStorageLink.getStructureId();
+
+		List<DDMStorageLink> ddmStorageLinks = _persistence.findByStructureId(structureId);
+
+		Assert.assertEquals(1, ddmStorageLinks.size());
+
+		Assert.assertEquals(ddmStorageLink.getPrimaryKey(),
+			ddmStorageLinks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByStructureIdNotFound() throws Exception {
+		addDDMStorageLink();
+
+		long structureId = ServiceTestUtil.nextLong();
+
+		List<DDMStorageLink> ddmStorageLinks = _persistence.findByStructureId(structureId);
+
+		Assert.assertEquals(0, ddmStorageLinks.size());
+	}
+
+	@Test
+	public void testFindByStructureIdStartEnd() throws Exception {
+		testFindByStructureIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByStructureIdStartEndWrongRange()
+		throws Exception {
+		testFindByStructureIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByStructureIdStartEndZeroZero()
+		throws Exception {
+		testFindByStructureIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByStructureIdStartEnd(int start, int end,
+		int expected) throws Exception {
+		DDMStorageLink ddmStorageLink = addDDMStorageLink();
+
+		long structureId = ddmStorageLink.getStructureId();
+
+		List<DDMStorageLink> ddmStorageLinks = _persistence.findByStructureId(structureId,
+				start, end);
+
+		Assert.assertEquals(expected, ddmStorageLinks.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("DDMStorageLink", "uuid",
 			true, "storageLinkId", true, "classNameId", true, "classPK", true,

@@ -210,6 +210,169 @@ public class RepositoryPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		Repository repository = addRepository();
+
+		String uuid = repository.getUuid();
+
+		List<Repository> repositories = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, repositories.size());
+
+		Assert.assertEquals(repository.getPrimaryKey(),
+			repositories.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addRepository();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<Repository> repositories = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, repositories.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		Repository repository = addRepository();
+
+		String uuid = repository.getUuid();
+
+		List<Repository> repositories = _persistence.findByUuid(uuid, start, end);
+
+		Assert.assertEquals(expected, repositories.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		Repository repository = addRepository();
+
+		String uuid = repository.getUuid();
+
+		long companyId = repository.getCompanyId();
+
+		List<Repository> repositories = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(1, repositories.size());
+
+		Assert.assertEquals(repository.getPrimaryKey(),
+			repositories.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addRepository();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<Repository> repositories = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(0, repositories.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		Repository repository = addRepository();
+
+		String uuid = repository.getUuid();
+
+		long companyId = repository.getCompanyId();
+
+		List<Repository> repositories = _persistence.findByUuid_C(uuid,
+				companyId, start, end);
+
+		Assert.assertEquals(expected, repositories.size());
+	}
+
+	@Test
+	public void testFindByGroupId() throws Exception {
+		Repository repository = addRepository();
+
+		long groupId = repository.getGroupId();
+
+		List<Repository> repositories = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(1, repositories.size());
+
+		Assert.assertEquals(repository.getPrimaryKey(),
+			repositories.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByGroupIdNotFound() throws Exception {
+		addRepository();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		List<Repository> repositories = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(0, repositories.size());
+	}
+
+	@Test
+	public void testFindByGroupIdStartEnd() throws Exception {
+		testFindByGroupIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndWrongRange() throws Exception {
+		testFindByGroupIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndZeroZero() throws Exception {
+		testFindByGroupIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByGroupIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		Repository repository = addRepository();
+
+		long groupId = repository.getGroupId();
+
+		List<Repository> repositories = _persistence.findByGroupId(groupId,
+				start, end);
+
+		Assert.assertEquals(expected, repositories.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("Repository", "uuid", true,
 			"repositoryId", true, "groupId", true, "companyId", true, "userId",

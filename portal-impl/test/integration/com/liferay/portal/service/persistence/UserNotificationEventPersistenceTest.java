@@ -189,6 +189,290 @@ public class UserNotificationEventPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		UserNotificationEvent userNotificationEvent = addUserNotificationEvent();
+
+		String uuid = userNotificationEvent.getUuid();
+
+		List<UserNotificationEvent> userNotificationEvents = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, userNotificationEvents.size());
+
+		Assert.assertEquals(userNotificationEvent.getPrimaryKey(),
+			userNotificationEvents.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addUserNotificationEvent();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<UserNotificationEvent> userNotificationEvents = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, userNotificationEvents.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		UserNotificationEvent userNotificationEvent = addUserNotificationEvent();
+
+		String uuid = userNotificationEvent.getUuid();
+
+		List<UserNotificationEvent> userNotificationEvents = _persistence.findByUuid(uuid,
+				start, end);
+
+		Assert.assertEquals(expected, userNotificationEvents.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		UserNotificationEvent userNotificationEvent = addUserNotificationEvent();
+
+		String uuid = userNotificationEvent.getUuid();
+
+		long companyId = userNotificationEvent.getCompanyId();
+
+		List<UserNotificationEvent> userNotificationEvents = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(1, userNotificationEvents.size());
+
+		Assert.assertEquals(userNotificationEvent.getPrimaryKey(),
+			userNotificationEvents.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addUserNotificationEvent();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<UserNotificationEvent> userNotificationEvents = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(0, userNotificationEvents.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		UserNotificationEvent userNotificationEvent = addUserNotificationEvent();
+
+		String uuid = userNotificationEvent.getUuid();
+
+		long companyId = userNotificationEvent.getCompanyId();
+
+		List<UserNotificationEvent> userNotificationEvents = _persistence.findByUuid_C(uuid,
+				companyId, start, end);
+
+		Assert.assertEquals(expected, userNotificationEvents.size());
+	}
+
+	@Test
+	public void testFindByUserId() throws Exception {
+		UserNotificationEvent userNotificationEvent = addUserNotificationEvent();
+
+		long userId = userNotificationEvent.getUserId();
+
+		List<UserNotificationEvent> userNotificationEvents = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(1, userNotificationEvents.size());
+
+		Assert.assertEquals(userNotificationEvent.getPrimaryKey(),
+			userNotificationEvents.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUserIdNotFound() throws Exception {
+		addUserNotificationEvent();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		List<UserNotificationEvent> userNotificationEvents = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(0, userNotificationEvents.size());
+	}
+
+	@Test
+	public void testFindByUserIdStartEnd() throws Exception {
+		testFindByUserIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndWrongRange() throws Exception {
+		testFindByUserIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndZeroZero() throws Exception {
+		testFindByUserIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUserIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		UserNotificationEvent userNotificationEvent = addUserNotificationEvent();
+
+		long userId = userNotificationEvent.getUserId();
+
+		List<UserNotificationEvent> userNotificationEvents = _persistence.findByUserId(userId,
+				start, end);
+
+		Assert.assertEquals(expected, userNotificationEvents.size());
+	}
+
+	@Test
+	public void testFindByU_D() throws Exception {
+		UserNotificationEvent userNotificationEvent = addUserNotificationEvent();
+
+		long userId = userNotificationEvent.getUserId();
+
+		boolean delivered = userNotificationEvent.getDelivered();
+
+		List<UserNotificationEvent> userNotificationEvents = _persistence.findByU_D(userId,
+				delivered);
+
+		Assert.assertEquals(1, userNotificationEvents.size());
+
+		Assert.assertEquals(userNotificationEvent.getPrimaryKey(),
+			userNotificationEvents.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByU_DNotFound() throws Exception {
+		addUserNotificationEvent();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		boolean delivered = ServiceTestUtil.randomBoolean();
+
+		List<UserNotificationEvent> userNotificationEvents = _persistence.findByU_D(userId,
+				delivered);
+
+		Assert.assertEquals(0, userNotificationEvents.size());
+	}
+
+	@Test
+	public void testFindByU_DStartEnd() throws Exception {
+		testFindByU_DStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByU_DStartEndWrongRange() throws Exception {
+		testFindByU_DStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByU_DStartEndZeroZero() throws Exception {
+		testFindByU_DStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByU_DStartEnd(int start, int end, int expected)
+		throws Exception {
+		UserNotificationEvent userNotificationEvent = addUserNotificationEvent();
+
+		long userId = userNotificationEvent.getUserId();
+
+		boolean delivered = userNotificationEvent.getDelivered();
+
+		List<UserNotificationEvent> userNotificationEvents = _persistence.findByU_D(userId,
+				delivered, start, end);
+
+		Assert.assertEquals(expected, userNotificationEvents.size());
+	}
+
+	@Test
+	public void testFindByU_A() throws Exception {
+		UserNotificationEvent userNotificationEvent = addUserNotificationEvent();
+
+		long userId = userNotificationEvent.getUserId();
+
+		boolean archived = userNotificationEvent.getArchived();
+
+		List<UserNotificationEvent> userNotificationEvents = _persistence.findByU_A(userId,
+				archived);
+
+		Assert.assertEquals(1, userNotificationEvents.size());
+
+		Assert.assertEquals(userNotificationEvent.getPrimaryKey(),
+			userNotificationEvents.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByU_ANotFound() throws Exception {
+		addUserNotificationEvent();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		boolean archived = ServiceTestUtil.randomBoolean();
+
+		List<UserNotificationEvent> userNotificationEvents = _persistence.findByU_A(userId,
+				archived);
+
+		Assert.assertEquals(0, userNotificationEvents.size());
+	}
+
+	@Test
+	public void testFindByU_AStartEnd() throws Exception {
+		testFindByU_AStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByU_AStartEndWrongRange() throws Exception {
+		testFindByU_AStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByU_AStartEndZeroZero() throws Exception {
+		testFindByU_AStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByU_AStartEnd(int start, int end, int expected)
+		throws Exception {
+		UserNotificationEvent userNotificationEvent = addUserNotificationEvent();
+
+		long userId = userNotificationEvent.getUserId();
+
+		boolean archived = userNotificationEvent.getArchived();
+
+		List<UserNotificationEvent> userNotificationEvents = _persistence.findByU_A(userId,
+				archived, start, end);
+
+		Assert.assertEquals(expected, userNotificationEvents.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("UserNotificationEvent",
 			"uuid", true, "userNotificationEventId", true, "companyId", true,

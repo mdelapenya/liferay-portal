@@ -212,6 +212,613 @@ public class BackgroundTaskPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByGroupId() throws Exception {
+		BackgroundTask backgroundTask = addBackgroundTask();
+
+		long groupId = backgroundTask.getGroupId();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(1, backgroundTasks.size());
+
+		Assert.assertEquals(backgroundTask.getPrimaryKey(),
+			backgroundTasks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByGroupIdNotFound() throws Exception {
+		addBackgroundTask();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(0, backgroundTasks.size());
+	}
+
+	@Test
+	public void testFindByGroupIdStartEnd() throws Exception {
+		testFindByGroupIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndWrongRange() throws Exception {
+		testFindByGroupIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndZeroZero() throws Exception {
+		testFindByGroupIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByGroupIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		BackgroundTask backgroundTask = addBackgroundTask();
+
+		long groupId = backgroundTask.getGroupId();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByGroupId(groupId,
+				start, end);
+
+		Assert.assertEquals(expected, backgroundTasks.size());
+	}
+
+	@Test
+	public void testFindByCompanyId() throws Exception {
+		BackgroundTask backgroundTask = addBackgroundTask();
+
+		long companyId = backgroundTask.getCompanyId();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(1, backgroundTasks.size());
+
+		Assert.assertEquals(backgroundTask.getPrimaryKey(),
+			backgroundTasks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByCompanyIdNotFound() throws Exception {
+		addBackgroundTask();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(0, backgroundTasks.size());
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEnd() throws Exception {
+		testFindByCompanyIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndWrongRange()
+		throws Exception {
+		testFindByCompanyIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndZeroZero() throws Exception {
+		testFindByCompanyIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByCompanyIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		BackgroundTask backgroundTask = addBackgroundTask();
+
+		long companyId = backgroundTask.getCompanyId();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByCompanyId(companyId,
+				start, end);
+
+		Assert.assertEquals(expected, backgroundTasks.size());
+	}
+
+	@Test
+	public void testFindByStatus() throws Exception {
+		BackgroundTask backgroundTask = addBackgroundTask();
+
+		int status = backgroundTask.getStatus();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByStatus(status);
+
+		Assert.assertEquals(1, backgroundTasks.size());
+
+		Assert.assertEquals(backgroundTask.getPrimaryKey(),
+			backgroundTasks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByStatusNotFound() throws Exception {
+		addBackgroundTask();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByStatus(status);
+
+		Assert.assertEquals(0, backgroundTasks.size());
+	}
+
+	@Test
+	public void testFindByStatusStartEnd() throws Exception {
+		testFindByStatusStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByStatusStartEndWrongRange() throws Exception {
+		testFindByStatusStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByStatusStartEndZeroZero() throws Exception {
+		testFindByStatusStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByStatusStartEnd(int start, int end, int expected)
+		throws Exception {
+		BackgroundTask backgroundTask = addBackgroundTask();
+
+		int status = backgroundTask.getStatus();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByStatus(status,
+				start, end);
+
+		Assert.assertEquals(expected, backgroundTasks.size());
+	}
+
+	@Test
+	public void testFindByG_T() throws Exception {
+		BackgroundTask backgroundTask = addBackgroundTask();
+
+		long groupId = backgroundTask.getGroupId();
+
+		String taskExecutorClassName = backgroundTask.getTaskExecutorClassName();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByG_T(groupId,
+				taskExecutorClassName);
+
+		Assert.assertEquals(1, backgroundTasks.size());
+
+		Assert.assertEquals(backgroundTask.getPrimaryKey(),
+			backgroundTasks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_TNotFound() throws Exception {
+		addBackgroundTask();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		String taskExecutorClassName = ServiceTestUtil.randomString();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByG_T(groupId,
+				taskExecutorClassName);
+
+		Assert.assertEquals(0, backgroundTasks.size());
+	}
+
+	@Test
+	public void testFindByG_TStartEnd() throws Exception {
+		testFindByG_TStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_TStartEndWrongRange() throws Exception {
+		testFindByG_TStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_TStartEndZeroZero() throws Exception {
+		testFindByG_TStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_TStartEnd(int start, int end, int expected)
+		throws Exception {
+		BackgroundTask backgroundTask = addBackgroundTask();
+
+		long groupId = backgroundTask.getGroupId();
+
+		String taskExecutorClassName = backgroundTask.getTaskExecutorClassName();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByG_T(groupId,
+				taskExecutorClassName, start, end);
+
+		Assert.assertEquals(expected, backgroundTasks.size());
+	}
+
+	@Test
+	public void testFindByG_S() throws Exception {
+		BackgroundTask backgroundTask = addBackgroundTask();
+
+		long groupId = backgroundTask.getGroupId();
+
+		int status = backgroundTask.getStatus();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByG_S(groupId,
+				status);
+
+		Assert.assertEquals(1, backgroundTasks.size());
+
+		Assert.assertEquals(backgroundTask.getPrimaryKey(),
+			backgroundTasks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_SNotFound() throws Exception {
+		addBackgroundTask();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByG_S(groupId,
+				status);
+
+		Assert.assertEquals(0, backgroundTasks.size());
+	}
+
+	@Test
+	public void testFindByG_SStartEnd() throws Exception {
+		testFindByG_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_SStartEndWrongRange() throws Exception {
+		testFindByG_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_SStartEndZeroZero() throws Exception {
+		testFindByG_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		BackgroundTask backgroundTask = addBackgroundTask();
+
+		long groupId = backgroundTask.getGroupId();
+
+		int status = backgroundTask.getStatus();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByG_S(groupId,
+				status, start, end);
+
+		Assert.assertEquals(expected, backgroundTasks.size());
+	}
+
+	@Test
+	public void testFindByT_S() throws Exception {
+		BackgroundTask backgroundTask = addBackgroundTask();
+
+		String taskExecutorClassName = backgroundTask.getTaskExecutorClassName();
+
+		int status = backgroundTask.getStatus();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByT_S(taskExecutorClassName,
+				status);
+
+		Assert.assertEquals(1, backgroundTasks.size());
+
+		Assert.assertEquals(backgroundTask.getPrimaryKey(),
+			backgroundTasks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByT_SNotFound() throws Exception {
+		addBackgroundTask();
+
+		String taskExecutorClassName = ServiceTestUtil.randomString();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByT_S(taskExecutorClassName,
+				status);
+
+		Assert.assertEquals(0, backgroundTasks.size());
+	}
+
+	@Test
+	public void testFindByT_SStartEnd() throws Exception {
+		testFindByT_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByT_SStartEndWrongRange() throws Exception {
+		testFindByT_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByT_SStartEndZeroZero() throws Exception {
+		testFindByT_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByT_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		BackgroundTask backgroundTask = addBackgroundTask();
+
+		String taskExecutorClassName = backgroundTask.getTaskExecutorClassName();
+
+		int status = backgroundTask.getStatus();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByT_S(taskExecutorClassName,
+				status, start, end);
+
+		Assert.assertEquals(expected, backgroundTasks.size());
+	}
+
+	@Test
+	public void testFindByG_N_T() throws Exception {
+		BackgroundTask backgroundTask = addBackgroundTask();
+
+		long groupId = backgroundTask.getGroupId();
+
+		String name = backgroundTask.getName();
+
+		String taskExecutorClassName = backgroundTask.getTaskExecutorClassName();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByG_N_T(groupId,
+				name, taskExecutorClassName);
+
+		Assert.assertEquals(1, backgroundTasks.size());
+
+		Assert.assertEquals(backgroundTask.getPrimaryKey(),
+			backgroundTasks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_N_TNotFound() throws Exception {
+		addBackgroundTask();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		String name = ServiceTestUtil.randomString();
+
+		String taskExecutorClassName = ServiceTestUtil.randomString();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByG_N_T(groupId,
+				name, taskExecutorClassName);
+
+		Assert.assertEquals(0, backgroundTasks.size());
+	}
+
+	@Test
+	public void testFindByG_N_TStartEnd() throws Exception {
+		testFindByG_N_TStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_N_TStartEndWrongRange() throws Exception {
+		testFindByG_N_TStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_N_TStartEndZeroZero() throws Exception {
+		testFindByG_N_TStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_N_TStartEnd(int start, int end, int expected)
+		throws Exception {
+		BackgroundTask backgroundTask = addBackgroundTask();
+
+		long groupId = backgroundTask.getGroupId();
+
+		String name = backgroundTask.getName();
+
+		String taskExecutorClassName = backgroundTask.getTaskExecutorClassName();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByG_N_T(groupId,
+				name, taskExecutorClassName, start, end);
+
+		Assert.assertEquals(expected, backgroundTasks.size());
+	}
+
+	@Test
+	public void testFindByG_T_C() throws Exception {
+		BackgroundTask backgroundTask = addBackgroundTask();
+
+		long groupId = backgroundTask.getGroupId();
+
+		String taskExecutorClassName = backgroundTask.getTaskExecutorClassName();
+
+		boolean completed = backgroundTask.getCompleted();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByG_T_C(groupId,
+				taskExecutorClassName, completed);
+
+		Assert.assertEquals(1, backgroundTasks.size());
+
+		Assert.assertEquals(backgroundTask.getPrimaryKey(),
+			backgroundTasks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_T_CNotFound() throws Exception {
+		addBackgroundTask();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		String taskExecutorClassName = ServiceTestUtil.randomString();
+
+		boolean completed = ServiceTestUtil.randomBoolean();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByG_T_C(groupId,
+				taskExecutorClassName, completed);
+
+		Assert.assertEquals(0, backgroundTasks.size());
+	}
+
+	@Test
+	public void testFindByG_T_CStartEnd() throws Exception {
+		testFindByG_T_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_T_CStartEndWrongRange() throws Exception {
+		testFindByG_T_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_T_CStartEndZeroZero() throws Exception {
+		testFindByG_T_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_T_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		BackgroundTask backgroundTask = addBackgroundTask();
+
+		long groupId = backgroundTask.getGroupId();
+
+		String taskExecutorClassName = backgroundTask.getTaskExecutorClassName();
+
+		boolean completed = backgroundTask.getCompleted();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByG_T_C(groupId,
+				taskExecutorClassName, completed, start, end);
+
+		Assert.assertEquals(expected, backgroundTasks.size());
+	}
+
+	@Test
+	public void testFindByG_T_S() throws Exception {
+		BackgroundTask backgroundTask = addBackgroundTask();
+
+		long groupId = backgroundTask.getGroupId();
+
+		String taskExecutorClassName = backgroundTask.getTaskExecutorClassName();
+
+		int status = backgroundTask.getStatus();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByG_T_S(groupId,
+				taskExecutorClassName, status);
+
+		Assert.assertEquals(1, backgroundTasks.size());
+
+		Assert.assertEquals(backgroundTask.getPrimaryKey(),
+			backgroundTasks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_T_SNotFound() throws Exception {
+		addBackgroundTask();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		String taskExecutorClassName = ServiceTestUtil.randomString();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByG_T_S(groupId,
+				taskExecutorClassName, status);
+
+		Assert.assertEquals(0, backgroundTasks.size());
+	}
+
+	@Test
+	public void testFindByG_T_SStartEnd() throws Exception {
+		testFindByG_T_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_T_SStartEndWrongRange() throws Exception {
+		testFindByG_T_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_T_SStartEndZeroZero() throws Exception {
+		testFindByG_T_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_T_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		BackgroundTask backgroundTask = addBackgroundTask();
+
+		long groupId = backgroundTask.getGroupId();
+
+		String taskExecutorClassName = backgroundTask.getTaskExecutorClassName();
+
+		int status = backgroundTask.getStatus();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByG_T_S(groupId,
+				taskExecutorClassName, status, start, end);
+
+		Assert.assertEquals(expected, backgroundTasks.size());
+	}
+
+	@Test
+	public void testFindByG_N_T_C() throws Exception {
+		BackgroundTask backgroundTask = addBackgroundTask();
+
+		long groupId = backgroundTask.getGroupId();
+
+		String name = backgroundTask.getName();
+
+		String taskExecutorClassName = backgroundTask.getTaskExecutorClassName();
+
+		boolean completed = backgroundTask.getCompleted();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByG_N_T_C(groupId,
+				name, taskExecutorClassName, completed);
+
+		Assert.assertEquals(1, backgroundTasks.size());
+
+		Assert.assertEquals(backgroundTask.getPrimaryKey(),
+			backgroundTasks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_N_T_CNotFound() throws Exception {
+		addBackgroundTask();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		String name = ServiceTestUtil.randomString();
+
+		String taskExecutorClassName = ServiceTestUtil.randomString();
+
+		boolean completed = ServiceTestUtil.randomBoolean();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByG_N_T_C(groupId,
+				name, taskExecutorClassName, completed);
+
+		Assert.assertEquals(0, backgroundTasks.size());
+	}
+
+	@Test
+	public void testFindByG_N_T_CStartEnd() throws Exception {
+		testFindByG_N_T_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_N_T_CStartEndWrongRange() throws Exception {
+		testFindByG_N_T_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_N_T_CStartEndZeroZero() throws Exception {
+		testFindByG_N_T_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_N_T_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		BackgroundTask backgroundTask = addBackgroundTask();
+
+		long groupId = backgroundTask.getGroupId();
+
+		String name = backgroundTask.getName();
+
+		String taskExecutorClassName = backgroundTask.getTaskExecutorClassName();
+
+		boolean completed = backgroundTask.getCompleted();
+
+		List<BackgroundTask> backgroundTasks = _persistence.findByG_N_T_C(groupId,
+				name, taskExecutorClassName, completed, start, end);
+
+		Assert.assertEquals(expected, backgroundTasks.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("BackgroundTask",
 			"backgroundTaskId", true, "groupId", true, "companyId", true,

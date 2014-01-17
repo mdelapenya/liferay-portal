@@ -206,6 +206,256 @@ public class SystemEventPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByGroupId() throws Exception {
+		SystemEvent systemEvent = addSystemEvent();
+
+		long groupId = systemEvent.getGroupId();
+
+		List<SystemEvent> systemEvents = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(1, systemEvents.size());
+
+		Assert.assertEquals(systemEvent.getPrimaryKey(),
+			systemEvents.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByGroupIdNotFound() throws Exception {
+		addSystemEvent();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		List<SystemEvent> systemEvents = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(0, systemEvents.size());
+	}
+
+	@Test
+	public void testFindByGroupIdStartEnd() throws Exception {
+		testFindByGroupIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndWrongRange() throws Exception {
+		testFindByGroupIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndZeroZero() throws Exception {
+		testFindByGroupIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByGroupIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		SystemEvent systemEvent = addSystemEvent();
+
+		long groupId = systemEvent.getGroupId();
+
+		List<SystemEvent> systemEvents = _persistence.findByGroupId(groupId,
+				start, end);
+
+		Assert.assertEquals(expected, systemEvents.size());
+	}
+
+	@Test
+	public void testFindByG_S() throws Exception {
+		SystemEvent systemEvent = addSystemEvent();
+
+		long groupId = systemEvent.getGroupId();
+
+		long systemEventSetKey = systemEvent.getSystemEventSetKey();
+
+		List<SystemEvent> systemEvents = _persistence.findByG_S(groupId,
+				systemEventSetKey);
+
+		Assert.assertEquals(1, systemEvents.size());
+
+		Assert.assertEquals(systemEvent.getPrimaryKey(),
+			systemEvents.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_SNotFound() throws Exception {
+		addSystemEvent();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		long systemEventSetKey = ServiceTestUtil.nextLong();
+
+		List<SystemEvent> systemEvents = _persistence.findByG_S(groupId,
+				systemEventSetKey);
+
+		Assert.assertEquals(0, systemEvents.size());
+	}
+
+	@Test
+	public void testFindByG_SStartEnd() throws Exception {
+		testFindByG_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_SStartEndWrongRange() throws Exception {
+		testFindByG_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_SStartEndZeroZero() throws Exception {
+		testFindByG_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		SystemEvent systemEvent = addSystemEvent();
+
+		long groupId = systemEvent.getGroupId();
+
+		long systemEventSetKey = systemEvent.getSystemEventSetKey();
+
+		List<SystemEvent> systemEvents = _persistence.findByG_S(groupId,
+				systemEventSetKey, start, end);
+
+		Assert.assertEquals(expected, systemEvents.size());
+	}
+
+	@Test
+	public void testFindByG_C_C() throws Exception {
+		SystemEvent systemEvent = addSystemEvent();
+
+		long groupId = systemEvent.getGroupId();
+
+		long classNameId = systemEvent.getClassNameId();
+
+		long classPK = systemEvent.getClassPK();
+
+		List<SystemEvent> systemEvents = _persistence.findByG_C_C(groupId,
+				classNameId, classPK);
+
+		Assert.assertEquals(1, systemEvents.size());
+
+		Assert.assertEquals(systemEvent.getPrimaryKey(),
+			systemEvents.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_C_CNotFound() throws Exception {
+		addSystemEvent();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		long classPK = ServiceTestUtil.nextLong();
+
+		List<SystemEvent> systemEvents = _persistence.findByG_C_C(groupId,
+				classNameId, classPK);
+
+		Assert.assertEquals(0, systemEvents.size());
+	}
+
+	@Test
+	public void testFindByG_C_CStartEnd() throws Exception {
+		testFindByG_C_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_C_CStartEndWrongRange() throws Exception {
+		testFindByG_C_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_C_CStartEndZeroZero() throws Exception {
+		testFindByG_C_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_C_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		SystemEvent systemEvent = addSystemEvent();
+
+		long groupId = systemEvent.getGroupId();
+
+		long classNameId = systemEvent.getClassNameId();
+
+		long classPK = systemEvent.getClassPK();
+
+		List<SystemEvent> systemEvents = _persistence.findByG_C_C(groupId,
+				classNameId, classPK, start, end);
+
+		Assert.assertEquals(expected, systemEvents.size());
+	}
+
+	@Test
+	public void testFindByG_C_C_T() throws Exception {
+		SystemEvent systemEvent = addSystemEvent();
+
+		long groupId = systemEvent.getGroupId();
+
+		long classNameId = systemEvent.getClassNameId();
+
+		long classPK = systemEvent.getClassPK();
+
+		int type = systemEvent.getType();
+
+		List<SystemEvent> systemEvents = _persistence.findByG_C_C_T(groupId,
+				classNameId, classPK, type);
+
+		Assert.assertEquals(1, systemEvents.size());
+
+		Assert.assertEquals(systemEvent.getPrimaryKey(),
+			systemEvents.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_C_C_TNotFound() throws Exception {
+		addSystemEvent();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		long classPK = ServiceTestUtil.nextLong();
+
+		int type = ServiceTestUtil.nextInt();
+
+		List<SystemEvent> systemEvents = _persistence.findByG_C_C_T(groupId,
+				classNameId, classPK, type);
+
+		Assert.assertEquals(0, systemEvents.size());
+	}
+
+	@Test
+	public void testFindByG_C_C_TStartEnd() throws Exception {
+		testFindByG_C_C_TStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_C_C_TStartEndWrongRange() throws Exception {
+		testFindByG_C_C_TStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_C_C_TStartEndZeroZero() throws Exception {
+		testFindByG_C_C_TStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_C_C_TStartEnd(int start, int end, int expected)
+		throws Exception {
+		SystemEvent systemEvent = addSystemEvent();
+
+		long groupId = systemEvent.getGroupId();
+
+		long classNameId = systemEvent.getClassNameId();
+
+		long classPK = systemEvent.getClassPK();
+
+		int type = systemEvent.getType();
+
+		List<SystemEvent> systemEvents = _persistence.findByG_C_C_T(groupId,
+				classNameId, classPK, type, start, end);
+
+		Assert.assertEquals(expected, systemEvents.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("SystemEvent",
 			"systemEventId", true, "groupId", true, "companyId", true,

@@ -197,6 +197,220 @@ public class DDMContentPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		DDMContent ddmContent = addDDMContent();
+
+		String uuid = ddmContent.getUuid();
+
+		List<DDMContent> ddmContents = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, ddmContents.size());
+
+		Assert.assertEquals(ddmContent.getPrimaryKey(),
+			ddmContents.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addDDMContent();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<DDMContent> ddmContents = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, ddmContents.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		DDMContent ddmContent = addDDMContent();
+
+		String uuid = ddmContent.getUuid();
+
+		List<DDMContent> ddmContents = _persistence.findByUuid(uuid, start, end);
+
+		Assert.assertEquals(expected, ddmContents.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		DDMContent ddmContent = addDDMContent();
+
+		String uuid = ddmContent.getUuid();
+
+		long companyId = ddmContent.getCompanyId();
+
+		List<DDMContent> ddmContents = _persistence.findByUuid_C(uuid, companyId);
+
+		Assert.assertEquals(1, ddmContents.size());
+
+		Assert.assertEquals(ddmContent.getPrimaryKey(),
+			ddmContents.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addDDMContent();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<DDMContent> ddmContents = _persistence.findByUuid_C(uuid, companyId);
+
+		Assert.assertEquals(0, ddmContents.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		DDMContent ddmContent = addDDMContent();
+
+		String uuid = ddmContent.getUuid();
+
+		long companyId = ddmContent.getCompanyId();
+
+		List<DDMContent> ddmContents = _persistence.findByUuid_C(uuid,
+				companyId, start, end);
+
+		Assert.assertEquals(expected, ddmContents.size());
+	}
+
+	@Test
+	public void testFindByGroupId() throws Exception {
+		DDMContent ddmContent = addDDMContent();
+
+		long groupId = ddmContent.getGroupId();
+
+		List<DDMContent> ddmContents = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(1, ddmContents.size());
+
+		Assert.assertEquals(ddmContent.getPrimaryKey(),
+			ddmContents.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByGroupIdNotFound() throws Exception {
+		addDDMContent();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		List<DDMContent> ddmContents = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(0, ddmContents.size());
+	}
+
+	@Test
+	public void testFindByGroupIdStartEnd() throws Exception {
+		testFindByGroupIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndWrongRange() throws Exception {
+		testFindByGroupIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndZeroZero() throws Exception {
+		testFindByGroupIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByGroupIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		DDMContent ddmContent = addDDMContent();
+
+		long groupId = ddmContent.getGroupId();
+
+		List<DDMContent> ddmContents = _persistence.findByGroupId(groupId,
+				start, end);
+
+		Assert.assertEquals(expected, ddmContents.size());
+	}
+
+	@Test
+	public void testFindByCompanyId() throws Exception {
+		DDMContent ddmContent = addDDMContent();
+
+		long companyId = ddmContent.getCompanyId();
+
+		List<DDMContent> ddmContents = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(1, ddmContents.size());
+
+		Assert.assertEquals(ddmContent.getPrimaryKey(),
+			ddmContents.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByCompanyIdNotFound() throws Exception {
+		addDDMContent();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<DDMContent> ddmContents = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(0, ddmContents.size());
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEnd() throws Exception {
+		testFindByCompanyIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndWrongRange()
+		throws Exception {
+		testFindByCompanyIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndZeroZero() throws Exception {
+		testFindByCompanyIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByCompanyIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		DDMContent ddmContent = addDDMContent();
+
+		long companyId = ddmContent.getCompanyId();
+
+		List<DDMContent> ddmContents = _persistence.findByCompanyId(companyId,
+				start, end);
+
+		Assert.assertEquals(expected, ddmContents.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("DDMContent", "uuid", true,
 			"contentId", true, "groupId", true, "companyId", true, "userId",

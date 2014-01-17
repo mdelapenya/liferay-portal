@@ -48,6 +48,7 @@ import org.junit.runner.RunWith;
 
 import java.io.Serializable;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -187,6 +188,290 @@ public class BlogsStatsUserPersistenceTest {
 		catch (Exception e) {
 			Assert.fail(e.getMessage());
 		}
+	}
+
+	@Test
+	public void testFindByGroupId() throws Exception {
+		BlogsStatsUser blogsStatsUser = addBlogsStatsUser();
+
+		long groupId = blogsStatsUser.getGroupId();
+
+		List<BlogsStatsUser> blogsStatsUsers = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(1, blogsStatsUsers.size());
+
+		Assert.assertEquals(blogsStatsUser.getPrimaryKey(),
+			blogsStatsUsers.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByGroupIdNotFound() throws Exception {
+		addBlogsStatsUser();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		List<BlogsStatsUser> blogsStatsUsers = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(0, blogsStatsUsers.size());
+	}
+
+	@Test
+	public void testFindByGroupIdStartEnd() throws Exception {
+		testFindByGroupIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndWrongRange() throws Exception {
+		testFindByGroupIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndZeroZero() throws Exception {
+		testFindByGroupIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByGroupIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		BlogsStatsUser blogsStatsUser = addBlogsStatsUser();
+
+		long groupId = blogsStatsUser.getGroupId();
+
+		List<BlogsStatsUser> blogsStatsUsers = _persistence.findByGroupId(groupId,
+				start, end);
+
+		Assert.assertEquals(expected, blogsStatsUsers.size());
+	}
+
+	@Test
+	public void testFindByUserId() throws Exception {
+		BlogsStatsUser blogsStatsUser = addBlogsStatsUser();
+
+		long userId = blogsStatsUser.getUserId();
+
+		List<BlogsStatsUser> blogsStatsUsers = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(1, blogsStatsUsers.size());
+
+		Assert.assertEquals(blogsStatsUser.getPrimaryKey(),
+			blogsStatsUsers.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUserIdNotFound() throws Exception {
+		addBlogsStatsUser();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		List<BlogsStatsUser> blogsStatsUsers = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(0, blogsStatsUsers.size());
+	}
+
+	@Test
+	public void testFindByUserIdStartEnd() throws Exception {
+		testFindByUserIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndWrongRange() throws Exception {
+		testFindByUserIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndZeroZero() throws Exception {
+		testFindByUserIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUserIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		BlogsStatsUser blogsStatsUser = addBlogsStatsUser();
+
+		long userId = blogsStatsUser.getUserId();
+
+		List<BlogsStatsUser> blogsStatsUsers = _persistence.findByUserId(userId,
+				start, end);
+
+		Assert.assertEquals(expected, blogsStatsUsers.size());
+	}
+
+	@Test
+	public void testFindByG_NotE() throws Exception {
+		BlogsStatsUser blogsStatsUser = addBlogsStatsUser();
+
+		long groupId = blogsStatsUser.getGroupId();
+
+		int entryCount = 1;
+
+		List<BlogsStatsUser> blogsStatsUsers = _persistence.findByG_NotE(groupId,
+				entryCount);
+
+		Assert.assertEquals(1, blogsStatsUsers.size());
+
+		Assert.assertEquals(blogsStatsUser.getPrimaryKey(),
+			blogsStatsUsers.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_NotENotFound() throws Exception {
+		addBlogsStatsUser();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		int entryCount = ServiceTestUtil.nextInt();
+
+		List<BlogsStatsUser> blogsStatsUsers = _persistence.findByG_NotE(groupId,
+				entryCount);
+
+		Assert.assertEquals(0, blogsStatsUsers.size());
+	}
+
+	@Test
+	public void testFindByG_NotEStartEnd() throws Exception {
+		testFindByG_NotEStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_NotEStartEndWrongRange() throws Exception {
+		testFindByG_NotEStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_NotEStartEndZeroZero() throws Exception {
+		testFindByG_NotEStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_NotEStartEnd(int start, int end, int expected)
+		throws Exception {
+		BlogsStatsUser blogsStatsUser = addBlogsStatsUser();
+
+		long groupId = blogsStatsUser.getGroupId();
+
+		int entryCount = 1;
+
+		List<BlogsStatsUser> blogsStatsUsers = _persistence.findByG_NotE(groupId,
+				entryCount, start, end);
+
+		Assert.assertEquals(expected, blogsStatsUsers.size());
+	}
+
+	@Test
+	public void testFindByC_NotE() throws Exception {
+		BlogsStatsUser blogsStatsUser = addBlogsStatsUser();
+
+		long companyId = blogsStatsUser.getCompanyId();
+
+		int entryCount = 1;
+
+		List<BlogsStatsUser> blogsStatsUsers = _persistence.findByC_NotE(companyId,
+				entryCount);
+
+		Assert.assertEquals(1, blogsStatsUsers.size());
+
+		Assert.assertEquals(blogsStatsUser.getPrimaryKey(),
+			blogsStatsUsers.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_NotENotFound() throws Exception {
+		addBlogsStatsUser();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		int entryCount = ServiceTestUtil.nextInt();
+
+		List<BlogsStatsUser> blogsStatsUsers = _persistence.findByC_NotE(companyId,
+				entryCount);
+
+		Assert.assertEquals(0, blogsStatsUsers.size());
+	}
+
+	@Test
+	public void testFindByC_NotEStartEnd() throws Exception {
+		testFindByC_NotEStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_NotEStartEndWrongRange() throws Exception {
+		testFindByC_NotEStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_NotEStartEndZeroZero() throws Exception {
+		testFindByC_NotEStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_NotEStartEnd(int start, int end, int expected)
+		throws Exception {
+		BlogsStatsUser blogsStatsUser = addBlogsStatsUser();
+
+		long companyId = blogsStatsUser.getCompanyId();
+
+		int entryCount = 1;
+
+		List<BlogsStatsUser> blogsStatsUsers = _persistence.findByC_NotE(companyId,
+				entryCount, start, end);
+
+		Assert.assertEquals(expected, blogsStatsUsers.size());
+	}
+
+	@Test
+	public void testFindByU_L() throws Exception {
+		BlogsStatsUser blogsStatsUser = addBlogsStatsUser();
+
+		long userId = blogsStatsUser.getUserId();
+
+		Date lastPostDate = blogsStatsUser.getLastPostDate();
+
+		List<BlogsStatsUser> blogsStatsUsers = _persistence.findByU_L(userId,
+				lastPostDate);
+
+		Assert.assertEquals(1, blogsStatsUsers.size());
+
+		Assert.assertEquals(blogsStatsUser.getPrimaryKey(),
+			blogsStatsUsers.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByU_LNotFound() throws Exception {
+		addBlogsStatsUser();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		Date lastPostDate = ServiceTestUtil.nextDate();
+
+		List<BlogsStatsUser> blogsStatsUsers = _persistence.findByU_L(userId,
+				lastPostDate);
+
+		Assert.assertEquals(0, blogsStatsUsers.size());
+	}
+
+	@Test
+	public void testFindByU_LStartEnd() throws Exception {
+		testFindByU_LStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByU_LStartEndWrongRange() throws Exception {
+		testFindByU_LStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByU_LStartEndZeroZero() throws Exception {
+		testFindByU_LStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByU_LStartEnd(int start, int end, int expected)
+		throws Exception {
+		BlogsStatsUser blogsStatsUser = addBlogsStatsUser();
+
+		long userId = blogsStatsUser.getUserId();
+
+		Date lastPostDate = blogsStatsUser.getLastPostDate();
+
+		List<BlogsStatsUser> blogsStatsUsers = _persistence.findByU_L(userId,
+				lastPostDate, start, end);
+
+		Assert.assertEquals(expected, blogsStatsUsers.size());
 	}
 
 	protected OrderByComparator getOrderByComparator() {

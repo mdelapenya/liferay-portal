@@ -155,6 +155,57 @@ public class ListTypePersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByType() throws Exception {
+		ListType listType = addListType();
+
+		String type = listType.getType();
+
+		List<ListType> listTypes = _persistence.findByType(type);
+
+		Assert.assertEquals(1, listTypes.size());
+
+		Assert.assertEquals(listType.getPrimaryKey(),
+			listTypes.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByTypeNotFound() throws Exception {
+		addListType();
+
+		String type = ServiceTestUtil.randomString();
+
+		List<ListType> listTypes = _persistence.findByType(type);
+
+		Assert.assertEquals(0, listTypes.size());
+	}
+
+	@Test
+	public void testFindByTypeStartEnd() throws Exception {
+		testFindByTypeStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByTypeStartEndWrongRange() throws Exception {
+		testFindByTypeStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByTypeStartEndZeroZero() throws Exception {
+		testFindByTypeStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByTypeStartEnd(int start, int end, int expected)
+		throws Exception {
+		ListType listType = addListType();
+
+		String type = listType.getType();
+
+		List<ListType> listTypes = _persistence.findByType(type, start, end);
+
+		Assert.assertEquals(expected, listTypes.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("ListType", "listTypeId",
 			true, "name", true, "type", true);

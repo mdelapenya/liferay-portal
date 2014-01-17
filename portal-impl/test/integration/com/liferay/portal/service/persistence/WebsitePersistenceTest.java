@@ -194,6 +194,415 @@ public class WebsitePersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		Website website = addWebsite();
+
+		String uuid = website.getUuid();
+
+		List<Website> websites = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, websites.size());
+
+		Assert.assertEquals(website.getPrimaryKey(),
+			websites.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addWebsite();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<Website> websites = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, websites.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		Website website = addWebsite();
+
+		String uuid = website.getUuid();
+
+		List<Website> websites = _persistence.findByUuid(uuid, start, end);
+
+		Assert.assertEquals(expected, websites.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		Website website = addWebsite();
+
+		String uuid = website.getUuid();
+
+		long companyId = website.getCompanyId();
+
+		List<Website> websites = _persistence.findByUuid_C(uuid, companyId);
+
+		Assert.assertEquals(1, websites.size());
+
+		Assert.assertEquals(website.getPrimaryKey(),
+			websites.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addWebsite();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<Website> websites = _persistence.findByUuid_C(uuid, companyId);
+
+		Assert.assertEquals(0, websites.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		Website website = addWebsite();
+
+		String uuid = website.getUuid();
+
+		long companyId = website.getCompanyId();
+
+		List<Website> websites = _persistence.findByUuid_C(uuid, companyId,
+				start, end);
+
+		Assert.assertEquals(expected, websites.size());
+	}
+
+	@Test
+	public void testFindByCompanyId() throws Exception {
+		Website website = addWebsite();
+
+		long companyId = website.getCompanyId();
+
+		List<Website> websites = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(1, websites.size());
+
+		Assert.assertEquals(website.getPrimaryKey(),
+			websites.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByCompanyIdNotFound() throws Exception {
+		addWebsite();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<Website> websites = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(0, websites.size());
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEnd() throws Exception {
+		testFindByCompanyIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndWrongRange()
+		throws Exception {
+		testFindByCompanyIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndZeroZero() throws Exception {
+		testFindByCompanyIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByCompanyIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		Website website = addWebsite();
+
+		long companyId = website.getCompanyId();
+
+		List<Website> websites = _persistence.findByCompanyId(companyId, start,
+				end);
+
+		Assert.assertEquals(expected, websites.size());
+	}
+
+	@Test
+	public void testFindByUserId() throws Exception {
+		Website website = addWebsite();
+
+		long userId = website.getUserId();
+
+		List<Website> websites = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(1, websites.size());
+
+		Assert.assertEquals(website.getPrimaryKey(),
+			websites.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUserIdNotFound() throws Exception {
+		addWebsite();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		List<Website> websites = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(0, websites.size());
+	}
+
+	@Test
+	public void testFindByUserIdStartEnd() throws Exception {
+		testFindByUserIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndWrongRange() throws Exception {
+		testFindByUserIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndZeroZero() throws Exception {
+		testFindByUserIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUserIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		Website website = addWebsite();
+
+		long userId = website.getUserId();
+
+		List<Website> websites = _persistence.findByUserId(userId, start, end);
+
+		Assert.assertEquals(expected, websites.size());
+	}
+
+	@Test
+	public void testFindByC_C() throws Exception {
+		Website website = addWebsite();
+
+		long companyId = website.getCompanyId();
+
+		long classNameId = website.getClassNameId();
+
+		List<Website> websites = _persistence.findByC_C(companyId, classNameId);
+
+		Assert.assertEquals(1, websites.size());
+
+		Assert.assertEquals(website.getPrimaryKey(),
+			websites.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_CNotFound() throws Exception {
+		addWebsite();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		List<Website> websites = _persistence.findByC_C(companyId, classNameId);
+
+		Assert.assertEquals(0, websites.size());
+	}
+
+	@Test
+	public void testFindByC_CStartEnd() throws Exception {
+		testFindByC_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_CStartEndWrongRange() throws Exception {
+		testFindByC_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_CStartEndZeroZero() throws Exception {
+		testFindByC_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		Website website = addWebsite();
+
+		long companyId = website.getCompanyId();
+
+		long classNameId = website.getClassNameId();
+
+		List<Website> websites = _persistence.findByC_C(companyId, classNameId,
+				start, end);
+
+		Assert.assertEquals(expected, websites.size());
+	}
+
+	@Test
+	public void testFindByC_C_C() throws Exception {
+		Website website = addWebsite();
+
+		long companyId = website.getCompanyId();
+
+		long classNameId = website.getClassNameId();
+
+		long classPK = website.getClassPK();
+
+		List<Website> websites = _persistence.findByC_C_C(companyId,
+				classNameId, classPK);
+
+		Assert.assertEquals(1, websites.size());
+
+		Assert.assertEquals(website.getPrimaryKey(),
+			websites.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_C_CNotFound() throws Exception {
+		addWebsite();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		long classPK = ServiceTestUtil.nextLong();
+
+		List<Website> websites = _persistence.findByC_C_C(companyId,
+				classNameId, classPK);
+
+		Assert.assertEquals(0, websites.size());
+	}
+
+	@Test
+	public void testFindByC_C_CStartEnd() throws Exception {
+		testFindByC_C_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_C_CStartEndWrongRange() throws Exception {
+		testFindByC_C_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_C_CStartEndZeroZero() throws Exception {
+		testFindByC_C_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_C_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		Website website = addWebsite();
+
+		long companyId = website.getCompanyId();
+
+		long classNameId = website.getClassNameId();
+
+		long classPK = website.getClassPK();
+
+		List<Website> websites = _persistence.findByC_C_C(companyId,
+				classNameId, classPK, start, end);
+
+		Assert.assertEquals(expected, websites.size());
+	}
+
+	@Test
+	public void testFindByC_C_C_P() throws Exception {
+		Website website = addWebsite();
+
+		long companyId = website.getCompanyId();
+
+		long classNameId = website.getClassNameId();
+
+		long classPK = website.getClassPK();
+
+		boolean primary = website.getPrimary();
+
+		List<Website> websites = _persistence.findByC_C_C_P(companyId,
+				classNameId, classPK, primary);
+
+		Assert.assertEquals(1, websites.size());
+
+		Assert.assertEquals(website.getPrimaryKey(),
+			websites.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_C_C_PNotFound() throws Exception {
+		addWebsite();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		long classPK = ServiceTestUtil.nextLong();
+
+		boolean primary = ServiceTestUtil.randomBoolean();
+
+		List<Website> websites = _persistence.findByC_C_C_P(companyId,
+				classNameId, classPK, primary);
+
+		Assert.assertEquals(0, websites.size());
+	}
+
+	@Test
+	public void testFindByC_C_C_PStartEnd() throws Exception {
+		testFindByC_C_C_PStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_C_C_PStartEndWrongRange() throws Exception {
+		testFindByC_C_C_PStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_C_C_PStartEndZeroZero() throws Exception {
+		testFindByC_C_C_PStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_C_C_PStartEnd(int start, int end, int expected)
+		throws Exception {
+		Website website = addWebsite();
+
+		long companyId = website.getCompanyId();
+
+		long classNameId = website.getClassNameId();
+
+		long classPK = website.getClassPK();
+
+		boolean primary = website.getPrimary();
+
+		List<Website> websites = _persistence.findByC_C_C_P(companyId,
+				classNameId, classPK, primary, start, end);
+
+		Assert.assertEquals(expected, websites.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("Website", "uuid", true,
 			"websiteId", true, "companyId", true, "userId", true, "userName",

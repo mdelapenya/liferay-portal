@@ -291,6 +291,66 @@ public class ShoppingItemPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByG_C() throws Exception {
+		ShoppingItem shoppingItem = addShoppingItem();
+
+		long groupId = shoppingItem.getGroupId();
+
+		long categoryId = shoppingItem.getCategoryId();
+
+		List<ShoppingItem> shoppingItems = _persistence.findByG_C(groupId,
+				categoryId);
+
+		Assert.assertEquals(1, shoppingItems.size());
+
+		Assert.assertEquals(shoppingItem.getPrimaryKey(),
+			shoppingItems.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_CNotFound() throws Exception {
+		addShoppingItem();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		long categoryId = ServiceTestUtil.nextLong();
+
+		List<ShoppingItem> shoppingItems = _persistence.findByG_C(groupId,
+				categoryId);
+
+		Assert.assertEquals(0, shoppingItems.size());
+	}
+
+	@Test
+	public void testFindByG_CStartEnd() throws Exception {
+		testFindByG_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_CStartEndWrongRange() throws Exception {
+		testFindByG_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_CStartEndZeroZero() throws Exception {
+		testFindByG_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		ShoppingItem shoppingItem = addShoppingItem();
+
+		long groupId = shoppingItem.getGroupId();
+
+		long categoryId = shoppingItem.getCategoryId();
+
+		List<ShoppingItem> shoppingItems = _persistence.findByG_C(groupId,
+				categoryId, start, end);
+
+		Assert.assertEquals(expected, shoppingItems.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("ShoppingItem", "itemId",
 			true, "groupId", true, "companyId", true, "userId", true,

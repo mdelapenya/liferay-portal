@@ -47,6 +47,7 @@ import org.junit.runner.RunWith;
 
 import java.io.Serializable;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -194,6 +195,231 @@ public class TrashEntryPersistenceTest {
 		catch (Exception e) {
 			Assert.fail(e.getMessage());
 		}
+	}
+
+	@Test
+	public void testFindByGroupId() throws Exception {
+		TrashEntry trashEntry = addTrashEntry();
+
+		long groupId = trashEntry.getGroupId();
+
+		List<TrashEntry> trashEntries = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(1, trashEntries.size());
+
+		Assert.assertEquals(trashEntry.getPrimaryKey(),
+			trashEntries.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByGroupIdNotFound() throws Exception {
+		addTrashEntry();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		List<TrashEntry> trashEntries = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(0, trashEntries.size());
+	}
+
+	@Test
+	public void testFindByGroupIdStartEnd() throws Exception {
+		testFindByGroupIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndWrongRange() throws Exception {
+		testFindByGroupIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndZeroZero() throws Exception {
+		testFindByGroupIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByGroupIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		TrashEntry trashEntry = addTrashEntry();
+
+		long groupId = trashEntry.getGroupId();
+
+		List<TrashEntry> trashEntries = _persistence.findByGroupId(groupId,
+				start, end);
+
+		Assert.assertEquals(expected, trashEntries.size());
+	}
+
+	@Test
+	public void testFindByCompanyId() throws Exception {
+		TrashEntry trashEntry = addTrashEntry();
+
+		long companyId = trashEntry.getCompanyId();
+
+		List<TrashEntry> trashEntries = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(1, trashEntries.size());
+
+		Assert.assertEquals(trashEntry.getPrimaryKey(),
+			trashEntries.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByCompanyIdNotFound() throws Exception {
+		addTrashEntry();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<TrashEntry> trashEntries = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(0, trashEntries.size());
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEnd() throws Exception {
+		testFindByCompanyIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndWrongRange()
+		throws Exception {
+		testFindByCompanyIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndZeroZero() throws Exception {
+		testFindByCompanyIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByCompanyIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		TrashEntry trashEntry = addTrashEntry();
+
+		long companyId = trashEntry.getCompanyId();
+
+		List<TrashEntry> trashEntries = _persistence.findByCompanyId(companyId,
+				start, end);
+
+		Assert.assertEquals(expected, trashEntries.size());
+	}
+
+	@Test
+	public void testFindByG_LtCD() throws Exception {
+		TrashEntry trashEntry = addTrashEntry();
+
+		long groupId = trashEntry.getGroupId();
+
+		Date createDate = trashEntry.getCreateDate();
+
+		List<TrashEntry> trashEntries = _persistence.findByG_LtCD(groupId,
+				createDate);
+
+		Assert.assertEquals(1, trashEntries.size());
+
+		Assert.assertEquals(trashEntry.getPrimaryKey(),
+			trashEntries.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_LtCDNotFound() throws Exception {
+		addTrashEntry();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		Date createDate = ServiceTestUtil.nextDate();
+
+		List<TrashEntry> trashEntries = _persistence.findByG_LtCD(groupId,
+				createDate);
+
+		Assert.assertEquals(0, trashEntries.size());
+	}
+
+	@Test
+	public void testFindByG_LtCDStartEnd() throws Exception {
+		testFindByG_LtCDStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_LtCDStartEndWrongRange() throws Exception {
+		testFindByG_LtCDStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_LtCDStartEndZeroZero() throws Exception {
+		testFindByG_LtCDStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_LtCDStartEnd(int start, int end, int expected)
+		throws Exception {
+		TrashEntry trashEntry = addTrashEntry();
+
+		long groupId = trashEntry.getGroupId();
+
+		Date createDate = trashEntry.getCreateDate();
+
+		List<TrashEntry> trashEntries = _persistence.findByG_LtCD(groupId,
+				createDate, start, end);
+
+		Assert.assertEquals(expected, trashEntries.size());
+	}
+
+	@Test
+	public void testFindByG_C() throws Exception {
+		TrashEntry trashEntry = addTrashEntry();
+
+		long groupId = trashEntry.getGroupId();
+
+		long classNameId = trashEntry.getClassNameId();
+
+		List<TrashEntry> trashEntries = _persistence.findByG_C(groupId,
+				classNameId);
+
+		Assert.assertEquals(1, trashEntries.size());
+
+		Assert.assertEquals(trashEntry.getPrimaryKey(),
+			trashEntries.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_CNotFound() throws Exception {
+		addTrashEntry();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		List<TrashEntry> trashEntries = _persistence.findByG_C(groupId,
+				classNameId);
+
+		Assert.assertEquals(0, trashEntries.size());
+	}
+
+	@Test
+	public void testFindByG_CStartEnd() throws Exception {
+		testFindByG_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_CStartEndWrongRange() throws Exception {
+		testFindByG_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_CStartEndZeroZero() throws Exception {
+		testFindByG_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		TrashEntry trashEntry = addTrashEntry();
+
+		long groupId = trashEntry.getGroupId();
+
+		long classNameId = trashEntry.getClassNameId();
+
+		List<TrashEntry> trashEntries = _persistence.findByG_C(groupId,
+				classNameId, start, end);
+
+		Assert.assertEquals(expected, trashEntries.size());
 	}
 
 	protected OrderByComparator getOrderByComparator() {

@@ -181,6 +181,304 @@ public class SocialActivityAchievementPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByGroupId() throws Exception {
+		SocialActivityAchievement socialActivityAchievement = addSocialActivityAchievement();
+
+		long groupId = socialActivityAchievement.getGroupId();
+
+		List<SocialActivityAchievement> socialActivityAchievements = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(1, socialActivityAchievements.size());
+
+		Assert.assertEquals(socialActivityAchievement.getPrimaryKey(),
+			socialActivityAchievements.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByGroupIdNotFound() throws Exception {
+		addSocialActivityAchievement();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		List<SocialActivityAchievement> socialActivityAchievements = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(0, socialActivityAchievements.size());
+	}
+
+	@Test
+	public void testFindByGroupIdStartEnd() throws Exception {
+		testFindByGroupIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndWrongRange() throws Exception {
+		testFindByGroupIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndZeroZero() throws Exception {
+		testFindByGroupIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByGroupIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		SocialActivityAchievement socialActivityAchievement = addSocialActivityAchievement();
+
+		long groupId = socialActivityAchievement.getGroupId();
+
+		List<SocialActivityAchievement> socialActivityAchievements = _persistence.findByGroupId(groupId,
+				start, end);
+
+		Assert.assertEquals(expected, socialActivityAchievements.size());
+	}
+
+	@Test
+	public void testFindByG_U() throws Exception {
+		SocialActivityAchievement socialActivityAchievement = addSocialActivityAchievement();
+
+		long groupId = socialActivityAchievement.getGroupId();
+
+		long userId = socialActivityAchievement.getUserId();
+
+		List<SocialActivityAchievement> socialActivityAchievements = _persistence.findByG_U(groupId,
+				userId);
+
+		Assert.assertEquals(1, socialActivityAchievements.size());
+
+		Assert.assertEquals(socialActivityAchievement.getPrimaryKey(),
+			socialActivityAchievements.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_UNotFound() throws Exception {
+		addSocialActivityAchievement();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		List<SocialActivityAchievement> socialActivityAchievements = _persistence.findByG_U(groupId,
+				userId);
+
+		Assert.assertEquals(0, socialActivityAchievements.size());
+	}
+
+	@Test
+	public void testFindByG_UStartEnd() throws Exception {
+		testFindByG_UStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_UStartEndWrongRange() throws Exception {
+		testFindByG_UStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_UStartEndZeroZero() throws Exception {
+		testFindByG_UStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_UStartEnd(int start, int end, int expected)
+		throws Exception {
+		SocialActivityAchievement socialActivityAchievement = addSocialActivityAchievement();
+
+		long groupId = socialActivityAchievement.getGroupId();
+
+		long userId = socialActivityAchievement.getUserId();
+
+		List<SocialActivityAchievement> socialActivityAchievements = _persistence.findByG_U(groupId,
+				userId, start, end);
+
+		Assert.assertEquals(expected, socialActivityAchievements.size());
+	}
+
+	@Test
+	public void testFindByG_N() throws Exception {
+		SocialActivityAchievement socialActivityAchievement = addSocialActivityAchievement();
+
+		long groupId = socialActivityAchievement.getGroupId();
+
+		String name = socialActivityAchievement.getName();
+
+		List<SocialActivityAchievement> socialActivityAchievements = _persistence.findByG_N(groupId,
+				name);
+
+		Assert.assertEquals(1, socialActivityAchievements.size());
+
+		Assert.assertEquals(socialActivityAchievement.getPrimaryKey(),
+			socialActivityAchievements.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_NNotFound() throws Exception {
+		addSocialActivityAchievement();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		String name = ServiceTestUtil.randomString();
+
+		List<SocialActivityAchievement> socialActivityAchievements = _persistence.findByG_N(groupId,
+				name);
+
+		Assert.assertEquals(0, socialActivityAchievements.size());
+	}
+
+	@Test
+	public void testFindByG_NStartEnd() throws Exception {
+		testFindByG_NStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_NStartEndWrongRange() throws Exception {
+		testFindByG_NStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_NStartEndZeroZero() throws Exception {
+		testFindByG_NStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_NStartEnd(int start, int end, int expected)
+		throws Exception {
+		SocialActivityAchievement socialActivityAchievement = addSocialActivityAchievement();
+
+		long groupId = socialActivityAchievement.getGroupId();
+
+		String name = socialActivityAchievement.getName();
+
+		List<SocialActivityAchievement> socialActivityAchievements = _persistence.findByG_N(groupId,
+				name, start, end);
+
+		Assert.assertEquals(expected, socialActivityAchievements.size());
+	}
+
+	@Test
+	public void testFindByG_F() throws Exception {
+		SocialActivityAchievement socialActivityAchievement = addSocialActivityAchievement();
+
+		long groupId = socialActivityAchievement.getGroupId();
+
+		boolean firstInGroup = socialActivityAchievement.getFirstInGroup();
+
+		List<SocialActivityAchievement> socialActivityAchievements = _persistence.findByG_F(groupId,
+				firstInGroup);
+
+		Assert.assertEquals(1, socialActivityAchievements.size());
+
+		Assert.assertEquals(socialActivityAchievement.getPrimaryKey(),
+			socialActivityAchievements.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_FNotFound() throws Exception {
+		addSocialActivityAchievement();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		boolean firstInGroup = ServiceTestUtil.randomBoolean();
+
+		List<SocialActivityAchievement> socialActivityAchievements = _persistence.findByG_F(groupId,
+				firstInGroup);
+
+		Assert.assertEquals(0, socialActivityAchievements.size());
+	}
+
+	@Test
+	public void testFindByG_FStartEnd() throws Exception {
+		testFindByG_FStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_FStartEndWrongRange() throws Exception {
+		testFindByG_FStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_FStartEndZeroZero() throws Exception {
+		testFindByG_FStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_FStartEnd(int start, int end, int expected)
+		throws Exception {
+		SocialActivityAchievement socialActivityAchievement = addSocialActivityAchievement();
+
+		long groupId = socialActivityAchievement.getGroupId();
+
+		boolean firstInGroup = socialActivityAchievement.getFirstInGroup();
+
+		List<SocialActivityAchievement> socialActivityAchievements = _persistence.findByG_F(groupId,
+				firstInGroup, start, end);
+
+		Assert.assertEquals(expected, socialActivityAchievements.size());
+	}
+
+	@Test
+	public void testFindByG_U_F() throws Exception {
+		SocialActivityAchievement socialActivityAchievement = addSocialActivityAchievement();
+
+		long groupId = socialActivityAchievement.getGroupId();
+
+		long userId = socialActivityAchievement.getUserId();
+
+		boolean firstInGroup = socialActivityAchievement.getFirstInGroup();
+
+		List<SocialActivityAchievement> socialActivityAchievements = _persistence.findByG_U_F(groupId,
+				userId, firstInGroup);
+
+		Assert.assertEquals(1, socialActivityAchievements.size());
+
+		Assert.assertEquals(socialActivityAchievement.getPrimaryKey(),
+			socialActivityAchievements.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_U_FNotFound() throws Exception {
+		addSocialActivityAchievement();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		boolean firstInGroup = ServiceTestUtil.randomBoolean();
+
+		List<SocialActivityAchievement> socialActivityAchievements = _persistence.findByG_U_F(groupId,
+				userId, firstInGroup);
+
+		Assert.assertEquals(0, socialActivityAchievements.size());
+	}
+
+	@Test
+	public void testFindByG_U_FStartEnd() throws Exception {
+		testFindByG_U_FStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_U_FStartEndWrongRange() throws Exception {
+		testFindByG_U_FStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_U_FStartEndZeroZero() throws Exception {
+		testFindByG_U_FStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_U_FStartEnd(int start, int end, int expected)
+		throws Exception {
+		SocialActivityAchievement socialActivityAchievement = addSocialActivityAchievement();
+
+		long groupId = socialActivityAchievement.getGroupId();
+
+		long userId = socialActivityAchievement.getUserId();
+
+		boolean firstInGroup = socialActivityAchievement.getFirstInGroup();
+
+		List<SocialActivityAchievement> socialActivityAchievements = _persistence.findByG_U_F(groupId,
+				userId, firstInGroup, start, end);
+
+		Assert.assertEquals(expected, socialActivityAchievements.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("SocialActivityAchievement",
 			"activityAchievementId", true, "groupId", true, "companyId", true,

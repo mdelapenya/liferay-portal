@@ -260,6 +260,536 @@ public class DLFileVersionPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		DLFileVersion dlFileVersion = addDLFileVersion();
+
+		String uuid = dlFileVersion.getUuid();
+
+		List<DLFileVersion> dlFileVersions = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, dlFileVersions.size());
+
+		Assert.assertEquals(dlFileVersion.getPrimaryKey(),
+			dlFileVersions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addDLFileVersion();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<DLFileVersion> dlFileVersions = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, dlFileVersions.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		DLFileVersion dlFileVersion = addDLFileVersion();
+
+		String uuid = dlFileVersion.getUuid();
+
+		List<DLFileVersion> dlFileVersions = _persistence.findByUuid(uuid,
+				start, end);
+
+		Assert.assertEquals(expected, dlFileVersions.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		DLFileVersion dlFileVersion = addDLFileVersion();
+
+		String uuid = dlFileVersion.getUuid();
+
+		long companyId = dlFileVersion.getCompanyId();
+
+		List<DLFileVersion> dlFileVersions = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(1, dlFileVersions.size());
+
+		Assert.assertEquals(dlFileVersion.getPrimaryKey(),
+			dlFileVersions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addDLFileVersion();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<DLFileVersion> dlFileVersions = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(0, dlFileVersions.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		DLFileVersion dlFileVersion = addDLFileVersion();
+
+		String uuid = dlFileVersion.getUuid();
+
+		long companyId = dlFileVersion.getCompanyId();
+
+		List<DLFileVersion> dlFileVersions = _persistence.findByUuid_C(uuid,
+				companyId, start, end);
+
+		Assert.assertEquals(expected, dlFileVersions.size());
+	}
+
+	@Test
+	public void testFindByCompanyId() throws Exception {
+		DLFileVersion dlFileVersion = addDLFileVersion();
+
+		long companyId = dlFileVersion.getCompanyId();
+
+		List<DLFileVersion> dlFileVersions = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(1, dlFileVersions.size());
+
+		Assert.assertEquals(dlFileVersion.getPrimaryKey(),
+			dlFileVersions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByCompanyIdNotFound() throws Exception {
+		addDLFileVersion();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<DLFileVersion> dlFileVersions = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(0, dlFileVersions.size());
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEnd() throws Exception {
+		testFindByCompanyIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndWrongRange()
+		throws Exception {
+		testFindByCompanyIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndZeroZero() throws Exception {
+		testFindByCompanyIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByCompanyIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		DLFileVersion dlFileVersion = addDLFileVersion();
+
+		long companyId = dlFileVersion.getCompanyId();
+
+		List<DLFileVersion> dlFileVersions = _persistence.findByCompanyId(companyId,
+				start, end);
+
+		Assert.assertEquals(expected, dlFileVersions.size());
+	}
+
+	@Test
+	public void testFindByFileEntryId() throws Exception {
+		DLFileVersion dlFileVersion = addDLFileVersion();
+
+		long fileEntryId = dlFileVersion.getFileEntryId();
+
+		List<DLFileVersion> dlFileVersions = _persistence.findByFileEntryId(fileEntryId);
+
+		Assert.assertEquals(1, dlFileVersions.size());
+
+		Assert.assertEquals(dlFileVersion.getPrimaryKey(),
+			dlFileVersions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByFileEntryIdNotFound() throws Exception {
+		addDLFileVersion();
+
+		long fileEntryId = ServiceTestUtil.nextLong();
+
+		List<DLFileVersion> dlFileVersions = _persistence.findByFileEntryId(fileEntryId);
+
+		Assert.assertEquals(0, dlFileVersions.size());
+	}
+
+	@Test
+	public void testFindByFileEntryIdStartEnd() throws Exception {
+		testFindByFileEntryIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByFileEntryIdStartEndWrongRange()
+		throws Exception {
+		testFindByFileEntryIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByFileEntryIdStartEndZeroZero()
+		throws Exception {
+		testFindByFileEntryIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByFileEntryIdStartEnd(int start, int end,
+		int expected) throws Exception {
+		DLFileVersion dlFileVersion = addDLFileVersion();
+
+		long fileEntryId = dlFileVersion.getFileEntryId();
+
+		List<DLFileVersion> dlFileVersions = _persistence.findByFileEntryId(fileEntryId,
+				start, end);
+
+		Assert.assertEquals(expected, dlFileVersions.size());
+	}
+
+	@Test
+	public void testFindByMimeType() throws Exception {
+		DLFileVersion dlFileVersion = addDLFileVersion();
+
+		String mimeType = dlFileVersion.getMimeType();
+
+		List<DLFileVersion> dlFileVersions = _persistence.findByMimeType(mimeType);
+
+		Assert.assertEquals(1, dlFileVersions.size());
+
+		Assert.assertEquals(dlFileVersion.getPrimaryKey(),
+			dlFileVersions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByMimeTypeNotFound() throws Exception {
+		addDLFileVersion();
+
+		String mimeType = ServiceTestUtil.randomString();
+
+		List<DLFileVersion> dlFileVersions = _persistence.findByMimeType(mimeType);
+
+		Assert.assertEquals(0, dlFileVersions.size());
+	}
+
+	@Test
+	public void testFindByMimeTypeStartEnd() throws Exception {
+		testFindByMimeTypeStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByMimeTypeStartEndWrongRange()
+		throws Exception {
+		testFindByMimeTypeStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByMimeTypeStartEndZeroZero() throws Exception {
+		testFindByMimeTypeStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByMimeTypeStartEnd(int start, int end, int expected)
+		throws Exception {
+		DLFileVersion dlFileVersion = addDLFileVersion();
+
+		String mimeType = dlFileVersion.getMimeType();
+
+		List<DLFileVersion> dlFileVersions = _persistence.findByMimeType(mimeType,
+				start, end);
+
+		Assert.assertEquals(expected, dlFileVersions.size());
+	}
+
+	@Test
+	public void testFindByC_NotS() throws Exception {
+		DLFileVersion dlFileVersion = addDLFileVersion();
+
+		long companyId = dlFileVersion.getCompanyId();
+
+		int status = dlFileVersion.getStatus();
+
+		List<DLFileVersion> dlFileVersions = _persistence.findByC_NotS(companyId,
+				status);
+
+		Assert.assertEquals(1, dlFileVersions.size());
+
+		Assert.assertEquals(dlFileVersion.getPrimaryKey(),
+			dlFileVersions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_NotSNotFound() throws Exception {
+		addDLFileVersion();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<DLFileVersion> dlFileVersions = _persistence.findByC_NotS(companyId,
+				status);
+
+		Assert.assertEquals(0, dlFileVersions.size());
+	}
+
+	@Test
+	public void testFindByC_NotSStartEnd() throws Exception {
+		testFindByC_NotSStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_NotSStartEndWrongRange() throws Exception {
+		testFindByC_NotSStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_NotSStartEndZeroZero() throws Exception {
+		testFindByC_NotSStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_NotSStartEnd(int start, int end, int expected)
+		throws Exception {
+		DLFileVersion dlFileVersion = addDLFileVersion();
+
+		long companyId = dlFileVersion.getCompanyId();
+
+		int status = dlFileVersion.getStatus();
+
+		List<DLFileVersion> dlFileVersions = _persistence.findByC_NotS(companyId,
+				status, start, end);
+
+		Assert.assertEquals(expected, dlFileVersions.size());
+	}
+
+	@Test
+	public void testFindByF_S() throws Exception {
+		DLFileVersion dlFileVersion = addDLFileVersion();
+
+		long fileEntryId = dlFileVersion.getFileEntryId();
+
+		int status = dlFileVersion.getStatus();
+
+		List<DLFileVersion> dlFileVersions = _persistence.findByF_S(fileEntryId,
+				status);
+
+		Assert.assertEquals(1, dlFileVersions.size());
+
+		Assert.assertEquals(dlFileVersion.getPrimaryKey(),
+			dlFileVersions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByF_SNotFound() throws Exception {
+		addDLFileVersion();
+
+		long fileEntryId = ServiceTestUtil.nextLong();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<DLFileVersion> dlFileVersions = _persistence.findByF_S(fileEntryId,
+				status);
+
+		Assert.assertEquals(0, dlFileVersions.size());
+	}
+
+	@Test
+	public void testFindByF_SStartEnd() throws Exception {
+		testFindByF_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByF_SStartEndWrongRange() throws Exception {
+		testFindByF_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByF_SStartEndZeroZero() throws Exception {
+		testFindByF_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByF_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		DLFileVersion dlFileVersion = addDLFileVersion();
+
+		long fileEntryId = dlFileVersion.getFileEntryId();
+
+		int status = dlFileVersion.getStatus();
+
+		List<DLFileVersion> dlFileVersions = _persistence.findByF_S(fileEntryId,
+				status, start, end);
+
+		Assert.assertEquals(expected, dlFileVersions.size());
+	}
+
+	@Test
+	public void testFindByG_F_S() throws Exception {
+		DLFileVersion dlFileVersion = addDLFileVersion();
+
+		long groupId = dlFileVersion.getGroupId();
+
+		long folderId = dlFileVersion.getFolderId();
+
+		int status = dlFileVersion.getStatus();
+
+		List<DLFileVersion> dlFileVersions = _persistence.findByG_F_S(groupId,
+				folderId, status);
+
+		Assert.assertEquals(1, dlFileVersions.size());
+
+		Assert.assertEquals(dlFileVersion.getPrimaryKey(),
+			dlFileVersions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_F_SNotFound() throws Exception {
+		addDLFileVersion();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		long folderId = ServiceTestUtil.nextLong();
+
+		int status = ServiceTestUtil.nextInt();
+
+		List<DLFileVersion> dlFileVersions = _persistence.findByG_F_S(groupId,
+				folderId, status);
+
+		Assert.assertEquals(0, dlFileVersions.size());
+	}
+
+	@Test
+	public void testFindByG_F_SStartEnd() throws Exception {
+		testFindByG_F_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_F_SStartEndWrongRange() throws Exception {
+		testFindByG_F_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_F_SStartEndZeroZero() throws Exception {
+		testFindByG_F_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_F_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		DLFileVersion dlFileVersion = addDLFileVersion();
+
+		long groupId = dlFileVersion.getGroupId();
+
+		long folderId = dlFileVersion.getFolderId();
+
+		int status = dlFileVersion.getStatus();
+
+		List<DLFileVersion> dlFileVersions = _persistence.findByG_F_S(groupId,
+				folderId, status, start, end);
+
+		Assert.assertEquals(expected, dlFileVersions.size());
+	}
+
+	@Test
+	public void testFindByG_F_T_V() throws Exception {
+		DLFileVersion dlFileVersion = addDLFileVersion();
+
+		long groupId = dlFileVersion.getGroupId();
+
+		long folderId = dlFileVersion.getFolderId();
+
+		String title = dlFileVersion.getTitle();
+
+		String version = dlFileVersion.getVersion();
+
+		List<DLFileVersion> dlFileVersions = _persistence.findByG_F_T_V(groupId,
+				folderId, title, version);
+
+		Assert.assertEquals(1, dlFileVersions.size());
+
+		Assert.assertEquals(dlFileVersion.getPrimaryKey(),
+			dlFileVersions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_F_T_VNotFound() throws Exception {
+		addDLFileVersion();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		long folderId = ServiceTestUtil.nextLong();
+
+		String title = ServiceTestUtil.randomString();
+
+		String version = ServiceTestUtil.randomString();
+
+		List<DLFileVersion> dlFileVersions = _persistence.findByG_F_T_V(groupId,
+				folderId, title, version);
+
+		Assert.assertEquals(0, dlFileVersions.size());
+	}
+
+	@Test
+	public void testFindByG_F_T_VStartEnd() throws Exception {
+		testFindByG_F_T_VStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_F_T_VStartEndWrongRange() throws Exception {
+		testFindByG_F_T_VStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_F_T_VStartEndZeroZero() throws Exception {
+		testFindByG_F_T_VStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_F_T_VStartEnd(int start, int end, int expected)
+		throws Exception {
+		DLFileVersion dlFileVersion = addDLFileVersion();
+
+		long groupId = dlFileVersion.getGroupId();
+
+		long folderId = dlFileVersion.getFolderId();
+
+		String title = dlFileVersion.getTitle();
+
+		String version = dlFileVersion.getVersion();
+
+		List<DLFileVersion> dlFileVersions = _persistence.findByG_F_T_V(groupId,
+				folderId, title, version, start, end);
+
+		Assert.assertEquals(expected, dlFileVersions.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("DLFileVersion", "uuid",
 			true, "fileVersionId", true, "groupId", true, "companyId", true,

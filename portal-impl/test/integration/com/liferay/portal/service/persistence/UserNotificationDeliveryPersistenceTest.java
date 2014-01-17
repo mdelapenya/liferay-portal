@@ -184,6 +184,58 @@ public class UserNotificationDeliveryPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUserId() throws Exception {
+		UserNotificationDelivery userNotificationDelivery = addUserNotificationDelivery();
+
+		long userId = userNotificationDelivery.getUserId();
+
+		List<UserNotificationDelivery> userNotificationDeliveries = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(1, userNotificationDeliveries.size());
+
+		Assert.assertEquals(userNotificationDelivery.getPrimaryKey(),
+			userNotificationDeliveries.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUserIdNotFound() throws Exception {
+		addUserNotificationDelivery();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		List<UserNotificationDelivery> userNotificationDeliveries = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(0, userNotificationDeliveries.size());
+	}
+
+	@Test
+	public void testFindByUserIdStartEnd() throws Exception {
+		testFindByUserIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndWrongRange() throws Exception {
+		testFindByUserIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndZeroZero() throws Exception {
+		testFindByUserIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUserIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		UserNotificationDelivery userNotificationDelivery = addUserNotificationDelivery();
+
+		long userId = userNotificationDelivery.getUserId();
+
+		List<UserNotificationDelivery> userNotificationDeliveries = _persistence.findByUserId(userId,
+				start, end);
+
+		Assert.assertEquals(expected, userNotificationDeliveries.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("UserNotificationDelivery",
 			"userNotificationDeliveryId", true, "companyId", true, "userId",

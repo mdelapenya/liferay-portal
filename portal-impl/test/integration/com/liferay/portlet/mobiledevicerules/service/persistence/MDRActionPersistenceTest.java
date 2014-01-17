@@ -211,6 +211,171 @@ public class MDRActionPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		MDRAction mdrAction = addMDRAction();
+
+		String uuid = mdrAction.getUuid();
+
+		List<MDRAction> mdrActions = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, mdrActions.size());
+
+		Assert.assertEquals(mdrAction.getPrimaryKey(),
+			mdrActions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addMDRAction();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<MDRAction> mdrActions = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, mdrActions.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		MDRAction mdrAction = addMDRAction();
+
+		String uuid = mdrAction.getUuid();
+
+		List<MDRAction> mdrActions = _persistence.findByUuid(uuid, start, end);
+
+		Assert.assertEquals(expected, mdrActions.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		MDRAction mdrAction = addMDRAction();
+
+		String uuid = mdrAction.getUuid();
+
+		long companyId = mdrAction.getCompanyId();
+
+		List<MDRAction> mdrActions = _persistence.findByUuid_C(uuid, companyId);
+
+		Assert.assertEquals(1, mdrActions.size());
+
+		Assert.assertEquals(mdrAction.getPrimaryKey(),
+			mdrActions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addMDRAction();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<MDRAction> mdrActions = _persistence.findByUuid_C(uuid, companyId);
+
+		Assert.assertEquals(0, mdrActions.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		MDRAction mdrAction = addMDRAction();
+
+		String uuid = mdrAction.getUuid();
+
+		long companyId = mdrAction.getCompanyId();
+
+		List<MDRAction> mdrActions = _persistence.findByUuid_C(uuid, companyId,
+				start, end);
+
+		Assert.assertEquals(expected, mdrActions.size());
+	}
+
+	@Test
+	public void testFindByRuleGroupInstanceId() throws Exception {
+		MDRAction mdrAction = addMDRAction();
+
+		long ruleGroupInstanceId = mdrAction.getRuleGroupInstanceId();
+
+		List<MDRAction> mdrActions = _persistence.findByRuleGroupInstanceId(ruleGroupInstanceId);
+
+		Assert.assertEquals(1, mdrActions.size());
+
+		Assert.assertEquals(mdrAction.getPrimaryKey(),
+			mdrActions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByRuleGroupInstanceIdNotFound()
+		throws Exception {
+		addMDRAction();
+
+		long ruleGroupInstanceId = ServiceTestUtil.nextLong();
+
+		List<MDRAction> mdrActions = _persistence.findByRuleGroupInstanceId(ruleGroupInstanceId);
+
+		Assert.assertEquals(0, mdrActions.size());
+	}
+
+	@Test
+	public void testFindByRuleGroupInstanceIdStartEnd()
+		throws Exception {
+		testFindByRuleGroupInstanceIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByRuleGroupInstanceIdStartEndWrongRange()
+		throws Exception {
+		testFindByRuleGroupInstanceIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByRuleGroupInstanceIdStartEndZeroZero()
+		throws Exception {
+		testFindByRuleGroupInstanceIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByRuleGroupInstanceIdStartEnd(int start, int end,
+		int expected) throws Exception {
+		MDRAction mdrAction = addMDRAction();
+
+		long ruleGroupInstanceId = mdrAction.getRuleGroupInstanceId();
+
+		List<MDRAction> mdrActions = _persistence.findByRuleGroupInstanceId(ruleGroupInstanceId,
+				start, end);
+
+		Assert.assertEquals(expected, mdrActions.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("MDRAction", "uuid", true,
 			"actionId", true, "groupId", true, "companyId", true, "userId",

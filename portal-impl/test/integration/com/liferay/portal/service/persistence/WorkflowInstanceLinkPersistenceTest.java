@@ -192,6 +192,78 @@ public class WorkflowInstanceLinkPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByG_C_C_C() throws Exception {
+		WorkflowInstanceLink workflowInstanceLink = addWorkflowInstanceLink();
+
+		long groupId = workflowInstanceLink.getGroupId();
+
+		long companyId = workflowInstanceLink.getCompanyId();
+
+		long classNameId = workflowInstanceLink.getClassNameId();
+
+		long classPK = workflowInstanceLink.getClassPK();
+
+		List<WorkflowInstanceLink> workflowInstanceLinks = _persistence.findByG_C_C_C(groupId,
+				companyId, classNameId, classPK);
+
+		Assert.assertEquals(1, workflowInstanceLinks.size());
+
+		Assert.assertEquals(workflowInstanceLink.getPrimaryKey(),
+			workflowInstanceLinks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_C_C_CNotFound() throws Exception {
+		addWorkflowInstanceLink();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		long classPK = ServiceTestUtil.nextLong();
+
+		List<WorkflowInstanceLink> workflowInstanceLinks = _persistence.findByG_C_C_C(groupId,
+				companyId, classNameId, classPK);
+
+		Assert.assertEquals(0, workflowInstanceLinks.size());
+	}
+
+	@Test
+	public void testFindByG_C_C_CStartEnd() throws Exception {
+		testFindByG_C_C_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_C_C_CStartEndWrongRange() throws Exception {
+		testFindByG_C_C_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_C_C_CStartEndZeroZero() throws Exception {
+		testFindByG_C_C_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_C_C_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		WorkflowInstanceLink workflowInstanceLink = addWorkflowInstanceLink();
+
+		long groupId = workflowInstanceLink.getGroupId();
+
+		long companyId = workflowInstanceLink.getCompanyId();
+
+		long classNameId = workflowInstanceLink.getClassNameId();
+
+		long classPK = workflowInstanceLink.getClassPK();
+
+		List<WorkflowInstanceLink> workflowInstanceLinks = _persistence.findByG_C_C_C(groupId,
+				companyId, classNameId, classPK, start, end);
+
+		Assert.assertEquals(expected, workflowInstanceLinks.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("WorkflowInstanceLink",
 			"workflowInstanceLinkId", true, "groupId", true, "companyId", true,

@@ -171,6 +171,60 @@ public class ServiceComponentPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByBuildNamespace() throws Exception {
+		ServiceComponent serviceComponent = addServiceComponent();
+
+		String buildNamespace = serviceComponent.getBuildNamespace();
+
+		List<ServiceComponent> serviceComponents = _persistence.findByBuildNamespace(buildNamespace);
+
+		Assert.assertEquals(1, serviceComponents.size());
+
+		Assert.assertEquals(serviceComponent.getPrimaryKey(),
+			serviceComponents.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByBuildNamespaceNotFound() throws Exception {
+		addServiceComponent();
+
+		String buildNamespace = ServiceTestUtil.randomString();
+
+		List<ServiceComponent> serviceComponents = _persistence.findByBuildNamespace(buildNamespace);
+
+		Assert.assertEquals(0, serviceComponents.size());
+	}
+
+	@Test
+	public void testFindByBuildNamespaceStartEnd() throws Exception {
+		testFindByBuildNamespaceStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByBuildNamespaceStartEndWrongRange()
+		throws Exception {
+		testFindByBuildNamespaceStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByBuildNamespaceStartEndZeroZero()
+		throws Exception {
+		testFindByBuildNamespaceStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByBuildNamespaceStartEnd(int start, int end,
+		int expected) throws Exception {
+		ServiceComponent serviceComponent = addServiceComponent();
+
+		String buildNamespace = serviceComponent.getBuildNamespace();
+
+		List<ServiceComponent> serviceComponents = _persistence.findByBuildNamespace(buildNamespace,
+				start, end);
+
+		Assert.assertEquals(expected, serviceComponents.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("ServiceComponent",
 			"serviceComponentId", true, "buildNamespace", true, "buildNumber",

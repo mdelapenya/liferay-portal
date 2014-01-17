@@ -197,6 +197,110 @@ public class ShoppingCartPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByGroupId() throws Exception {
+		ShoppingCart shoppingCart = addShoppingCart();
+
+		long groupId = shoppingCart.getGroupId();
+
+		List<ShoppingCart> shoppingCarts = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(1, shoppingCarts.size());
+
+		Assert.assertEquals(shoppingCart.getPrimaryKey(),
+			shoppingCarts.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByGroupIdNotFound() throws Exception {
+		addShoppingCart();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		List<ShoppingCart> shoppingCarts = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(0, shoppingCarts.size());
+	}
+
+	@Test
+	public void testFindByGroupIdStartEnd() throws Exception {
+		testFindByGroupIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndWrongRange() throws Exception {
+		testFindByGroupIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndZeroZero() throws Exception {
+		testFindByGroupIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByGroupIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		ShoppingCart shoppingCart = addShoppingCart();
+
+		long groupId = shoppingCart.getGroupId();
+
+		List<ShoppingCart> shoppingCarts = _persistence.findByGroupId(groupId,
+				start, end);
+
+		Assert.assertEquals(expected, shoppingCarts.size());
+	}
+
+	@Test
+	public void testFindByUserId() throws Exception {
+		ShoppingCart shoppingCart = addShoppingCart();
+
+		long userId = shoppingCart.getUserId();
+
+		List<ShoppingCart> shoppingCarts = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(1, shoppingCarts.size());
+
+		Assert.assertEquals(shoppingCart.getPrimaryKey(),
+			shoppingCarts.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUserIdNotFound() throws Exception {
+		addShoppingCart();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		List<ShoppingCart> shoppingCarts = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(0, shoppingCarts.size());
+	}
+
+	@Test
+	public void testFindByUserIdStartEnd() throws Exception {
+		testFindByUserIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndWrongRange() throws Exception {
+		testFindByUserIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndZeroZero() throws Exception {
+		testFindByUserIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUserIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		ShoppingCart shoppingCart = addShoppingCart();
+
+		long userId = shoppingCart.getUserId();
+
+		List<ShoppingCart> shoppingCarts = _persistence.findByUserId(userId,
+				start, end);
+
+		Assert.assertEquals(expected, shoppingCarts.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("ShoppingCart", "cartId",
 			true, "groupId", true, "companyId", true, "userId", true,

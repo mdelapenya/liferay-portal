@@ -166,6 +166,112 @@ public class AssetTagStatsPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByTagId() throws Exception {
+		AssetTagStats assetTagStats = addAssetTagStats();
+
+		long tagId = assetTagStats.getTagId();
+
+		List<AssetTagStats> assetTagStatses = _persistence.findByTagId(tagId);
+
+		Assert.assertEquals(1, assetTagStatses.size());
+
+		Assert.assertEquals(assetTagStats.getPrimaryKey(),
+			assetTagStatses.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByTagIdNotFound() throws Exception {
+		addAssetTagStats();
+
+		long tagId = ServiceTestUtil.nextLong();
+
+		List<AssetTagStats> assetTagStatses = _persistence.findByTagId(tagId);
+
+		Assert.assertEquals(0, assetTagStatses.size());
+	}
+
+	@Test
+	public void testFindByTagIdStartEnd() throws Exception {
+		testFindByTagIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByTagIdStartEndWrongRange() throws Exception {
+		testFindByTagIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByTagIdStartEndZeroZero() throws Exception {
+		testFindByTagIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByTagIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		AssetTagStats assetTagStats = addAssetTagStats();
+
+		long tagId = assetTagStats.getTagId();
+
+		List<AssetTagStats> assetTagStatses = _persistence.findByTagId(tagId,
+				start, end);
+
+		Assert.assertEquals(expected, assetTagStatses.size());
+	}
+
+	@Test
+	public void testFindByClassNameId() throws Exception {
+		AssetTagStats assetTagStats = addAssetTagStats();
+
+		long classNameId = assetTagStats.getClassNameId();
+
+		List<AssetTagStats> assetTagStatses = _persistence.findByClassNameId(classNameId);
+
+		Assert.assertEquals(1, assetTagStatses.size());
+
+		Assert.assertEquals(assetTagStats.getPrimaryKey(),
+			assetTagStatses.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByClassNameIdNotFound() throws Exception {
+		addAssetTagStats();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		List<AssetTagStats> assetTagStatses = _persistence.findByClassNameId(classNameId);
+
+		Assert.assertEquals(0, assetTagStatses.size());
+	}
+
+	@Test
+	public void testFindByClassNameIdStartEnd() throws Exception {
+		testFindByClassNameIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByClassNameIdStartEndWrongRange()
+		throws Exception {
+		testFindByClassNameIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByClassNameIdStartEndZeroZero()
+		throws Exception {
+		testFindByClassNameIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByClassNameIdStartEnd(int start, int end,
+		int expected) throws Exception {
+		AssetTagStats assetTagStats = addAssetTagStats();
+
+		long classNameId = assetTagStats.getClassNameId();
+
+		List<AssetTagStats> assetTagStatses = _persistence.findByClassNameId(classNameId,
+				start, end);
+
+		Assert.assertEquals(expected, assetTagStatses.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("AssetTagStats",
 			"tagStatsId", true, "tagId", true, "classNameId", true,

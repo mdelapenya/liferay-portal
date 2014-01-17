@@ -167,6 +167,59 @@ public class PortletPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByCompanyId() throws Exception {
+		Portlet portlet = addPortlet();
+
+		long companyId = portlet.getCompanyId();
+
+		List<Portlet> portlets = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(1, portlets.size());
+
+		Assert.assertEquals(portlet.getPrimaryKey(),
+			portlets.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByCompanyIdNotFound() throws Exception {
+		addPortlet();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<Portlet> portlets = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(0, portlets.size());
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEnd() throws Exception {
+		testFindByCompanyIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndWrongRange()
+		throws Exception {
+		testFindByCompanyIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndZeroZero() throws Exception {
+		testFindByCompanyIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByCompanyIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		Portlet portlet = addPortlet();
+
+		long companyId = portlet.getCompanyId();
+
+		List<Portlet> portlets = _persistence.findByCompanyId(companyId, start,
+				end);
+
+		Assert.assertEquals(expected, portlets.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("Portlet", "id", true,
 			"companyId", true, "portletId", true, "roles", true, "active", true);

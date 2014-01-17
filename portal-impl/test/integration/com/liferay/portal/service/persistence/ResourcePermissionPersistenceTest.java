@@ -183,6 +183,308 @@ public class ResourcePermissionPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByScope() throws Exception {
+		ResourcePermission resourcePermission = addResourcePermission();
+
+		int scope = resourcePermission.getScope();
+
+		List<ResourcePermission> resourcePermissions = _persistence.findByScope(scope);
+
+		Assert.assertEquals(1, resourcePermissions.size());
+
+		Assert.assertEquals(resourcePermission.getPrimaryKey(),
+			resourcePermissions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByScopeNotFound() throws Exception {
+		addResourcePermission();
+
+		int scope = ServiceTestUtil.nextInt();
+
+		List<ResourcePermission> resourcePermissions = _persistence.findByScope(scope);
+
+		Assert.assertEquals(0, resourcePermissions.size());
+	}
+
+	@Test
+	public void testFindByScopeStartEnd() throws Exception {
+		testFindByScopeStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByScopeStartEndWrongRange() throws Exception {
+		testFindByScopeStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByScopeStartEndZeroZero() throws Exception {
+		testFindByScopeStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByScopeStartEnd(int start, int end, int expected)
+		throws Exception {
+		ResourcePermission resourcePermission = addResourcePermission();
+
+		int scope = resourcePermission.getScope();
+
+		List<ResourcePermission> resourcePermissions = _persistence.findByScope(scope,
+				start, end);
+
+		Assert.assertEquals(expected, resourcePermissions.size());
+	}
+
+	@Test
+	public void testFindByRoleId() throws Exception {
+		ResourcePermission resourcePermission = addResourcePermission();
+
+		long roleId = resourcePermission.getRoleId();
+
+		List<ResourcePermission> resourcePermissions = _persistence.findByRoleId(roleId);
+
+		Assert.assertEquals(1, resourcePermissions.size());
+
+		Assert.assertEquals(resourcePermission.getPrimaryKey(),
+			resourcePermissions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByRoleIdNotFound() throws Exception {
+		addResourcePermission();
+
+		long roleId = ServiceTestUtil.nextLong();
+
+		List<ResourcePermission> resourcePermissions = _persistence.findByRoleId(roleId);
+
+		Assert.assertEquals(0, resourcePermissions.size());
+	}
+
+	@Test
+	public void testFindByRoleIdStartEnd() throws Exception {
+		testFindByRoleIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByRoleIdStartEndWrongRange() throws Exception {
+		testFindByRoleIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByRoleIdStartEndZeroZero() throws Exception {
+		testFindByRoleIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByRoleIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		ResourcePermission resourcePermission = addResourcePermission();
+
+		long roleId = resourcePermission.getRoleId();
+
+		List<ResourcePermission> resourcePermissions = _persistence.findByRoleId(roleId,
+				start, end);
+
+		Assert.assertEquals(expected, resourcePermissions.size());
+	}
+
+	@Test
+	public void testFindByC_LikeP() throws Exception {
+		ResourcePermission resourcePermission = addResourcePermission();
+
+		long companyId = resourcePermission.getCompanyId();
+
+		String primKey = resourcePermission.getPrimKey();
+
+		List<ResourcePermission> resourcePermissions = _persistence.findByC_LikeP(companyId,
+				primKey);
+
+		Assert.assertEquals(1, resourcePermissions.size());
+
+		Assert.assertEquals(resourcePermission.getPrimaryKey(),
+			resourcePermissions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_LikePNotFound() throws Exception {
+		addResourcePermission();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		String primKey = ServiceTestUtil.randomString();
+
+		List<ResourcePermission> resourcePermissions = _persistence.findByC_LikeP(companyId,
+				primKey);
+
+		Assert.assertEquals(0, resourcePermissions.size());
+	}
+
+	@Test
+	public void testFindByC_LikePStartEnd() throws Exception {
+		testFindByC_LikePStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_LikePStartEndWrongRange() throws Exception {
+		testFindByC_LikePStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_LikePStartEndZeroZero() throws Exception {
+		testFindByC_LikePStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_LikePStartEnd(int start, int end, int expected)
+		throws Exception {
+		ResourcePermission resourcePermission = addResourcePermission();
+
+		long companyId = resourcePermission.getCompanyId();
+
+		String primKey = resourcePermission.getPrimKey();
+
+		List<ResourcePermission> resourcePermissions = _persistence.findByC_LikeP(companyId,
+				primKey, start, end);
+
+		Assert.assertEquals(expected, resourcePermissions.size());
+	}
+
+	@Test
+	public void testFindByC_N_S() throws Exception {
+		ResourcePermission resourcePermission = addResourcePermission();
+
+		long companyId = resourcePermission.getCompanyId();
+
+		String name = resourcePermission.getName();
+
+		int scope = resourcePermission.getScope();
+
+		List<ResourcePermission> resourcePermissions = _persistence.findByC_N_S(companyId,
+				name, scope);
+
+		Assert.assertEquals(1, resourcePermissions.size());
+
+		Assert.assertEquals(resourcePermission.getPrimaryKey(),
+			resourcePermissions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_N_SNotFound() throws Exception {
+		addResourcePermission();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		String name = ServiceTestUtil.randomString();
+
+		int scope = ServiceTestUtil.nextInt();
+
+		List<ResourcePermission> resourcePermissions = _persistence.findByC_N_S(companyId,
+				name, scope);
+
+		Assert.assertEquals(0, resourcePermissions.size());
+	}
+
+	@Test
+	public void testFindByC_N_SStartEnd() throws Exception {
+		testFindByC_N_SStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_N_SStartEndWrongRange() throws Exception {
+		testFindByC_N_SStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_N_SStartEndZeroZero() throws Exception {
+		testFindByC_N_SStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_N_SStartEnd(int start, int end, int expected)
+		throws Exception {
+		ResourcePermission resourcePermission = addResourcePermission();
+
+		long companyId = resourcePermission.getCompanyId();
+
+		String name = resourcePermission.getName();
+
+		int scope = resourcePermission.getScope();
+
+		List<ResourcePermission> resourcePermissions = _persistence.findByC_N_S(companyId,
+				name, scope, start, end);
+
+		Assert.assertEquals(expected, resourcePermissions.size());
+	}
+
+	@Test
+	public void testFindByC_N_S_P() throws Exception {
+		ResourcePermission resourcePermission = addResourcePermission();
+
+		long companyId = resourcePermission.getCompanyId();
+
+		String name = resourcePermission.getName();
+
+		int scope = resourcePermission.getScope();
+
+		String primKey = resourcePermission.getPrimKey();
+
+		List<ResourcePermission> resourcePermissions = _persistence.findByC_N_S_P(companyId,
+				name, scope, primKey);
+
+		Assert.assertEquals(1, resourcePermissions.size());
+
+		Assert.assertEquals(resourcePermission.getPrimaryKey(),
+			resourcePermissions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_N_S_PNotFound() throws Exception {
+		addResourcePermission();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		String name = ServiceTestUtil.randomString();
+
+		int scope = ServiceTestUtil.nextInt();
+
+		String primKey = ServiceTestUtil.randomString();
+
+		List<ResourcePermission> resourcePermissions = _persistence.findByC_N_S_P(companyId,
+				name, scope, primKey);
+
+		Assert.assertEquals(0, resourcePermissions.size());
+	}
+
+	@Test
+	public void testFindByC_N_S_PStartEnd() throws Exception {
+		testFindByC_N_S_PStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_N_S_PStartEndWrongRange() throws Exception {
+		testFindByC_N_S_PStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_N_S_PStartEndZeroZero() throws Exception {
+		testFindByC_N_S_PStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_N_S_PStartEnd(int start, int end, int expected)
+		throws Exception {
+		ResourcePermission resourcePermission = addResourcePermission();
+
+		long companyId = resourcePermission.getCompanyId();
+
+		String name = resourcePermission.getName();
+
+		int scope = resourcePermission.getScope();
+
+		String primKey = resourcePermission.getPrimKey();
+
+		List<ResourcePermission> resourcePermissions = _persistence.findByC_N_S_P(companyId,
+				name, scope, primKey, start, end);
+
+		Assert.assertEquals(expected, resourcePermissions.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("ResourcePermission",
 			"resourcePermissionId", true, "companyId", true, "name", true,

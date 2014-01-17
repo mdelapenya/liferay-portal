@@ -185,6 +185,264 @@ public class MBBanPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		MBBan mbBan = addMBBan();
+
+		String uuid = mbBan.getUuid();
+
+		List<MBBan> mbBans = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, mbBans.size());
+
+		Assert.assertEquals(mbBan.getPrimaryKey(), mbBans.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addMBBan();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<MBBan> mbBans = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, mbBans.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		MBBan mbBan = addMBBan();
+
+		String uuid = mbBan.getUuid();
+
+		List<MBBan> mbBans = _persistence.findByUuid(uuid, start, end);
+
+		Assert.assertEquals(expected, mbBans.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		MBBan mbBan = addMBBan();
+
+		String uuid = mbBan.getUuid();
+
+		long companyId = mbBan.getCompanyId();
+
+		List<MBBan> mbBans = _persistence.findByUuid_C(uuid, companyId);
+
+		Assert.assertEquals(1, mbBans.size());
+
+		Assert.assertEquals(mbBan.getPrimaryKey(), mbBans.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addMBBan();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<MBBan> mbBans = _persistence.findByUuid_C(uuid, companyId);
+
+		Assert.assertEquals(0, mbBans.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		MBBan mbBan = addMBBan();
+
+		String uuid = mbBan.getUuid();
+
+		long companyId = mbBan.getCompanyId();
+
+		List<MBBan> mbBans = _persistence.findByUuid_C(uuid, companyId, start,
+				end);
+
+		Assert.assertEquals(expected, mbBans.size());
+	}
+
+	@Test
+	public void testFindByGroupId() throws Exception {
+		MBBan mbBan = addMBBan();
+
+		long groupId = mbBan.getGroupId();
+
+		List<MBBan> mbBans = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(1, mbBans.size());
+
+		Assert.assertEquals(mbBan.getPrimaryKey(), mbBans.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByGroupIdNotFound() throws Exception {
+		addMBBan();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		List<MBBan> mbBans = _persistence.findByGroupId(groupId);
+
+		Assert.assertEquals(0, mbBans.size());
+	}
+
+	@Test
+	public void testFindByGroupIdStartEnd() throws Exception {
+		testFindByGroupIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndWrongRange() throws Exception {
+		testFindByGroupIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByGroupIdStartEndZeroZero() throws Exception {
+		testFindByGroupIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByGroupIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		MBBan mbBan = addMBBan();
+
+		long groupId = mbBan.getGroupId();
+
+		List<MBBan> mbBans = _persistence.findByGroupId(groupId, start, end);
+
+		Assert.assertEquals(expected, mbBans.size());
+	}
+
+	@Test
+	public void testFindByUserId() throws Exception {
+		MBBan mbBan = addMBBan();
+
+		long userId = mbBan.getUserId();
+
+		List<MBBan> mbBans = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(1, mbBans.size());
+
+		Assert.assertEquals(mbBan.getPrimaryKey(), mbBans.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUserIdNotFound() throws Exception {
+		addMBBan();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		List<MBBan> mbBans = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(0, mbBans.size());
+	}
+
+	@Test
+	public void testFindByUserIdStartEnd() throws Exception {
+		testFindByUserIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndWrongRange() throws Exception {
+		testFindByUserIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndZeroZero() throws Exception {
+		testFindByUserIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUserIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		MBBan mbBan = addMBBan();
+
+		long userId = mbBan.getUserId();
+
+		List<MBBan> mbBans = _persistence.findByUserId(userId, start, end);
+
+		Assert.assertEquals(expected, mbBans.size());
+	}
+
+	@Test
+	public void testFindByBanUserId() throws Exception {
+		MBBan mbBan = addMBBan();
+
+		long banUserId = mbBan.getBanUserId();
+
+		List<MBBan> mbBans = _persistence.findByBanUserId(banUserId);
+
+		Assert.assertEquals(1, mbBans.size());
+
+		Assert.assertEquals(mbBan.getPrimaryKey(), mbBans.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByBanUserIdNotFound() throws Exception {
+		addMBBan();
+
+		long banUserId = ServiceTestUtil.nextLong();
+
+		List<MBBan> mbBans = _persistence.findByBanUserId(banUserId);
+
+		Assert.assertEquals(0, mbBans.size());
+	}
+
+	@Test
+	public void testFindByBanUserIdStartEnd() throws Exception {
+		testFindByBanUserIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByBanUserIdStartEndWrongRange()
+		throws Exception {
+		testFindByBanUserIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByBanUserIdStartEndZeroZero() throws Exception {
+		testFindByBanUserIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByBanUserIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		MBBan mbBan = addMBBan();
+
+		long banUserId = mbBan.getBanUserId();
+
+		List<MBBan> mbBans = _persistence.findByBanUserId(banUserId, start, end);
+
+		Assert.assertEquals(expected, mbBans.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("MBBan", "uuid", true,
 			"banId", true, "groupId", true, "companyId", true, "userId", true,

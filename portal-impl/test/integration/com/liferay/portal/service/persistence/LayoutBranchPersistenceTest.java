@@ -191,6 +191,186 @@ public class LayoutBranchPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByLayoutSetBranchId() throws Exception {
+		LayoutBranch layoutBranch = addLayoutBranch();
+
+		long layoutSetBranchId = layoutBranch.getLayoutSetBranchId();
+
+		List<LayoutBranch> layoutBranchs = _persistence.findByLayoutSetBranchId(layoutSetBranchId);
+
+		Assert.assertEquals(1, layoutBranchs.size());
+
+		Assert.assertEquals(layoutBranch.getPrimaryKey(),
+			layoutBranchs.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByLayoutSetBranchIdNotFound() throws Exception {
+		addLayoutBranch();
+
+		long layoutSetBranchId = ServiceTestUtil.nextLong();
+
+		List<LayoutBranch> layoutBranchs = _persistence.findByLayoutSetBranchId(layoutSetBranchId);
+
+		Assert.assertEquals(0, layoutBranchs.size());
+	}
+
+	@Test
+	public void testFindByLayoutSetBranchIdStartEnd() throws Exception {
+		testFindByLayoutSetBranchIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByLayoutSetBranchIdStartEndWrongRange()
+		throws Exception {
+		testFindByLayoutSetBranchIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByLayoutSetBranchIdStartEndZeroZero()
+		throws Exception {
+		testFindByLayoutSetBranchIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByLayoutSetBranchIdStartEnd(int start, int end,
+		int expected) throws Exception {
+		LayoutBranch layoutBranch = addLayoutBranch();
+
+		long layoutSetBranchId = layoutBranch.getLayoutSetBranchId();
+
+		List<LayoutBranch> layoutBranchs = _persistence.findByLayoutSetBranchId(layoutSetBranchId,
+				start, end);
+
+		Assert.assertEquals(expected, layoutBranchs.size());
+	}
+
+	@Test
+	public void testFindByL_P() throws Exception {
+		LayoutBranch layoutBranch = addLayoutBranch();
+
+		long layoutSetBranchId = layoutBranch.getLayoutSetBranchId();
+
+		long plid = layoutBranch.getPlid();
+
+		List<LayoutBranch> layoutBranchs = _persistence.findByL_P(layoutSetBranchId,
+				plid);
+
+		Assert.assertEquals(1, layoutBranchs.size());
+
+		Assert.assertEquals(layoutBranch.getPrimaryKey(),
+			layoutBranchs.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByL_PNotFound() throws Exception {
+		addLayoutBranch();
+
+		long layoutSetBranchId = ServiceTestUtil.nextLong();
+
+		long plid = ServiceTestUtil.nextLong();
+
+		List<LayoutBranch> layoutBranchs = _persistence.findByL_P(layoutSetBranchId,
+				plid);
+
+		Assert.assertEquals(0, layoutBranchs.size());
+	}
+
+	@Test
+	public void testFindByL_PStartEnd() throws Exception {
+		testFindByL_PStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByL_PStartEndWrongRange() throws Exception {
+		testFindByL_PStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByL_PStartEndZeroZero() throws Exception {
+		testFindByL_PStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByL_PStartEnd(int start, int end, int expected)
+		throws Exception {
+		LayoutBranch layoutBranch = addLayoutBranch();
+
+		long layoutSetBranchId = layoutBranch.getLayoutSetBranchId();
+
+		long plid = layoutBranch.getPlid();
+
+		List<LayoutBranch> layoutBranchs = _persistence.findByL_P(layoutSetBranchId,
+				plid, start, end);
+
+		Assert.assertEquals(expected, layoutBranchs.size());
+	}
+
+	@Test
+	public void testFindByL_P_M() throws Exception {
+		LayoutBranch layoutBranch = addLayoutBranch();
+
+		long layoutSetBranchId = layoutBranch.getLayoutSetBranchId();
+
+		long plid = layoutBranch.getPlid();
+
+		boolean master = layoutBranch.getMaster();
+
+		List<LayoutBranch> layoutBranchs = _persistence.findByL_P_M(layoutSetBranchId,
+				plid, master);
+
+		Assert.assertEquals(1, layoutBranchs.size());
+
+		Assert.assertEquals(layoutBranch.getPrimaryKey(),
+			layoutBranchs.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByL_P_MNotFound() throws Exception {
+		addLayoutBranch();
+
+		long layoutSetBranchId = ServiceTestUtil.nextLong();
+
+		long plid = ServiceTestUtil.nextLong();
+
+		boolean master = ServiceTestUtil.randomBoolean();
+
+		List<LayoutBranch> layoutBranchs = _persistence.findByL_P_M(layoutSetBranchId,
+				plid, master);
+
+		Assert.assertEquals(0, layoutBranchs.size());
+	}
+
+	@Test
+	public void testFindByL_P_MStartEnd() throws Exception {
+		testFindByL_P_MStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByL_P_MStartEndWrongRange() throws Exception {
+		testFindByL_P_MStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByL_P_MStartEndZeroZero() throws Exception {
+		testFindByL_P_MStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByL_P_MStartEnd(int start, int end, int expected)
+		throws Exception {
+		LayoutBranch layoutBranch = addLayoutBranch();
+
+		long layoutSetBranchId = layoutBranch.getLayoutSetBranchId();
+
+		long plid = layoutBranch.getPlid();
+
+		boolean master = layoutBranch.getMaster();
+
+		List<LayoutBranch> layoutBranchs = _persistence.findByL_P_M(layoutSetBranchId,
+				plid, master, start, end);
+
+		Assert.assertEquals(expected, layoutBranchs.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("LayoutBranch",
 			"LayoutBranchId", true, "groupId", true, "companyId", true,

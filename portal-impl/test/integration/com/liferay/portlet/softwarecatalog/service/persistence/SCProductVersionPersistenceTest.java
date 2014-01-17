@@ -203,6 +203,60 @@ public class SCProductVersionPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByProductEntryId() throws Exception {
+		SCProductVersion scProductVersion = addSCProductVersion();
+
+		long productEntryId = scProductVersion.getProductEntryId();
+
+		List<SCProductVersion> scProductVersions = _persistence.findByProductEntryId(productEntryId);
+
+		Assert.assertEquals(1, scProductVersions.size());
+
+		Assert.assertEquals(scProductVersion.getPrimaryKey(),
+			scProductVersions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByProductEntryIdNotFound() throws Exception {
+		addSCProductVersion();
+
+		long productEntryId = ServiceTestUtil.nextLong();
+
+		List<SCProductVersion> scProductVersions = _persistence.findByProductEntryId(productEntryId);
+
+		Assert.assertEquals(0, scProductVersions.size());
+	}
+
+	@Test
+	public void testFindByProductEntryIdStartEnd() throws Exception {
+		testFindByProductEntryIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByProductEntryIdStartEndWrongRange()
+		throws Exception {
+		testFindByProductEntryIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByProductEntryIdStartEndZeroZero()
+		throws Exception {
+		testFindByProductEntryIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByProductEntryIdStartEnd(int start, int end,
+		int expected) throws Exception {
+		SCProductVersion scProductVersion = addSCProductVersion();
+
+		long productEntryId = scProductVersion.getProductEntryId();
+
+		List<SCProductVersion> scProductVersions = _persistence.findByProductEntryId(productEntryId,
+				start, end);
+
+		Assert.assertEquals(expected, scProductVersions.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("SCProductVersion",
 			"productVersionId", true, "companyId", true, "userId", true,

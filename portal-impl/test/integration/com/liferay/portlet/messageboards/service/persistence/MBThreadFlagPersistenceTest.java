@@ -191,6 +191,223 @@ public class MBThreadFlagPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		MBThreadFlag mbThreadFlag = addMBThreadFlag();
+
+		String uuid = mbThreadFlag.getUuid();
+
+		List<MBThreadFlag> mbThreadFlags = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, mbThreadFlags.size());
+
+		Assert.assertEquals(mbThreadFlag.getPrimaryKey(),
+			mbThreadFlags.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addMBThreadFlag();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<MBThreadFlag> mbThreadFlags = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, mbThreadFlags.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		MBThreadFlag mbThreadFlag = addMBThreadFlag();
+
+		String uuid = mbThreadFlag.getUuid();
+
+		List<MBThreadFlag> mbThreadFlags = _persistence.findByUuid(uuid, start,
+				end);
+
+		Assert.assertEquals(expected, mbThreadFlags.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		MBThreadFlag mbThreadFlag = addMBThreadFlag();
+
+		String uuid = mbThreadFlag.getUuid();
+
+		long companyId = mbThreadFlag.getCompanyId();
+
+		List<MBThreadFlag> mbThreadFlags = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(1, mbThreadFlags.size());
+
+		Assert.assertEquals(mbThreadFlag.getPrimaryKey(),
+			mbThreadFlags.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addMBThreadFlag();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<MBThreadFlag> mbThreadFlags = _persistence.findByUuid_C(uuid,
+				companyId);
+
+		Assert.assertEquals(0, mbThreadFlags.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		MBThreadFlag mbThreadFlag = addMBThreadFlag();
+
+		String uuid = mbThreadFlag.getUuid();
+
+		long companyId = mbThreadFlag.getCompanyId();
+
+		List<MBThreadFlag> mbThreadFlags = _persistence.findByUuid_C(uuid,
+				companyId, start, end);
+
+		Assert.assertEquals(expected, mbThreadFlags.size());
+	}
+
+	@Test
+	public void testFindByUserId() throws Exception {
+		MBThreadFlag mbThreadFlag = addMBThreadFlag();
+
+		long userId = mbThreadFlag.getUserId();
+
+		List<MBThreadFlag> mbThreadFlags = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(1, mbThreadFlags.size());
+
+		Assert.assertEquals(mbThreadFlag.getPrimaryKey(),
+			mbThreadFlags.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUserIdNotFound() throws Exception {
+		addMBThreadFlag();
+
+		long userId = ServiceTestUtil.nextLong();
+
+		List<MBThreadFlag> mbThreadFlags = _persistence.findByUserId(userId);
+
+		Assert.assertEquals(0, mbThreadFlags.size());
+	}
+
+	@Test
+	public void testFindByUserIdStartEnd() throws Exception {
+		testFindByUserIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndWrongRange() throws Exception {
+		testFindByUserIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUserIdStartEndZeroZero() throws Exception {
+		testFindByUserIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUserIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		MBThreadFlag mbThreadFlag = addMBThreadFlag();
+
+		long userId = mbThreadFlag.getUserId();
+
+		List<MBThreadFlag> mbThreadFlags = _persistence.findByUserId(userId,
+				start, end);
+
+		Assert.assertEquals(expected, mbThreadFlags.size());
+	}
+
+	@Test
+	public void testFindByThreadId() throws Exception {
+		MBThreadFlag mbThreadFlag = addMBThreadFlag();
+
+		long threadId = mbThreadFlag.getThreadId();
+
+		List<MBThreadFlag> mbThreadFlags = _persistence.findByThreadId(threadId);
+
+		Assert.assertEquals(1, mbThreadFlags.size());
+
+		Assert.assertEquals(mbThreadFlag.getPrimaryKey(),
+			mbThreadFlags.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByThreadIdNotFound() throws Exception {
+		addMBThreadFlag();
+
+		long threadId = ServiceTestUtil.nextLong();
+
+		List<MBThreadFlag> mbThreadFlags = _persistence.findByThreadId(threadId);
+
+		Assert.assertEquals(0, mbThreadFlags.size());
+	}
+
+	@Test
+	public void testFindByThreadIdStartEnd() throws Exception {
+		testFindByThreadIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByThreadIdStartEndWrongRange()
+		throws Exception {
+		testFindByThreadIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByThreadIdStartEndZeroZero() throws Exception {
+		testFindByThreadIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByThreadIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		MBThreadFlag mbThreadFlag = addMBThreadFlag();
+
+		long threadId = mbThreadFlag.getThreadId();
+
+		List<MBThreadFlag> mbThreadFlags = _persistence.findByThreadId(threadId,
+				start, end);
+
+		Assert.assertEquals(expected, mbThreadFlags.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("MBThreadFlag", "uuid",
 			true, "threadFlagId", true, "groupId", true, "companyId", true,

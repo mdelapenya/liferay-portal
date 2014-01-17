@@ -174,6 +174,57 @@ public class CountryPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByActive() throws Exception {
+		Country country = addCountry();
+
+		boolean active = country.getActive();
+
+		List<Country> countries = _persistence.findByActive(active);
+
+		Assert.assertEquals(1, countries.size());
+
+		Assert.assertEquals(country.getPrimaryKey(),
+			countries.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByActiveNotFound() throws Exception {
+		addCountry();
+
+		boolean active = ServiceTestUtil.randomBoolean();
+
+		List<Country> countries = _persistence.findByActive(active);
+
+		Assert.assertEquals(0, countries.size());
+	}
+
+	@Test
+	public void testFindByActiveStartEnd() throws Exception {
+		testFindByActiveStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByActiveStartEndWrongRange() throws Exception {
+		testFindByActiveStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByActiveStartEndZeroZero() throws Exception {
+		testFindByActiveStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByActiveStartEnd(int start, int end, int expected)
+		throws Exception {
+		Country country = addCountry();
+
+		boolean active = country.getActive();
+
+		List<Country> countries = _persistence.findByActive(active, start, end);
+
+		Assert.assertEquals(expected, countries.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("Country", "countryId",
 			true, "name", true, "a2", true, "a3", true, "number", true, "idd",

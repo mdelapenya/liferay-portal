@@ -276,6 +276,170 @@ public class ContactPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByCompanyId() throws Exception {
+		Contact contact = addContact();
+
+		long companyId = contact.getCompanyId();
+
+		List<Contact> contacts = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(1, contacts.size());
+
+		Assert.assertEquals(contact.getPrimaryKey(),
+			contacts.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByCompanyIdNotFound() throws Exception {
+		addContact();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<Contact> contacts = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(0, contacts.size());
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEnd() throws Exception {
+		testFindByCompanyIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndWrongRange()
+		throws Exception {
+		testFindByCompanyIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndZeroZero() throws Exception {
+		testFindByCompanyIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByCompanyIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		Contact contact = addContact();
+
+		long companyId = contact.getCompanyId();
+
+		List<Contact> contacts = _persistence.findByCompanyId(companyId, start,
+				end);
+
+		Assert.assertEquals(expected, contacts.size());
+	}
+
+	@Test
+	public void testFindByAccountId() throws Exception {
+		Contact contact = addContact();
+
+		long accountId = contact.getAccountId();
+
+		List<Contact> contacts = _persistence.findByAccountId(accountId);
+
+		Assert.assertEquals(1, contacts.size());
+
+		Assert.assertEquals(contact.getPrimaryKey(),
+			contacts.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByAccountIdNotFound() throws Exception {
+		addContact();
+
+		long accountId = ServiceTestUtil.nextLong();
+
+		List<Contact> contacts = _persistence.findByAccountId(accountId);
+
+		Assert.assertEquals(0, contacts.size());
+	}
+
+	@Test
+	public void testFindByAccountIdStartEnd() throws Exception {
+		testFindByAccountIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByAccountIdStartEndWrongRange()
+		throws Exception {
+		testFindByAccountIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByAccountIdStartEndZeroZero() throws Exception {
+		testFindByAccountIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByAccountIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		Contact contact = addContact();
+
+		long accountId = contact.getAccountId();
+
+		List<Contact> contacts = _persistence.findByAccountId(accountId, start,
+				end);
+
+		Assert.assertEquals(expected, contacts.size());
+	}
+
+	@Test
+	public void testFindByC_C() throws Exception {
+		Contact contact = addContact();
+
+		long classNameId = contact.getClassNameId();
+
+		long classPK = contact.getClassPK();
+
+		List<Contact> contacts = _persistence.findByC_C(classNameId, classPK);
+
+		Assert.assertEquals(1, contacts.size());
+
+		Assert.assertEquals(contact.getPrimaryKey(),
+			contacts.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_CNotFound() throws Exception {
+		addContact();
+
+		long classNameId = ServiceTestUtil.nextLong();
+
+		long classPK = ServiceTestUtil.nextLong();
+
+		List<Contact> contacts = _persistence.findByC_C(classNameId, classPK);
+
+		Assert.assertEquals(0, contacts.size());
+	}
+
+	@Test
+	public void testFindByC_CStartEnd() throws Exception {
+		testFindByC_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_CStartEndWrongRange() throws Exception {
+		testFindByC_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_CStartEndZeroZero() throws Exception {
+		testFindByC_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		Contact contact = addContact();
+
+		long classNameId = contact.getClassNameId();
+
+		long classPK = contact.getClassPK();
+
+		List<Contact> contacts = _persistence.findByC_C(classNameId, classPK,
+				start, end);
+
+		Assert.assertEquals(expected, contacts.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("Contact_", "contactId",
 			true, "companyId", true, "userId", true, "userName", true,

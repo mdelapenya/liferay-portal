@@ -202,6 +202,125 @@ public class WorkflowDefinitionLinkPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByCompanyId() throws Exception {
+		WorkflowDefinitionLink workflowDefinitionLink = addWorkflowDefinitionLink();
+
+		long companyId = workflowDefinitionLink.getCompanyId();
+
+		List<WorkflowDefinitionLink> workflowDefinitionLinks = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(1, workflowDefinitionLinks.size());
+
+		Assert.assertEquals(workflowDefinitionLink.getPrimaryKey(),
+			workflowDefinitionLinks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByCompanyIdNotFound() throws Exception {
+		addWorkflowDefinitionLink();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<WorkflowDefinitionLink> workflowDefinitionLinks = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(0, workflowDefinitionLinks.size());
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEnd() throws Exception {
+		testFindByCompanyIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndWrongRange()
+		throws Exception {
+		testFindByCompanyIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndZeroZero() throws Exception {
+		testFindByCompanyIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByCompanyIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		WorkflowDefinitionLink workflowDefinitionLink = addWorkflowDefinitionLink();
+
+		long companyId = workflowDefinitionLink.getCompanyId();
+
+		List<WorkflowDefinitionLink> workflowDefinitionLinks = _persistence.findByCompanyId(companyId,
+				start, end);
+
+		Assert.assertEquals(expected, workflowDefinitionLinks.size());
+	}
+
+	@Test
+	public void testFindByC_W_W() throws Exception {
+		WorkflowDefinitionLink workflowDefinitionLink = addWorkflowDefinitionLink();
+
+		long companyId = workflowDefinitionLink.getCompanyId();
+
+		String workflowDefinitionName = workflowDefinitionLink.getWorkflowDefinitionName();
+
+		int workflowDefinitionVersion = workflowDefinitionLink.getWorkflowDefinitionVersion();
+
+		List<WorkflowDefinitionLink> workflowDefinitionLinks = _persistence.findByC_W_W(companyId,
+				workflowDefinitionName, workflowDefinitionVersion);
+
+		Assert.assertEquals(1, workflowDefinitionLinks.size());
+
+		Assert.assertEquals(workflowDefinitionLink.getPrimaryKey(),
+			workflowDefinitionLinks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_W_WNotFound() throws Exception {
+		addWorkflowDefinitionLink();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		String workflowDefinitionName = ServiceTestUtil.randomString();
+
+		int workflowDefinitionVersion = ServiceTestUtil.nextInt();
+
+		List<WorkflowDefinitionLink> workflowDefinitionLinks = _persistence.findByC_W_W(companyId,
+				workflowDefinitionName, workflowDefinitionVersion);
+
+		Assert.assertEquals(0, workflowDefinitionLinks.size());
+	}
+
+	@Test
+	public void testFindByC_W_WStartEnd() throws Exception {
+		testFindByC_W_WStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_W_WStartEndWrongRange() throws Exception {
+		testFindByC_W_WStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_W_WStartEndZeroZero() throws Exception {
+		testFindByC_W_WStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_W_WStartEnd(int start, int end, int expected)
+		throws Exception {
+		WorkflowDefinitionLink workflowDefinitionLink = addWorkflowDefinitionLink();
+
+		long companyId = workflowDefinitionLink.getCompanyId();
+
+		String workflowDefinitionName = workflowDefinitionLink.getWorkflowDefinitionName();
+
+		int workflowDefinitionVersion = workflowDefinitionLink.getWorkflowDefinitionVersion();
+
+		List<WorkflowDefinitionLink> workflowDefinitionLinks = _persistence.findByC_W_W(companyId,
+				workflowDefinitionName, workflowDefinitionVersion, start, end);
+
+		Assert.assertEquals(expected, workflowDefinitionLinks.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("WorkflowDefinitionLink",
 			"workflowDefinitionLinkId", true, "groupId", true, "companyId",

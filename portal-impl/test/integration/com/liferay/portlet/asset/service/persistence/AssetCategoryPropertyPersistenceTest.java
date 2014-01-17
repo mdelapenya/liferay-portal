@@ -192,6 +192,173 @@ public class AssetCategoryPropertyPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByCompanyId() throws Exception {
+		AssetCategoryProperty assetCategoryProperty = addAssetCategoryProperty();
+
+		long companyId = assetCategoryProperty.getCompanyId();
+
+		List<AssetCategoryProperty> assetCategoryProperties = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(1, assetCategoryProperties.size());
+
+		Assert.assertEquals(assetCategoryProperty.getPrimaryKey(),
+			assetCategoryProperties.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByCompanyIdNotFound() throws Exception {
+		addAssetCategoryProperty();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<AssetCategoryProperty> assetCategoryProperties = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(0, assetCategoryProperties.size());
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEnd() throws Exception {
+		testFindByCompanyIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndWrongRange()
+		throws Exception {
+		testFindByCompanyIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndZeroZero() throws Exception {
+		testFindByCompanyIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByCompanyIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		AssetCategoryProperty assetCategoryProperty = addAssetCategoryProperty();
+
+		long companyId = assetCategoryProperty.getCompanyId();
+
+		List<AssetCategoryProperty> assetCategoryProperties = _persistence.findByCompanyId(companyId,
+				start, end);
+
+		Assert.assertEquals(expected, assetCategoryProperties.size());
+	}
+
+	@Test
+	public void testFindByCategoryId() throws Exception {
+		AssetCategoryProperty assetCategoryProperty = addAssetCategoryProperty();
+
+		long categoryId = assetCategoryProperty.getCategoryId();
+
+		List<AssetCategoryProperty> assetCategoryProperties = _persistence.findByCategoryId(categoryId);
+
+		Assert.assertEquals(1, assetCategoryProperties.size());
+
+		Assert.assertEquals(assetCategoryProperty.getPrimaryKey(),
+			assetCategoryProperties.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByCategoryIdNotFound() throws Exception {
+		addAssetCategoryProperty();
+
+		long categoryId = ServiceTestUtil.nextLong();
+
+		List<AssetCategoryProperty> assetCategoryProperties = _persistence.findByCategoryId(categoryId);
+
+		Assert.assertEquals(0, assetCategoryProperties.size());
+	}
+
+	@Test
+	public void testFindByCategoryIdStartEnd() throws Exception {
+		testFindByCategoryIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByCategoryIdStartEndWrongRange()
+		throws Exception {
+		testFindByCategoryIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByCategoryIdStartEndZeroZero()
+		throws Exception {
+		testFindByCategoryIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByCategoryIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		AssetCategoryProperty assetCategoryProperty = addAssetCategoryProperty();
+
+		long categoryId = assetCategoryProperty.getCategoryId();
+
+		List<AssetCategoryProperty> assetCategoryProperties = _persistence.findByCategoryId(categoryId,
+				start, end);
+
+		Assert.assertEquals(expected, assetCategoryProperties.size());
+	}
+
+	@Test
+	public void testFindByC_K() throws Exception {
+		AssetCategoryProperty assetCategoryProperty = addAssetCategoryProperty();
+
+		long companyId = assetCategoryProperty.getCompanyId();
+
+		String key = assetCategoryProperty.getKey();
+
+		List<AssetCategoryProperty> assetCategoryProperties = _persistence.findByC_K(companyId,
+				key);
+
+		Assert.assertEquals(1, assetCategoryProperties.size());
+
+		Assert.assertEquals(assetCategoryProperty.getPrimaryKey(),
+			assetCategoryProperties.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_KNotFound() throws Exception {
+		addAssetCategoryProperty();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		String key = ServiceTestUtil.randomString();
+
+		List<AssetCategoryProperty> assetCategoryProperties = _persistence.findByC_K(companyId,
+				key);
+
+		Assert.assertEquals(0, assetCategoryProperties.size());
+	}
+
+	@Test
+	public void testFindByC_KStartEnd() throws Exception {
+		testFindByC_KStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_KStartEndWrongRange() throws Exception {
+		testFindByC_KStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_KStartEndZeroZero() throws Exception {
+		testFindByC_KStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_KStartEnd(int start, int end, int expected)
+		throws Exception {
+		AssetCategoryProperty assetCategoryProperty = addAssetCategoryProperty();
+
+		long companyId = assetCategoryProperty.getCompanyId();
+
+		String key = assetCategoryProperty.getKey();
+
+		List<AssetCategoryProperty> assetCategoryProperties = _persistence.findByC_K(companyId,
+				key, start, end);
+
+		Assert.assertEquals(expected, assetCategoryProperties.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("AssetCategoryProperty",
 			"categoryPropertyId", true, "companyId", true, "userId", true,

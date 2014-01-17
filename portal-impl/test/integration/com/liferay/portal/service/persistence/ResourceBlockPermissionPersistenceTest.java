@@ -167,6 +167,112 @@ public class ResourceBlockPermissionPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByResourceBlockId() throws Exception {
+		ResourceBlockPermission resourceBlockPermission = addResourceBlockPermission();
+
+		long resourceBlockId = resourceBlockPermission.getResourceBlockId();
+
+		List<ResourceBlockPermission> resourceBlockPermissions = _persistence.findByResourceBlockId(resourceBlockId);
+
+		Assert.assertEquals(1, resourceBlockPermissions.size());
+
+		Assert.assertEquals(resourceBlockPermission.getPrimaryKey(),
+			resourceBlockPermissions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByResourceBlockIdNotFound() throws Exception {
+		addResourceBlockPermission();
+
+		long resourceBlockId = ServiceTestUtil.nextLong();
+
+		List<ResourceBlockPermission> resourceBlockPermissions = _persistence.findByResourceBlockId(resourceBlockId);
+
+		Assert.assertEquals(0, resourceBlockPermissions.size());
+	}
+
+	@Test
+	public void testFindByResourceBlockIdStartEnd() throws Exception {
+		testFindByResourceBlockIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByResourceBlockIdStartEndWrongRange()
+		throws Exception {
+		testFindByResourceBlockIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByResourceBlockIdStartEndZeroZero()
+		throws Exception {
+		testFindByResourceBlockIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByResourceBlockIdStartEnd(int start, int end,
+		int expected) throws Exception {
+		ResourceBlockPermission resourceBlockPermission = addResourceBlockPermission();
+
+		long resourceBlockId = resourceBlockPermission.getResourceBlockId();
+
+		List<ResourceBlockPermission> resourceBlockPermissions = _persistence.findByResourceBlockId(resourceBlockId,
+				start, end);
+
+		Assert.assertEquals(expected, resourceBlockPermissions.size());
+	}
+
+	@Test
+	public void testFindByRoleId() throws Exception {
+		ResourceBlockPermission resourceBlockPermission = addResourceBlockPermission();
+
+		long roleId = resourceBlockPermission.getRoleId();
+
+		List<ResourceBlockPermission> resourceBlockPermissions = _persistence.findByRoleId(roleId);
+
+		Assert.assertEquals(1, resourceBlockPermissions.size());
+
+		Assert.assertEquals(resourceBlockPermission.getPrimaryKey(),
+			resourceBlockPermissions.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByRoleIdNotFound() throws Exception {
+		addResourceBlockPermission();
+
+		long roleId = ServiceTestUtil.nextLong();
+
+		List<ResourceBlockPermission> resourceBlockPermissions = _persistence.findByRoleId(roleId);
+
+		Assert.assertEquals(0, resourceBlockPermissions.size());
+	}
+
+	@Test
+	public void testFindByRoleIdStartEnd() throws Exception {
+		testFindByRoleIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByRoleIdStartEndWrongRange() throws Exception {
+		testFindByRoleIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByRoleIdStartEndZeroZero() throws Exception {
+		testFindByRoleIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByRoleIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		ResourceBlockPermission resourceBlockPermission = addResourceBlockPermission();
+
+		long roleId = resourceBlockPermission.getRoleId();
+
+		List<ResourceBlockPermission> resourceBlockPermissions = _persistence.findByRoleId(roleId,
+				start, end);
+
+		Assert.assertEquals(expected, resourceBlockPermissions.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("ResourceBlockPermission",
 			"resourceBlockPermissionId", true, "resourceBlockId", true,

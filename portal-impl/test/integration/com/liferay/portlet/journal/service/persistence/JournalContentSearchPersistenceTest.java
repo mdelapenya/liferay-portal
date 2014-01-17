@@ -181,6 +181,436 @@ public class JournalContentSearchPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByPortletId() throws Exception {
+		JournalContentSearch journalContentSearch = addJournalContentSearch();
+
+		String portletId = journalContentSearch.getPortletId();
+
+		List<JournalContentSearch> journalContentSearchs = _persistence.findByPortletId(portletId);
+
+		Assert.assertEquals(1, journalContentSearchs.size());
+
+		Assert.assertEquals(journalContentSearch.getPrimaryKey(),
+			journalContentSearchs.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByPortletIdNotFound() throws Exception {
+		addJournalContentSearch();
+
+		String portletId = ServiceTestUtil.randomString();
+
+		List<JournalContentSearch> journalContentSearchs = _persistence.findByPortletId(portletId);
+
+		Assert.assertEquals(0, journalContentSearchs.size());
+	}
+
+	@Test
+	public void testFindByPortletIdStartEnd() throws Exception {
+		testFindByPortletIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByPortletIdStartEndWrongRange()
+		throws Exception {
+		testFindByPortletIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByPortletIdStartEndZeroZero() throws Exception {
+		testFindByPortletIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByPortletIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		JournalContentSearch journalContentSearch = addJournalContentSearch();
+
+		String portletId = journalContentSearch.getPortletId();
+
+		List<JournalContentSearch> journalContentSearchs = _persistence.findByPortletId(portletId,
+				start, end);
+
+		Assert.assertEquals(expected, journalContentSearchs.size());
+	}
+
+	@Test
+	public void testFindByArticleId() throws Exception {
+		JournalContentSearch journalContentSearch = addJournalContentSearch();
+
+		String articleId = journalContentSearch.getArticleId();
+
+		List<JournalContentSearch> journalContentSearchs = _persistence.findByArticleId(articleId);
+
+		Assert.assertEquals(1, journalContentSearchs.size());
+
+		Assert.assertEquals(journalContentSearch.getPrimaryKey(),
+			journalContentSearchs.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByArticleIdNotFound() throws Exception {
+		addJournalContentSearch();
+
+		String articleId = ServiceTestUtil.randomString();
+
+		List<JournalContentSearch> journalContentSearchs = _persistence.findByArticleId(articleId);
+
+		Assert.assertEquals(0, journalContentSearchs.size());
+	}
+
+	@Test
+	public void testFindByArticleIdStartEnd() throws Exception {
+		testFindByArticleIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByArticleIdStartEndWrongRange()
+		throws Exception {
+		testFindByArticleIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByArticleIdStartEndZeroZero() throws Exception {
+		testFindByArticleIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByArticleIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		JournalContentSearch journalContentSearch = addJournalContentSearch();
+
+		String articleId = journalContentSearch.getArticleId();
+
+		List<JournalContentSearch> journalContentSearchs = _persistence.findByArticleId(articleId,
+				start, end);
+
+		Assert.assertEquals(expected, journalContentSearchs.size());
+	}
+
+	@Test
+	public void testFindByG_P() throws Exception {
+		JournalContentSearch journalContentSearch = addJournalContentSearch();
+
+		long groupId = journalContentSearch.getGroupId();
+
+		boolean privateLayout = journalContentSearch.getPrivateLayout();
+
+		List<JournalContentSearch> journalContentSearchs = _persistence.findByG_P(groupId,
+				privateLayout);
+
+		Assert.assertEquals(1, journalContentSearchs.size());
+
+		Assert.assertEquals(journalContentSearch.getPrimaryKey(),
+			journalContentSearchs.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_PNotFound() throws Exception {
+		addJournalContentSearch();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		boolean privateLayout = ServiceTestUtil.randomBoolean();
+
+		List<JournalContentSearch> journalContentSearchs = _persistence.findByG_P(groupId,
+				privateLayout);
+
+		Assert.assertEquals(0, journalContentSearchs.size());
+	}
+
+	@Test
+	public void testFindByG_PStartEnd() throws Exception {
+		testFindByG_PStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_PStartEndWrongRange() throws Exception {
+		testFindByG_PStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_PStartEndZeroZero() throws Exception {
+		testFindByG_PStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_PStartEnd(int start, int end, int expected)
+		throws Exception {
+		JournalContentSearch journalContentSearch = addJournalContentSearch();
+
+		long groupId = journalContentSearch.getGroupId();
+
+		boolean privateLayout = journalContentSearch.getPrivateLayout();
+
+		List<JournalContentSearch> journalContentSearchs = _persistence.findByG_P(groupId,
+				privateLayout, start, end);
+
+		Assert.assertEquals(expected, journalContentSearchs.size());
+	}
+
+	@Test
+	public void testFindByG_A() throws Exception {
+		JournalContentSearch journalContentSearch = addJournalContentSearch();
+
+		long groupId = journalContentSearch.getGroupId();
+
+		String articleId = journalContentSearch.getArticleId();
+
+		List<JournalContentSearch> journalContentSearchs = _persistence.findByG_A(groupId,
+				articleId);
+
+		Assert.assertEquals(1, journalContentSearchs.size());
+
+		Assert.assertEquals(journalContentSearch.getPrimaryKey(),
+			journalContentSearchs.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_ANotFound() throws Exception {
+		addJournalContentSearch();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		String articleId = ServiceTestUtil.randomString();
+
+		List<JournalContentSearch> journalContentSearchs = _persistence.findByG_A(groupId,
+				articleId);
+
+		Assert.assertEquals(0, journalContentSearchs.size());
+	}
+
+	@Test
+	public void testFindByG_AStartEnd() throws Exception {
+		testFindByG_AStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_AStartEndWrongRange() throws Exception {
+		testFindByG_AStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_AStartEndZeroZero() throws Exception {
+		testFindByG_AStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_AStartEnd(int start, int end, int expected)
+		throws Exception {
+		JournalContentSearch journalContentSearch = addJournalContentSearch();
+
+		long groupId = journalContentSearch.getGroupId();
+
+		String articleId = journalContentSearch.getArticleId();
+
+		List<JournalContentSearch> journalContentSearchs = _persistence.findByG_A(groupId,
+				articleId, start, end);
+
+		Assert.assertEquals(expected, journalContentSearchs.size());
+	}
+
+	@Test
+	public void testFindByG_P_L() throws Exception {
+		JournalContentSearch journalContentSearch = addJournalContentSearch();
+
+		long groupId = journalContentSearch.getGroupId();
+
+		boolean privateLayout = journalContentSearch.getPrivateLayout();
+
+		long layoutId = journalContentSearch.getLayoutId();
+
+		List<JournalContentSearch> journalContentSearchs = _persistence.findByG_P_L(groupId,
+				privateLayout, layoutId);
+
+		Assert.assertEquals(1, journalContentSearchs.size());
+
+		Assert.assertEquals(journalContentSearch.getPrimaryKey(),
+			journalContentSearchs.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_P_LNotFound() throws Exception {
+		addJournalContentSearch();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		boolean privateLayout = ServiceTestUtil.randomBoolean();
+
+		long layoutId = ServiceTestUtil.nextLong();
+
+		List<JournalContentSearch> journalContentSearchs = _persistence.findByG_P_L(groupId,
+				privateLayout, layoutId);
+
+		Assert.assertEquals(0, journalContentSearchs.size());
+	}
+
+	@Test
+	public void testFindByG_P_LStartEnd() throws Exception {
+		testFindByG_P_LStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_P_LStartEndWrongRange() throws Exception {
+		testFindByG_P_LStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_P_LStartEndZeroZero() throws Exception {
+		testFindByG_P_LStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_P_LStartEnd(int start, int end, int expected)
+		throws Exception {
+		JournalContentSearch journalContentSearch = addJournalContentSearch();
+
+		long groupId = journalContentSearch.getGroupId();
+
+		boolean privateLayout = journalContentSearch.getPrivateLayout();
+
+		long layoutId = journalContentSearch.getLayoutId();
+
+		List<JournalContentSearch> journalContentSearchs = _persistence.findByG_P_L(groupId,
+				privateLayout, layoutId, start, end);
+
+		Assert.assertEquals(expected, journalContentSearchs.size());
+	}
+
+	@Test
+	public void testFindByG_P_A() throws Exception {
+		JournalContentSearch journalContentSearch = addJournalContentSearch();
+
+		long groupId = journalContentSearch.getGroupId();
+
+		boolean privateLayout = journalContentSearch.getPrivateLayout();
+
+		String articleId = journalContentSearch.getArticleId();
+
+		List<JournalContentSearch> journalContentSearchs = _persistence.findByG_P_A(groupId,
+				privateLayout, articleId);
+
+		Assert.assertEquals(1, journalContentSearchs.size());
+
+		Assert.assertEquals(journalContentSearch.getPrimaryKey(),
+			journalContentSearchs.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_P_ANotFound() throws Exception {
+		addJournalContentSearch();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		boolean privateLayout = ServiceTestUtil.randomBoolean();
+
+		String articleId = ServiceTestUtil.randomString();
+
+		List<JournalContentSearch> journalContentSearchs = _persistence.findByG_P_A(groupId,
+				privateLayout, articleId);
+
+		Assert.assertEquals(0, journalContentSearchs.size());
+	}
+
+	@Test
+	public void testFindByG_P_AStartEnd() throws Exception {
+		testFindByG_P_AStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_P_AStartEndWrongRange() throws Exception {
+		testFindByG_P_AStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_P_AStartEndZeroZero() throws Exception {
+		testFindByG_P_AStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_P_AStartEnd(int start, int end, int expected)
+		throws Exception {
+		JournalContentSearch journalContentSearch = addJournalContentSearch();
+
+		long groupId = journalContentSearch.getGroupId();
+
+		boolean privateLayout = journalContentSearch.getPrivateLayout();
+
+		String articleId = journalContentSearch.getArticleId();
+
+		List<JournalContentSearch> journalContentSearchs = _persistence.findByG_P_A(groupId,
+				privateLayout, articleId, start, end);
+
+		Assert.assertEquals(expected, journalContentSearchs.size());
+	}
+
+	@Test
+	public void testFindByG_P_L_P() throws Exception {
+		JournalContentSearch journalContentSearch = addJournalContentSearch();
+
+		long groupId = journalContentSearch.getGroupId();
+
+		boolean privateLayout = journalContentSearch.getPrivateLayout();
+
+		long layoutId = journalContentSearch.getLayoutId();
+
+		String portletId = journalContentSearch.getPortletId();
+
+		List<JournalContentSearch> journalContentSearchs = _persistence.findByG_P_L_P(groupId,
+				privateLayout, layoutId, portletId);
+
+		Assert.assertEquals(1, journalContentSearchs.size());
+
+		Assert.assertEquals(journalContentSearch.getPrimaryKey(),
+			journalContentSearchs.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByG_P_L_PNotFound() throws Exception {
+		addJournalContentSearch();
+
+		long groupId = ServiceTestUtil.nextLong();
+
+		boolean privateLayout = ServiceTestUtil.randomBoolean();
+
+		long layoutId = ServiceTestUtil.nextLong();
+
+		String portletId = ServiceTestUtil.randomString();
+
+		List<JournalContentSearch> journalContentSearchs = _persistence.findByG_P_L_P(groupId,
+				privateLayout, layoutId, portletId);
+
+		Assert.assertEquals(0, journalContentSearchs.size());
+	}
+
+	@Test
+	public void testFindByG_P_L_PStartEnd() throws Exception {
+		testFindByG_P_L_PStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByG_P_L_PStartEndWrongRange() throws Exception {
+		testFindByG_P_L_PStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByG_P_L_PStartEndZeroZero() throws Exception {
+		testFindByG_P_L_PStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByG_P_L_PStartEnd(int start, int end, int expected)
+		throws Exception {
+		JournalContentSearch journalContentSearch = addJournalContentSearch();
+
+		long groupId = journalContentSearch.getGroupId();
+
+		boolean privateLayout = journalContentSearch.getPrivateLayout();
+
+		long layoutId = journalContentSearch.getLayoutId();
+
+		String portletId = journalContentSearch.getPortletId();
+
+		List<JournalContentSearch> journalContentSearchs = _persistence.findByG_P_L_P(groupId,
+				privateLayout, layoutId, portletId, start, end);
+
+		Assert.assertEquals(expected, journalContentSearchs.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("JournalContentSearch",
 			"contentSearchId", true, "groupId", true, "companyId", true,

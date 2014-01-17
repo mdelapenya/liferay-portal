@@ -246,6 +246,168 @@ public class CalEventPersistenceTest {
 	}
 
 	@Test
+	public void testFindByUuid() throws Exception {
+		CalEvent calEvent = addCalEvent();
+
+		String uuid = calEvent.getUuid();
+
+		List<CalEvent> calEvents = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, calEvents.size());
+
+		Assert.assertEquals(calEvent.getPrimaryKey(),
+			calEvents.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addCalEvent();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<CalEvent> calEvents = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, calEvents.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		CalEvent calEvent = addCalEvent();
+
+		String uuid = calEvent.getUuid();
+
+		List<CalEvent> calEvents = _persistence.findByUuid(uuid, start, end);
+
+		Assert.assertEquals(expected, calEvents.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		CalEvent calEvent = addCalEvent();
+
+		String uuid = calEvent.getUuid();
+
+		long companyId = calEvent.getCompanyId();
+
+		List<CalEvent> calEvents = _persistence.findByUuid_C(uuid, companyId);
+
+		Assert.assertEquals(1, calEvents.size());
+
+		Assert.assertEquals(calEvent.getPrimaryKey(),
+			calEvents.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addCalEvent();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<CalEvent> calEvents = _persistence.findByUuid_C(uuid, companyId);
+
+		Assert.assertEquals(0, calEvents.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		CalEvent calEvent = addCalEvent();
+
+		String uuid = calEvent.getUuid();
+
+		long companyId = calEvent.getCompanyId();
+
+		List<CalEvent> calEvents = _persistence.findByUuid_C(uuid, companyId,
+				start, end);
+
+		Assert.assertEquals(expected, calEvents.size());
+	}
+
+	@Test
+	public void testFindByCompanyId() throws Exception {
+		CalEvent calEvent = addCalEvent();
+
+		long companyId = calEvent.getCompanyId();
+
+		List<CalEvent> calEvents = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(1, calEvents.size());
+
+		Assert.assertEquals(calEvent.getPrimaryKey(),
+			calEvents.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByCompanyIdNotFound() throws Exception {
+		addCalEvent();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<CalEvent> calEvents = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(0, calEvents.size());
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEnd() throws Exception {
+		testFindByCompanyIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndWrongRange()
+		throws Exception {
+		testFindByCompanyIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndZeroZero() throws Exception {
+		testFindByCompanyIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByCompanyIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		CalEvent calEvent = addCalEvent();
+
+		long companyId = calEvent.getCompanyId();
+
+		List<CalEvent> calEvents = _persistence.findByCompanyId(companyId,
+				start, end);
+
+		Assert.assertEquals(expected, calEvents.size());
+	}
+
+	@Test
 	public void testFilterFindByGroupId() throws Exception {
 		try {
 			_persistence.filterFindByGroupId(0, QueryUtil.ALL_POS,

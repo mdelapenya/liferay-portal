@@ -197,6 +197,199 @@ public class DLContentPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByC_R() throws Exception {
+		DLContent dlContent = addDLContent();
+
+		long companyId = dlContent.getCompanyId();
+
+		long repositoryId = dlContent.getRepositoryId();
+
+		List<DLContent> dlContents = _persistence.findByC_R(companyId,
+				repositoryId);
+
+		Assert.assertEquals(1, dlContents.size());
+
+		Assert.assertEquals(dlContent.getPrimaryKey(),
+			dlContents.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_RNotFound() throws Exception {
+		addDLContent();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		long repositoryId = ServiceTestUtil.nextLong();
+
+		List<DLContent> dlContents = _persistence.findByC_R(companyId,
+				repositoryId);
+
+		Assert.assertEquals(0, dlContents.size());
+	}
+
+	@Test
+	public void testFindByC_RStartEnd() throws Exception {
+		testFindByC_RStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_RStartEndWrongRange() throws Exception {
+		testFindByC_RStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_RStartEndZeroZero() throws Exception {
+		testFindByC_RStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_RStartEnd(int start, int end, int expected)
+		throws Exception {
+		DLContent dlContent = addDLContent();
+
+		long companyId = dlContent.getCompanyId();
+
+		long repositoryId = dlContent.getRepositoryId();
+
+		List<DLContent> dlContents = _persistence.findByC_R(companyId,
+				repositoryId, start, end);
+
+		Assert.assertEquals(expected, dlContents.size());
+	}
+
+	@Test
+	public void testFindByC_R_P() throws Exception {
+		DLContent dlContent = addDLContent();
+
+		long companyId = dlContent.getCompanyId();
+
+		long repositoryId = dlContent.getRepositoryId();
+
+		String path = dlContent.getPath();
+
+		List<DLContent> dlContents = _persistence.findByC_R_P(companyId,
+				repositoryId, path);
+
+		Assert.assertEquals(1, dlContents.size());
+
+		Assert.assertEquals(dlContent.getPrimaryKey(),
+			dlContents.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_R_PNotFound() throws Exception {
+		addDLContent();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		long repositoryId = ServiceTestUtil.nextLong();
+
+		String path = ServiceTestUtil.randomString();
+
+		List<DLContent> dlContents = _persistence.findByC_R_P(companyId,
+				repositoryId, path);
+
+		Assert.assertEquals(0, dlContents.size());
+	}
+
+	@Test
+	public void testFindByC_R_PStartEnd() throws Exception {
+		testFindByC_R_PStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_R_PStartEndWrongRange() throws Exception {
+		testFindByC_R_PStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_R_PStartEndZeroZero() throws Exception {
+		testFindByC_R_PStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_R_PStartEnd(int start, int end, int expected)
+		throws Exception {
+		DLContent dlContent = addDLContent();
+
+		long companyId = dlContent.getCompanyId();
+
+		long repositoryId = dlContent.getRepositoryId();
+
+		String path = dlContent.getPath();
+
+		List<DLContent> dlContents = _persistence.findByC_R_P(companyId,
+				repositoryId, path, start, end);
+
+		Assert.assertEquals(expected, dlContents.size());
+	}
+
+	@Test
+	public void testFindByC_R_LikeP() throws Exception {
+		DLContent dlContent = addDLContent();
+
+		long companyId = dlContent.getCompanyId();
+
+		long repositoryId = dlContent.getRepositoryId();
+
+		String path = dlContent.getPath();
+
+		List<DLContent> dlContents = _persistence.findByC_R_LikeP(companyId,
+				repositoryId, path);
+
+		Assert.assertEquals(1, dlContents.size());
+
+		Assert.assertEquals(dlContent.getPrimaryKey(),
+			dlContents.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByC_R_LikePNotFound() throws Exception {
+		addDLContent();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		long repositoryId = ServiceTestUtil.nextLong();
+
+		String path = ServiceTestUtil.randomString();
+
+		List<DLContent> dlContents = _persistence.findByC_R_LikeP(companyId,
+				repositoryId, path);
+
+		Assert.assertEquals(0, dlContents.size());
+	}
+
+	@Test
+	public void testFindByC_R_LikePStartEnd() throws Exception {
+		testFindByC_R_LikePStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByC_R_LikePStartEndWrongRange()
+		throws Exception {
+		testFindByC_R_LikePStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByC_R_LikePStartEndZeroZero() throws Exception {
+		testFindByC_R_LikePStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByC_R_LikePStartEnd(int start, int end, int expected)
+		throws Exception {
+		DLContent dlContent = addDLContent();
+
+		long companyId = dlContent.getCompanyId();
+
+		long repositoryId = dlContent.getRepositoryId();
+
+		String path = dlContent.getPath();
+
+		List<DLContent> dlContents = _persistence.findByC_R_LikeP(companyId,
+				repositoryId, path, start, end);
+
+		Assert.assertEquals(expected, dlContents.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("DLContent", "contentId",
 			true, "groupId", true, "companyId", true, "repositoryId", true,

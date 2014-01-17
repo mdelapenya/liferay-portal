@@ -47,6 +47,7 @@ import org.junit.runner.RunWith;
 
 import java.io.Serializable;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -186,6 +187,165 @@ public class LockPersistenceTest {
 		catch (Exception e) {
 			Assert.fail(e.getMessage());
 		}
+	}
+
+	@Test
+	public void testFindByUuid() throws Exception {
+		Lock lock = addLock();
+
+		String uuid = lock.getUuid();
+
+		List<Lock> locks = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, locks.size());
+
+		Assert.assertEquals(lock.getPrimaryKey(), locks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addLock();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<Lock> locks = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, locks.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		Lock lock = addLock();
+
+		String uuid = lock.getUuid();
+
+		List<Lock> locks = _persistence.findByUuid(uuid, start, end);
+
+		Assert.assertEquals(expected, locks.size());
+	}
+
+	@Test
+	public void testFindByUuid_C() throws Exception {
+		Lock lock = addLock();
+
+		String uuid = lock.getUuid();
+
+		long companyId = lock.getCompanyId();
+
+		List<Lock> locks = _persistence.findByUuid_C(uuid, companyId);
+
+		Assert.assertEquals(1, locks.size());
+
+		Assert.assertEquals(lock.getPrimaryKey(), locks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuid_CNotFound() throws Exception {
+		addLock();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<Lock> locks = _persistence.findByUuid_C(uuid, companyId);
+
+		Assert.assertEquals(0, locks.size());
+	}
+
+	@Test
+	public void testFindByUuid_CStartEnd() throws Exception {
+		testFindByUuid_CStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndWrongRange() throws Exception {
+		testFindByUuid_CStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuid_CStartEndZeroZero() throws Exception {
+		testFindByUuid_CStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuid_CStartEnd(int start, int end, int expected)
+		throws Exception {
+		Lock lock = addLock();
+
+		String uuid = lock.getUuid();
+
+		long companyId = lock.getCompanyId();
+
+		List<Lock> locks = _persistence.findByUuid_C(uuid, companyId, start, end);
+
+		Assert.assertEquals(expected, locks.size());
+	}
+
+	@Test
+	public void testFindByLtExpirationDate() throws Exception {
+		Lock lock = addLock();
+
+		Date expirationDate = lock.getExpirationDate();
+
+		List<Lock> locks = _persistence.findByLtExpirationDate(expirationDate);
+
+		Assert.assertEquals(1, locks.size());
+
+		Assert.assertEquals(lock.getPrimaryKey(), locks.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByLtExpirationDateNotFound() throws Exception {
+		addLock();
+
+		Date expirationDate = ServiceTestUtil.nextDate();
+
+		List<Lock> locks = _persistence.findByLtExpirationDate(expirationDate);
+
+		Assert.assertEquals(0, locks.size());
+	}
+
+	@Test
+	public void testFindByLtExpirationDateStartEnd() throws Exception {
+		testFindByLtExpirationDateStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByLtExpirationDateStartEndWrongRange()
+		throws Exception {
+		testFindByLtExpirationDateStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByLtExpirationDateStartEndZeroZero()
+		throws Exception {
+		testFindByLtExpirationDateStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByLtExpirationDateStartEnd(int start, int end,
+		int expected) throws Exception {
+		Lock lock = addLock();
+
+		Date expirationDate = lock.getExpirationDate();
+
+		List<Lock> locks = _persistence.findByLtExpirationDate(expirationDate,
+				start, end);
+
+		Assert.assertEquals(expected, locks.size());
 	}
 
 	protected OrderByComparator getOrderByComparator() {

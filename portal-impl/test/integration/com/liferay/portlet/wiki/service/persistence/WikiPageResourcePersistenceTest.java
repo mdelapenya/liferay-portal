@@ -168,6 +168,58 @@ public class WikiPageResourcePersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByUuid() throws Exception {
+		WikiPageResource wikiPageResource = addWikiPageResource();
+
+		String uuid = wikiPageResource.getUuid();
+
+		List<WikiPageResource> wikiPageResources = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(1, wikiPageResources.size());
+
+		Assert.assertEquals(wikiPageResource.getPrimaryKey(),
+			wikiPageResources.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByUuidNotFound() throws Exception {
+		addWikiPageResource();
+
+		String uuid = ServiceTestUtil.randomString();
+
+		List<WikiPageResource> wikiPageResources = _persistence.findByUuid(uuid);
+
+		Assert.assertEquals(0, wikiPageResources.size());
+	}
+
+	@Test
+	public void testFindByUuidStartEnd() throws Exception {
+		testFindByUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByUuidStartEndWrongRange() throws Exception {
+		testFindByUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByUuidStartEndZeroZero() throws Exception {
+		testFindByUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		WikiPageResource wikiPageResource = addWikiPageResource();
+
+		String uuid = wikiPageResource.getUuid();
+
+		List<WikiPageResource> wikiPageResources = _persistence.findByUuid(uuid,
+				start, end);
+
+		Assert.assertEquals(expected, wikiPageResources.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("WikiPageResource", "uuid",
 			true, "resourcePrimKey", true, "nodeId", true, "title", true);

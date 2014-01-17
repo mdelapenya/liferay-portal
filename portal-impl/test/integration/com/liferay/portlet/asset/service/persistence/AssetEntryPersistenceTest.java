@@ -49,6 +49,7 @@ import org.junit.runner.RunWith;
 
 import java.io.Serializable;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -260,6 +261,273 @@ public class AssetEntryPersistenceTest {
 		catch (Exception e) {
 			Assert.fail(e.getMessage());
 		}
+	}
+
+	@Test
+	public void testFindByCompanyId() throws Exception {
+		AssetEntry assetEntry = addAssetEntry();
+
+		long companyId = assetEntry.getCompanyId();
+
+		List<AssetEntry> assetEntries = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(1, assetEntries.size());
+
+		Assert.assertEquals(assetEntry.getPrimaryKey(),
+			assetEntries.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByCompanyIdNotFound() throws Exception {
+		addAssetEntry();
+
+		long companyId = ServiceTestUtil.nextLong();
+
+		List<AssetEntry> assetEntries = _persistence.findByCompanyId(companyId);
+
+		Assert.assertEquals(0, assetEntries.size());
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEnd() throws Exception {
+		testFindByCompanyIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndWrongRange()
+		throws Exception {
+		testFindByCompanyIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByCompanyIdStartEndZeroZero() throws Exception {
+		testFindByCompanyIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByCompanyIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		AssetEntry assetEntry = addAssetEntry();
+
+		long companyId = assetEntry.getCompanyId();
+
+		List<AssetEntry> assetEntries = _persistence.findByCompanyId(companyId,
+				start, end);
+
+		Assert.assertEquals(expected, assetEntries.size());
+	}
+
+	@Test
+	public void testFindByVisible() throws Exception {
+		AssetEntry assetEntry = addAssetEntry();
+
+		boolean visible = assetEntry.getVisible();
+
+		List<AssetEntry> assetEntries = _persistence.findByVisible(visible);
+
+		Assert.assertEquals(1, assetEntries.size());
+
+		Assert.assertEquals(assetEntry.getPrimaryKey(),
+			assetEntries.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByVisibleNotFound() throws Exception {
+		addAssetEntry();
+
+		boolean visible = ServiceTestUtil.randomBoolean();
+
+		List<AssetEntry> assetEntries = _persistence.findByVisible(visible);
+
+		Assert.assertEquals(0, assetEntries.size());
+	}
+
+	@Test
+	public void testFindByVisibleStartEnd() throws Exception {
+		testFindByVisibleStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByVisibleStartEndWrongRange() throws Exception {
+		testFindByVisibleStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByVisibleStartEndZeroZero() throws Exception {
+		testFindByVisibleStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByVisibleStartEnd(int start, int end, int expected)
+		throws Exception {
+		AssetEntry assetEntry = addAssetEntry();
+
+		boolean visible = assetEntry.getVisible();
+
+		List<AssetEntry> assetEntries = _persistence.findByVisible(visible,
+				start, end);
+
+		Assert.assertEquals(expected, assetEntries.size());
+	}
+
+	@Test
+	public void testFindByPublishDate() throws Exception {
+		AssetEntry assetEntry = addAssetEntry();
+
+		Date publishDate = assetEntry.getPublishDate();
+
+		List<AssetEntry> assetEntries = _persistence.findByPublishDate(publishDate);
+
+		Assert.assertEquals(1, assetEntries.size());
+
+		Assert.assertEquals(assetEntry.getPrimaryKey(),
+			assetEntries.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByPublishDateNotFound() throws Exception {
+		addAssetEntry();
+
+		Date publishDate = ServiceTestUtil.nextDate();
+
+		List<AssetEntry> assetEntries = _persistence.findByPublishDate(publishDate);
+
+		Assert.assertEquals(0, assetEntries.size());
+	}
+
+	@Test
+	public void testFindByPublishDateStartEnd() throws Exception {
+		testFindByPublishDateStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByPublishDateStartEndWrongRange()
+		throws Exception {
+		testFindByPublishDateStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByPublishDateStartEndZeroZero()
+		throws Exception {
+		testFindByPublishDateStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByPublishDateStartEnd(int start, int end,
+		int expected) throws Exception {
+		AssetEntry assetEntry = addAssetEntry();
+
+		Date publishDate = assetEntry.getPublishDate();
+
+		List<AssetEntry> assetEntries = _persistence.findByPublishDate(publishDate,
+				start, end);
+
+		Assert.assertEquals(expected, assetEntries.size());
+	}
+
+	@Test
+	public void testFindByExpirationDate() throws Exception {
+		AssetEntry assetEntry = addAssetEntry();
+
+		Date expirationDate = assetEntry.getExpirationDate();
+
+		List<AssetEntry> assetEntries = _persistence.findByExpirationDate(expirationDate);
+
+		Assert.assertEquals(1, assetEntries.size());
+
+		Assert.assertEquals(assetEntry.getPrimaryKey(),
+			assetEntries.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByExpirationDateNotFound() throws Exception {
+		addAssetEntry();
+
+		Date expirationDate = ServiceTestUtil.nextDate();
+
+		List<AssetEntry> assetEntries = _persistence.findByExpirationDate(expirationDate);
+
+		Assert.assertEquals(0, assetEntries.size());
+	}
+
+	@Test
+	public void testFindByExpirationDateStartEnd() throws Exception {
+		testFindByExpirationDateStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByExpirationDateStartEndWrongRange()
+		throws Exception {
+		testFindByExpirationDateStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByExpirationDateStartEndZeroZero()
+		throws Exception {
+		testFindByExpirationDateStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByExpirationDateStartEnd(int start, int end,
+		int expected) throws Exception {
+		AssetEntry assetEntry = addAssetEntry();
+
+		Date expirationDate = assetEntry.getExpirationDate();
+
+		List<AssetEntry> assetEntries = _persistence.findByExpirationDate(expirationDate,
+				start, end);
+
+		Assert.assertEquals(expected, assetEntries.size());
+	}
+
+	@Test
+	public void testFindByLayoutUuid() throws Exception {
+		AssetEntry assetEntry = addAssetEntry();
+
+		String layoutUuid = assetEntry.getLayoutUuid();
+
+		List<AssetEntry> assetEntries = _persistence.findByLayoutUuid(layoutUuid);
+
+		Assert.assertEquals(1, assetEntries.size());
+
+		Assert.assertEquals(assetEntry.getPrimaryKey(),
+			assetEntries.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByLayoutUuidNotFound() throws Exception {
+		addAssetEntry();
+
+		String layoutUuid = ServiceTestUtil.randomString();
+
+		List<AssetEntry> assetEntries = _persistence.findByLayoutUuid(layoutUuid);
+
+		Assert.assertEquals(0, assetEntries.size());
+	}
+
+	@Test
+	public void testFindByLayoutUuidStartEnd() throws Exception {
+		testFindByLayoutUuidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByLayoutUuidStartEndWrongRange()
+		throws Exception {
+		testFindByLayoutUuidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByLayoutUuidStartEndZeroZero()
+		throws Exception {
+		testFindByLayoutUuidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByLayoutUuidStartEnd(int start, int end, int expected)
+		throws Exception {
+		AssetEntry assetEntry = addAssetEntry();
+
+		String layoutUuid = assetEntry.getLayoutUuid();
+
+		List<AssetEntry> assetEntries = _persistence.findByLayoutUuid(layoutUuid,
+				start, end);
+
+		Assert.assertEquals(expected, assetEntries.size());
 	}
 
 	protected OrderByComparator getOrderByComparator() {

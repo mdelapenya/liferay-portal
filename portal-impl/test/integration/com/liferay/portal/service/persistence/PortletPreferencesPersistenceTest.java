@@ -175,6 +175,429 @@ public class PortletPreferencesPersistenceTest {
 		}
 	}
 
+	@Test
+	public void testFindByPlid() throws Exception {
+		PortletPreferences portletPreferences = addPortletPreferences();
+
+		long plid = portletPreferences.getPlid();
+
+		List<PortletPreferences> portletPreferenceses = _persistence.findByPlid(plid);
+
+		Assert.assertEquals(1, portletPreferenceses.size());
+
+		Assert.assertEquals(portletPreferences.getPrimaryKey(),
+			portletPreferenceses.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByPlidNotFound() throws Exception {
+		addPortletPreferences();
+
+		long plid = ServiceTestUtil.nextLong();
+
+		List<PortletPreferences> portletPreferenceses = _persistence.findByPlid(plid);
+
+		Assert.assertEquals(0, portletPreferenceses.size());
+	}
+
+	@Test
+	public void testFindByPlidStartEnd() throws Exception {
+		testFindByPlidStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByPlidStartEndWrongRange() throws Exception {
+		testFindByPlidStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByPlidStartEndZeroZero() throws Exception {
+		testFindByPlidStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByPlidStartEnd(int start, int end, int expected)
+		throws Exception {
+		PortletPreferences portletPreferences = addPortletPreferences();
+
+		long plid = portletPreferences.getPlid();
+
+		List<PortletPreferences> portletPreferenceses = _persistence.findByPlid(plid,
+				start, end);
+
+		Assert.assertEquals(expected, portletPreferenceses.size());
+	}
+
+	@Test
+	public void testFindByPortletId() throws Exception {
+		PortletPreferences portletPreferences = addPortletPreferences();
+
+		String portletId = portletPreferences.getPortletId();
+
+		List<PortletPreferences> portletPreferenceses = _persistence.findByPortletId(portletId);
+
+		Assert.assertEquals(1, portletPreferenceses.size());
+
+		Assert.assertEquals(portletPreferences.getPrimaryKey(),
+			portletPreferenceses.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByPortletIdNotFound() throws Exception {
+		addPortletPreferences();
+
+		String portletId = ServiceTestUtil.randomString();
+
+		List<PortletPreferences> portletPreferenceses = _persistence.findByPortletId(portletId);
+
+		Assert.assertEquals(0, portletPreferenceses.size());
+	}
+
+	@Test
+	public void testFindByPortletIdStartEnd() throws Exception {
+		testFindByPortletIdStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByPortletIdStartEndWrongRange()
+		throws Exception {
+		testFindByPortletIdStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByPortletIdStartEndZeroZero() throws Exception {
+		testFindByPortletIdStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByPortletIdStartEnd(int start, int end, int expected)
+		throws Exception {
+		PortletPreferences portletPreferences = addPortletPreferences();
+
+		String portletId = portletPreferences.getPortletId();
+
+		List<PortletPreferences> portletPreferenceses = _persistence.findByPortletId(portletId,
+				start, end);
+
+		Assert.assertEquals(expected, portletPreferenceses.size());
+	}
+
+	@Test
+	public void testFindByO_P() throws Exception {
+		PortletPreferences portletPreferences = addPortletPreferences();
+
+		int ownerType = portletPreferences.getOwnerType();
+
+		String portletId = portletPreferences.getPortletId();
+
+		List<PortletPreferences> portletPreferenceses = _persistence.findByO_P(ownerType,
+				portletId);
+
+		Assert.assertEquals(1, portletPreferenceses.size());
+
+		Assert.assertEquals(portletPreferences.getPrimaryKey(),
+			portletPreferenceses.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByO_PNotFound() throws Exception {
+		addPortletPreferences();
+
+		int ownerType = ServiceTestUtil.nextInt();
+
+		String portletId = ServiceTestUtil.randomString();
+
+		List<PortletPreferences> portletPreferenceses = _persistence.findByO_P(ownerType,
+				portletId);
+
+		Assert.assertEquals(0, portletPreferenceses.size());
+	}
+
+	@Test
+	public void testFindByO_PStartEnd() throws Exception {
+		testFindByO_PStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByO_PStartEndWrongRange() throws Exception {
+		testFindByO_PStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByO_PStartEndZeroZero() throws Exception {
+		testFindByO_PStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByO_PStartEnd(int start, int end, int expected)
+		throws Exception {
+		PortletPreferences portletPreferences = addPortletPreferences();
+
+		int ownerType = portletPreferences.getOwnerType();
+
+		String portletId = portletPreferences.getPortletId();
+
+		List<PortletPreferences> portletPreferenceses = _persistence.findByO_P(ownerType,
+				portletId, start, end);
+
+		Assert.assertEquals(expected, portletPreferenceses.size());
+	}
+
+	@Test
+	public void testFindByP_P() throws Exception {
+		PortletPreferences portletPreferences = addPortletPreferences();
+
+		long plid = portletPreferences.getPlid();
+
+		String portletId = portletPreferences.getPortletId();
+
+		List<PortletPreferences> portletPreferenceses = _persistence.findByP_P(plid,
+				portletId);
+
+		Assert.assertEquals(1, portletPreferenceses.size());
+
+		Assert.assertEquals(portletPreferences.getPrimaryKey(),
+			portletPreferenceses.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByP_PNotFound() throws Exception {
+		addPortletPreferences();
+
+		long plid = ServiceTestUtil.nextLong();
+
+		String portletId = ServiceTestUtil.randomString();
+
+		List<PortletPreferences> portletPreferenceses = _persistence.findByP_P(plid,
+				portletId);
+
+		Assert.assertEquals(0, portletPreferenceses.size());
+	}
+
+	@Test
+	public void testFindByP_PStartEnd() throws Exception {
+		testFindByP_PStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByP_PStartEndWrongRange() throws Exception {
+		testFindByP_PStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByP_PStartEndZeroZero() throws Exception {
+		testFindByP_PStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByP_PStartEnd(int start, int end, int expected)
+		throws Exception {
+		PortletPreferences portletPreferences = addPortletPreferences();
+
+		long plid = portletPreferences.getPlid();
+
+		String portletId = portletPreferences.getPortletId();
+
+		List<PortletPreferences> portletPreferenceses = _persistence.findByP_P(plid,
+				portletId, start, end);
+
+		Assert.assertEquals(expected, portletPreferenceses.size());
+	}
+
+	@Test
+	public void testFindByO_O_P() throws Exception {
+		PortletPreferences portletPreferences = addPortletPreferences();
+
+		long ownerId = portletPreferences.getOwnerId();
+
+		int ownerType = portletPreferences.getOwnerType();
+
+		long plid = portletPreferences.getPlid();
+
+		List<PortletPreferences> portletPreferenceses = _persistence.findByO_O_P(ownerId,
+				ownerType, plid);
+
+		Assert.assertEquals(1, portletPreferenceses.size());
+
+		Assert.assertEquals(portletPreferences.getPrimaryKey(),
+			portletPreferenceses.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByO_O_PNotFound() throws Exception {
+		addPortletPreferences();
+
+		long ownerId = ServiceTestUtil.nextLong();
+
+		int ownerType = ServiceTestUtil.nextInt();
+
+		long plid = ServiceTestUtil.nextLong();
+
+		List<PortletPreferences> portletPreferenceses = _persistence.findByO_O_P(ownerId,
+				ownerType, plid);
+
+		Assert.assertEquals(0, portletPreferenceses.size());
+	}
+
+	@Test
+	public void testFindByO_O_PStartEnd() throws Exception {
+		testFindByO_O_PStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByO_O_PStartEndWrongRange() throws Exception {
+		testFindByO_O_PStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByO_O_PStartEndZeroZero() throws Exception {
+		testFindByO_O_PStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByO_O_PStartEnd(int start, int end, int expected)
+		throws Exception {
+		PortletPreferences portletPreferences = addPortletPreferences();
+
+		long ownerId = portletPreferences.getOwnerId();
+
+		int ownerType = portletPreferences.getOwnerType();
+
+		long plid = portletPreferences.getPlid();
+
+		List<PortletPreferences> portletPreferenceses = _persistence.findByO_O_P(ownerId,
+				ownerType, plid, start, end);
+
+		Assert.assertEquals(expected, portletPreferenceses.size());
+	}
+
+	@Test
+	public void testFindByO_O_PI() throws Exception {
+		PortletPreferences portletPreferences = addPortletPreferences();
+
+		long ownerId = portletPreferences.getOwnerId();
+
+		int ownerType = portletPreferences.getOwnerType();
+
+		String portletId = portletPreferences.getPortletId();
+
+		List<PortletPreferences> portletPreferenceses = _persistence.findByO_O_PI(ownerId,
+				ownerType, portletId);
+
+		Assert.assertEquals(1, portletPreferenceses.size());
+
+		Assert.assertEquals(portletPreferences.getPrimaryKey(),
+			portletPreferenceses.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByO_O_PINotFound() throws Exception {
+		addPortletPreferences();
+
+		long ownerId = ServiceTestUtil.nextLong();
+
+		int ownerType = ServiceTestUtil.nextInt();
+
+		String portletId = ServiceTestUtil.randomString();
+
+		List<PortletPreferences> portletPreferenceses = _persistence.findByO_O_PI(ownerId,
+				ownerType, portletId);
+
+		Assert.assertEquals(0, portletPreferenceses.size());
+	}
+
+	@Test
+	public void testFindByO_O_PIStartEnd() throws Exception {
+		testFindByO_O_PIStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByO_O_PIStartEndWrongRange() throws Exception {
+		testFindByO_O_PIStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByO_O_PIStartEndZeroZero() throws Exception {
+		testFindByO_O_PIStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByO_O_PIStartEnd(int start, int end, int expected)
+		throws Exception {
+		PortletPreferences portletPreferences = addPortletPreferences();
+
+		long ownerId = portletPreferences.getOwnerId();
+
+		int ownerType = portletPreferences.getOwnerType();
+
+		String portletId = portletPreferences.getPortletId();
+
+		List<PortletPreferences> portletPreferenceses = _persistence.findByO_O_PI(ownerId,
+				ownerType, portletId, start, end);
+
+		Assert.assertEquals(expected, portletPreferenceses.size());
+	}
+
+	@Test
+	public void testFindByO_P_P() throws Exception {
+		PortletPreferences portletPreferences = addPortletPreferences();
+
+		int ownerType = portletPreferences.getOwnerType();
+
+		long plid = portletPreferences.getPlid();
+
+		String portletId = portletPreferences.getPortletId();
+
+		List<PortletPreferences> portletPreferenceses = _persistence.findByO_P_P(ownerType,
+				plid, portletId);
+
+		Assert.assertEquals(1, portletPreferenceses.size());
+
+		Assert.assertEquals(portletPreferences.getPrimaryKey(),
+			portletPreferenceses.get(0).getPrimaryKey());
+	}
+
+	@Test
+	public void testFindByO_P_PNotFound() throws Exception {
+		addPortletPreferences();
+
+		int ownerType = ServiceTestUtil.nextInt();
+
+		long plid = ServiceTestUtil.nextLong();
+
+		String portletId = ServiceTestUtil.randomString();
+
+		List<PortletPreferences> portletPreferenceses = _persistence.findByO_P_P(ownerType,
+				plid, portletId);
+
+		Assert.assertEquals(0, portletPreferenceses.size());
+	}
+
+	@Test
+	public void testFindByO_P_PStartEnd() throws Exception {
+		testFindByO_P_PStartEnd(0, 5, 1);
+	}
+
+	@Test
+	public void testFindByO_P_PStartEndWrongRange() throws Exception {
+		testFindByO_P_PStartEnd(5, 0, 0);
+	}
+
+	@Test
+	public void testFindByO_P_PStartEndZeroZero() throws Exception {
+		testFindByO_P_PStartEnd(0, 0, 0);
+	}
+
+	protected void testFindByO_P_PStartEnd(int start, int end, int expected)
+		throws Exception {
+		PortletPreferences portletPreferences = addPortletPreferences();
+
+		int ownerType = portletPreferences.getOwnerType();
+
+		long plid = portletPreferences.getPlid();
+
+		String portletId = portletPreferences.getPortletId();
+
+		List<PortletPreferences> portletPreferenceses = _persistence.findByO_P_P(ownerType,
+				plid, portletId, start, end);
+
+		Assert.assertEquals(expected, portletPreferenceses.size());
+	}
+
 	protected OrderByComparator getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("PortletPreferences",
 			"portletPreferencesId", true, "ownerId", true, "ownerType", true,
