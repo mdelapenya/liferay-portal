@@ -55,6 +55,7 @@ import java.sql.SQLException;
 import java.io.Serializable;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -318,6 +319,8 @@ public class ${entity.name}PersistenceTest {
 
 				<#break>
 			</#if>
+
+			<#include "persistence_impl_finder_find_test.ftl">
 		</#list>
 
 		protected OrderByComparator getOrderByComparator() {
