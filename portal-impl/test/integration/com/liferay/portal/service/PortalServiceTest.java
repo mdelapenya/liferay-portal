@@ -33,10 +33,14 @@ import com.liferay.portal.model.impl.ClassNameImpl;
 
 import com.liferay.portal.service.persistence.ClassNamePersistence;
 import org.junit.Test;
+import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
+import org.junit.runner.RunWith;
+import org.testng.Assert;
 
 /**
  * @author Manuel de la Peña
  */
+@RunWith(LiferayIntegrationJUnitTestRunner.class)
 public class PortalServiceTest {
 
 	@Test
@@ -172,21 +176,18 @@ public class PortalServiceTest {
 	}
 
 	@Test
-	public int testGetBuildNumber() {
-		return PortalServiceUtil.getBuildNumber();
+	public void testGetBuildNumber() {
+		int buildNumber = PortalServiceUtil.getBuildNumber();
+
+		Assert.assertEquals(7000, buildNumber);
 	}
 
 	@Test
-	public boolean testHasClassName() throws SystemException {
+	public void testHasClassName() throws SystemException {
 		int count = _persistence.countByValue(
 			PortalService.class.getName());
 
-		if (count > 0) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		Assert.assertTrue(count > 0);
 	}
 
 	protected void addClassName(String classNameValue) throws SystemException {
