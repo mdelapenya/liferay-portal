@@ -67,36 +67,4 @@ public interface PortalService extends BaseService {
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getBuildNumber();
-
-	public void testAddClassName_Rollback(java.lang.String classNameValue)
-		throws com.liferay.portal.kernel.exception.SystemException;
-
-	public void testAddClassName_Success(java.lang.String classNameValue)
-		throws com.liferay.portal.kernel.exception.SystemException;
-
-	public void testAddClassNameAndTestTransactionPortletBar_PortalRollback(
-		java.lang.String transactionPortletBarText)
-		throws com.liferay.portal.kernel.exception.SystemException;
-
-	public void testAddClassNameAndTestTransactionPortletBar_PortletRollback(
-		java.lang.String transactionPortletBarText)
-		throws com.liferay.portal.kernel.exception.SystemException;
-
-	public void testAddClassNameAndTestTransactionPortletBar_Success(
-		java.lang.String transactionPortletBarText)
-		throws com.liferay.portal.kernel.exception.SystemException;
-
-	public void testAutoSyncHibernateSessionStateOnTxCreation()
-		throws com.liferay.portal.kernel.exception.SystemException;
-
-	public void testDeleteClassName()
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException;
-
-	public int testGetBuildNumber();
-
-	public void testGetUserId();
-
-	public boolean testHasClassName()
-		throws com.liferay.portal.kernel.exception.SystemException;
 }

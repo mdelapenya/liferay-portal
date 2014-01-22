@@ -61,68 +61,6 @@ public class PortalServiceWrapper implements PortalService,
 		return _portalService.getBuildNumber();
 	}
 
-	@Override
-	public void testAddClassName_Rollback(java.lang.String classNameValue)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		_portalService.testAddClassName_Rollback(classNameValue);
-	}
-
-	@Override
-	public void testAddClassName_Success(java.lang.String classNameValue)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		_portalService.testAddClassName_Success(classNameValue);
-	}
-
-	@Override
-	public void testAddClassNameAndTestTransactionPortletBar_PortalRollback(
-		java.lang.String transactionPortletBarText)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		_portalService.testAddClassNameAndTestTransactionPortletBar_PortalRollback(transactionPortletBarText);
-	}
-
-	@Override
-	public void testAddClassNameAndTestTransactionPortletBar_PortletRollback(
-		java.lang.String transactionPortletBarText)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		_portalService.testAddClassNameAndTestTransactionPortletBar_PortletRollback(transactionPortletBarText);
-	}
-
-	@Override
-	public void testAddClassNameAndTestTransactionPortletBar_Success(
-		java.lang.String transactionPortletBarText)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		_portalService.testAddClassNameAndTestTransactionPortletBar_Success(transactionPortletBarText);
-	}
-
-	@Override
-	public void testAutoSyncHibernateSessionStateOnTxCreation()
-		throws com.liferay.portal.kernel.exception.SystemException {
-		_portalService.testAutoSyncHibernateSessionStateOnTxCreation();
-	}
-
-	@Override
-	public void testDeleteClassName()
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		_portalService.testDeleteClassName();
-	}
-
-	@Override
-	public int testGetBuildNumber() {
-		return _portalService.testGetBuildNumber();
-	}
-
-	@Override
-	public void testGetUserId() {
-		_portalService.testGetUserId();
-	}
-
-	@Override
-	public boolean testHasClassName()
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return _portalService.testHasClassName();
-	}
-
 	/**
 	 * @deprecated As of 6.1.0, replaced by {@link #getWrappedService}
 	 */
