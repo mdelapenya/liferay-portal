@@ -23,6 +23,7 @@ import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutTypePortlet;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.PortletPreferences;
+import com.liferay.portal.model.PortletPreferencesIds;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.TransactionalCallbackAwareExecutionTestListener;
@@ -226,6 +227,84 @@ public class PortletPreferencesLocalServiceTest {
 				portletPreferences.getPortletPreferencesId());
 
 		Assert.assertNull(portletPreferencesRecovered);
+	}
+
+	@Test
+	public void testFetchPreferences() throws Exception {
+		String preferenceName = "name";
+
+		String[] preferenceValues = {"defaultValue"};
+
+		String preferencesAsXml = getPreferencesAsXMLString(
+			preferenceName, preferenceValues);
+
+		addPortelPreferencesReturnJavaxPreferences(_portlet, preferencesAsXml);
+
+		javax.portlet.PortletPreferences portletPreferences =
+			PortletPreferencesLocalServiceUtil.fetchPreferences(
+				TestPropsValues.getCompanyId(),
+				PortletKeys.PREFS_OWNER_ID_DEFAULT,
+				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
+				_portlet.getPortletId());
+
+		Assert.assertTrue(!portletPreferences.getMap().isEmpty());
+
+		Assert.assertArrayEquals(
+			preferenceValues, portletPreferences.getMap().get(preferenceName));
+	}
+
+	@Test
+	public void testFetchPreferencesByPortletPreferencesIds() throws Exception {
+		String preferenceName = "name";
+
+		String[] preferenceValues = {"defaultValue"};
+
+		String preferencesAsXml = getPreferencesAsXMLString(
+			preferenceName, preferenceValues);
+
+		addPortelPreferencesReturnJavaxPreferences(_portlet, preferencesAsXml);
+
+		PortletPreferencesIds portletPreferencesIds =
+			new PortletPreferencesIds(
+				TestPropsValues.getCompanyId(),
+				PortletKeys.PREFS_OWNER_ID_DEFAULT,
+				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
+				_portlet.getPortletId());
+
+		javax.portlet.PortletPreferences portletPreferences =
+			PortletPreferencesLocalServiceUtil.fetchPreferences(
+				portletPreferencesIds);
+
+		Assert.assertTrue(!portletPreferences.getMap().isEmpty());
+
+		Assert.assertArrayEquals(
+			preferenceValues, portletPreferences.getMap().get(preferenceName));
+	}
+
+	@Test
+	public void testFetchPreferencesNull() throws Exception {
+		String preferenceName = "name";
+
+		String[] preferenceValues = {"defaultValue"};
+
+		String preferencesAsXml = getPreferencesAsXMLString(
+			preferenceName, preferenceValues);
+
+		addPortelPreferencesReturnJavaxPreferences(_portlet, preferencesAsXml);
+
+		PortletPreferencesLocalServiceUtil.deletePortletPreferences(
+			PortletKeys.PREFS_OWNER_ID_DEFAULT,
+			PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
+			_portlet.getPortletId());
+
+		javax.portlet.PortletPreferences portletPreferences =
+			PortletPreferencesLocalServiceUtil.fetchPreferences(
+				TestPropsValues.getCompanyId(),
+				PortletKeys.PREFS_OWNER_ID_DEFAULT,
+				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
+				_portlet.getPortletId());
+
+		Assert.assertNull(portletPreferences);
 	}
 
 	private Layout addLayout() throws Exception {
