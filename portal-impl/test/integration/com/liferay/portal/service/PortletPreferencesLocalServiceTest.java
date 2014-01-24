@@ -67,6 +67,17 @@ public class PortletPreferencesLocalServiceTest {
 	}
 
 	@Test
+	public void testAddPreferencesDefault() throws Exception {
+		_layoutTypePortlet.addPortletId(
+			TestPropsValues.getUserId(), _portlet.getPortletId(), false);
+
+		javax.portlet.PortletPreferences javaxPortletPreferences =
+			addPortelPreferencesReturnJavaxPreferences(_portlet.getPortletId());
+
+		Assert.assertTrue(javaxPortletPreferences.getMap().isEmpty());
+	}
+
+	@Test
 	public void testAddPreferencesDefaultPortlet() throws Exception {
 		_layoutTypePortlet.addPortletId(
 			TestPropsValues.getUserId(), _portlet.getPortletId(), false);
@@ -88,6 +99,28 @@ public class PortletPreferencesLocalServiceTest {
 		Assert.assertArrayEquals(
 			preferenceValues,
 			javaxPortletPreferences.getMap().get(preferenceName));
+	}
+
+	@Test
+	public void testAddPreferencesMultipleValues() throws Exception {
+		String preferenceName = "name";
+
+		String[] preferenceValues = {"value1", "value2"};
+
+		String preferencesAsXml = getPreferencesAsXMLString(
+			preferenceName, preferenceValues);
+
+		_layoutTypePortlet.addPortletId(
+			TestPropsValues.getUserId(), _portlet.getPortletId(), false);
+
+		javax.portlet.PortletPreferences javaxPortletPreferences =
+			addPortelPreferencesReturnJavaxPreferences(
+				_portlet, preferencesAsXml);
+
+		String[] actualValues =
+			javaxPortletPreferences.getMap().get(preferenceName);
+
+		Assert.assertArrayEquals(preferenceValues, actualValues);
 	}
 
 	private Layout addLayout() throws Exception {
@@ -129,6 +162,31 @@ public class PortletPreferencesLocalServiceTest {
 
 		return getJavaxPortalPreferences(
 			portlet.getPortletId(), portletPreferences.getPreferences());
+	}
+
+	private javax.portlet.PortletPreferences
+			addPortelPreferencesReturnJavaxPreferences(
+				Portlet portlet, String defaultPreferences)
+		throws Exception {
+
+		PortletPreferences portletPreferences =
+			addPortelPreferences(
+				null, _layout, portlet, portlet.getPortletId(),
+				defaultPreferences);
+
+		return getJavaxPortalPreferences(
+			portlet.getPortletId(), portletPreferences.getPreferences());
+	}
+
+	private javax.portlet.PortletPreferences
+	addPortelPreferencesReturnJavaxPreferences(String portletId)
+		throws Exception {
+
+		PortletPreferences portletPreferences = addPortelPreferences(
+			null, _layout, null, portletId, null);
+
+		return getJavaxPortalPreferences(
+			portletId, portletPreferences.getPreferences());
 	}
 
 	private javax.portlet.PortletPreferences getJavaxPortalPreferences(
