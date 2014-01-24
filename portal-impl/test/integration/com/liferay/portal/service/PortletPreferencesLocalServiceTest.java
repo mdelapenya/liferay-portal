@@ -307,6 +307,19 @@ public class PortletPreferencesLocalServiceTest {
 		Assert.assertNull(portletPreferences);
 	}
 
+	@Test
+	public void testGetDefaultPreferences() throws Exception {
+		javax.portlet.PortletPreferences defaultPreferences =
+			PortletPreferencesLocalServiceUtil.getDefaultPreferences(
+				TestPropsValues.getCompanyId(), _PORTEL_WITH_PREFERENCES_ID);
+
+		Assert.assertTrue(!defaultPreferences.getMap().isEmpty());
+		String[] symbols = {"GBP", "CNY", "EUR", "JPY", "USD"};
+
+		Assert.assertArrayEquals(
+			symbols, defaultPreferences.getMap().get("symbols"));
+	}
+
 	private Layout addLayout() throws Exception {
 		return addLayout(_group);
 	}
@@ -468,6 +481,8 @@ public class PortletPreferencesLocalServiceTest {
 	}
 
 	private static final int _INIT_PORTLET_ID = 1000;
+
+	private static final String _PORTEL_WITH_PREFERENCES_ID = "16";
 
 	private Group _group;
 	private Layout _layout;
