@@ -894,6 +894,102 @@ public class PortletPreferencesLocalServiceTest {
 		assertStrictPortletPreferences(portletPreferences);
 	}
 
+	@Test
+	public void testUpdatePreferencesMultipleValues() throws Exception {
+		assertNotExistPreferences();
+
+		addPortelPreferences();
+
+		String[] values = {"value4", "value5", "value6"};
+
+		PortletPreferencesLocalServiceUtil.updatePreferences(
+			PortletKeys.PREFS_OWNER_ID_DEFAULT,
+			PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
+			_portlet.getPortletId(), getPreferencesAsXMLString(values));
+
+		javax.portlet.PortletPreferences preferences =
+			PortletPreferencesLocalServiceUtil.getPreferences(
+				TestPropsValues.getCompanyId(),
+				PortletKeys.PREFS_OWNER_ID_DEFAULT,
+				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
+				_portlet.getPortletId());
+
+		String[] actualValues = preferences.getMap().get(_PREFERENCE_NAME);
+
+		Assert.assertEquals(values.length, actualValues.length);
+
+		for (int i = 0; i < values.length; i++) {
+			Assert.assertEquals(values[i], actualValues[i]);
+		}
+	}
+
+	@Test
+	public void testUpdatePreferencesMultipleValuesByPortletPreferencesImpl()
+		throws Exception {
+
+		assertNotExistPreferences();
+
+		addPortelPreferences();
+
+		String[] values = {"value4", "value5", "value6"};
+
+		PortletPreferencesImpl portletPreferencesImpl =
+			(PortletPreferencesImpl)PortletPreferencesFactoryUtil.fromXML(
+				TestPropsValues.getCompanyId(),
+				PortletKeys.PREFS_OWNER_ID_DEFAULT,
+				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
+				_portlet.getPortletId(), getPreferencesAsXMLString(values));
+
+		PortletPreferencesLocalServiceUtil.updatePreferences(
+			PortletKeys.PREFS_OWNER_ID_DEFAULT,
+			PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
+			_portlet.getPortletId(), portletPreferencesImpl);
+
+		javax.portlet.PortletPreferences preferences =
+			PortletPreferencesLocalServiceUtil.getPreferences(
+				TestPropsValues.getCompanyId(),
+				PortletKeys.PREFS_OWNER_ID_DEFAULT,
+				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
+				_portlet.getPortletId());
+
+		String[] actualValues = preferences.getMap().get(_PREFERENCE_NAME);
+
+		Assert.assertEquals(values.length, actualValues.length);
+
+		for (int i = 0; i < values.length; i++) {
+			Assert.assertEquals(values[i], actualValues[i]);
+		}
+	}
+
+	@Test
+	public void testUpdatePreferencesMultipleValuesNoPreviouslyAdded()
+		throws Exception {
+
+		String[] values = {"value4", "value5", "value6"};
+
+		assertNotExistPreferences();
+
+		PortletPreferencesLocalServiceUtil.updatePreferences(
+			PortletKeys.PREFS_OWNER_ID_DEFAULT,
+			PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
+			_portlet.getPortletId(), getPreferencesAsXMLString(values));
+
+		javax.portlet.PortletPreferences preferences =
+			PortletPreferencesLocalServiceUtil.getPreferences(
+				TestPropsValues.getCompanyId(),
+				PortletKeys.PREFS_OWNER_ID_DEFAULT,
+				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
+				_portlet.getPortletId());
+
+		String[] actualValues = preferences.getMap().get(_PREFERENCE_NAME);
+
+		Assert.assertEquals(values.length, actualValues.length);
+
+		for (int i = 0; i < values.length; i++) {
+			Assert.assertEquals(values[i], actualValues[i]);
+		}
+	}
+
 	private Layout addLayout() throws Exception {
 		return addLayout(_group);
 	}
@@ -1039,6 +1135,19 @@ public class PortletPreferencesLocalServiceTest {
 		}
 
 		return results;
+	}
+
+	private void assertNotExistPreferences() throws Exception {
+
+		javax.portlet.PortletPreferences preferences =
+			PortletPreferencesLocalServiceUtil.fetchPreferences(
+				TestPropsValues.getCompanyId(),
+				PortletKeys.PREFS_OWNER_ID_DEFAULT,
+				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
+				_portlet.getPortletId()
+			);
+
+		Assert.assertNull(preferences);
 	}
 
 	private void assertStrictPortletPreferences(
