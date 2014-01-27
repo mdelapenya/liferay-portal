@@ -584,7 +584,7 @@ public class PortletPreferencesLocalServiceTest {
 		long initialCount =
 			PortletPreferencesLocalServiceUtil.getPortletPreferencesCount(
 				_group.getGroupId(), PortletKeys.PREFS_OWNER_TYPE_GROUP,
-				_layout.getPlid(), portlets[0], false);
+				_layout.getPlid(), portlets[0], true);
 
 		Assert.assertEquals(0, initialCount);
 
@@ -633,24 +633,16 @@ public class PortletPreferencesLocalServiceTest {
 
 		Group group2 = GroupTestUtil.addGroup();
 
-		Portlet[] portlets = getTestPortlets(2);
-
-		String preferenceName = "name";
-
-		String[] preferenceValues = {"defaultValue"};
-
-		String preferencesAsXml = getPreferencesAsXMLString(
-			preferenceName, preferenceValues);
+		Portlet[] portlets = getTestPortlets(1);
 
 		long initialCount =
 			PortletPreferencesLocalServiceUtil.getPortletPreferencesCount(
 				_group.getGroupId(), PortletKeys.PREFS_OWNER_TYPE_GROUP,
-				_layout.getPlid(), portlets[0], false);
+				portlets[0].getPortletId(), true);
 
 		Assert.assertEquals(0, initialCount);
 
-		addPortelsPreferences(_group, portlets, preferencesAsXml);
-		addPortelPreferences(group2, portlets[0]);
+		addPortelsPreferences(_group, portlets);
 
 		long actualCount =
 			PortletPreferencesLocalServiceUtil.getPortletPreferencesCount(
@@ -664,9 +656,7 @@ public class PortletPreferencesLocalServiceTest {
 	public void testGetPortletPreferencesCountByOwnerPortletNotExcludeDefault()
 		throws Exception {
 
-		Group group2 = GroupTestUtil.addGroup();
-
-		Portlet[] portlets = getTestPortlets(2);
+		Portlet[] portlets = getTestPortlets(1);
 
 		long initialCount =
 			PortletPreferencesLocalServiceUtil.getPortletPreferencesCount(
@@ -676,7 +666,6 @@ public class PortletPreferencesLocalServiceTest {
 		Assert.assertEquals(0, initialCount);
 
 		addPortelsPreferences(_group, portlets);
-		addPortelPreferences(group2, portlets[0]);
 
 		Assert.assertEquals(0, initialCount);
 
