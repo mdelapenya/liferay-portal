@@ -112,6 +112,7 @@ public class PortletPreferencesLocalServiceTest {
 	@Test
 	public void testAddPreferencesMultipleValues() throws Exception {
 		String[] preferenceValues = {"value1", "value2"};
+
 		String preferencesAsXml = getPreferencesAsXMLString(preferenceValues);
 
 		assertNotExistPreferences();
@@ -608,8 +609,6 @@ public class PortletPreferencesLocalServiceTest {
 	@Test
 		public void testGetPortletPreferencesCountByOwnerPortletExcludeDefault()
 			throws Exception {
-
-		Group group2 = GroupTestUtil.addGroup();
 
 		long initialCount =
 			PortletPreferencesLocalServiceUtil.getPortletPreferencesCount(
