@@ -103,7 +103,8 @@ public class PortletPreferencesLocalServiceTest {
 
 	@Test
 	public void testAddPreferencesMultipleValues() throws Exception {
-		String preferencesAsXml = getPreferencesAsXMLString();
+		String[] preferenceValues = {"value1", "value2"};
+		String preferencesAsXml = getPreferencesAsXMLString(preferenceValues);
 
 		_layoutTypePortlet.addPortletId(
 			TestPropsValues.getUserId(), _portlet.getPortletId(), false);
@@ -115,7 +116,7 @@ public class PortletPreferencesLocalServiceTest {
 		String[] actualValues =
 			javaxPortletPreferences.getMap().get(_PREFERENCE_NAME);
 
-		Assert.assertArrayEquals(_PREFERENCE_VALUES, actualValues);
+		Assert.assertArrayEquals(preferenceValues, actualValues);
 	}
 
 	@Test
@@ -555,8 +556,6 @@ public class PortletPreferencesLocalServiceTest {
 	public void testGetPortletPreferencesCountByOwnerLayoutPortletNotDefault()
 		throws Exception {
 
-		Group group2 = GroupTestUtil.addGroup();
-
 		Portlet[] portlets = getTestPortlets(2);
 
 		long initialCount =
@@ -567,7 +566,6 @@ public class PortletPreferencesLocalServiceTest {
 		Assert.assertEquals(0, initialCount);
 
 		addPortelsPreferences(_group, portlets);
-		addPortelPreferences(group2, portlets[0]);
 
 		long actualCount =
 			PortletPreferencesLocalServiceUtil.getPortletPreferencesCount(
@@ -907,6 +905,10 @@ public class PortletPreferencesLocalServiceTest {
 			portletPreferences);
 	}
 
+	private String getPreferencesAsXMLString() {
+		return getPreferencesAsXMLString(_PREFERENCE_NAME, _PREFERENCE_VALUES);
+	}
+
 	private String getPreferencesAsXMLString(String name, String[] values) {
 
 		String preferencesAsXml = "<portlet-preferences><preference>";
@@ -920,9 +922,9 @@ public class PortletPreferencesLocalServiceTest {
 		return preferencesAsXml;
 	}
 
+	private String getPreferencesAsXMLString(String[] values) {
 
-	private String getPreferencesAsXMLString() {
-		return getPreferencesAsXMLString(_PREFERENCE_NAME, _PREFERENCE_VALUES);
+		return getPreferencesAsXMLString(_PREFERENCE_NAME, values);
 	}
 
 	private Portlet[] getTestPortlets(int numberPortlets) throws Exception {
