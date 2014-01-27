@@ -86,12 +86,7 @@ public class PortletPreferencesLocalServiceTest {
 		_layoutTypePortlet.addPortletId(
 			TestPropsValues.getUserId(), _portlet.getPortletId(), false);
 
-		String preferenceName = "name";
-
-		String[] preferenceValues = {"defaultValue"};
-
-		String preferencesAsXml = getPreferencesAsXMLString(
-			preferenceName, preferenceValues);
+		String preferencesAsXml = getPreferencesAsXMLString();
 
 		_portlet.setDefaultPreferences(preferencesAsXml);
 
@@ -100,19 +95,15 @@ public class PortletPreferencesLocalServiceTest {
 
 		Assert.assertTrue(!javaxPortletPreferences.getMap().isEmpty());
 
-		Assert.assertArrayEquals(
-			preferenceValues,
-			javaxPortletPreferences.getMap().get(preferenceName));
+		String[] actualValues =
+			javaxPortletPreferences.getMap().get(_PREFERENCE_NAME);
+
+		Assert.assertArrayEquals(_PREFERENCE_VALUES, actualValues);
 	}
 
 	@Test
 	public void testAddPreferencesMultipleValues() throws Exception {
-		String preferenceName = "name";
-
-		String[] preferenceValues = {"value1", "value2"};
-
-		String preferencesAsXml = getPreferencesAsXMLString(
-			preferenceName, preferenceValues);
+		String preferencesAsXml = getPreferencesAsXMLString();
 
 		_layoutTypePortlet.addPortletId(
 			TestPropsValues.getUserId(), _portlet.getPortletId(), false);
@@ -122,9 +113,9 @@ public class PortletPreferencesLocalServiceTest {
 				_portlet, preferencesAsXml);
 
 		String[] actualValues =
-			javaxPortletPreferences.getMap().get(preferenceName);
+			javaxPortletPreferences.getMap().get(_PREFERENCE_NAME);
 
-		Assert.assertArrayEquals(preferenceValues, actualValues);
+		Assert.assertArrayEquals(_PREFERENCE_VALUES, actualValues);
 	}
 
 	@Test
@@ -233,12 +224,7 @@ public class PortletPreferencesLocalServiceTest {
 
 	@Test
 	public void testFetchPreferences() throws Exception {
-		String preferenceName = "name";
-
-		String[] preferenceValues = {"defaultValue"};
-
-		String preferencesAsXml = getPreferencesAsXMLString(
-			preferenceName, preferenceValues);
+		String preferencesAsXml = getPreferencesAsXMLString();
 
 		addPortelPreferencesReturnJavaxPreferences(_portlet, preferencesAsXml);
 
@@ -252,17 +238,13 @@ public class PortletPreferencesLocalServiceTest {
 		Assert.assertTrue(!portletPreferences.getMap().isEmpty());
 
 		Assert.assertArrayEquals(
-			preferenceValues, portletPreferences.getMap().get(preferenceName));
+			_PREFERENCE_VALUES,
+			portletPreferences.getMap().get(_PREFERENCE_NAME));
 	}
 
 	@Test
 	public void testFetchPreferencesByPortletPreferencesIds() throws Exception {
-		String preferenceName = "name";
-
-		String[] preferenceValues = {"defaultValue"};
-
-		String preferencesAsXml = getPreferencesAsXMLString(
-			preferenceName, preferenceValues);
+		String preferencesAsXml = getPreferencesAsXMLString();
 
 		addPortelPreferencesReturnJavaxPreferences(_portlet, preferencesAsXml);
 
@@ -280,17 +262,13 @@ public class PortletPreferencesLocalServiceTest {
 		Assert.assertTrue(!portletPreferences.getMap().isEmpty());
 
 		Assert.assertArrayEquals(
-			preferenceValues, portletPreferences.getMap().get(preferenceName));
+			_PREFERENCE_VALUES,
+			portletPreferences.getMap().get(_PREFERENCE_NAME));
 	}
 
 	@Test
 	public void testFetchPreferencesNull() throws Exception {
-		String preferenceName = "name";
-
-		String[] preferenceValues = {"defaultValue"};
-
-		String preferencesAsXml = getPreferencesAsXMLString(
-			preferenceName, preferenceValues);
+		String preferencesAsXml = getPreferencesAsXMLString();
 
 		addPortelPreferencesReturnJavaxPreferences(_portlet, preferencesAsXml);
 
@@ -942,6 +920,11 @@ public class PortletPreferencesLocalServiceTest {
 		return preferencesAsXml;
 	}
 
+
+	private String getPreferencesAsXMLString() {
+		return getPreferencesAsXMLString(_PREFERENCE_NAME, _PREFERENCE_VALUES);
+	}
+
 	private Portlet[] getTestPortlets(int numberPortlets) throws Exception {
 		Portlet[] results = new Portlet[numberPortlets];
 
@@ -957,6 +940,10 @@ public class PortletPreferencesLocalServiceTest {
 	private static final int _INIT_PORTLET_ID = 1000;
 
 	private static final String _PORTEL_WITH_PREFERENCES_ID = "16";
+
+	private static final String _PREFERENCE_NAME = "name";
+
+	private static final String[] _PREFERENCE_VALUES = {"defaultValue"};
 
 	private Group _group;
 	private Layout _layout;
