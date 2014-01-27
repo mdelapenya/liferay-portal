@@ -850,8 +850,7 @@ public class PortletPreferencesLocalServiceTest {
 				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
 				_portlet.getPortletId());
 
-		Assert.assertTrue(
-			portletPreferences instanceof StrictPortletPreferencesImpl);
+		assertStrictPortletPreferences(portletPreferences);
 	}
 
 	@Test
@@ -869,16 +868,7 @@ public class PortletPreferencesLocalServiceTest {
 			PortletPreferencesLocalServiceUtil.getStrictPreferences(
 				portletPreferencesIds);
 
-		Assert.assertTrue(
-			portletPreferences instanceof StrictPortletPreferencesImpl);
-
-		StrictPortletPreferencesImpl strictPortletPreferences =
-			(StrictPortletPreferencesImpl)portletPreferences;
-
-		Assert.assertEquals(0, strictPortletPreferences.getPlid());
-		Assert.assertEquals(0, strictPortletPreferences.getOwnerType());
-		Assert.assertEquals(0, strictPortletPreferences.getOwnerId());
-		Assert.assertTrue(strictPortletPreferences.getMap().isEmpty());
+		assertStrictPortletPreferences(portletPreferences);
 	}
 
 	@Test
@@ -901,8 +891,7 @@ public class PortletPreferencesLocalServiceTest {
 				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
 				_portlet.getPortletId(), getPreferencesAsXMLString());
 
-		Assert.assertTrue(
-			portletPreferences instanceof StrictPortletPreferencesImpl);
+		assertStrictPortletPreferences(portletPreferences);
 	}
 
 	private Layout addLayout() throws Exception {
@@ -1050,6 +1039,21 @@ public class PortletPreferencesLocalServiceTest {
 		}
 
 		return results;
+	}
+
+	private void assertStrictPortletPreferences(
+		javax.portlet.PortletPreferences portletPreferences) {
+
+		Assert.assertTrue(
+			portletPreferences instanceof StrictPortletPreferencesImpl);
+
+		StrictPortletPreferencesImpl strictPortletPreferences =
+			(StrictPortletPreferencesImpl)portletPreferences;
+
+		Assert.assertEquals(0, strictPortletPreferences.getPlid());
+		Assert.assertEquals(0, strictPortletPreferences.getOwnerType());
+		Assert.assertEquals(0, strictPortletPreferences.getOwnerId());
+		Assert.assertTrue(strictPortletPreferences.getMap().isEmpty());
 	}
 
 	private PortletPreferences[] fetchPortletPreferences(
