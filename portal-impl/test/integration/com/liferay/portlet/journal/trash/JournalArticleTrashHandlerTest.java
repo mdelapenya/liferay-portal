@@ -333,6 +333,6 @@ public class JournalArticleTrashHandlerTest extends BaseTrashHandlerTestCase {
 	private static final int _FOLDER_NAME_MAX_LENGTH = 100;
 
 	private static final String _JOURNAL_DEPENDENCIES_PATH =
-		"com/liferay/portlet/journal/dependencies/";
+		"/com/liferay/portlet/journal/dependencies/";
 
 }
