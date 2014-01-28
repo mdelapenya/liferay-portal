@@ -68,8 +68,6 @@ public class PortletPreferencesLocalServiceTest {
 
 		_layout = addLayout();
 
-		_layoutTypePortlet = (LayoutTypePortlet)_layout.getLayoutType();
-
 		_portlet = getTestPortlets(1)[0];
 	}
 
@@ -79,9 +77,6 @@ public class PortletPreferencesLocalServiceTest {
 
 	@Test
 	public void testAddPreferencesDefault() throws Exception {
-		_layoutTypePortlet.addPortletId(
-			TestPropsValues.getUserId(), _portlet.getPortletId(), false);
-
 		assertNotExistPreferences();
 
 		javax.portlet.PortletPreferences portletPreferences =
@@ -93,9 +88,6 @@ public class PortletPreferencesLocalServiceTest {
 
 	@Test
 	public void testAddPreferencesDefaultPortlet() throws Exception {
-		_layoutTypePortlet.addPortletId(
-			TestPropsValues.getUserId(), _portlet.getPortletId(), false);
-
 		assertNotExistPreferences();
 
 		String preferencesAsXml = getPreferencesAsXMLString();
@@ -116,9 +108,6 @@ public class PortletPreferencesLocalServiceTest {
 		String preferencesAsXml = getPreferencesAsXMLString(preferenceValues);
 
 		assertNotExistPreferences();
-
-		_layoutTypePortlet.addPortletId(
-			TestPropsValues.getUserId(), _portlet.getPortletId(), false);
 
 		javax.portlet.PortletPreferences portletPreferences =
 			addPortletPreferencesReturnJavaxPreferences(
@@ -1279,7 +1268,6 @@ public class PortletPreferencesLocalServiceTest {
 
 	private Group _group;
 	private Layout _layout;
-	private LayoutTypePortlet _layoutTypePortlet;
 	private Portlet _portlet;
 
 	private class MockPortletPreferencesLocalServiceImpl
