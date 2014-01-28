@@ -34,21 +34,10 @@ public class FileTestUtil {
 			Class<?> clazz, String fileName)
 		throws Exception {
 
-		if (fileName.startsWith(_DEPENDENCIES)) {
-			String packageName = clazz.getPackage().getName();
-
-			fileName = packageName.replace(
-					StringPool.PERIOD, StringPool.SLASH) +
-				StringPool.SLASH  + fileName;
-		}
-
-		ClassLoader classLoader = clazz.getClassLoader();
-
-		InputStream inputStream = classLoader.getResourceAsStream(fileName);
+		InputStream inputStream = clazz.getResourceAsStream(fileName);
 
 		return inputStream;
 	}
 
-	private static final String _DEPENDENCIES = "dependencies";
 
 }
