@@ -77,6 +77,23 @@ public class PortletPreferencesLocalServiceTest {
 	}
 
 	@Test
+	public void testAddPreferencesWithDefaultInParameter() throws Exception {
+		assertNullLayoutPreferences();
+
+		String preferencesAsXml =
+			PortletPreferencesTestUtil.getPreferencesAsXMLString(
+				_PREFERENCE_NAME, _PREFERENCE_VALUES_SINGLE);
+
+		PortletPreferences portletPreferences = addPortletLayoutPreferences(
+			preferencesAsXml);
+
+		assertPortletPreferencesOwnedByLayout(portletPreferences);
+
+		assertPortletPreferenceValues(
+			portletPreferences, _PREFERENCE_NAME, _PREFERENCE_VALUES_SINGLE);
+	}
+
+	@Test
 	public void testAddPreferencesWithDefaultInPortletObject()
 		throws Exception {
 
@@ -100,20 +117,19 @@ public class PortletPreferencesLocalServiceTest {
 	public void testAddPreferencesWithMultipleValuedDefaultInParameter()
 		throws Exception {
 
-		String[] preferenceValues = {"value1", "value2"};
-
 		String preferencesAsXML =
 			PortletPreferencesTestUtil.getPreferencesAsXMLString(
-				_PREFERENCE_NAME, preferenceValues);
+				_PREFERENCE_NAME, _PREFERENCE_VALUES_MULTIPLE);
 
 		assertNullLayoutPreferences();
 
-		javax.portlet.PortletPreferences portletPreferences =
-			addPortletPreferencesReturnJavaxPreferences(
-				_portlet, preferencesAsXML);
+		PortletPreferences portletPreferences = addPortletLayoutPreferences(
+			preferencesAsXML);
+
+		assertPortletPreferencesOwnedByLayout(portletPreferences);
 
 		assertPortletPreferenceValues(
-			portletPreferences, _PREFERENCE_NAME, preferenceValues);
+			portletPreferences, _PREFERENCE_NAME, _PREFERENCE_VALUES_MULTIPLE);
 	}
 
 	@Test
@@ -1324,7 +1340,7 @@ public class PortletPreferencesLocalServiceTest {
 
 	private static final String _PREFERENCE_NAME = "testPreferenceName";
 
-	private static final String[] __PREFERENCE_VALUES_MULTIPLE =
+	private static final String[] _PREFERENCE_VALUES_MULTIPLE =
 		{"testPreferenceValue1", "testPreferenceValue2"};
 
 	private static final String[] _PREFERENCE_VALUES_SINGLE =
