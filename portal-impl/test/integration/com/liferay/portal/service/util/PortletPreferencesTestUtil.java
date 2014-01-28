@@ -24,6 +24,19 @@ import com.liferay.portlet.PortletPreferencesImpl;
  */
 public class PortletPreferencesTestUtil {
 
+	public static String getPreferencesAsXMLString(String name, String[] values) {
+
+		String preferencesAsXml = "<portlet-preferences><preference>";
+		preferencesAsXml+= "<name>" + name + "</name>";
+
+		for (String value : values) {
+			preferencesAsXml+= "<value>" + value + "</value>";
+		}
+
+		preferencesAsXml+="</preference></portlet-preferences>";
+		return preferencesAsXml;
+	}
+
 	public static PortletPreferencesImpl convert(
 			PortletPreferences portletPreferences)
 		throws Exception {
