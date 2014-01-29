@@ -210,7 +210,7 @@ public class PortletPreferencesLocalServiceTest {
 	public void testDeletePortletPreferencesByPortletPreferencesId()
 		throws Exception {
 
-		PortletPreferences portletPreferences =  addPortletPreferences();
+		PortletPreferences portletPreferences =  addPortletLayoutPreferences();
 
 		PortletPreferences portletPreferencesRecovered =
 			PortletPreferencesLocalServiceUtil.fetchPortletPreferences(
@@ -348,7 +348,7 @@ public class PortletPreferencesLocalServiceTest {
 
 		int initialCount = initialPortletPreferences.size();
 
-		addPortletPreferences();
+		addPortletLayoutPreferences();
 
 		List<PortletPreferences> actualPortletPreferences =
 			PortletPreferencesLocalServiceUtil.getPortletPreferences();
@@ -528,7 +528,7 @@ public class PortletPreferencesLocalServiceTest {
 		Group group2 = GroupTestUtil.addGroup();
 
 		PortletPreferences[] portletPreferences = new PortletPreferences[2];
-		portletPreferences[0] = addPortletPreferences();
+		portletPreferences[0] = addPortletLayoutPreferences();
 		portletPreferences[1] = addPortletGroupDefaultPreferences(
 			group2, _portlet)[0];
 
@@ -692,7 +692,7 @@ public class PortletPreferencesLocalServiceTest {
 			PortletPreferencesLocalServiceUtil.getPortletPreferencesCount(
 				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _portlet.getPortletId());
 
-		addPortletPreferences();
+		addPortletLayoutPreferences();
 		addPortletsPreferences(layout2, _portlet);
 		addPortletGroupDefaultPreferences(_group, _portlet);
 
@@ -730,7 +730,7 @@ public class PortletPreferencesLocalServiceTest {
 
 		Assert.assertEquals(0, initialCountTypeCompany);
 
-		addPortletPreferences();
+		addPortletLayoutPreferences();
 		addPortletGroupDefaultPreferences(group2, _portlet);
 
 		long actualCountTypeLayout =
@@ -891,7 +891,7 @@ public class PortletPreferencesLocalServiceTest {
 	public void testUpdatePreferencesMultipleValues() throws Exception {
 		assertNullLayoutPreferences();
 
-		addPortletPreferences();
+		addPortletLayoutPreferences();
 
 		String[] values = {"value4", "value5", "value6"};
 
@@ -926,7 +926,7 @@ public class PortletPreferencesLocalServiceTest {
 
 		assertNullLayoutPreferences();
 
-		addPortletPreferences();
+		addPortletLayoutPreferences();
 
 		String[] values = {"value4", "value5", "value6"};
 
@@ -1068,11 +1068,6 @@ public class PortletPreferencesLocalServiceTest {
 		}
 
 		return results;
-	}
-
-	private PortletPreferences addPortletPreferences() throws Exception {
-		return addPortletPreferences(
-			null, null, _portlet, _portlet.getPortletId(), null);
 	}
 
 	private PortletPreferences addPortletPreferences(
