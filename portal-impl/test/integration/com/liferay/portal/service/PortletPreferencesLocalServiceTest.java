@@ -653,22 +653,23 @@ public class PortletPreferencesLocalServiceTest {
 	public void testGetPreferencesCountByOwnerLayoutPortlet() throws Exception {
 		Group group2 = GroupTestUtil.addGroup();
 
-		Portlet[] portlets = getTestPortlets(2);
+		Portlet portletGroup2 = getTestPortlets(1)[0];
 
 		long initialCount =
 			PortletPreferencesLocalServiceUtil.getPortletPreferencesCount(
 				_group.getGroupId(), PortletKeys.PREFS_OWNER_TYPE_GROUP,
-				_layout.getPlid(), portlets[0], false);
+				_layout.getPlid(), _portlet, false);
 
 		Assert.assertEquals(0, initialCount);
 
-		addPortletGroupWithoutDefaultPreferences(_group, portlets);
-		addPortletGroupWithoutDefaultPreferences(group2, portlets[0]);
+		addPortletGroupWithoutDefaultPreferences(_group, _portlet);
+		addPortletGroupWithoutDefaultPreferences(
+			group2, _portlet, portletGroup2);
 
 		long currentCount =
 			PortletPreferencesLocalServiceUtil.getPortletPreferencesCount(
 				_group.getGroupId(), PortletKeys.PREFS_OWNER_TYPE_GROUP,
-				_layout.getPlid(), portlets[0], false);
+				_layout.getPlid(), _portlet, false);
 
 		Assert.assertEquals(1, currentCount);
 	}
