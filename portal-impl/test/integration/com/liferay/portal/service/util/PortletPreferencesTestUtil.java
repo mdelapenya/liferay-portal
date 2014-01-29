@@ -24,7 +24,19 @@ import com.liferay.portlet.PortletPreferencesImpl;
  */
 public class PortletPreferencesTestUtil {
 
-	public static String getPreferencesAsXMLString(String name, String[] values) {
+	public static PortletPreferencesImpl convert(
+			PortletPreferences portletPreferences)
+		throws Exception {
+
+		return (PortletPreferencesImpl)PortletPreferencesFactoryUtil.fromXML(
+			TestPropsValues.getCompanyId(), portletPreferences.getOwnerId(),
+			portletPreferences.getOwnerType(), portletPreferences.getPlid(),
+			portletPreferences.getPortletId(),
+			portletPreferences.getPreferences());
+	}
+
+	public static String getPreferencesAsXMLString(
+		String name, String[] values) {
 
 		String preferencesAsXml = "<portlet-preferences><preference>";
 		preferencesAsXml+= "<name>" + name + "</name>";
@@ -37,14 +49,4 @@ public class PortletPreferencesTestUtil {
 		return preferencesAsXml;
 	}
 
-	public static PortletPreferencesImpl convert(
-			PortletPreferences portletPreferences)
-		throws Exception {
-
-		return (PortletPreferencesImpl)PortletPreferencesFactoryUtil.fromXML(
-			TestPropsValues.getCompanyId(), portletPreferences.getOwnerId(),
-			portletPreferences.getOwnerType(), portletPreferences.getPlid(),
-			portletPreferences.getPortletId(),
-			portletPreferences.getPreferences());
-	}
 }
