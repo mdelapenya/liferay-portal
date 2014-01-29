@@ -397,7 +397,7 @@ public class PortletPreferencesLocalServiceTest {
 	}
 
 	@Test
-	public void testGetPreferencesByCompanyOwnerLayoutPortletNotAdded()
+	public void testGetPreferencesByOwnerLayoutPortletNotAdded()
 		throws Exception {
 
 		assertNullLayoutPreferences();
@@ -414,15 +414,31 @@ public class PortletPreferencesLocalServiceTest {
 	}
 
 	@Test
-	public void testGetPreferencesByCompanyOwnerLayoutPortletNotAddedDefault()
+	public void testGetPreferencesByOwnerLayoutPortletNotAddedWithoutDefault()
 		throws Exception {
 
 		assertNullLayoutPreferences();
 
 		PortletPreferencesImpl portletPreferences = (PortletPreferencesImpl )
-			getPreferences(_portlet, null);
+			PortletPreferencesLocalServiceUtil.getPreferences(
+				TestPropsValues.getCompanyId(),
+				PortletKeys.PREFS_OWNER_ID_DEFAULT,
+				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
+				_portlet.getPortletId());
 
 		assertEmptyPortletPreferences(portletPreferences);
+
+		Assert.assertEquals(
+			PortletKeys.PREFS_OWNER_ID_DEFAULT,
+			portletPreferences.getOwnerId());
+
+		Assert.assertEquals(
+			PortletKeys.PREFS_OWNER_TYPE_LAYOUT,
+			portletPreferences.getOwnerType());
+
+		Assert.assertEquals(
+			_layout.getPlid(),
+			portletPreferences.getPlid());
 	}
 
 	@Test
