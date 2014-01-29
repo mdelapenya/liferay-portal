@@ -259,7 +259,7 @@ public class PortletPreferencesLocalServiceTest {
 			PortletPreferencesTestUtil.getPreferencesAsXMLString(
 				_PREFERENCE_NAME, _PREFERENCE_VALUES_SINGLE);
 
-		addPortletPreferencesReturnJavaxPreferences(_portlet, preferencesAsXML);
+		addPortletLayoutPreferences(_layout, preferencesAsXML, _portlet);
 
 		javax.portlet.PortletPreferences portletPreferences =
 			PortletPreferencesLocalServiceUtil.fetchPreferences(
