@@ -66,7 +66,7 @@ public class PortletPreferencesLocalServiceTest {
 
 		_group = GroupTestUtil.addGroup();
 
-		_layout = addLayout();
+		_layout = addLayout(_group);
 
 		_portlet = PortletLocalServiceUtil.getPortletById(
 			TestPropsValues.getCompanyId(), String.valueOf(_PORTLET_ID));
@@ -557,7 +557,7 @@ public class PortletPreferencesLocalServiceTest {
 
 	@Test
 	public void testGetPreferencesByPlid() throws Exception {
-		Layout layout2 = addLayout();
+		Layout layout2 = addLayout(_group);
 
 		Portlet[] portlets = getTestPortlets(2);
 
@@ -574,7 +574,7 @@ public class PortletPreferencesLocalServiceTest {
 
 	@Test
 	public void testGetPreferencesByPortletLayout() throws Exception {
-		Layout layout2 = addLayout();
+		Layout layout2 = addLayout(_group);
 
 		addPortletLayoutWithoutDefaultPreferences(_layout, _portlet);
 
@@ -759,7 +759,7 @@ public class PortletPreferencesLocalServiceTest {
 
 	@Test
 	public void testGetPreferencesCountByPortletOwnerType() throws Exception {
-		Layout layout2 = addLayout();
+		Layout layout2 = addLayout(_group);
 
 		long initialCount =
 			PortletPreferencesLocalServiceUtil.getPortletPreferencesCount(
@@ -981,10 +981,6 @@ public class PortletPreferencesLocalServiceTest {
 
 		assertPortletPreferenceValues(
 			preferences, _PREFERENCE_NAME, _PREFERENCE_VALUES_MULTIPLE);
-	}
-
-	private Layout addLayout() throws Exception {
-		return addLayout(_group);
 	}
 
 	private Layout addLayout(Group group) throws Exception {
