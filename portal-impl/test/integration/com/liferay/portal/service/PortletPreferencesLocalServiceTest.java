@@ -1016,13 +1016,6 @@ public class PortletPreferencesLocalServiceTest {
 		return addLayout(_group, numberLayouts);
 	}
 
-	private PortletPreferences addPortelPreferences(Portlet portlet)
-		throws Exception {
-
-		return addPortletPreferences(
-			null, null, portlet, portlet.getPortletId(), null);
-	}
-
 	private PortletPreferences[] addPortletGroupWithoutDefaultPreferences(
 			Group group, Portlet... portlet)
 		throws Exception {
@@ -1071,29 +1064,6 @@ public class PortletPreferencesLocalServiceTest {
 		throws Exception {
 
 		return addPortletLayoutPreferences(layout, null, portlets);
-	}
-
-	private PortletPreferences addPortletPreferences(
-			Group group, Layout layout, Portlet portlet, String portletId,
-			String defaultPreferences)
-		throws Exception {
-
-		if (layout == null)
-			layout = _layout;
-
-		if (group != null) {
-			return PortletPreferencesLocalServiceUtil.addPortletPreferences(
-				TestPropsValues.getCompanyId(), group.getGroupId(),
-				PortletKeys.PREFS_OWNER_TYPE_GROUP, layout.getPlid(), portletId,
-				portlet, defaultPreferences);
-		}
-		else {
-			return PortletPreferencesLocalServiceUtil.addPortletPreferences(
-				TestPropsValues.getCompanyId(),
-				PortletKeys.PREFS_OWNER_ID_DEFAULT,
-				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, layout.getPlid(),
-				portletId, portlet, defaultPreferences);
-		}
 	}
 
 	private PortletPreferences[] addPortletsGroupPreferences(
