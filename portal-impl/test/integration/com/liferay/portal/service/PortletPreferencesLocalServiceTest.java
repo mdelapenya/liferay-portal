@@ -337,7 +337,7 @@ public class PortletPreferencesLocalServiceTest {
 	}
 
 	@Test
-	public void testGetPortletPreferencesByCompanyOwnerPortletRepeatedGroup()
+	public void testGetPreferencesByCompanyOwnerPortletRepeatedGroup()
 		throws Exception {
 
 		Layout[] layouts = addLayout(_group, 2);
