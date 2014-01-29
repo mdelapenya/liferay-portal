@@ -14,7 +14,12 @@
 
 package com.liferay.portal.service.util;
 
+import com.liferay.portal.model.Group;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.PortletPreferences;
+import com.liferay.portal.service.PortletPreferencesLocalServiceUtil;
+import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.PortletPreferencesImpl;
@@ -48,5 +53,32 @@ public class PortletPreferencesTestUtil {
 		preferencesAsXml+="</preference></portlet-preferences>";
 		return preferencesAsXml;
 	}
+
+	public static PortletPreferences[] addPortletGroupWithoutDefaultPreferences(
+		Group group, Layout layout, Portlet... portlet)
+		throws Exception {
+
+		return addPortletsGroupPreferences(group, layout, null, portlet);
+	}
+
+	public static PortletPreferences[] addPortletsGroupPreferences(
+		Group group, Layout layout, String defaultPreferences, Portlet ... portlets)
+		throws Exception {
+
+		PortletPreferences[] results = new PortletPreferences[portlets.length];
+
+		for (int i = 0; i < results.length; i++) {
+			results[i] =
+				PortletPreferencesLocalServiceUtil.addPortletPreferences(
+					TestPropsValues.getCompanyId(), group.getGroupId(),
+					PortletKeys.PREFS_OWNER_TYPE_GROUP, layout.getPlid(),
+					portlets[i].getPortletId(), portlets[i],
+					defaultPreferences);
+		}
+
+		return results;
+	}
+
+
 
 }

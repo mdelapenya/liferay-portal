@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.model.CustomizedPages;
+import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutConstants;
 import com.liferay.portal.model.LayoutPrototype;
@@ -314,6 +315,23 @@ public class LayoutTestUtil {
 		return LayoutServiceUtil.updateLayout(
 			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
 			layout.getTypeSettings());
+	}
+
+	public static Layout addLayout(Group group) throws Exception {
+		return LayoutTestUtil.addLayout(
+			group.getGroupId(), ServiceTestUtil.randomString(), false);
+	}
+
+	public static Layout[] addLayout(Group group, int numberLayouts)
+		throws Exception {
+
+		Layout[] layouts = new Layout[numberLayouts];
+
+		for (int i = 0; i < numberLayouts; i++) {
+			layouts[i] = addLayout(group);
+		}
+
+		return layouts;
 	}
 
 }
