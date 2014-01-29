@@ -336,46 +336,6 @@ public class PortletPreferencesLocalServiceTest {
 	}
 
 	@Test
-	public void testGetPortletPreferencesByPortletOwnerTypeLayout()
-		throws Exception {
-
-		Group group2 = GroupTestUtil.addGroup();
-
-		PortletPreferences[] portletPreferences = new PortletPreferences[2];
-		portletPreferences[0] = addPortletLayoutPreferences();
-		portletPreferences[1] = addPortletGroupWithoutDefaultPreferences(
-			group2, _portlet)[0];
-
-		PortletPreferences[] actualPortletPreferences = fetchPortletPreferences(
-			portletPreferences);
-
-		Assert.assertNotNull(actualPortletPreferences[0]);
-
-		Assert.assertNotNull(actualPortletPreferences[1]);
-
-		List<PortletPreferences> portletPreferencesList =
-			PortletPreferencesLocalServiceUtil.getPortletPreferences(
-				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
-				_portlet.getPortletId());
-
-		Assert.assertEquals(1, portletPreferencesList.size());
-
-		portletPreferencesList =
-			PortletPreferencesLocalServiceUtil.getPortletPreferences(
-				PortletKeys.PREFS_OWNER_TYPE_GROUP, _layout.getPlid(),
-				_portlet.getPortletId());
-
-		Assert.assertEquals(1, portletPreferencesList.size());
-
-		portletPreferencesList =
-			PortletPreferencesLocalServiceUtil.getPortletPreferences(
-				PortletKeys.PREFS_OWNER_TYPE_COMPANY, _layout.getPlid(),
-				_portlet.getPortletId());
-
-		Assert.assertEquals(0, portletPreferencesList.size());
-	}
-
-	@Test
 	public void testGetPortletPreferencesCountByOwnerLayoutPortlet()
 		throws Exception {
 
@@ -781,6 +741,36 @@ public class PortletPreferencesLocalServiceTest {
 		Assert.assertEquals(
 			_portlet.getPortletId(),
 			listPortletPreferences.get(0).getPortletId());
+	}
+
+	@Test
+	public void testGetPreferencesByPortletOwnerTypeLayout() throws Exception {
+		Group group2 = GroupTestUtil.addGroup();
+
+		addPortletLayoutWithoutDefaultPreferences(_layout, _portlet);
+		PortletPreferences portletPferencesGroup2 =
+			addPortletGroupWithoutDefaultPreferences(group2, _portlet)[0];
+
+		List<PortletPreferences> portletPreferencesList =
+			PortletPreferencesLocalServiceUtil.getPortletPreferences(
+				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
+				_portlet.getPortletId());
+
+		Assert.assertEquals(1, portletPreferencesList.size());
+
+		portletPreferencesList =
+			PortletPreferencesLocalServiceUtil.getPortletPreferences(
+				PortletKeys.PREFS_OWNER_TYPE_GROUP,
+				portletPferencesGroup2.getPlid(), _portlet.getPortletId());
+
+		Assert.assertEquals(1, portletPreferencesList.size());
+
+		portletPreferencesList =
+			PortletPreferencesLocalServiceUtil.getPortletPreferences(
+				PortletKeys.PREFS_OWNER_TYPE_COMPANY, _layout.getPlid(),
+				_portlet.getPortletId());
+
+		Assert.assertEquals(0, portletPreferencesList.size());
 	}
 
 	@Test
