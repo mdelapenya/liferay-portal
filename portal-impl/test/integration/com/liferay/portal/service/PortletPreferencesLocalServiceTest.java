@@ -19,7 +19,6 @@ import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.transaction.Transactional;
-import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.Portlet;
@@ -334,45 +333,6 @@ public class PortletPreferencesLocalServiceTest {
 
 		Assert.assertArrayEquals(
 			symbols, defaultPreferences.getMap().get("symbols"));
-	}
-
-	@Test
-	public void testGetPortletPreferencesByOwnerLayoutPortlet()
-		throws Exception {
-
-		Group group2 = GroupTestUtil.addGroup();
-
-		Portlet[] portlets = getTestPortlets(2);
-
-		PortletPreferences[] arrayPortletPreferences = ArrayUtil.append(
-			addPortletGroupWithoutDefaultPreferences(_group, portlets),
-			addPortletGroupWithoutDefaultPreferences(group2, portlets[0]));
-
-		PortletPreferences[] actualPortletPreferences = fetchPortletPreferences(
-			arrayPortletPreferences);
-
-		Assert.assertNotNull(actualPortletPreferences[0]);
-
-		Assert.assertNotNull(actualPortletPreferences[1]);
-
-		Assert.assertNotNull(actualPortletPreferences[2]);
-
-		PortletPreferences portletPreferences =
-			PortletPreferencesLocalServiceUtil.getPortletPreferences(
-				_group.getGroupId(), PortletKeys.PREFS_OWNER_TYPE_GROUP,
-				_layout.getPlid(), portlets[0].getPortletId());
-
-		Assert.assertEquals(
-			portletPreferences.getPortletId(), portlets[0].getPortletId());
-
-		Assert.assertEquals(portletPreferences.getPlid(), _layout.getPlid());
-
-		Assert.assertEquals(
-			portletPreferences.getOwnerType(),
-			PortletKeys.PREFS_OWNER_TYPE_GROUP);
-
-		Assert.assertEquals(
-			portletPreferences.getOwnerId(), _group.getGroupId());
 	}
 
 	@Test
@@ -789,6 +749,33 @@ public class PortletPreferencesLocalServiceTest {
 				_layout.getPlid());
 
 		Assert.assertEquals(2, portletPreferencesList.size());
+	}
+
+	@Test
+	public void testGetPreferencesByOwnerLayoutPortlet() throws Exception {
+		Group group2 = GroupTestUtil.addGroup();
+
+		Portlet[] portletsGroup2 = getTestPortlets(2);
+
+		addPortletGroupWithoutDefaultPreferences(_group, _portlet);
+		addPortletGroupWithoutDefaultPreferences(group2, portletsGroup2);
+
+		PortletPreferences portletPreferences =
+			PortletPreferencesLocalServiceUtil.getPortletPreferences(
+				_group.getGroupId(), PortletKeys.PREFS_OWNER_TYPE_GROUP,
+				_layout.getPlid(), _portlet.getPortletId());
+
+		Assert.assertEquals(
+			portletPreferences.getPortletId(), _portlet.getPortletId());
+
+		Assert.assertEquals(portletPreferences.getPlid(), _layout.getPlid());
+
+		Assert.assertEquals(
+			portletPreferences.getOwnerType(),
+			PortletKeys.PREFS_OWNER_TYPE_GROUP);
+
+		Assert.assertEquals(
+			portletPreferences.getOwnerId(), _group.getGroupId());
 	}
 
 	@Test
