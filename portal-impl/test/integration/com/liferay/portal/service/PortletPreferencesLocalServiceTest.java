@@ -102,7 +102,7 @@ public class PortletPreferencesLocalServiceTest {
 		throws Exception {
 
 		PortletPreferencesTestUtil.assertNullLayoutPreferences(
-			_layout, _portlet);;
+			_layout, _portlet);
 
 		String preferencesAsXML =
 			PortletPreferencesTestUtil.getPreferencesAsXMLString(
@@ -133,7 +133,7 @@ public class PortletPreferencesLocalServiceTest {
 				_PREFERENCE_NAME, _PREFERENCE_VALUES_MULTIPLE);
 
 		PortletPreferencesTestUtil.assertNullLayoutPreferences(
-			_layout, _portlet);;
+			_layout, _portlet);
 
 		PortletPreferences portletPreferences =
 			PortletPreferencesTestUtil.addPortletLayoutPreferences(
