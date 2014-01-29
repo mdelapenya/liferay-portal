@@ -148,32 +148,6 @@ public class PortletPreferencesLocalServiceTest {
 	}
 
 	@Test
-	public void testDeletePortletPreferencesByPortletId() throws Exception {
-		Portlet[] portlets = getTestPortlets(2);
-
-		PortletPreferences[] portletPreferences = addPortletsPreferences(
-			portlets);
-
-		PortletPreferences[] actualPortletPreferences = fetchPortletPreferences(
-			portletPreferences);
-
-		Assert.assertNotNull(actualPortletPreferences[0]);
-
-		Assert.assertNotNull(actualPortletPreferences[1]);
-
-		PortletPreferencesLocalServiceUtil.deletePortletPreferences(
-			PortletKeys.PREFS_OWNER_ID_DEFAULT,
-			PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
-			portlets[0].getPortletId());
-
-		actualPortletPreferences = fetchPortletPreferences(portletPreferences);
-
-		Assert.assertNull(actualPortletPreferences[0]);
-
-		Assert.assertNotNull(actualPortletPreferences[1]);
-	}
-
-	@Test
 	public void testDeletePortletPreferencesByPortletPreferencesId()
 		throws Exception {
 
@@ -250,6 +224,33 @@ public class PortletPreferencesLocalServiceTest {
 		Assert.assertNull(currentPortletPreferences[0]);
 
 		Assert.assertNotNull(currentPortletPreferences[1]);
+	}
+
+	@Test
+	public void testDeletePreferencesByPortletId() throws Exception {
+		Portlet portlet2 = getTestPortlets(1)[0];
+
+		PortletPreferences[] portletPreferences =
+			addPortletLayoutWithoutDefaultPreferences(
+				_layout, _portlet, portlet2);
+
+		PortletPreferences[] actualPortletPreferences = fetchPortletPreferences(
+			portletPreferences);
+
+		Assert.assertNotNull(actualPortletPreferences[0]);
+
+		Assert.assertNotNull(actualPortletPreferences[1]);
+
+		PortletPreferencesLocalServiceUtil.deletePortletPreferences(
+			PortletKeys.PREFS_OWNER_ID_DEFAULT,
+			PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
+			_portlet.getPortletId());
+
+		actualPortletPreferences = fetchPortletPreferences(portletPreferences);
+
+		Assert.assertNull(actualPortletPreferences[0]);
+
+		Assert.assertNotNull(actualPortletPreferences[1]);
 	}
 
 	@Test
