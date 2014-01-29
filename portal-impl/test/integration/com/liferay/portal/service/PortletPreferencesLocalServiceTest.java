@@ -337,21 +337,6 @@ public class PortletPreferencesLocalServiceTest {
 	}
 
 	@Test
-	public void testGetPortletPreferencesAll() throws Exception {
-		List<PortletPreferences> initialPortletPreferences =
-			PortletPreferencesLocalServiceUtil.getPortletPreferences();
-
-		int initialCount = initialPortletPreferences.size();
-
-		addPortletLayoutPreferences();
-
-		List<PortletPreferences> actualPortletPreferences =
-			PortletPreferencesLocalServiceUtil.getPortletPreferences();
-
-		Assert.assertEquals(initialCount + 1, actualPortletPreferences.size());
-	}
-
-	@Test
 	public void testGetPortletPreferencesByCompanyGroupOwnerPortlet()
 		throws Exception {
 
@@ -748,6 +733,22 @@ public class PortletPreferencesLocalServiceTest {
 				_portlet.getPortletId());
 
 		Assert.assertEquals(0, actualCountTypeCompany);
+	}
+
+	@Test
+	public void testGetPreferencesAll() throws Exception {
+		List<PortletPreferences> initialPortletPreferences =
+			PortletPreferencesLocalServiceUtil.getPortletPreferences();
+
+		int initialCount = initialPortletPreferences.size();
+
+		addPortletLayoutPreferences();
+
+		List<PortletPreferences> currentPortletsPreferences =
+			PortletPreferencesLocalServiceUtil.getPortletPreferences();
+
+		Assert.assertEquals(
+			initialCount + 1, currentPortletsPreferences.size());
 	}
 
 	@Test
