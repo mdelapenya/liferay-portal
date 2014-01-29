@@ -305,7 +305,7 @@ public class PortletPreferencesLocalServiceTest {
 			PortletPreferencesTestUtil.getPreferencesAsXMLString(
 				_PREFERENCE_NAME, _PREFERENCE_VALUES_SINGLE);
 
-		addPortletPreferencesReturnJavaxPreferences(_portlet, preferencesAsXML);
+		addPortletLayoutPreferences(_layout, preferencesAsXML, _portlet);
 
 		PortletPreferencesLocalServiceUtil.deletePortletPreferences(
 			PortletKeys.PREFS_OWNER_ID_DEFAULT,
@@ -329,6 +329,7 @@ public class PortletPreferencesLocalServiceTest {
 				TestPropsValues.getCompanyId(), _PORTEL_WITH_PREFERENCES_ID);
 
 		Assert.assertTrue(!defaultPreferences.getMap().isEmpty());
+
 		String[] symbols = {"GBP", "CNY", "EUR", "JPY", "USD"};
 
 		Assert.assertArrayEquals(
