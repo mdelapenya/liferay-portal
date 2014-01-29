@@ -280,7 +280,7 @@ public class PortletPreferencesLocalServiceTest {
 			PortletPreferencesTestUtil.getPreferencesAsXMLString(
 				_PREFERENCE_NAME, _PREFERENCE_VALUES_SINGLE);
 
-		addPortletPreferencesReturnJavaxPreferences(_portlet, preferencesAsXML);
+		addPortletLayoutPreferences(_layout, preferencesAsXML, _portlet);
 
 		PortletPreferencesIds portletPreferencesIds =
 			new PortletPreferencesIds(
@@ -294,8 +294,7 @@ public class PortletPreferencesLocalServiceTest {
 				portletPreferencesIds);
 
 		assertPortletPreferenceValues(
-			(PortletPreferencesImpl)portletPreferences, _PREFERENCE_NAME,
-			_PREFERENCE_VALUES_SINGLE);
+			portletPreferences, _PREFERENCE_NAME, _PREFERENCE_VALUES_SINGLE);
 	}
 
 	@Test
