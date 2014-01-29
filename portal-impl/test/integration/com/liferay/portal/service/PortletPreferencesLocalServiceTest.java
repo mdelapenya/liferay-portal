@@ -1114,18 +1114,6 @@ public class PortletPreferencesLocalServiceTest {
 		return results;
 	}
 
-	private PortletPreferences[] addPortletsPreferences(Portlet[] portlets)
-		throws Exception {
-
-		PortletPreferences[] results = new PortletPreferences[portlets.length];
-
-		for (int i = 0; i < results.length; i++) {
-			results[i] = addPortelPreferences(portlets[i]);
-		}
-
-		return results;
-	}
-
 	private void assertEmptyPortletPreferences(
 			javax.portlet.PortletPreferences portletPreferences)
 		throws Exception {
