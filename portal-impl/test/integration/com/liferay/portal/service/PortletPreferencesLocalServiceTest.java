@@ -336,23 +336,6 @@ public class PortletPreferencesLocalServiceTest {
 	}
 
 	@Test
-	public void testGetPortletPreferencesByPlid() throws Exception {
-		Layout[] layouts = addLayout(2);
-
-		Portlet[] portlets = getTestPortlets(2);
-
-		addPortletLayoutWithoutDefaultPreferences(layouts[0], portlets);
-
-		addPortletLayoutWithoutDefaultPreferences(layouts[1], portlets);
-
-		List<PortletPreferences> listPortletPreferences =
-			PortletPreferencesLocalServiceUtil.getPortletPreferencesByPlid(
-				layouts[0].getPlid());
-
-		Assert.assertEquals(2, listPortletPreferences.size());
-	}
-
-	@Test
 	public void testGetPortletPreferencesByPortletLayout() throws Exception {
 		Layout[] layouts = addLayout(2);
 
@@ -776,6 +759,23 @@ public class PortletPreferencesLocalServiceTest {
 
 		Assert.assertEquals(
 			portletPreferences.getOwnerId(), _group.getGroupId());
+	}
+
+	@Test
+	public void testGetPreferencesByPlid() throws Exception {
+		Layout layout2 = addLayout();
+
+		Portlet[] portlets = getTestPortlets(2);
+
+		addPortletLayoutWithoutDefaultPreferences(_layout, _portlet);
+
+		addPortletLayoutWithoutDefaultPreferences(layout2, portlets);
+
+		List<PortletPreferences> listPortletPreferences =
+			PortletPreferencesLocalServiceUtil.getPortletPreferencesByPlid(
+				layout2.getPlid());
+
+		Assert.assertEquals(2, listPortletPreferences.size());
 	}
 
 	@Test
