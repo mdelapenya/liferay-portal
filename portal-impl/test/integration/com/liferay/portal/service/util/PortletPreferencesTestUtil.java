@@ -159,7 +159,7 @@ public class PortletPreferencesTestUtil {
 			portletPreferences instanceof StrictPortletPreferencesImpl);
 
 		StrictPortletPreferencesImpl strictPortletPreferences =
-			(Str∫ictPortletPreferencesImpl)portletPreferences;
+			(StrictPortletPreferencesImpl)portletPreferences;
 
 		Assert.assertEquals(0, strictPortletPreferences.getPlid());
 		Assert.assertEquals(0, strictPortletPreferences.getOwnerType());
@@ -189,7 +189,7 @@ public class PortletPreferencesTestUtil {
 	}
 
 	public static PortletPreferences[] fetchPortletPreferences(
-		PortletPreferences... portletPreferenceses)
+			PortletPreferences... portletPreferenceses)
 		throws Exception {
 
 		PortletPreferences[] results =
