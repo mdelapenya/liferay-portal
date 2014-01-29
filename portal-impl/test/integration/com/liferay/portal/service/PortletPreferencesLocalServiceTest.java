@@ -865,7 +865,7 @@ public class PortletPreferencesLocalServiceTest {
 			MockPortletPreferencesLocalServiceImpl();
 
 		mockservice.setPortletPreferencesPersistence(
-			(PortletPreferencesPersistence) PortalBeanLocatorUtil.locate(
+			(PortletPreferencesPersistence)PortalBeanLocatorUtil.locate(
 				PortletPreferencesPersistence.class.getName()));
 
 		mockservice.setPortletLocalService(
@@ -896,8 +896,7 @@ public class PortletPreferencesLocalServiceTest {
 			PortletPreferencesTestUtil.getPreferencesAsXMLString(
 				_PREFERENCE_NAME, _PREFERENCE_VALUES_SINGLE);
 
-		addPortletLayoutPreferences(
-			_layout, preferencesAsXML, _portlet);
+		addPortletLayoutPreferences(_layout, preferencesAsXML, _portlet);
 
 		String multiplePreferencesAsXML =
 			PortletPreferencesTestUtil.getPreferencesAsXMLString(
@@ -929,8 +928,7 @@ public class PortletPreferencesLocalServiceTest {
 			PortletPreferencesTestUtil.getPreferencesAsXMLString(
 				_PREFERENCE_NAME, _PREFERENCE_VALUES_SINGLE);
 
-		addPortletLayoutPreferences(
-			_layout, preferencesAsXML, _portlet);
+		addPortletLayoutPreferences(_layout, preferencesAsXML, _portlet);
 
 		String multiplePreferencesAsXML =
 			PortletPreferencesTestUtil.getPreferencesAsXMLString(
@@ -968,7 +966,6 @@ public class PortletPreferencesLocalServiceTest {
 		String multiplePreferencesAsXML =
 			PortletPreferencesTestUtil.getPreferencesAsXMLString(
 				_PREFERENCE_NAME, _PREFERENCE_VALUES_MULTIPLE);
-
 
 		PortletPreferencesLocalServiceUtil.updatePreferences(
 			PortletKeys.PREFS_OWNER_ID_DEFAULT,
