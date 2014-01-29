@@ -227,10 +227,10 @@ public class PortletPreferencesLocalServiceTest {
 		Portlet group2Portlet = getTestPortlets(1)[0];
 
 		PortletPreferences portletPreferencesGroup1 =
-			addPortletGroupDefaultPreferences(_group, _portlet)[0];
+			addPortletGroupWithoutDefaultPreferences(_group, _portlet)[0];
 
 		PortletPreferences portletPreferencesGroup2 =
-			addPortletGroupDefaultPreferences(group2, group2Portlet)[0];
+			addPortletGroupWithoutDefaultPreferences(group2, group2Portlet)[0];
 
 		PortletPreferences[] currentPortletPreferences =
 			fetchPortletPreferences(
@@ -417,8 +417,8 @@ public class PortletPreferencesLocalServiceTest {
 		Portlet[] portlets = getTestPortlets(2);
 
 		PortletPreferences[] portletPreferences = ArrayUtil.append(
-			addPortletGroupDefaultPreferences(_group, portlets),
-			addPortletGroupDefaultPreferences(group2, portlets[0]));
+			addPortletGroupWithoutDefaultPreferences(_group, portlets),
+			addPortletGroupWithoutDefaultPreferences(group2, portlets[0]));
 
 		PortletPreferences[] actualPortletPreferences = fetchPortletPreferences(
 			portletPreferences);
@@ -453,8 +453,8 @@ public class PortletPreferencesLocalServiceTest {
 		Portlet[] portlets = getTestPortlets(2);
 
 		PortletPreferences[] arrayPortletPreferences = ArrayUtil.append(
-			addPortletGroupDefaultPreferences(_group, portlets),
-			addPortletGroupDefaultPreferences(group2, portlets[0]));
+			addPortletGroupWithoutDefaultPreferences(_group, portlets),
+			addPortletGroupWithoutDefaultPreferences(group2, portlets[0]));
 
 		PortletPreferences[] actualPortletPreferences = fetchPortletPreferences(
 			arrayPortletPreferences);
@@ -525,7 +525,7 @@ public class PortletPreferencesLocalServiceTest {
 
 		PortletPreferences[] portletPreferences = new PortletPreferences[2];
 		portletPreferences[0] = addPortletLayoutPreferences();
-		portletPreferences[1] = addPortletGroupDefaultPreferences(
+		portletPreferences[1] = addPortletGroupWithoutDefaultPreferences(
 			group2, _portlet)[0];
 
 		PortletPreferences[] actualPortletPreferences = fetchPortletPreferences(
@@ -572,8 +572,8 @@ public class PortletPreferencesLocalServiceTest {
 
 		Assert.assertEquals(0, initialCount);
 
-		addPortletGroupDefaultPreferences(_group, portlets);
-		addPortletGroupDefaultPreferences(group2, portlets[0]);
+		addPortletGroupWithoutDefaultPreferences(_group, portlets);
+		addPortletGroupWithoutDefaultPreferences(group2, portlets[0]);
 
 		long actualCount =
 			PortletPreferencesLocalServiceUtil.getPortletPreferencesCount(
@@ -596,7 +596,7 @@ public class PortletPreferencesLocalServiceTest {
 
 		Assert.assertEquals(0, initialCount);
 
-		addPortletGroupDefaultPreferences(_group, portlets);
+		addPortletGroupWithoutDefaultPreferences(_group, portlets);
 
 		long actualCount =
 			PortletPreferencesLocalServiceUtil.getPortletPreferencesCount(
@@ -621,8 +621,8 @@ public class PortletPreferencesLocalServiceTest {
 
 		Assert.assertEquals(0, initialCount);
 
-		addPortletGroupDefaultPreferences(_group, portlets);
-		addPortletGroupDefaultPreferences(group2, portlets[0]);
+		addPortletGroupWithoutDefaultPreferences(_group, portlets);
+		addPortletGroupWithoutDefaultPreferences(group2, portlets[0]);
 
 		Assert.assertEquals(0, initialCount);
 
@@ -645,7 +645,7 @@ public class PortletPreferencesLocalServiceTest {
 
 		Assert.assertEquals(0, initialCount);
 
-		addPortletGroupDefaultPreferences(_group, _portlet);
+		addPortletGroupWithoutDefaultPreferences(_group, _portlet);
 
 		long actualCount =
 			PortletPreferencesLocalServiceUtil.getPortletPreferencesCount(
@@ -666,7 +666,7 @@ public class PortletPreferencesLocalServiceTest {
 
 		Assert.assertEquals(0, initialCount);
 
-		addPortletGroupDefaultPreferences(_group, _portlet);
+		addPortletGroupWithoutDefaultPreferences(_group, _portlet);
 
 		Assert.assertEquals(0, initialCount);
 
@@ -690,7 +690,7 @@ public class PortletPreferencesLocalServiceTest {
 
 		addPortletLayoutPreferences();
 		addPortletLayoutWithoutDefaultPreferences(layout2, _portlet);
-		addPortletGroupDefaultPreferences(_group, _portlet);
+		addPortletGroupWithoutDefaultPreferences(_group, _portlet);
 
 		long actualCount =
 			PortletPreferencesLocalServiceUtil.getPortletPreferencesCount(
@@ -727,7 +727,7 @@ public class PortletPreferencesLocalServiceTest {
 		Assert.assertEquals(0, initialCountTypeCompany);
 
 		addPortletLayoutPreferences();
-		addPortletGroupDefaultPreferences(group2, _portlet);
+		addPortletGroupWithoutDefaultPreferences(group2, _portlet);
 
 		long actualCountTypeLayout =
 			PortletPreferencesLocalServiceUtil.getPortletPreferencesCount(
@@ -1023,8 +1023,8 @@ public class PortletPreferencesLocalServiceTest {
 			null, null, portlet, portlet.getPortletId(), null);
 	}
 
-	private PortletPreferences[] addPortletGroupDefaultPreferences(
-			Group group, Portlet ... portlet)
+	private PortletPreferences[] addPortletGroupWithoutDefaultPreferences(
+			Group group, Portlet... portlet)
 		throws Exception {
 
 		return addPortletsGroupPreferences(group, null, portlet);
