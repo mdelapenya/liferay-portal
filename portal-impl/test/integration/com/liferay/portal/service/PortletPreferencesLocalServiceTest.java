@@ -69,7 +69,8 @@ public class PortletPreferencesLocalServiceTest {
 
 		_layout = addLayout();
 
-		_portlet = getTestPortlets(1)[0];
+		_portlet = PortletLocalServiceUtil.getPortletById(
+			TestPropsValues.getCompanyId(), String.valueOf(_PORTLET_ID));
 	}
 
 	@After
@@ -144,30 +145,6 @@ public class PortletPreferencesLocalServiceTest {
 		assertEmptyPortletPreferences(portletPreferences);
 
 		assertEmptyPortletPreferences(fetchedPortletPreferences);
-	}
-
-	@Test
-	public void testDeletePortletPreferencesByPlid() throws Exception {
-		Portlet[] portlets = getTestPortlets(2);
-
-		PortletPreferences[] portletPreferences = addPortletsPreferences(
-			portlets);
-
-		PortletPreferences[] actualPortletPreferences = fetchPortletPreferences(
-			portletPreferences);
-
-		Assert.assertNotNull(actualPortletPreferences[0]);
-
-		Assert.assertNotNull(actualPortletPreferences[1]);
-
-		PortletPreferencesLocalServiceUtil.deletePortletPreferencesByPlid(
-			_layout.getPlid());
-
-		actualPortletPreferences = fetchPortletPreferences(portletPreferences);
-
-		Assert.assertNull(actualPortletPreferences[0]);
-
-		Assert.assertNull(actualPortletPreferences[1]);
 	}
 
 	@Test
@@ -249,6 +226,34 @@ public class PortletPreferencesLocalServiceTest {
 				portletPreferences.getPortletPreferencesId());
 
 		Assert.assertNull(portletPreferencesRecovered);
+	}
+
+	@Test
+	public void testDeletePreferencesByPlid() throws Exception {
+		Portlet portlet2 = getTestPortlets(1)[0];
+
+		String preferencesAsXml =
+			PortletPreferencesTestUtil.getPreferencesAsXMLString(
+				_PREFERENCE_NAME, _PREFERENCE_VALUES_MULTIPLE);
+
+		PortletPreferences[] portletPreferences = addPortletLayoutPreferences(
+			preferencesAsXml, _portlet, portlet2);
+
+		PortletPreferences[] currentPortletPreferences =
+			fetchPortletPreferences(portletPreferences);
+
+		Assert.assertNotNull(currentPortletPreferences[0]);
+
+		Assert.assertNotNull(currentPortletPreferences[1]);
+
+		PortletPreferencesLocalServiceUtil.deletePortletPreferencesByPlid(
+			_layout.getPlid());
+
+		currentPortletPreferences = fetchPortletPreferences(portletPreferences);
+
+		Assert.assertNull(currentPortletPreferences[0]);
+
+		Assert.assertNull(currentPortletPreferences[1]);
 	}
 
 	@Test
@@ -1317,15 +1322,15 @@ public class PortletPreferencesLocalServiceTest {
 		for (int i = 0; i < results.length; i++) {
 			results[i] = PortletLocalServiceUtil.getPortletById(
 				TestPropsValues.getCompanyId(),
-				String.valueOf(_INIT_PORTLET_ID + i));
+				String.valueOf(_PORTLET_ID + 1 + i));
 		}
 
 		return results;
 	}
 
-	private static final int _INIT_PORTLET_ID = 1000;
-
 	private static final String _PORTEL_WITH_PREFERENCES_ID = "16";
+
+	private static final int _PORTLET_ID = 1000;
 
 	private static final String _PREFERENCE_NAME = "testPreferenceName";
 
