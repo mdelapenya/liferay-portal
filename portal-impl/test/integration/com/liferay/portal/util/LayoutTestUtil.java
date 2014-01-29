@@ -49,6 +49,23 @@ import javax.portlet.PortletPreferences;
  */
 public class LayoutTestUtil {
 
+	public static Layout addLayout(Group group) throws Exception {
+		return LayoutTestUtil.addLayout(
+			group.getGroupId(), ServiceTestUtil.randomString(), false);
+	}
+
+	public static Layout[] addLayout(Group group, int numberLayouts)
+		throws Exception {
+
+		Layout[] layouts = new Layout[numberLayouts];
+
+		for (int i = 0; i < numberLayouts; i++) {
+			layouts[i] = addLayout(group);
+		}
+
+		return layouts;
+	}
+
 	public static Layout addLayout(
 			long groupId, boolean privateLayout, Map<Locale, String> nameMap,
 			Map<Locale, String> friendlyURLMap)
@@ -315,23 +332,6 @@ public class LayoutTestUtil {
 		return LayoutServiceUtil.updateLayout(
 			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
 			layout.getTypeSettings());
-	}
-
-	public static Layout addLayout(Group group) throws Exception {
-		return LayoutTestUtil.addLayout(
-			group.getGroupId(), ServiceTestUtil.randomString(), false);
-	}
-
-	public static Layout[] addLayout(Group group, int numberLayouts)
-		throws Exception {
-
-		Layout[] layouts = new Layout[numberLayouts];
-
-		for (int i = 0; i < numberLayouts; i++) {
-			layouts[i] = addLayout(group);
-		}
-
-		return layouts;
 	}
 
 }
