@@ -37,7 +37,6 @@ import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.PortletPreferencesImpl;
-import com.liferay.portlet.StrictPortletPreferencesImpl;
 
 import java.util.List;
 
@@ -86,7 +85,7 @@ public class PortletPreferencesLocalServiceTest {
 
 		PortletPreferences portletPreferences =
 			PortletPreferencesTestUtil.addPortletLayoutPreferences(
-				_layout, preferencesAsXml, _portlet);
+				_layout, preferencesAsXml, _portlet)[0];
 
 		PortletPreferencesImpl portletPreferencesImpl =
 			PortletPreferencesTestUtil.convert(portletPreferences);
@@ -138,7 +137,7 @@ public class PortletPreferencesLocalServiceTest {
 
 		PortletPreferences portletPreferences =
 			PortletPreferencesTestUtil.addPortletLayoutPreferences(
-				_layout, preferencesAsXML, _portlet);
+				_layout, preferencesAsXML, _portlet)[0];
 
 		PortletPreferencesImpl portletPreferencesImpl =
 			PortletPreferencesTestUtil.convert(portletPreferences);
@@ -433,7 +432,7 @@ public class PortletPreferencesLocalServiceTest {
 
 		PortletPreferences portletPreferences =
 			PortletPreferencesTestUtil.addPortletLayoutPreferences(
-				_layout, preferencesAsXML, _portlet);
+				_layout, preferencesAsXML, _portlet)[0];
 
 		javax.portlet.PortletPreferences initialPortletPreferences =
 			PortletPreferencesTestUtil.convert(portletPreferences);
