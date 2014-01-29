@@ -921,7 +921,8 @@ public class PortletPreferencesLocalServiceTest {
 				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
 				_portlet.getPortletId());
 
-		assertStrictPortletPreferences(portletPreferences);
+		PortletPreferencesTestUtil.assertStrictPortletPreferences(
+			portletPreferences);
 	}
 
 	@Test
@@ -939,7 +940,8 @@ public class PortletPreferencesLocalServiceTest {
 			PortletPreferencesLocalServiceUtil.getStrictPreferences(
 				portletPreferencesIds);
 
-		assertStrictPortletPreferences(portletPreferences);
+		PortletPreferencesTestUtil.assertStrictPortletPreferences(
+			portletPreferences);
 	}
 
 	@Test
@@ -966,7 +968,8 @@ public class PortletPreferencesLocalServiceTest {
 				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
 				_portlet.getPortletId(), preferencesAsXML);
 
-		assertStrictPortletPreferences(portletPreferences);
+		PortletPreferencesTestUtil.assertStrictPortletPreferences(
+			portletPreferences);
 	}
 
 	@Test
@@ -1072,22 +1075,7 @@ public class PortletPreferencesLocalServiceTest {
 			preferences, _PREFERENCE_NAME, _PREFERENCE_VALUES_MULTIPLE);
 	}
 
-	private void assertStrictPortletPreferences(
-		javax.portlet.PortletPreferences portletPreferences) {
-
-		Assert.assertTrue(
-			portletPreferences instanceof StrictPortletPreferencesImpl);
-
-		StrictPortletPreferencesImpl strictPortletPreferences =
-			(StrictPortletPreferencesImpl)portletPreferences;
-
-		Assert.assertEquals(0, strictPortletPreferences.getPlid());
-		Assert.assertEquals(0, strictPortletPreferences.getOwnerType());
-		Assert.assertEquals(0, strictPortletPreferences.getOwnerId());
-		Assert.assertTrue(strictPortletPreferences.getMap().isEmpty());
-	}
-
-	private Portlet[] getTestPortlets(int numberPortlets) throws Exception {
+	protected Portlet[] getTestPortlets(int numberPortlets) throws Exception {
 		Portlet[] results = new Portlet[numberPortlets];
 
 		for (int i = 0; i < results.length; i++) {

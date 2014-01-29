@@ -23,6 +23,7 @@ import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.PortletPreferencesImpl;
+import com.liferay.portlet.StrictPortletPreferencesImpl;
 import org.junit.Assert;
 
 import java.util.Map;
@@ -208,5 +209,20 @@ public class PortletPreferencesTestUtil {
 		return results;
 	}
 
+
+	public static void assertStrictPortletPreferences(
+		javax.portlet.PortletPreferences portletPreferences) {
+
+		Assert.assertTrue(
+			portletPreferences instanceof StrictPortletPreferencesImpl);
+
+		StrictPortletPreferencesImpl strictPortletPreferences =
+			(StrictPortletPreferencesImpl)portletPreferences;
+
+		Assert.assertEquals(0, strictPortletPreferences.getPlid());
+		Assert.assertEquals(0, strictPortletPreferences.getOwnerType());
+		Assert.assertEquals(0, strictPortletPreferences.getOwnerId());
+		Assert.assertTrue(strictPortletPreferences.getMap().isEmpty());
+	}
 
 }
