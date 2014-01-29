@@ -25,6 +25,7 @@
 String attachmentURLPrefix = ParamUtil.getString(request, "attachmentURLPrefix");
 String contentsLanguageId = ParamUtil.getString(request, "contentsLanguageId");
 String cssClasses = ParamUtil.getString(request, "cssClasses");
+String cssPath = ParamUtil.getString(request, "cssPath");
 String languageId = ParamUtil.getString(request, "languageId");
 String name = ParamUtil.getString(request, "name");
 boolean resizable = ParamUtil.getBoolean(request, "resizable");
@@ -41,6 +42,8 @@ response.setContentType(ContentTypes.TEXT_JAVASCRIPT);
 	config.attachmentURLPrefix = '<%= HtmlUtil.escapeJS(attachmentURLPrefix) %>';
 
 	config.bodyClass = 'html-editor <%= HtmlUtil.escapeJS(cssClasses) %>';
+
+	config.contentsCss = ['<%= HtmlUtil.escapeJS(cssPath) %>/aui.css', '<%= HtmlUtil.escapeJS(cssPath) %>/main.css'];
 
 	config.contentsLangDirection = '<%= PortalUtil.isRightToLeft(request) ? "rtl" : "ltr" %>';
 
