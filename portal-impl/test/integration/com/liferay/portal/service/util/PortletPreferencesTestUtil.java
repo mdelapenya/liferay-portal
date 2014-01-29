@@ -23,6 +23,9 @@ import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.PortletPreferencesImpl;
+import org.junit.Assert;
+
+import java.util.Map;
 
 /**
  * @author Cristina González
@@ -55,14 +58,15 @@ public class PortletPreferencesTestUtil {
 	}
 
 	public static PortletPreferences[] addPortletGroupWithoutDefaultPreferences(
-		Group group, Layout layout, Portlet... portlet)
+			Group group, Layout layout, Portlet... portlet)
 		throws Exception {
 
 		return addPortletsGroupPreferences(group, layout, null, portlet);
 	}
 
 	public static PortletPreferences[] addPortletsGroupPreferences(
-		Group group, Layout layout, String defaultPreferences, Portlet ... portlets)
+			Group group, Layout layout, String defaultPreferences,
+			Portlet ... portlets)
 		throws Exception {
 
 		PortletPreferences[] results = new PortletPreferences[portlets.length];
@@ -79,6 +83,130 @@ public class PortletPreferencesTestUtil {
 		return results;
 	}
 
+	public static PortletPreferences addPortletLayoutPreferences(
+			Layout layout, String defaultPreferences, Portlet portlet)
+		throws Exception {
+
+		return PortletPreferencesLocalServiceUtil.addPortletPreferences(
+			TestPropsValues.getCompanyId(), PortletKeys.PREFS_OWNER_ID_DEFAULT,
+			PortletKeys.PREFS_OWNER_TYPE_LAYOUT, layout.getPlid(),
+			portlet.getPortletId(), portlet, defaultPreferences);
+	}
+
+	public static  PortletPreferences[] addPortletLayoutPreferences(
+			Layout layout, String defaultPreferences, Portlet ... portlets)
+		throws Exception {
+
+		PortletPreferences[] results = new PortletPreferences[portlets.length];
+
+		for (int i = 0; i < results.length; i++) {
+			results[i] =  addPortletLayoutPreferences(
+				layout, defaultPreferences, portlets[i]);
+		}
+
+		return results;
+	}
+
+	public static void assertPortletPreferenceValues(
+			javax.portlet.PortletPreferences portletPreferences,
+			String preferenceName, String[] preferenceValues)
+		throws Exception {
+
+		PortletPreferencesImpl portletPreferencesImpl =
+			(PortletPreferencesImpl)portletPreferences;
+
+		Map<String, String[]> portletPreferencesMap =
+			portletPreferencesImpl.getMap();
+
+		Assert.assertFalse(portletPreferencesMap.isEmpty());
+
+		Assert.assertArrayEquals(
+			preferenceValues, portletPreferencesMap.get(preferenceName));
+	}
+
+	public static void assertPortletPreferenceValues(
+
+		PortletPreferences portletPreferences, String preferenceName,
+			String[] preferenceValues)
+		throws Exception {
+
+		PortletPreferencesImpl portletPreferencesImpl =
+			PortletPreferencesTestUtil.convert(portletPreferences);
+
+		assertPortletPreferenceValues(
+			portletPreferencesImpl, preferenceName, preferenceValues);
+	}
+
+
+	public static PortletPreferences[]
+		addPortletLayoutWithoutDefaultPreferences(
+			Layout layout, Portlet... portlets)
+		throws Exception {
+
+		return addPortletLayoutPreferences(layout, null, portlets);
+	}
+
+	public static javax.portlet.PortletPreferences fetchLayoutPreferences(
+			Layout layout, Portlet portlet)
+		throws Exception {
+
+		return PortletPreferencesLocalServiceUtil.fetchPreferences(
+			TestPropsValues.getCompanyId(), PortletKeys.PREFS_OWNER_ID_DEFAULT,
+			PortletKeys.PREFS_OWNER_TYPE_LAYOUT, layout.getPlid(),
+			portlet.getPortletId());
+	}
+
+	public static void assertEmptyPortletPreferences(
+			Layout layout, javax.portlet.PortletPreferences portletPreferences)
+		throws Exception {
+
+		assertPortletPreferencesOwnedByLayout(
+			layout, (PortletPreferencesImpl) portletPreferences);
+
+		PortletPreferencesImpl portletPreferencesImpl =
+			(PortletPreferencesImpl)portletPreferences;
+
+		Assert.assertTrue(portletPreferencesImpl.getMap().isEmpty());
+	}
+
+	public static void assertNullLayoutPreferences(
+			Layout layout, Portlet portlet)
+		throws Exception {
+
+		javax.portlet.PortletPreferences preferences =
+			PortletPreferencesTestUtil.fetchLayoutPreferences(layout, portlet);
+		Assert.assertNull(preferences);
+	}
+
+	public static void assertPortletPreferencesOwnedByLayout(
+		Layout layout, PortletPreferencesImpl portletPreferences) {
+
+		Assert.assertEquals(layout.getPlid(), portletPreferences.getPlid());
+
+		Assert.assertEquals(
+			PortletKeys.PREFS_OWNER_TYPE_LAYOUT,
+			portletPreferences.getOwnerType());
+
+		Assert.assertEquals(
+			PortletKeys.PREFS_OWNER_ID_DEFAULT,
+			portletPreferences.getOwnerId());
+	}
+
+	public static PortletPreferences[] fetchPortletPreferences(
+			PortletPreferences... portletPreferenceses)
+		throws Exception {
+
+		PortletPreferences[] results =
+			new PortletPreferences[portletPreferenceses.length];
+
+		for (int i = 0; i < results.length; i++) {
+			results[i] =
+				PortletPreferencesLocalServiceUtil.fetchPortletPreferences(
+					portletPreferenceses[i].getPortletPreferencesId());
+		}
+
+		return results;
+	}
 
 
 }
