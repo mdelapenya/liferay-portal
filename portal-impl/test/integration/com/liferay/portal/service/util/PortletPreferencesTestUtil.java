@@ -97,28 +97,47 @@ public class PortletPreferencesTestUtil {
 		PortletPreferencesImpl portletPreferencesImpl =
 			(PortletPreferencesImpl)portletPreferences;
 
-		Assert.assertTrue(portletPreferencesImpl.getMap().isEmpty());
+		Assert.assertTrue(
+			"The portlet preferences defined by (ownerType: " +
+			portletPreferencesImpl.getOwnerType() + " ownerId: " +
+			portletPreferencesImpl.getOwnerId() + " and plid: " +
+			portletPreferencesImpl.getPlid() +
+			") has defined the preferences: "
+			+portletPreferencesImpl.getMap().keySet() +
+			" and was expected to be empty",
+			portletPreferencesImpl.getMap().isEmpty());
 	}
 
 	public static void assertNullLayoutPreferences(
 			Layout layout, Portlet portlet)
 		throws Exception {
 
-		javax.portlet.PortletPreferences preferences =
-			PortletPreferencesTestUtil.fetchLayoutPreferences(layout, portlet);
-		Assert.assertNull(preferences);
+		PortletPreferencesImpl preferences =
+			(PortletPreferencesImpl)PortletPreferencesTestUtil.
+				fetchLayoutPreferences(layout, portlet);
+
+		Assert.assertNull(
+			"Any portlet preferences was expected to be defined for " +
+				"(layoutId: " + layout.getPlid() + " and portletId: " +
+				portlet.getPortletId() +
+				")",
+			preferences);
 	}
 
 	public static void assertPortletPreferencesOwnedByLayout(
 		Layout layout, PortletPreferencesImpl portletPreferences) {
 
-		Assert.assertEquals(layout.getPlid(), portletPreferences.getPlid());
+		Assert.assertEquals(
+			"The portlet preferences PLID is not the same as the layout PLID, ",
+			layout.getPlid(), portletPreferences.getPlid());
 
 		Assert.assertEquals(
+			"The portlet preferences owner type is not layout, ",
 			PortletKeys.PREFS_OWNER_TYPE_LAYOUT,
 			portletPreferences.getOwnerType());
 
 		Assert.assertEquals(
+			"The portlet preferences owner is is not the default owner, ",
 			PortletKeys.PREFS_OWNER_ID_DEFAULT,
 			portletPreferences.getOwnerId());
 	}
@@ -134,10 +153,21 @@ public class PortletPreferencesTestUtil {
 		Map<String, String[]> portletPreferencesMap =
 			portletPreferencesImpl.getMap();
 
-		Assert.assertFalse(portletPreferencesMap.isEmpty());
+		Assert.assertFalse(
+			"There are not portlet preferences defined for "+
+			"(ownerType: " + portletPreferencesImpl.getOwnerType() +
+			" ownerId: " + portletPreferencesImpl.getOwnerId() + " and plid: " +
+			portletPreferencesImpl.getPlid() +
+			")",portletPreferencesMap.isEmpty());
 
 		Assert.assertArrayEquals(
-			preferenceValues, portletPreferencesMap.get(preferenceName));
+			"The value of the portlet preference " +
+			preferenceName + " defined for (ownerType: " +
+			portletPreferencesImpl.getOwnerType() + " ownerId: " +
+			portletPreferencesImpl.getOwnerId() + " and plid: " +
+			portletPreferencesImpl.getPlid() +
+			") is not the expected", preferenceValues,
+			portletPreferencesMap.get(preferenceName));
 	}
 
 	public static void assertPortletPreferenceValues(
@@ -155,16 +185,25 @@ public class PortletPreferencesTestUtil {
 	public static void assertStrictPortletPreferences(
 		javax.portlet.PortletPreferences portletPreferences) {
 
-		Assert.assertTrue(
-			portletPreferences instanceof StrictPortletPreferencesImpl);
-
 		StrictPortletPreferencesImpl strictPortletPreferences =
 			(StrictPortletPreferencesImpl)portletPreferences;
 
-		Assert.assertEquals(0, strictPortletPreferences.getPlid());
-		Assert.assertEquals(0, strictPortletPreferences.getOwnerType());
-		Assert.assertEquals(0, strictPortletPreferences.getOwnerId());
-		Assert.assertTrue(strictPortletPreferences.getMap().isEmpty());
+		Assert.assertEquals(
+			"The PLID of a StrictPortletPreference always should by 0: ", 0,
+			strictPortletPreferences.getPlid());
+
+		Assert.assertEquals(
+			"The OwnerType of a StrictPortletPreference always should by 0: ",
+			0, strictPortletPreferences.getOwnerType());
+
+		Assert.assertEquals(
+			"The OwnerId of a StrictPortletPreference always should by 0: ", 0,
+			strictPortletPreferences.getOwnerId());
+
+		Assert.assertTrue(
+			"The map of preferences of a StrictPortletPreference "+
+				"always should by empty",
+			strictPortletPreferences.getMap().isEmpty());
 	}
 
 	public static PortletPreferencesImpl convert(
