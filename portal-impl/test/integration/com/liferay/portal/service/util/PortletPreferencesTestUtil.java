@@ -124,6 +124,23 @@ public class PortletPreferencesTestUtil {
 			preferences);
 	}
 
+	public static void assertPortletPreferencesOwnedByGroup(
+		Layout layout, Group group, PortletPreferences portletPreferences) {
+
+		Assert.assertEquals(
+			"The portlet preferences PLID is not the same as the layout PLID, ",
+			layout.getPlid(), portletPreferences.getPlid());
+
+		Assert.assertEquals(
+			"The portlet preferences owner type is not layout, ",
+			PortletKeys.PREFS_OWNER_TYPE_GROUP,
+			portletPreferences.getOwnerType());
+
+		Assert.assertEquals(
+			"The portlet preferences owner is is not the default owner, ",
+			group.getGroupId(), portletPreferences.getOwnerId());
+	}
+
 	public static void assertPortletPreferencesOwnedByLayout(
 		Layout layout, PortletPreferencesImpl portletPreferences) {
 
