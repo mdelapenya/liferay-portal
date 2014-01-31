@@ -977,39 +977,6 @@ public class PortletPreferencesLocalServiceTest {
 		Group group2 = GroupTestUtil.addGroup();
 		Layout layout2 = LayoutTestUtil.addLayout(group2);
 
-		long initialCountTypeLayout =
-			PortletPreferencesLocalServiceUtil.getPortletPreferencesCount(
-				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
-				_portlet.getPortletId());
-
-		Assert.assertEquals(
-			"The count of the portlet preferences by (portletId: " +
-				_portlet.getPortletId() + " PLID: " +
-				_layout.getPlid() + " and OwnerType layout) should be 0",
-			0, initialCountTypeLayout);
-
-		long initialCountTypeGroup =
-			PortletPreferencesLocalServiceUtil.getPortletPreferencesCount(
-				PortletKeys.PREFS_OWNER_TYPE_GROUP, _layout.getPlid(),
-				_portlet.getPortletId());
-
-		Assert.assertEquals(
-			"The count of the portlet preferences by (portletId: " +
-				_portlet.getPortletId() + " PLID: " +
-				_layout.getPlid() + " and OwnerType group) should be 0",
-			0, initialCountTypeGroup);
-
-		long initialCountTypeCompany =
-			PortletPreferencesLocalServiceUtil.getPortletPreferencesCount(
-				PortletKeys.PREFS_OWNER_TYPE_COMPANY, _layout.getPlid(),
-				_portlet.getPortletId());
-
-		Assert.assertEquals(
-			"The count of the portlet preferences by (portletId: " +
-				_portlet.getPortletId() + " PLID: " +
-				_layout.getPlid() + " and OwnerType company) should be 0",
-			0, initialCountTypeCompany);
-
 		PortletPreferencesTestUtil.addPortletPreferencesOwnedByLayout(
 			_layout, _portlet);
 
