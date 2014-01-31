@@ -34,65 +34,46 @@ import org.junit.Assert;
  */
 public class PortletPreferencesTestUtil {
 
-	public static PortletPreferences[] addPortletGroupWithoutDefaultPreferences(
-			Group group, Layout layout, Portlet... portlet)
+	public static PortletPreferences addPortletPreferencesOwnedByGroup(
+			Layout layout, Portlet portlet)
 		throws Exception {
 
-		return addPortletsGroupPreferences(group, layout, null, portlet);
+		return addPortletPreferencesOwnedByGroup(layout, portlet, null);
 	}
 
-	public static  PortletPreferences[] addPortletLayoutPreferences(
-			Layout layout, String defaultPreferences, Portlet ... portlets)
+	public static  PortletPreferences addPortletPreferencesOwnedByLayout(
+			Layout layout, Portlet portlet, String defaultPreferences)
 		throws Exception {
 
-		PortletPreferences[] results = new PortletPreferences[portlets.length];
-
-		for (int i = 0; i < results.length; i++) {
-			results[i] =
-				PortletPreferencesLocalServiceUtil.addPortletPreferences(
+		return PortletPreferencesLocalServiceUtil.addPortletPreferences(
 					TestPropsValues.getCompanyId(),
 					PortletKeys.PREFS_OWNER_ID_DEFAULT,
 					PortletKeys.PREFS_OWNER_TYPE_LAYOUT, layout.getPlid(),
-					portlets[i].getPortletId(), portlets[i],
+					portlet.getPortletId(), portlet,
 					defaultPreferences);
-		}
-
-		return results;
 	}
 
-	public static PortletPreferences[]
-		addPortletLayoutWithoutDefaultPreferences(
-			Layout layout, Portlet... portlets)
+	public static PortletPreferences addPortletPreferencesOwnedByLayout(
+			Layout layout, Portlet portlet)
 		throws Exception {
 
-		return addPortletLayoutPreferences(layout, null, portlets);
+		return addPortletPreferencesOwnedByLayout(layout, portlet, null);
 	}
 
-	public static PortletPreferences[] addPortletsGroupPreferences(
-			Group group, Layout layout, String defaultPreferences,
-			Portlet... portlets)
+	public static PortletPreferences addPortletPreferencesOwnedByGroup(
+			Layout layout, Portlet portlet, String defaultPreferences)
 		throws Exception {
 
-		PortletPreferences[] results = new PortletPreferences[portlets.length];
-
-		for (int i = 0; i < results.length; i++) {
-			results[i] =
-				PortletPreferencesLocalServiceUtil.addPortletPreferences(
-					TestPropsValues.getCompanyId(), group.getGroupId(),
+			return PortletPreferencesLocalServiceUtil.addPortletPreferences(
+					layout.getCompanyId(), layout.getGroupId(),
 					PortletKeys.PREFS_OWNER_TYPE_GROUP, layout.getPlid(),
-					portlets[i].getPortletId(), portlets[i],
+					portlet.getPortletId(), portlet,
 					defaultPreferences);
-		}
-
-		return results;
 	}
 
-	public static void assertEmptyPortletPreferences(
-			Layout layout, javax.portlet.PortletPreferences portletPreferences)
+	public static void assertEmpty(
+			javax.portlet.PortletPreferences portletPreferences)
 		throws Exception {
-
-		assertPortletPreferencesOwnedByLayout(
-			layout, (PortletPreferencesImpl)portletPreferences);
 
 		PortletPreferencesImpl portletPreferencesImpl =
 			(PortletPreferencesImpl)portletPreferences;
@@ -141,7 +122,7 @@ public class PortletPreferencesTestUtil {
 			group.getGroupId(), portletPreferences.getOwnerId());
 	}
 
-	public static void assertPortletPreferencesOwnedByLayout(
+	public static void assertOwnedByLayout(
 		Layout layout, PortletPreferencesImpl portletPreferences) {
 
 		Assert.assertEquals(
@@ -242,22 +223,6 @@ public class PortletPreferencesTestUtil {
 			TestPropsValues.getCompanyId(), PortletKeys.PREFS_OWNER_ID_DEFAULT,
 			PortletKeys.PREFS_OWNER_TYPE_LAYOUT, layout.getPlid(),
 			portlet.getPortletId());
-	}
-
-	public static PortletPreferences[] fetchPortletPreferences(
-			PortletPreferences... portletPreferenceses)
-		throws Exception {
-
-		PortletPreferences[] results =
-			new PortletPreferences[portletPreferenceses.length];
-
-		for (int i = 0; i < results.length; i++) {
-			results[i] =
-				PortletPreferencesLocalServiceUtil.fetchPortletPreferences(
-					portletPreferenceses[i].getPortletPreferencesId());
-		}
-
-		return results;
 	}
 
 	public static String getPreferencesAsXMLString(
