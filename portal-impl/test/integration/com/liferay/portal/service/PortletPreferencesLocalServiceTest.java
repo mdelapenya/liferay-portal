@@ -98,6 +98,31 @@ public class PortletPreferencesLocalServiceTest {
 	}
 
 	@Test
+	public void testAddPreferencesWithoutDefaultInParameteWithoutPortletObject()
+		throws Exception {
+
+		PortletPreferencesTestUtil.assertNullLayoutPreferences(
+			_layout, _portlet);
+
+		PortletPreferences portletPreferences =
+			PortletPreferencesLocalServiceUtil.addPortletPreferences(
+				TestPropsValues.getCompanyId(),
+				PortletKeys.PREFS_OWNER_ID_DEFAULT,
+				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
+				_portlet.getPortletId(), null,
+				null);
+
+		PortletPreferencesImpl portletPreferencesImpl =
+			PortletPreferencesTestUtil.convert(portletPreferences);
+
+		PortletPreferencesTestUtil.assertPortletPreferencesOwnedByLayout(
+			_layout, portletPreferencesImpl);
+
+		PortletPreferencesTestUtil.assertEmptyPortletPreferences(
+			_layout, portletPreferencesImpl);
+	}
+
+	@Test
 	public void testAddPreferencesWithDefaultInPortletObject()
 		throws Exception {
 
@@ -822,6 +847,42 @@ public class PortletPreferencesLocalServiceTest {
 	}
 
 	@Test
+	public void testGetPreferencesCountByOwnerLayoutPortletWithoutLayout()
+		throws Exception {
+
+		long initialCount =
+			PortletPreferencesLocalServiceUtil.getPortletPreferencesCount(
+				_group.getGroupId(), PortletKeys.PREFS_OWNER_TYPE_GROUP,
+				-1, _portlet, false);
+
+		Assert.assertEquals(
+			"Before add any portlet preferences for (the portlet " +
+				_portlet.getPortletId() + " The group " +_group.getGroupId() +
+				" and the layout " + -1 +
+				" )the count should be 0",
+			0, initialCount);
+
+		PortletPreferencesLocalServiceUtil.addPortletPreferences(
+			TestPropsValues.getCompanyId(),
+			_group.getGroupId(),
+			PortletKeys.PREFS_OWNER_TYPE_GROUP, -1,
+			_portlet.getPortletId(), _portlet,
+			null);
+
+		long currentCount =
+			PortletPreferencesLocalServiceUtil.getPortletPreferencesCount(
+				_group.getGroupId(), PortletKeys.PREFS_OWNER_TYPE_GROUP,
+				-1, _portlet, false);
+
+		Assert.assertEquals(
+			"After add one portlet preferences for (the portlet " +
+				_portlet.getPortletId() + " The group " + _group.getGroupId() +
+				" and the layout " + _layout.getPlid() +
+				" ) the count should be 1",
+			1, currentCount);
+	}
+
+	@Test
 	public void testGetPreferencesCountByOwnerLayoutPortletNotDefault()
 		throws Exception {
 
@@ -847,9 +908,9 @@ public class PortletPreferencesLocalServiceTest {
 
 		Assert.assertEquals(
 			"After add one portlet preferences for (the portlet " +
-				_portlet.getPortletId() + " The group " +_group.getGroupId() +
+				_portlet.getPortletId() + " The group " + _group.getGroupId() +
 				" and the layout " + _layout.getPlid() +
-				" ) without specify the default value, "+
+				" ) without specify the default value, " +
 				"the search excluding default preferences should not " +
 				"return any value ",
 			0, currentCount);
@@ -944,9 +1005,10 @@ public class PortletPreferencesLocalServiceTest {
 			PortletPreferencesLocalServiceUtil.getPortletPreferencesCount(
 				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _portlet.getPortletId());
 
-		Assert.assertEquals("The search of the portlet preferences of the " +
-			"portlet " +_portlet.getPortletId() + " and the ownertype layout " +
-			"should return 2 results",initialCount + 2, currentCount);
+		Assert.assertEquals(
+			"The search of the portlet preferences of the portlet " +
+				_portlet.getPortletId() + " and the ownertype layout " +
+				"should return 2 results", initialCount + 2, currentCount);
 	}
 
 	@Test
@@ -1006,7 +1068,7 @@ public class PortletPreferencesLocalServiceTest {
 			"After add preferences of type layout to the layout  " +
 				_layout.getPlid() + " and the portlet " +
 				_portlet.getPortletId() +
-				"one portlet preference should by returned after search "+
+				"one portlet preference should by returned after search " +
 				"by these two parameters and the ownertype layout", 1,
 			currentCountTypeLayout);
 
@@ -1019,7 +1081,7 @@ public class PortletPreferencesLocalServiceTest {
 			"After add preferences of type group to the layout  " +
 				_layout.getPlid() + " and the portlet " +
 				_portlet.getPortletId() +
-				"one portlet preference should by returned after search "+
+				"one portlet preference should by returned after search " +
 				"by these two parameters and the ownertype group", 1,
 			currentCountTypeGroup);
 
@@ -1033,7 +1095,7 @@ public class PortletPreferencesLocalServiceTest {
 				_layout.getPlid() + " and the portlet " +
 				_portlet.getPortletId() +
 				" any portlet preferences should be found for" +
-				" this portlet and layout" ,0, currentCountTypeCompany);
+				" this portlet and layout", 0, currentCountTypeCompany);
 	}
 
 	@Test
