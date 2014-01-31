@@ -211,13 +211,15 @@ public class PortletPreferencesLocalServiceTest {
 				portletPreferences);
 
 		Assert.assertNotNull(
-			"After added a porlet preferences for the portlet: " +
-			_portlet.getPortletId() + " these should not be null",
+			"The portlet preferences for the portletPreferencesId " +
+				portletPreferences[0].getPortletPreferencesId() +
+				" should not be null",
 			currentPortletPreferences[0]);
 
 		Assert.assertNotNull(
-			"After added porlet preferences for the portlet: " +
-			portlet2.getPortletId() + " these should not be null",
+			"The portlet preferences for the portletPreferencesId " +
+				portletPreferences[1].getPortletPreferencesId() +
+				" should not be null",
 			currentPortletPreferences[1]);
 
 		PortletPreferencesLocalServiceUtil.deletePortletPreferencesByPlid(
@@ -228,14 +230,17 @@ public class PortletPreferencesLocalServiceTest {
 				portletPreferences);
 
 		Assert.assertNull(
-			"After delete the porlet preferences for the portlet: " +
-			_portlet.getPortletId() + " these should be null",
+			"The portlet preferences for the portletPreferencesId " +
+				portletPreferences[0].getPortletPreferencesId() +
+				" should be null",
 			currentPortletPreferences[0]);
 
 		Assert.assertNull(
-			"After delete the porlet preferences for the portlet: " +
-				portlet2.getPortletId() + " these should be null",
+			"The portlet preferences for the portletPreferencesId " +
+				portletPreferences[1].getPortletPreferencesId() +
+				" should be null",
 			currentPortletPreferences[1]);
+
 	}
 
 	@Test
