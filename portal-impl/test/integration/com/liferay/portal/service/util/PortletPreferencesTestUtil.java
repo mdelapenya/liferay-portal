@@ -14,7 +14,6 @@
 
 package com.liferay.portal.service.util;
 
-import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.PortletPreferences;
@@ -23,11 +22,6 @@ import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.PortletPreferencesImpl;
-import com.liferay.portlet.StrictPortletPreferencesImpl;
-
-import java.util.Map;
-
-import org.junit.Assert;
 
 /**
  * @author Cristina González
@@ -41,16 +35,14 @@ public class PortletPreferencesTestUtil {
 		return addPortletPreferencesOwnedByGroup(layout, portlet, null);
 	}
 
-	public static  PortletPreferences addPortletPreferencesOwnedByLayout(
+	public static PortletPreferences addPortletPreferencesOwnedByGroup(
 			Layout layout, Portlet portlet, String defaultPreferences)
 		throws Exception {
 
-		return PortletPreferencesLocalServiceUtil.addPortletPreferences(
-					TestPropsValues.getCompanyId(),
-					PortletKeys.PREFS_OWNER_ID_DEFAULT,
-					PortletKeys.PREFS_OWNER_TYPE_LAYOUT, layout.getPlid(),
-					portlet.getPortletId(), portlet,
-					defaultPreferences);
+			return PortletPreferencesLocalServiceUtil.addPortletPreferences(
+					layout.getCompanyId(), layout.getGroupId(),
+					PortletKeys.PREFS_OWNER_TYPE_GROUP, layout.getPlid(),
+					portlet.getPortletId(), portlet, defaultPreferences);
 	}
 
 	public static PortletPreferences addPortletPreferencesOwnedByLayout(
@@ -60,148 +52,15 @@ public class PortletPreferencesTestUtil {
 		return addPortletPreferencesOwnedByLayout(layout, portlet, null);
 	}
 
-	public static PortletPreferences addPortletPreferencesOwnedByGroup(
+	public static  PortletPreferences addPortletPreferencesOwnedByLayout(
 			Layout layout, Portlet portlet, String defaultPreferences)
 		throws Exception {
 
-			return PortletPreferencesLocalServiceUtil.addPortletPreferences(
-					layout.getCompanyId(), layout.getGroupId(),
-					PortletKeys.PREFS_OWNER_TYPE_GROUP, layout.getPlid(),
-					portlet.getPortletId(), portlet,
-					defaultPreferences);
-	}
-
-	public static void assertEmpty(
-			javax.portlet.PortletPreferences portletPreferences)
-		throws Exception {
-
-		PortletPreferencesImpl portletPreferencesImpl =
-			(PortletPreferencesImpl)portletPreferences;
-
-		Assert.assertTrue(
-			"The portlet preferences defined by (ownerType: " +
-			portletPreferencesImpl.getOwnerType() + " ownerId: " +
-			portletPreferencesImpl.getOwnerId() + " and plid: " +
-			portletPreferencesImpl.getPlid() +
-			") has defined the preferences: "
-			+portletPreferencesImpl.getMap().keySet() +
-			" and was expected to be empty",
-			portletPreferencesImpl.getMap().isEmpty());
-	}
-
-	public static void assertNullLayoutPreferences(
-			Layout layout, Portlet portlet)
-		throws Exception {
-
-		PortletPreferencesImpl preferences =
-			(PortletPreferencesImpl)PortletPreferencesTestUtil.
-				fetchLayoutPreferences(layout, portlet);
-
-		Assert.assertNull(
-			"Any portlet preferences was expected to be defined for " +
-				"(layoutId: " + layout.getPlid() + " and portletId: " +
-				portlet.getPortletId() +
-				")",
-			preferences);
-	}
-
-	public static void assertPortletPreferencesOwnedByGroup(
-		Layout layout, Group group, PortletPreferences portletPreferences) {
-
-		Assert.assertEquals(
-			"The portlet preferences PLID is not the same as the layout PLID, ",
-			layout.getPlid(), portletPreferences.getPlid());
-
-		Assert.assertEquals(
-			"The portlet preferences owner type is not layout, ",
-			PortletKeys.PREFS_OWNER_TYPE_GROUP,
-			portletPreferences.getOwnerType());
-
-		Assert.assertEquals(
-			"The portlet preferences owner is is not the default owner, ",
-			group.getGroupId(), portletPreferences.getOwnerId());
-	}
-
-	public static void assertOwnedByLayout(
-		Layout layout, PortletPreferencesImpl portletPreferences) {
-
-		Assert.assertEquals(
-			"The portlet preferences PLID is not the same as the layout PLID, ",
-			layout.getPlid(), portletPreferences.getPlid());
-
-		Assert.assertEquals(
-			"The portlet preferences owner type is not layout, ",
-			PortletKeys.PREFS_OWNER_TYPE_LAYOUT,
-			portletPreferences.getOwnerType());
-
-		Assert.assertEquals(
-			"The portlet preferences owner is is not the default owner, ",
-			PortletKeys.PREFS_OWNER_ID_DEFAULT,
-			portletPreferences.getOwnerId());
-	}
-
-	public static void assertPortletPreferenceValues(
-			javax.portlet.PortletPreferences portletPreferences,
-			String preferenceName, String[] preferenceValues)
-		throws Exception {
-
-		PortletPreferencesImpl portletPreferencesImpl =
-			(PortletPreferencesImpl)portletPreferences;
-
-		Map<String, String[]> portletPreferencesMap =
-			portletPreferencesImpl.getMap();
-
-		Assert.assertFalse(
-			"There are not portlet preferences defined for "+
-			"(ownerType: " + portletPreferencesImpl.getOwnerType() +
-			" ownerId: " + portletPreferencesImpl.getOwnerId() + " and plid: " +
-			portletPreferencesImpl.getPlid() +
-			")",portletPreferencesMap.isEmpty());
-
-		Assert.assertArrayEquals(
-			"The value of the portlet preference " +
-			preferenceName + " defined for (ownerType: " +
-			portletPreferencesImpl.getOwnerType() + " ownerId: " +
-			portletPreferencesImpl.getOwnerId() + " and plid: " +
-			portletPreferencesImpl.getPlid() +
-			") is not the expected", preferenceValues,
-			portletPreferencesMap.get(preferenceName));
-	}
-
-	public static void assertPortletPreferenceValues(
-			PortletPreferences portletPreferences, String preferenceName,
-			String[] preferenceValues)
-		throws Exception {
-
-		PortletPreferencesImpl portletPreferencesImpl =
-			PortletPreferencesTestUtil.convert(portletPreferences);
-
-		assertPortletPreferenceValues(
-			portletPreferencesImpl, preferenceName, preferenceValues);
-	}
-
-	public static void assertStrictPortletPreferences(
-		javax.portlet.PortletPreferences portletPreferences) {
-
-		StrictPortletPreferencesImpl strictPortletPreferences =
-			(StrictPortletPreferencesImpl)portletPreferences;
-
-		Assert.assertEquals(
-			"The PLID of a StrictPortletPreference always should by 0: ", 0,
-			strictPortletPreferences.getPlid());
-
-		Assert.assertEquals(
-			"The OwnerType of a StrictPortletPreference always should by 0: ",
-			0, strictPortletPreferences.getOwnerType());
-
-		Assert.assertEquals(
-			"The OwnerId of a StrictPortletPreference always should by 0: ", 0,
-			strictPortletPreferences.getOwnerId());
-
-		Assert.assertTrue(
-			"The map of preferences of a StrictPortletPreference "+
-				"always should by empty",
-			strictPortletPreferences.getMap().isEmpty());
+		return PortletPreferencesLocalServiceUtil.addPortletPreferences(
+					TestPropsValues.getCompanyId(),
+					PortletKeys.PREFS_OWNER_ID_DEFAULT,
+					PortletKeys.PREFS_OWNER_TYPE_LAYOUT, layout.getPlid(),
+					portlet.getPortletId(), portlet, defaultPreferences);
 	}
 
 	public static PortletPreferencesImpl convert(
