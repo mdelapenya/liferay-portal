@@ -669,7 +669,7 @@ public class PortletPreferencesLocalServiceTest {
 	}
 
 	@Test
-	public void testGetPreferencesByPlid() throws Exception {
+	public void testGetByPlid() throws Exception {
 		Layout layout2 = LayoutTestUtil.addLayout(_group);
 
 		Portlet[] portlets = getTestPortlets(2);
@@ -694,7 +694,7 @@ public class PortletPreferencesLocalServiceTest {
 	}
 
 	@Test
-	public void testGetPreferencesByPortletLayout() throws Exception {
+	public void testGetByPortletAndLayout() throws Exception {
 		Layout layout2 = LayoutTestUtil.addLayout(_group);
 
 		PortletPreferencesTestUtil.addPortletPreferencesOwnedByLayout(
@@ -724,7 +724,7 @@ public class PortletPreferencesLocalServiceTest {
 	}
 
 	@Test
-	public void testGetPreferencesByPortletOwnerTypeLayout() throws Exception {
+	public void testGetByPortletOwnerTypeLayout() throws Exception {
 		Group group2 = GroupTestUtil.addGroup();
 		Layout layout2 = LayoutTestUtil.addLayout(group2);
 
