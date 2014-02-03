@@ -362,7 +362,7 @@ public class SassToCssBuilder {
 
 			// Append custom CSS for RTL
 
-			String rtlCustomFileName = getRtlCustomFileName(_fileName);
+			String rtlCustomFileName = getRtlCustomFileName(fileName);
 
 			File rtlCustomFile = new File(_docrootDirName, rtlCustomFileName);
 

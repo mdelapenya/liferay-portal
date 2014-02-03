@@ -112,7 +112,6 @@ import org.dom4j.DocumentException;
  * @author Prashant Dighe
  * @author Shuyang Zhou
  * @author James Lefeu
- * @author Miguel Pastor
  */
 public class ServiceBuilder {
 
@@ -231,7 +230,6 @@ public class ServiceBuilder {
 		String sqlFileName = arguments.get("service.sql.file");
 		String sqlIndexesFileName = arguments.get("service.sql.indexes.file");
 		String sqlSequencesFileName = arguments.get("service.sql.sequences.file");
-		boolean autoImportDefaultReferences = GetterUtil.getBoolean(arguments.get("service.auto.import.default.references"), true);
 		boolean autoNamespaceTables = GetterUtil.getBoolean(arguments.get("service.auto.namespace.tables"));
 		String beanLocatorUtil = arguments.get("service.bean.locator.util");
 		String propsUtil = arguments.get("service.props.util");
@@ -245,8 +243,7 @@ public class ServiceBuilder {
 			new ServiceBuilder(
 				fileName, hbmFileName, modelHintsFileName, springFileName,
 				apiDir, implDir, remotingFileName, sqlDir, sqlFileName,
-				sqlIndexesFileName, sqlSequencesFileName,
-				autoImportDefaultReferences, autoNamespaceTables,
+				sqlIndexesFileName, sqlSequencesFileName, autoNamespaceTables,
 				beanLocatorUtil, propsUtil, pluginName, targetEntityName,
 				testDir, true, buildNumber, buildNumberIncrement);
 		}
@@ -504,16 +501,14 @@ public class ServiceBuilder {
 		String springFileName, String apiDir, String implDir,
 		String remotingFileName, String sqlDir, String sqlFileName,
 		String sqlIndexesFileName, String sqlSequencesFileName,
-		boolean autoImportDefaultReferences, boolean autoNamespaceTables,
-		String beanLocatorUtil, String propsUtil, String pluginName,
-		String targetEntityName, String testDir) {
+		boolean autoNamespaceTables, String beanLocatorUtil, String propsUtil,
+		String pluginName, String targetEntityName, String testDir) {
 
 		this(
 			fileName, hbmFileName, modelHintsFileName, springFileName, apiDir,
 			implDir, remotingFileName, sqlDir, sqlFileName, sqlIndexesFileName,
-			sqlSequencesFileName, autoImportDefaultReferences,
-			autoNamespaceTables, beanLocatorUtil, propsUtil, pluginName,
-			targetEntityName, testDir, true, 1, true);
+			sqlSequencesFileName, autoNamespaceTables, beanLocatorUtil,
+			propsUtil, pluginName, targetEntityName, testDir, true, 1, true);
 	}
 
 	public ServiceBuilder(
@@ -521,10 +516,9 @@ public class ServiceBuilder {
 		String springFileName, String apiDir, String implDir,
 		String remotingFileName, String sqlDir, String sqlFileName,
 		String sqlIndexesFileName, String sqlSequencesFileName,
-		boolean autoImportDefaultReferences, boolean autoNamespaceTables,
-		String beanLocatorUtil, String propsUtil, String pluginName,
-		String targetEntityName, String testDir, boolean build,
-		long buildNumber, boolean buildNumberIncrement) {
+		boolean autoNamespaceTables, String beanLocatorUtil, String propsUtil,
+		String pluginName, String targetEntityName, String testDir,
+		boolean build, long buildNumber, boolean buildNumberIncrement) {
 
 		_tplBadAliasNames = _getTplProperty(
 			"bad_alias_names", _tplBadAliasNames);
@@ -593,7 +587,6 @@ public class ServiceBuilder {
 			_sqlFileName = sqlFileName;
 			_sqlIndexesFileName = sqlIndexesFileName;
 			_sqlSequencesFileName = sqlSequencesFileName;
-			_autoImportDefaultReferences = autoImportDefaultReferences;
 			_autoNamespaceTables = autoNamespaceTables;
 			_beanLocatorUtil = beanLocatorUtil;
 			_beanLocatorUtilShortName = _beanLocatorUtil.substring(
@@ -632,9 +625,6 @@ public class ServiceBuilder {
 
 			_packagePath = packagePath;
 
-			_autoImportDefaultReferences = GetterUtil.getBoolean(
-				rootElement.attributeValue("auto-import-default-references"),
-				_autoImportDefaultReferences);
 			_autoNamespaceTables = GetterUtil.getBoolean(
 				rootElement.attributeValue("auto-namespace-tables"),
 				_autoNamespaceTables);
@@ -992,8 +982,7 @@ public class ServiceBuilder {
 		ServiceBuilder serviceBuilder = new ServiceBuilder(
 			refFileName, _hbmFileName, _modelHintsFileName, _springFileName,
 			_apiDir, _implDir, _remotingFileName, _sqlDir, _sqlFileName,
-			_sqlIndexesFileName, _sqlSequencesFileName,
-			_autoImportDefaultReferences, _autoNamespaceTables,
+			_sqlIndexesFileName, _sqlSequencesFileName, _autoNamespaceTables,
 			_beanLocatorUtil, _propsUtil, _pluginName, _targetEntityName,
 			_testDir, false, _buildNumber, _buildNumberIncrement);
 
@@ -2472,7 +2461,8 @@ public class ServiceBuilder {
 		Map<String, Object> context = _getContext();
 
 		context.put("entity", entity);
-		context.put("referenceList", _mergeReferenceList(entity));
+		context.put(
+			"referenceList", _mergeReferenceList(entity.getReferenceList()));
 
 		// Content
 
@@ -2763,7 +2753,8 @@ public class ServiceBuilder {
 		context.put("entity", entity);
 		context.put("methods", methods);
 		context.put("sessionTypeName",_getSessionTypeName(sessionType));
-		context.put("referenceList", _mergeReferenceList(entity));
+		context.put(
+			"referenceList", _mergeReferenceList(entity.getReferenceList()));
 
 		context = _putDeprecatedKeys(context, javaClass);
 
@@ -4276,19 +4267,11 @@ public class ServiceBuilder {
 		return value.equals(type.getValue());
 	}
 
-	private List<Entity> _mergeReferenceList(Entity entity) {
-		List<Entity> referenceList = entity.getReferenceList();
-
+	private List<Entity> _mergeReferenceList(List<Entity> referenceList) {
 		List<Entity> list = new ArrayList<Entity>(
 			_ejbList.size() + referenceList.size());
 
-		if (_autoImportDefaultReferences) {
-			list.addAll(_ejbList);
-		}
-		else {
-			list.add(entity);
-		}
-
+		list.addAll(_ejbList);
 		list.addAll(referenceList);
 
 		return list;
@@ -4669,8 +4652,6 @@ public class ServiceBuilder {
 				col.setComparator(finderColComparator);
 				col.setArrayableOperator(finderColArrayableOperator);
 
-				col.validate();
-
 				finderColsList.add(col);
 			}
 
@@ -4805,7 +4786,6 @@ public class ServiceBuilder {
 
 	private String _apiDir;
 	private String _author;
-	private boolean _autoImportDefaultReferences;
 	private boolean _autoNamespaceTables;
 	private Set<String> _badAliasNames;
 	private Set<String> _badColumnNames;

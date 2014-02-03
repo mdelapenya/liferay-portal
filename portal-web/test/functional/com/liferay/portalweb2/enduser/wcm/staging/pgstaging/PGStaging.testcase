@@ -343,12 +343,14 @@
 
 		<execute macro="Page#addPG">
 			<var name="pageName" value="Blogs Test Page" />
+			<var name="pageType" value="Site" />
 			<var name="siteName" value="${siteName}" />
 			<var name="siteURL" value="true" />
 		</execute>
 
 		<execute macro="Page#addPG">
 			<var name="pageName" value="AP Test Page" />
+			<var name="pageType" value="Site" />
 			<var name="siteName" value="${siteName}" />
 			<var name="siteURL" value="true" />
 		</execute>
@@ -876,8 +878,8 @@
 
 		<var name="key_dmDocumentTitle" value="${dmDocumentTitle}" />
 
-		<execute action="PGDocumentsandmedia#assertElementPresent" locator-key1="ENTRY_ICON_DOCUMENT_THUMBNAIL" />
-		<execute action="PGDocumentsandmedia#assertTextEquals" locator-key1="ENTRY_ICON_DOCUMENT_TITLE" value1="${dmDocumentTitle}" />
+		<execute action="PGDocumentsandmedia#assertElementPresent" locator-key1="ENTRIES_DOCUMENT" />
+		<execute action="PGDocumentsandmedia#assertTextEquals" locator-key1="ENTRIES_DOCUMENT_TITLE" value1="${dmDocumentTitle}" />
 
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="${pageName}" />
@@ -907,9 +909,7 @@
 			<var name="siteURL" value="true" />
 		</execute>
 
-		<var name="key_dmDocumentTitle" value="${dmDocumentTitle}" />
-
-		<execute action="PGDocumentsandmedia#assertElementNotPresent" locator-key1="ENTRY_ICON_DOCUMENT_THUMBNAIL" />
+		<execute action="PGDocumentsandmedia#assertElementNotPresent" locator-key1="ENTRIES_DOCUMENT" />
 	</command>
 
 	<command name="LayoutScope" priority="5">
