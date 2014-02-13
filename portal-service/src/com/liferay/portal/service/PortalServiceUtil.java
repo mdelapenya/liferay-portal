@@ -68,62 +68,6 @@ public class PortalServiceUtil {
 		return getService().getBuildNumber();
 	}
 
-	public static void testAddClassName_Rollback(
-		java.lang.String classNameValue)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		getService().testAddClassName_Rollback(classNameValue);
-	}
-
-	public static void testAddClassName_Success(java.lang.String classNameValue)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		getService().testAddClassName_Success(classNameValue);
-	}
-
-	public static void testAddClassNameAndTestTransactionPortletBar_PortalRollback(
-		java.lang.String transactionPortletBarText)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		getService()
-			.testAddClassNameAndTestTransactionPortletBar_PortalRollback(transactionPortletBarText);
-	}
-
-	public static void testAddClassNameAndTestTransactionPortletBar_PortletRollback(
-		java.lang.String transactionPortletBarText)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		getService()
-			.testAddClassNameAndTestTransactionPortletBar_PortletRollback(transactionPortletBarText);
-	}
-
-	public static void testAddClassNameAndTestTransactionPortletBar_Success(
-		java.lang.String transactionPortletBarText)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		getService()
-			.testAddClassNameAndTestTransactionPortletBar_Success(transactionPortletBarText);
-	}
-
-	public static void testAutoSyncHibernateSessionStateOnTxCreation()
-		throws com.liferay.portal.kernel.exception.SystemException {
-		getService().testAutoSyncHibernateSessionStateOnTxCreation();
-	}
-
-	public static void testDeleteClassName()
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		getService().testDeleteClassName();
-	}
-
-	public static int testGetBuildNumber() {
-		return getService().testGetBuildNumber();
-	}
-
-	public static void testGetUserId() {
-		getService().testGetUserId();
-	}
-
-	public static boolean testHasClassName()
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().testHasClassName();
-	}
-
 	public static PortalService getService() {
 		if (_service == null) {
 			_service = (PortalService)PortalBeanLocatorUtil.locate(PortalService.class.getName());
