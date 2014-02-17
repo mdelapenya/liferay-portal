@@ -12,9 +12,15 @@
 		<if>
 			<antelope:isgreaterthan arg1="${ant.java.version}" arg2="1.5" />
 			<then>
+				<antcall target="compile-required-modules" />
+
 				<antcall target="build-common-java.compile" />
 			</then>
 		</if>
+	</target>
+
+	<target name="compile-required-modules">
+		<ant dir="../portal-impl" target="compile" inheritAll="false" />
 	</target>
 
 	<target name="deploy">
