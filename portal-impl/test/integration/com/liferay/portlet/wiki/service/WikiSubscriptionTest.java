@@ -30,8 +30,6 @@ import com.liferay.portlet.wiki.model.WikiNode;
 import com.liferay.portlet.wiki.model.WikiPage;
 import com.liferay.portlet.wiki.model.WikiPageConstants;
 
-import org.junit.Ignore;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
@@ -79,20 +77,19 @@ public class WikiSubscriptionTest extends BaseSubscriptionTestCase {
 	@Override
 	public void addSubscriptionBaseModel(long baseModelId) throws Exception {
 		SubscriptionLocalServiceUtil.addSubscription(
-			TestPropsValues.getUserId(), group.getGroupId(),
+			_subscriptionUser.getUserId(), group.getGroupId(),
 			WikiPage.class.getName(), baseModelId);
 	}
 
 	@Override
 	public void addSubscriptionContainerModel(long containerModelId)
 		throws Exception {
-
 		SubscriptionLocalServiceUtil.addSubscription(
-			TestPropsValues.getUserId(), group.getGroupId(),
+			_subscriptionUser.getUserId(), group.getGroupId(),
 			WikiNode.class.getName(), containerModelId);
 	}
 
-	@Ignore
+	/*@Ignore
 	@Override
 	@Test
 	public void testSubscriptionBaseModelWhenInRootContainerModel() {
@@ -126,7 +123,7 @@ public class WikiSubscriptionTest extends BaseSubscriptionTestCase {
 	@Override
 	@Test
 	public void testSubscriptionRootContainerModelWhenInSubcontainerModel() {
-	}
+	}*/
 
 	@Override
 	public long updateEntry(long baseModelId) throws Exception {
