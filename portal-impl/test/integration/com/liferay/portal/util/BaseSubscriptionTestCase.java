@@ -53,19 +53,8 @@ import org.junit.runner.RunWith;
 @Sync
 public abstract class BaseSubscriptionTestCase {
 
-	public abstract long addBaseModel(long containerModelId) throws Exception;
-
-	public abstract long addContainerModel(long containerModelId)
-		throws Exception;
-
-	public abstract void addSubscriptionBaseModel(long baseModelId)
-		throws Exception;
-
-	public abstract void addSubscriptionContainerModel(long containerModelId)
-		throws Exception;
-
 	@Before
-	public void setUpClass() throws Exception {
+	public void setUp() throws Exception {
 		group = GroupTestUtil.addGroup();
 
 		_logFactory = LogFactoryUtil.getLogFactory();
@@ -80,7 +69,7 @@ public abstract class BaseSubscriptionTestCase {
 	}
 
 	@After
-	public void tearDownClass() throws Exception {
+	public void tearDown() throws Exception {
 		GroupLocalServiceUtil.deleteGroup(group);
 
 		LogFactoryUtil.setLogFactory(_logFactory);
@@ -256,7 +245,18 @@ public abstract class BaseSubscriptionTestCase {
 		Assert.assertEquals("Sending email", logRecord.getMessage());
 	}
 
-	public abstract long updateEntry(long baseModelId) throws Exception;
+	protected abstract long addBaseModel(long containerModelId) throws Exception;
+
+	protected abstract long addContainerModel(long containerModelId)
+		throws Exception;
+
+	protected abstract void addSubscriptionBaseModel(long baseModelId)
+		throws Exception;
+
+	protected abstract void addSubscriptionContainerModel(long containerModelId)
+		throws Exception;
+
+	protected abstract long updateEntry(long baseModelId) throws Exception;
 
 	protected static final long DEFAULT_PARENT_CONTAINER_MODEL_ID = 0;
 
