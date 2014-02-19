@@ -21,7 +21,6 @@ import com.liferay.portal.kernel.util.HttpUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -29,16 +28,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.modules.junit4.PowerMockRunner;
-
 import org.springframework.mock.web.MockHttpServletRequest;
 
 /**
  * @author Mika Koivisto
  */
-@RunWith(PowerMockRunner.class)
-public class InvokerFilterTest extends PowerMockito {
+public class InvokerFilterTest {
 
 	@Before
 	public void setUp() {
