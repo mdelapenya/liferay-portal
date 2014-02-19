@@ -28,7 +28,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockServletContext;
 
 /**
  * @author Mika Koivisto
@@ -49,10 +51,33 @@ public class InvokerFilterTest {
 
 		InvokerFilter invokerFilter = new InvokerFilter();
 
+		_assertGetURIArgumentIsHandedOverToHttp(
+			"URI processed by InvokerFilter " +
+				"must be handed over to the Http", invokerFilter,
+			"/c/portal/login;jsessionid=ae01b0f2af.worker1",
+			"/c/portal/login;jsessionid=ae01b0f2af.worker1");
+	}
+
+	@Test
+	public void testGetURIMatchingContextPath() throws Exception {
+		MockServletContext mockServletContext = new MockServletContext();
+		mockServletContext.setContextPath("/context/path");
+
+		InvokerFilter invokerFilter = new InvokerFilter();
+		invokerFilter.init(new MockFilterConfig(mockServletContext));
+
+		_assertGetURIArgumentIsHandedOverToHttp(
+			"URI matching the context path has it removed " +
+				"before being handed over to the Http", invokerFilter,
+			"/context/path/c/portal/login", "/c/portal/login");
+	}
+
+	private void _assertGetURIArgumentIsHandedOverToHttp(
+		String message, InvokerFilter invokerFilter, String requestURI,
+		String expected) {
+
 		MockHttpServletRequest mockHttpServletRequest =
-			new MockHttpServletRequest(
-				HttpMethods.GET,
-				"/c/portal/login;jsessionid=ae01b0f2af.worker1");
+			new MockHttpServletRequest(HttpMethods.GET, requestURI);
 
 		invokerFilter.getURI(mockHttpServletRequest);
 
@@ -60,10 +85,7 @@ public class InvokerFilterTest {
 
 		Mockito.verify(_mockHttp).removePathParameters(_argumentUri.capture());
 
-		Assert.assertEquals(
-			"URI processed by InvokerFilter must be handed over to the Http",
-			"/c/portal/login;jsessionid=ae01b0f2af.worker1",
-			_argumentUri.getValue());
+		Assert.assertEquals(message, expected, _argumentUri.getValue());
 	}
 
 	private @Captor ArgumentCaptor<String> _argumentUri;
