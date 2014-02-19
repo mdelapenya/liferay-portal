@@ -15,13 +15,19 @@
 package com.liferay.portal.kernel.servlet.filters.invoker;
 
 import com.liferay.portal.kernel.servlet.HttpMethods;
+import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.HttpUtil;
-import com.liferay.portal.util.HttpImpl;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -36,13 +42,16 @@ public class InvokerFilterTest extends PowerMockito {
 
 	@Before
 	public void setUp() {
+		MockitoAnnotations.initMocks(this);
+
 		HttpUtil httpUtil = new HttpUtil();
 
-		httpUtil.setHttp(new HttpImpl());
+		httpUtil.setHttp(_mockHttp);
 	}
 
 	@Test
-	public void testGetURIWithJSessionId() {
+	public void testGetURIInvokesHttpRemovePathParameters() {
+
 		InvokerFilter invokerFilter = new InvokerFilter();
 
 		MockHttpServletRequest mockHttpServletRequest =
@@ -50,6 +59,19 @@ public class InvokerFilterTest extends PowerMockito {
 				HttpMethods.GET,
 				"/c/portal/login;jsessionid=ae01b0f2af.worker1");
 
+		invokerFilter.getURI(mockHttpServletRequest);
+
+		// assert that Http.removePathParameters was indeed invoked
+
+		Mockito.verify(_mockHttp).removePathParameters(_argumentUri.capture());
+
+		Assert.assertEquals(
+			"URI processed by InvokerFilter must be handed over to the Http",
+			"/c/portal/login;jsessionid=ae01b0f2af.worker1",
+			_argumentUri.getValue());
 	}
+
+	private @Captor ArgumentCaptor<String> _argumentUri;
+	private @Mock Http _mockHttp;
 
 }
