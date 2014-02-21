@@ -134,7 +134,8 @@ public interface LuceneHelper {
 
 	public void loadIndexesFromCluster(long companyId) throws SystemException;
 
-	public void releaseIndexSearcher(long companyId, IndexSearcher indexSearcher)
+	public void releaseIndexSearcher(
+			long companyId, IndexSearcher indexSearcher)
 		throws IOException;
 
 	public void shutdown();

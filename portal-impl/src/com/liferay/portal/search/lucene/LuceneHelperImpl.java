@@ -664,7 +664,8 @@ public class LuceneHelperImpl implements LuceneHelper {
 	}
 
 	@Override
-	public void releaseIndexSearcher(long companyId, IndexSearcher indexSearcher)
+	public void releaseIndexSearcher(
+			long companyId, IndexSearcher indexSearcher)
 		throws IOException {
 
 		IndexAccessor indexAccessor = getIndexAccessor(companyId);
