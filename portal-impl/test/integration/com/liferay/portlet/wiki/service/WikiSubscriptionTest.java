@@ -79,16 +79,15 @@ public class WikiSubscriptionTest extends BaseSubscriptionTestCase {
 	@Override
 	public void addSubscriptionBaseModel(long baseModelId) throws Exception {
 		SubscriptionLocalServiceUtil.addSubscription(
-			TestPropsValues.getUserId(), group.getGroupId(),
+			subscriptionUser.getUserId(), group.getGroupId(),
 			WikiPage.class.getName(), baseModelId);
 	}
 
 	@Override
 	public void addSubscriptionContainerModel(long containerModelId)
 		throws Exception {
-
 		SubscriptionLocalServiceUtil.addSubscription(
-			TestPropsValues.getUserId(), group.getGroupId(),
+			subscriptionUser.getUserId(), group.getGroupId(),
 			WikiNode.class.getName(), containerModelId);
 	}
 
@@ -122,8 +121,6 @@ public class WikiSubscriptionTest extends BaseSubscriptionTestCase {
 	public void testSubscriptionRootContainerModelWhenInRootContainerModel() {
 	}
 
-	@Ignore
-	@Override
 	@Test
 	public void testSubscriptionRootContainerModelWhenInSubcontainerModel() {
 	}
