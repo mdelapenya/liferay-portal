@@ -1093,14 +1093,14 @@ public class PortletPreferencesLocalServiceTest {
 	public void testGetPreferencesByOwnerAndPlidAndPortletNotAutoAdded()
 		throws Exception {
 
-		String portletPreferencesXMLSingle =
+		String singleValuePortletPreferencesXML =
 			PortletPreferencesTestUtil.getPortletPreferencesXML(
 				_NAME, _SINGLE_VALUE);
 
 		PortletPreferencesTestUtil.addLayoutPortletPreferences(
-			_layout, _portlet, portletPreferencesXMLSingle);
+			_layout, _portlet, singleValuePortletPreferencesXML);
 
-		String portletPreferencesXMLMultiple =
+		String multipleValuesPortletPreferencesXML =
 			PortletPreferencesTestUtil.getPortletPreferencesXML(
 				_NAME, _MULTIPLE_VALUES);
 
@@ -1109,7 +1109,7 @@ public class PortletPreferencesLocalServiceTest {
 				TestPropsValues.getCompanyId(),
 				PortletKeys.PREFS_OWNER_ID_DEFAULT,
 				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
-				_portlet.getPortletId(), portletPreferencesXMLMultiple);
+				_portlet.getPortletId(), multipleValuesPortletPreferencesXML);
 
 		assertValues(jxPortletPreferences, _NAME, _SINGLE_VALUE);
 		assertOwner(_layout, (PortletPreferencesImpl) jxPortletPreferences);
@@ -1266,14 +1266,14 @@ public class PortletPreferencesLocalServiceTest {
 
 	@Test
 	public void testUpdatePreferencesByJxPortletPreferences() throws Exception {
-		String portletPreferencesXMLSingle =
+		String singleValuePortletPreferences =
 			PortletPreferencesTestUtil.getPortletPreferencesXML(
 				_NAME, _SINGLE_VALUE);
 
 		PortletPreferencesTestUtil.addLayoutPortletPreferences(
-			_layout, _portlet, portletPreferencesXMLSingle);
+			_layout, _portlet, singleValuePortletPreferences);
 
-		String portletPreferencesXMLMultiple =
+		String multipleValuesPortletPreferencesXML =
 			PortletPreferencesTestUtil.getPortletPreferencesXML(
 				_NAME, _MULTIPLE_VALUES);
 
@@ -1282,7 +1282,7 @@ public class PortletPreferencesLocalServiceTest {
 				TestPropsValues.getCompanyId(),
 				PortletKeys.PREFS_OWNER_ID_DEFAULT,
 				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
-				_portlet.getPortletId(), portletPreferencesXMLMultiple);
+				_portlet.getPortletId(), multipleValuesPortletPreferencesXML);
 
 		PortletPreferencesLocalServiceUtil.updatePreferences(
 			PortletKeys.PREFS_OWNER_ID_DEFAULT,
