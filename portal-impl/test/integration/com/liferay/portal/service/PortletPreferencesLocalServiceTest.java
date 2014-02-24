@@ -1013,11 +1013,12 @@ public class PortletPreferencesLocalServiceTest {
 
 	@Test
 	public void testGetNotStrictPortletPreferences() throws Exception {
-		MockPortletPreferencesLocalServiceImpl mockService =
+		MockPortletPreferencesLocalServiceImpl
+			mockPortletPreferencesLocalServiceImpl =
 			getMockPortletPreferencesServiceImpl(false);
 
 		javax.portlet.PortletPreferences jxPortletPreferences =
-			mockService.getStrictPreferences(
+			mockPortletPreferencesLocalServiceImpl.getStrictPreferences(
 				TestPropsValues.getCompanyId(),
 				PortletKeys.PREFS_OWNER_ID_DEFAULT,
 				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
@@ -1077,11 +1078,12 @@ public class PortletPreferencesLocalServiceTest {
 
 	@Test
 	public void testGetStrictPreferences() throws Exception {
-		MockPortletPreferencesLocalServiceImpl mockService =
-			getMockPortletPreferencesServiceImpl(true);
+		MockPortletPreferencesLocalServiceImpl
+			mockPortletPreferencesLocalServiceImpl =
+				getMockPortletPreferencesServiceImpl(true);
 
 		javax.portlet.PortletPreferences jxPortletPreferences =
-			mockService.getStrictPreferences(
+			mockPortletPreferencesLocalServiceImpl.getStrictPreferences(
 				TestPropsValues.getCompanyId(),
 				PortletKeys.PREFS_OWNER_ID_DEFAULT,
 				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
@@ -1094,8 +1096,9 @@ public class PortletPreferencesLocalServiceTest {
 	public void testGetStrictPreferencesByPortletPreferencesIds()
 		throws Exception {
 
-		MockPortletPreferencesLocalServiceImpl mockService =
-			getMockPortletPreferencesServiceImpl(true);
+		MockPortletPreferencesLocalServiceImpl
+			mockPortletPreferencesLocalServiceImpl =
+				getMockPortletPreferencesServiceImpl(true);
 
 		PortletPreferencesIds portletPreferencesIds =
 			new PortletPreferencesIds(
@@ -1105,7 +1108,7 @@ public class PortletPreferencesLocalServiceTest {
 				_portlet.getPortletId());
 
 		javax.portlet.PortletPreferences jxPortletPreferences =
-			mockService.getStrictPreferences(portletPreferencesIds);
+			mockPortletPreferencesLocalServiceImpl.getStrictPreferences(portletPreferencesIds);
 
 		assertStrictPortletPreferences(jxPortletPreferences);
 	}
@@ -1114,15 +1117,16 @@ public class PortletPreferencesLocalServiceTest {
 	public void testGetStrictPreferencesWithDefaultSingleXML()
 		throws Exception {
 
-		MockPortletPreferencesLocalServiceImpl mockService =
-			getMockPortletPreferencesServiceImpl(true);
+		MockPortletPreferencesLocalServiceImpl
+			mockPortletPreferencesLocalServiceImpl =
+				getMockPortletPreferencesServiceImpl(true);
 
 		String portletPreferencesXML =
 			PortletPreferencesTestUtil.getPortletPreferencesXML(
 				_NAME, _SINGLE_VALUE);
 
 		javax.portlet.PortletPreferences jxPortletPreferences =
-			mockService.getStrictPreferences(
+			mockPortletPreferencesLocalServiceImpl.getStrictPreferences(
 				TestPropsValues.getCompanyId(),
 				PortletKeys.PREFS_OWNER_ID_DEFAULT,
 				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
