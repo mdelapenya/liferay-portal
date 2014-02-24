@@ -1353,6 +1353,8 @@ public class Creole10Parser]]></replacevalue>
 			<else>
 				<antcall target="compile-dependencies" />
 
+				<antcall target="compile-required-modules" />
+
 				<antcall target="build-common-java.compile" />
 			</else>
 		</if>
@@ -1454,6 +1456,12 @@ public class Creole10Parser]]></replacevalue>
 				/>
 			</then>
 		</if>
+	</target>
+
+	<target name="compile-required-modules">
+		<ant dir="../portal-service" target="compile" inheritAll="false" />
+		<ant dir="../util-bridges" target="compile" inheritAll="false" />
+		<ant dir="../util-taglib" target="compile" inheritAll="false" />
 	</target>
 
 	<target name="compile-test">

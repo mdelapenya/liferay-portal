@@ -15,43 +15,80 @@
 package com.liferay.portal.kernel.servlet.filters.invoker;
 
 import com.liferay.portal.kernel.servlet.HttpMethods;
+import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.HttpUtil;
-import com.liferay.portal.util.HttpImpl;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
+import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockServletContext;
 
 /**
  * @author Mika Koivisto
  */
-@RunWith(PowerMockRunner.class)
-public class InvokerFilterTest extends PowerMockito {
+public class InvokerFilterTest {
 
 	@Before
 	public void setUp() {
+		MockitoAnnotations.initMocks(this);
+
 		HttpUtil httpUtil = new HttpUtil();
 
-		httpUtil.setHttp(new HttpImpl());
+		httpUtil.setHttp(_mockHttp);
 	}
 
 	@Test
-	public void testGetURIWithJSessionId() {
+	public void testGetURIInvokesHttpRemovePathParameters() {
+
 		InvokerFilter invokerFilter = new InvokerFilter();
 
-		MockHttpServletRequest mockHttpServletRequest =
-			new MockHttpServletRequest(
-				HttpMethods.GET,
-				"/c/portal/login;jsessionid=ae01b0f2af.worker1");
-
-		Assert.assertEquals(
-			"/c/portal/login", invokerFilter.getURI(mockHttpServletRequest));
+		_assertGetURIArgumentIsHandedOverToHttp(
+			"URI processed by InvokerFilter " +
+				"must be handed over to the Http", invokerFilter,
+			"/c/portal/login;jsessionid=ae01b0f2af.worker1",
+			"/c/portal/login;jsessionid=ae01b0f2af.worker1");
 	}
+
+	@Test
+	public void testGetURIMatchingContextPath() throws Exception {
+		MockServletContext mockServletContext = new MockServletContext();
+		mockServletContext.setContextPath("/context/path");
+
+		InvokerFilter invokerFilter = new InvokerFilter();
+		invokerFilter.init(new MockFilterConfig(mockServletContext));
+
+		_assertGetURIArgumentIsHandedOverToHttp(
+			"URI matching the context path has it removed " +
+				"before being handed over to the Http", invokerFilter,
+			"/context/path/c/portal/login", "/c/portal/login");
+	}
+
+	private void _assertGetURIArgumentIsHandedOverToHttp(
+		String message, InvokerFilter invokerFilter, String requestURI,
+		String expected) {
+
+		MockHttpServletRequest mockHttpServletRequest =
+			new MockHttpServletRequest(HttpMethods.GET, requestURI);
+
+		invokerFilter.getURI(mockHttpServletRequest);
+
+		// assert that Http.removePathParameters was indeed invoked
+
+		Mockito.verify(_mockHttp).removePathParameters(_argumentUri.capture());
+
+		Assert.assertEquals(message, expected, _argumentUri.getValue());
+	}
+
+	private @Captor ArgumentCaptor<String> _argumentUri;
+	private @Mock Http _mockHttp;
 
 }
