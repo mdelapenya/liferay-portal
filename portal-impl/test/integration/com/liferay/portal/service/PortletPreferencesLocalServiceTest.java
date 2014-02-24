@@ -1277,7 +1277,7 @@ public class PortletPreferencesLocalServiceTest {
 			PortletPreferencesTestUtil.getPortletPreferencesXML(
 				_NAME, _MULTIPLE_VALUES);
 
-		javax.portlet.PortletPreferences jxPortletPreferences =
+		javax.portlet.PortletPreferences initialJxPortletPreferences =
 			PortletPreferencesFactoryUtil.fromXML(
 				TestPropsValues.getCompanyId(),
 				PortletKeys.PREFS_OWNER_ID_DEFAULT,
@@ -1287,7 +1287,7 @@ public class PortletPreferencesLocalServiceTest {
 		PortletPreferencesLocalServiceUtil.updatePreferences(
 			PortletKeys.PREFS_OWNER_ID_DEFAULT,
 			PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
-			_portlet.getPortletId(), jxPortletPreferences);
+			_portlet.getPortletId(), initialJxPortletPreferences);
 
 		javax.portlet.PortletPreferences currentJxPortletPreferences =
 			PortletPreferencesLocalServiceUtil.getPreferences(
