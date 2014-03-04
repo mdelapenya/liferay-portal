@@ -112,6 +112,8 @@ import javax.servlet.http.HttpServletRequest;
 import net.htmlparser.jericho.Source;
 import net.htmlparser.jericho.StartTag;
 
+import org.python.modules.thread.thread;
+
 /**
  * @author Brian Wing Shun Chan
  * @author Raymond Augé
@@ -2114,6 +2116,14 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 		subscriptionSenderPrototype.setMailId(
 			MBUtil.MESSAGE_POP_PORTLET_PREFIX, message.getCategoryId(),
 			message.getMessageId());
+		subscriptionSenderPrototype.setPermissionCheckClassName(
+			MBMessage.class.getName());
+
+		MBThread thread = message.getThread();
+
+		subscriptionSenderPrototype.setPermissionCheckClassPK(
+			thread.getRootMessageId());
+
 		subscriptionSenderPrototype.setPortletId(PortletKeys.MESSAGE_BOARDS);
 		subscriptionSenderPrototype.setReplyToAddress(replyToAddress);
 		subscriptionSenderPrototype.setScopeGroupId(message.getGroupId());

@@ -18,12 +18,10 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowInstance;
-import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
-import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.blogs.model.BlogsEntry;
 import com.liferay.portlet.blogs.service.permission.BlogsEntryPermission;
@@ -33,15 +31,13 @@ import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.service.permission.DLFileEntryPermission;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.service.permission.JournalArticlePermission;
-import com.liferay.portlet.messageboards.model.MBCategory;
 import com.liferay.portlet.messageboards.model.MBDiscussion;
+import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.messageboards.model.MBThread;
 import com.liferay.portlet.messageboards.service.MBDiscussionLocalServiceUtil;
 import com.liferay.portlet.messageboards.service.MBThreadLocalServiceUtil;
-import com.liferay.portlet.messageboards.service.permission.MBCategoryPermission;
 import com.liferay.portlet.messageboards.service.permission.MBDiscussionPermission;
 import com.liferay.portlet.messageboards.service.permission.MBMessagePermission;
-import com.liferay.portlet.messageboards.service.permission.MBPermission;
 import com.liferay.portlet.wiki.model.WikiNode;
 import com.liferay.portlet.wiki.model.WikiPage;
 import com.liferay.portlet.wiki.service.permission.WikiNodePermission;
@@ -171,25 +167,9 @@ public class SubscriptionPermissionImpl implements SubscriptionPermission {
 			return JournalArticlePermission.contains(
 				permissionChecker, classPK, actionId);
 		}
-		else if (className.equals(MBCategory.class.getName())) {
-			Group group = GroupLocalServiceUtil.fetchGroup(classPK);
-
-			if (group == null) {
-				return MBCategoryPermission.contains(
-					permissionChecker, classPK, actionId);
-			}
-
-			return MBPermission.contains(permissionChecker, classPK, actionId);
-		}
-		else if (className.equals(MBThread.class.getName())) {
-			MBThread mbThread = MBThreadLocalServiceUtil.fetchThread(classPK);
-
-			if (mbThread == null) {
-				return false;
-			}
-
+		else if (className.equals(MBMessage.class.getName())) {
 			return MBMessagePermission.contains(
-				permissionChecker, mbThread.getRootMessageId(), actionId);
+				permissionChecker, classPK, actionId);
 		}
 		else if (className.equals(WikiNode.class.getName())) {
 			return WikiNodePermission.contains(
