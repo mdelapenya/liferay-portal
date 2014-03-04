@@ -1477,6 +1477,9 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 
 		subscriptionSender.setNotificationType(notificationType);
 
+		subscriptionSender.setPermissionCheckClassName(
+			BlogsEntry.class.getName());
+		subscriptionSender.setPermissionCheckClassPK(entry.getGroupId());
 		subscriptionSender.setPortletId(PortletKeys.BLOGS);
 		subscriptionSender.setReplyToAddress(fromAddress);
 		subscriptionSender.setScopeGroupId(entry.getGroupId());
@@ -1485,9 +1488,6 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 
 		subscriptionSender.addPersistedSubscribers(
 			BlogsEntry.class.getName(), entry.getGroupId());
-
-		subscriptionSender.addPersistedSubscribers(
-			BlogsEntry.class.getName(), entry.getEntryId());
 
 		subscriptionSender.flushNotificationsAsync();
 	}
