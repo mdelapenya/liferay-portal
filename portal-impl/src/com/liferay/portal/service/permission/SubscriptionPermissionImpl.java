@@ -171,10 +171,6 @@ public class SubscriptionPermissionImpl implements SubscriptionPermission {
 			return MBMessagePermission.contains(
 				permissionChecker, classPK, actionId);
 		}
-		else if (className.equals(WikiNode.class.getName())) {
-			return WikiNodePermission.contains(
-				permissionChecker, classPK, actionId);
-		}
 		else if (className.equals(WikiPage.class.getName())) {
 			return WikiPagePermission.contains(
 				permissionChecker, classPK, actionId);

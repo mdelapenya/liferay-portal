@@ -2522,6 +2522,9 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		subscriptionSender.setNotificationType(notificationType);
 
+		subscriptionSender.setPermissionCheckClassName(
+			WikiPage.class.getName());
+		subscriptionSender.setPermissionCheckClassPK(page.getResourcePrimKey());
 		subscriptionSender.setPortletId(PortletKeys.WIKI);
 		subscriptionSender.setReplyToAddress(fromAddress);
 		subscriptionSender.setScopeGroupId(node.getGroupId());
