@@ -779,6 +779,9 @@ public class BookmarksEntryLocalServiceImpl
 
 		subscriptionSender.setNotificationType(notificationType);
 
+		subscriptionSender.setPermissionCheckClassName(
+			BookmarksEntry.class.getName());
+		subscriptionSender.setPermissionCheckClassPK(entry.getEntryId());
 		subscriptionSender.setPortletId(PortletKeys.BOOKMARKS);
 		subscriptionSender.setReplyToAddress(fromAddress);
 		subscriptionSender.setScopeGroupId(entry.getGroupId());
@@ -799,9 +802,6 @@ public class BookmarksEntryLocalServiceImpl
 
 		subscriptionSender.addPersistedSubscribers(
 			BookmarksFolder.class.getName(), entry.getGroupId());
-
-		subscriptionSender.addPersistedSubscribers(
-			BookmarksEntry.class.getName(), entry.getEntryId());
 
 		subscriptionSender.flushNotificationsAsync();
 	}
