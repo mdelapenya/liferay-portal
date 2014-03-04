@@ -6405,6 +6405,10 @@ public class JournalArticleLocalServiceImpl
 
 		subscriptionSender.setNotificationType(notificationType);
 
+		subscriptionSender.setPermissionCheckClassName(
+			JournalArticle.class.getName());
+		subscriptionSender.setPermissionCheckClassPK(
+			article.getResourcePrimKey());
 		subscriptionSender.setPortletId(PortletKeys.JOURNAL);
 		subscriptionSender.setReplyToAddress(fromAddress);
 		subscriptionSender.setScopeGroupId(article.getGroupId());
