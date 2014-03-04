@@ -2114,6 +2114,10 @@ public class DLAppHelperLocalServiceImpl
 
 		subscriptionSender.setNotificationType(notificationType);
 
+		subscriptionSender.setPermissionCheckClassName(
+			DLFileEntry.class.getName());
+		subscriptionSender.setPermissionCheckClassPK(
+			fileEntry.getFileEntryId());
 		subscriptionSender.setPortletId(PortletKeys.DOCUMENT_LIBRARY);
 		subscriptionSender.setReplyToAddress(fromAddress);
 		subscriptionSender.setScopeGroupId(fileVersion.getGroupId());
@@ -2144,9 +2148,6 @@ public class DLAppHelperLocalServiceImpl
 				DLFileEntryType.class.getName(),
 				dlFileEntryType.getFileEntryTypeId());
 		}
-
-		subscriptionSender.addPersistedSubscribers(
-			DLFileEntry.class.getName(), fileEntry.getFileEntryId());
 
 		subscriptionSender.flushNotificationsAsync();
 	}
