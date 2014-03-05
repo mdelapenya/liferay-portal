@@ -30,8 +30,11 @@ import com.liferay.portlet.blogs.service.permission.BlogsPermission;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
 import com.liferay.portlet.bookmarks.service.permission.BookmarksEntryPermission;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
+import com.liferay.portlet.documentlibrary.model.DLFileVersion;
+import com.liferay.portlet.documentlibrary.service.DLFileVersionLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.permission.DLFileEntryPermission;
 import com.liferay.portlet.journal.model.JournalArticle;
+import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.permission.JournalArticlePermission;
 import com.liferay.portlet.messageboards.model.MBCategory;
 import com.liferay.portlet.messageboards.model.MBDiscussion;
@@ -44,6 +47,7 @@ import com.liferay.portlet.messageboards.service.permission.MBMessagePermission;
 import com.liferay.portlet.messageboards.service.permission.MBPermission;
 import com.liferay.portlet.wiki.model.WikiNode;
 import com.liferay.portlet.wiki.model.WikiPage;
+import com.liferay.portlet.wiki.service.WikiPageLocalServiceUtil;
 import com.liferay.portlet.wiki.service.permission.WikiNodePermission;
 import com.liferay.portlet.wiki.service.permission.WikiPagePermission;
 
@@ -164,12 +168,26 @@ public class SubscriptionPermissionImpl implements SubscriptionPermission {
 				permissionChecker, classPK, actionId);
 		}
 		else if (className.equals(DLFileEntry.class.getName())) {
+			DLFileVersion fileVersion =
+				DLFileVersionLocalServiceUtil.fetchDLFileVersion(classPK);
+
+			if (fileVersion != null) {
+				classPK = fileVersion.getFileEntryId();
+			}
+
 			return DLFileEntryPermission.contains(
 				permissionChecker, classPK, actionId);
 		}
 		else if (className.equals(JournalArticle.class.getName())) {
+			JournalArticle article =
+				JournalArticleLocalServiceUtil.fetchJournalArticle(classPK);
+
+			if (article == null) {
+				return false;
+			}
+
 			return JournalArticlePermission.contains(
-				permissionChecker, classPK, actionId);
+				permissionChecker, article.getResourcePrimKey(), actionId);
 		}
 		else if (className.equals(MBCategory.class.getName())) {
 			Group group = GroupLocalServiceUtil.fetchGroup(classPK);
@@ -196,8 +214,14 @@ public class SubscriptionPermissionImpl implements SubscriptionPermission {
 				permissionChecker, classPK, actionId);
 		}
 		else if (className.equals(WikiPage.class.getName())) {
+			WikiPage page = WikiPageLocalServiceUtil.fetchWikiPage(classPK);
+
+			if (page == null) {
+				return null;
+			}
+
 			return WikiPagePermission.contains(
-				permissionChecker, classPK, actionId);
+				permissionChecker, page.getResourcePrimKey(), actionId);
 		}
 
 		return null;
