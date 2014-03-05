@@ -41,4 +41,8 @@ public class WikiPageConstants {
 
 	public static final double VERSION_DEFAULT = 1.0;
 
+	public static String getClassName() {
+		return WikiPage.class.getName();
+	}
+
 }
