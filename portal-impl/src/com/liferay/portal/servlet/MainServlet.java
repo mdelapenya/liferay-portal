@@ -200,7 +200,7 @@ public class MainServlet extends ActionServlet {
 			_log.debug("Initialize listeners");
 		}
 
-		initListeners(servletContext);
+		initListeners();
 
 		if (_log.isDebugEnabled()) {
 			_log.debug("Process startup events");
@@ -811,11 +811,8 @@ public class MainServlet extends ActionServlet {
 			WebKeys.PLUGIN_LAYOUT_TEMPLATES, layoutTemplates);
 	}
 
-	protected void initListeners(ServletContext servletContext) {
-		if (PropsValues.SESSION_VERIFY_SERIALIZABLE_ATTRIBUTE) {
-			servletContext.addListener(
-				SerializableSessionAttributeListener.class);
-		}
+	protected void initListeners() {
+		SerializableSessionAttributeListener.initialize();
 	}
 
 	protected PluginPackage initPluginPackage() throws Exception {
