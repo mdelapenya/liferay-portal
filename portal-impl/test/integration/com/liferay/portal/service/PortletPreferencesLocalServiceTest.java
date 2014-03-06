@@ -1117,7 +1117,7 @@ public class PortletPreferencesLocalServiceTest {
 
 	@Test
 	public void
-	testGetPreferencesByOwnerAndPlidAndPortletWithoutDefault()
+			testGetPreferencesByOwnerAndPlidAndPortletWithoutDefault()
 		throws Exception {
 
 		javax.portlet.PortletPreferences jxPortletPreferences  =
