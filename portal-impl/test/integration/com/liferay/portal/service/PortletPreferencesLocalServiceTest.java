@@ -1115,7 +1115,7 @@ public class PortletPreferencesLocalServiceTest {
 	}
 
 	@Test
-	public void testGetStrictPreferencesWithDefaultSingleXML()
+	public void testGetStrictPreferencesWithDefaultXML()
 		throws Exception {
 
 		MockPortletPreferencesLocalServiceImpl
