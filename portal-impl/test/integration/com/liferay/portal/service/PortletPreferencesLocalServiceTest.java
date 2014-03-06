@@ -1220,6 +1220,36 @@ public class PortletPreferencesLocalServiceTest {
 	}
 
 	@Test
+	public void testUpdatePortletPreferences() throws Exception {
+		String singleValuePortletPreferencesXML =
+			PortletPreferencesTestUtil.getPortletPreferencesXML(
+				_NAME, _SINGLE_VALUE);
+
+		PortletPreferences portletPreferences =
+			PortletPreferencesTestUtil.addLayoutPortletPreferences(
+				_layout, _portlet, singleValuePortletPreferencesXML);
+
+		String multipleValuesPortletPreferencesAsXML =
+			PortletPreferencesTestUtil.getPortletPreferencesXML(
+				_NAME, _MULTIPLE_VALUES);
+
+		portletPreferences.setPreferences(
+			multipleValuesPortletPreferencesAsXML);
+
+		PortletPreferencesLocalServiceUtil.updatePortletPreferences(
+			portletPreferences);
+
+		javax.portlet.PortletPreferences jxPortletPreferences =
+			PortletPreferencesLocalServiceUtil.getPreferences(
+				TestPropsValues.getCompanyId(),
+				PortletKeys.PREFS_OWNER_ID_DEFAULT,
+				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
+				_portlet.getPortletId());
+
+		assertValues(jxPortletPreferences, _NAME, _MULTIPLE_VALUES);
+	}
+
+	@Test
 	public void testUpdatePreferences() throws Exception {
 		String singleValuePortletPreferencesXML =
 			PortletPreferencesTestUtil.getPortletPreferencesXML(
