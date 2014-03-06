@@ -1071,7 +1071,8 @@ public class PortletPreferencesLocalServiceTest {
 	}
 
 	@Test
-	public void testGetPreferencesByOwnerAndPlidAndPortletAutoAdded()
+	public void
+			testGetLayoutPreferencesByOwnerAndPlidAndPortletIdWithDefaultXMLAutoAdded()
 		throws Exception {
 
 		String portletPreferencesXML =
@@ -1090,7 +1091,7 @@ public class PortletPreferencesLocalServiceTest {
 	}
 
 	@Test
-	public void testGetPreferencesByOwnerAndPlidAndPortletNotAutoAdded()
+	public void testGetLayoutPreferencesByOwnerAndPlidAndPortletIdNotAutoAdded()
 		throws Exception {
 
 		String singleValuePortletPreferencesXML =
@@ -1117,7 +1118,7 @@ public class PortletPreferencesLocalServiceTest {
 
 	@Test
 	public void
-			testGetPreferencesByOwnerAndPlidAndPortletWithoutDefault()
+			testGetLayoutPreferencesByOwnerAndPlidAndPortletIdWithoutDefaultAutoAdded()
 		throws Exception {
 
 		javax.portlet.PortletPreferences jxPortletPreferences  =
@@ -1132,7 +1133,9 @@ public class PortletPreferencesLocalServiceTest {
 	}
 
 	@Test
-	public void testGetPreferencesByPortletPreferencesIds() throws Exception {
+	public void testGetLayoutPreferencesByPortletPreferencesIds()
+		throws Exception {
+
 		String portletPreferencesXML =
 			PortletPreferencesTestUtil.getPortletPreferencesXML(
 				_NAME, _SINGLE_VALUE);
