@@ -143,9 +143,11 @@ public class CounterLocalServiceTest {
 			finally {
 				try {
 					SchedulerEngineHelperUtil.shutdown();
+
+					InitUtil.stopModuleFramework();
 				}
-				catch (SchedulerException se) {
-					throw new ProcessException(se);
+				catch (Exception e) {
+					throw new ProcessException(e);
 				}
 			}
 
