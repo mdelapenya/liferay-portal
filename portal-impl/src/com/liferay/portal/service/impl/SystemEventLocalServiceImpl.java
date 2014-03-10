@@ -157,23 +157,18 @@ public class SystemEventLocalServiceImpl
 			referrerClassName = null;
 		}
 
-		long systemEventId = 0;
-
 		SystemEvent systemEvent = null;
 
 		if ((systemEventHierarchyEntry != null) &&
 			systemEventHierarchyEntry.hasTypedModel(className, classPK)) {
 
-			systemEventId = systemEventHierarchyEntry.getSystemEventId();
-
 			systemEvent = systemEventPersistence.fetchByPrimaryKey(
-				systemEventId);
+				systemEventHierarchyEntry.getSystemEventId());
 		}
 
 		if (systemEvent == null) {
-			systemEventId = counterLocalService.increment();
-
-			systemEvent = systemEventPersistence.create(systemEventId);
+			systemEvent = systemEventPersistence.create(
+				counterLocalService.increment());
 		}
 
 		systemEvent.setGroupId(groupId);
