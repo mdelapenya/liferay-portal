@@ -159,16 +159,22 @@ public class SystemEventLocalServiceImpl
 
 		long systemEventId = 0;
 
+		SystemEvent systemEvent = null;
+
 		if ((systemEventHierarchyEntry != null) &&
 			systemEventHierarchyEntry.hasTypedModel(className, classPK)) {
 
 			systemEventId = systemEventHierarchyEntry.getSystemEventId();
-		}
-		else {
-			systemEventId = counterLocalService.increment();
+
+			systemEvent = systemEventPersistence.fetchByPrimaryKey(
+				systemEventId);
 		}
 
-		SystemEvent systemEvent = systemEventPersistence.create(systemEventId);
+		if (systemEvent == null) {
+			systemEventId = counterLocalService.increment();
+
+			systemEvent = systemEventPersistence.create(systemEventId);
+		}
 
 		systemEvent.setGroupId(groupId);
 		systemEvent.setCompanyId(companyId);
