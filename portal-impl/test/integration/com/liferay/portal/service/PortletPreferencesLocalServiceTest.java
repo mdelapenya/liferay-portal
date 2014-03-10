@@ -908,14 +908,14 @@ public class PortletPreferencesLocalServiceTest {
 	}
 
 	@Test
-	public void testGeGroupPreferencesByPortletPreferencesIds()
+	public void testGetGroupPreferencesByPortletPreferencesIds()
 		throws Exception {
 
 		String portletPreferencesXML =
 			PortletPreferencesTestUtil.getPortletPreferencesXML(
 				_NAME, _SINGLE_VALUE);
 
-		PortletPreferencesTestUtil.addLayoutPortletPreferences(
+		PortletPreferencesTestUtil.addGroupPortletPreferences(
 			_layout, _portlet, portletPreferencesXML);
 
 		PortletPreferencesIds portletPreferencesIds =
