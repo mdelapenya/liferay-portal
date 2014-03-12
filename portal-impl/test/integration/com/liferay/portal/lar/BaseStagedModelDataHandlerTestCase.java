@@ -119,10 +119,6 @@ public abstract class BaseStagedModelDataHandlerTestCase {
 		StagedModelAssets stagedModelAssets = updateAssetEntry(
 			stagedModel, stagingGroup);
 
-		// Comments
-
-		addComments(stagedModel);
-
 		// Ratings
 
 		addRatings(stagedModel);
@@ -151,17 +147,6 @@ public abstract class BaseStagedModelDataHandlerTestCase {
 		validateImport(
 			stagedModel, stagedModelAssets, dependentStagedModelsMap,
 			liveGroup);
-	}
-
-	protected void addComments(StagedModel stagedModel) throws Exception {
-		if (!isCommentableStagedModel()) {
-			return;
-		}
-
-		MBTestUtil.addDiscussionMessage(
-			TestPropsValues.getUser(), stagingGroup.getGroupId(),
-			ExportImportClassedModelUtil.getClassName(stagedModel),
-			ExportImportClassedModelUtil.getClassPK(stagedModel));
 	}
 
 	protected List<StagedModel> addDependentStagedModel(
