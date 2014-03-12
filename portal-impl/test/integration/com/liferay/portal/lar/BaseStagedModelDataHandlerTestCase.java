@@ -15,7 +15,6 @@
 package com.liferay.portal.lar;
 
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
-import com.liferay.portal.kernel.lar.ExportImportClassedModelUtil;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataContextFactoryUtil;
@@ -25,7 +24,6 @@ import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.Time;
-import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.kernel.zip.ZipReader;
@@ -42,6 +40,7 @@ import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.util.GroupTestUtil;
 import com.liferay.portal.util.TestPropsValues;
+import com.liferay.portlet.asset.NoSuchEntryException;
 import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetTag;
@@ -51,12 +50,6 @@ import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetVocabularyLocalServiceUtil;
 import com.liferay.portlet.asset.util.AssetTestUtil;
-import com.liferay.portlet.messageboards.model.MBMessage;
-import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
-import com.liferay.portlet.messageboards.util.MBTestUtil;
-import com.liferay.portlet.ratings.model.RatingsEntry;
-import com.liferay.portlet.ratings.service.RatingsEntryLocalServiceUtil;
-import com.liferay.portlet.ratings.util.RatingsTestUtil;
 
 import java.io.Serializable;
 
@@ -114,18 +107,7 @@ public abstract class BaseStagedModelDataHandlerTestCase {
 		StagedModel stagedModel = addStagedModel(
 			stagingGroup, dependentStagedModelsMap);
 
-		// Assets
-
-		StagedModelAssets stagedModelAssets = updateAssetEntry(
-			stagedModel, stagingGroup);
-
-		// Comments
-
-		addComments(stagedModel);
-
-		// Ratings
-
-		addRatings(stagedModel);
+		StagedModelAssets stagedModelAssets = updateAssetEntry(stagedModel);
 
 		StagedModelDataHandlerUtil.exportStagedModel(
 			portletDataContext, stagedModel);
@@ -151,17 +133,6 @@ public abstract class BaseStagedModelDataHandlerTestCase {
 		validateImport(
 			stagedModel, stagedModelAssets, dependentStagedModelsMap,
 			liveGroup);
-	}
-
-	protected void addComments(StagedModel stagedModel) throws Exception {
-		if (!isCommentableStagedModel()) {
-			return;
-		}
-
-		MBTestUtil.addDiscussionMessage(
-			TestPropsValues.getUser(), stagingGroup.getGroupId(),
-			ExportImportClassedModelUtil.getClassName(stagedModel),
-			ExportImportClassedModelUtil.getClassPK(stagedModel));
 	}
 
 	protected List<StagedModel> addDependentStagedModel(
@@ -190,12 +161,6 @@ public abstract class BaseStagedModelDataHandlerTestCase {
 		return new HashMap<String, List<StagedModel>>();
 	}
 
-	protected void addRatings(StagedModel stagedModel) throws Exception {
-		RatingsTestUtil.addEntry(
-			ExportImportClassedModelUtil.getClassName(stagedModel),
-			ExportImportClassedModelUtil.getClassPK(stagedModel));
-	}
-
 	protected abstract StagedModel addStagedModel(
 			Group group,
 			Map<String, List<StagedModel>> dependentStagedModelsMap)
@@ -206,13 +171,6 @@ public abstract class BaseStagedModelDataHandlerTestCase {
 			Map<String, List<StagedModel>> dependentStagedModelsMap,
 			Group group)
 		throws Exception {
-	}
-
-	protected AssetEntry fetchAssetEntry(StagedModel stagedModel, Group group)
-		throws Exception {
-
-		return AssetEntryLocalServiceUtil.fetchEntry(
-			group.getGroupId(), stagedModel.getUuid());
 	}
 
 	protected Date getEndDate() {
@@ -304,10 +262,6 @@ public abstract class BaseStagedModelDataHandlerTestCase {
 		portletImporter.readAssetTags(portletDataContext);
 	}
 
-	protected boolean isCommentableStagedModel() {
-		return false;
-	}
-
 	protected StagedModel readExportedStagedModel(StagedModel stagedModel) {
 		String stagedModelPath = ExportImportPathUtil.getModelPath(stagedModel);
 
@@ -318,13 +272,16 @@ public abstract class BaseStagedModelDataHandlerTestCase {
 		return exportedStagedModel;
 	}
 
-	protected StagedModelAssets updateAssetEntry(
-			StagedModel stagedModel, Group group)
+	protected StagedModelAssets updateAssetEntry(StagedModel stagedModel)
 		throws Exception {
 
-		AssetEntry assetEntry = fetchAssetEntry(stagedModel, group);
+		AssetEntry assetEntry = null;
 
-		if (assetEntry == null) {
+		try {
+			assetEntry = AssetEntryLocalServiceUtil.getEntry(
+				stagingGroup.getGroupId(), stagedModel.getUuid());
+		}
+		catch (NoSuchEntryException nsee) {
 			return null;
 		}
 
@@ -361,15 +318,15 @@ public abstract class BaseStagedModelDataHandlerTestCase {
 	}
 
 	protected void validateAssets(
-			StagedModel stagedModel, StagedModelAssets stagedModelAssets,
-			Group group)
+			String classUuid, StagedModelAssets stagedModelAssets, Group group)
 		throws Exception {
 
 		if (stagedModelAssets == null) {
 			return;
 		}
 
-		AssetEntry assetEntry = fetchAssetEntry(stagedModel, group);
+		AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(
+			group.getGroupId(), classUuid);
 
 		List<AssetCategory> assetCategories =
 			AssetCategoryLocalServiceUtil.getEntryCategories(
@@ -418,47 +375,6 @@ public abstract class BaseStagedModelDataHandlerTestCase {
 
 		Assert.assertEquals(
 			assetVocabulary.getUuid(), importedAssetVocabulary.getUuid());
-	}
-
-	protected void validateComments(
-			StagedModel stagedModel, StagedModel importedStagedModel,
-			Group group)
-		throws Exception {
-
-		if (!isCommentableStagedModel()) {
-			return;
-		}
-
-		List<MBMessage> discussionMBMessages =
-			MBMessageLocalServiceUtil.getMessages(
-				ExportImportClassedModelUtil.getClassName(stagedModel),
-				ExportImportClassedModelUtil.getClassPK(stagedModel),
-				WorkflowConstants.STATUS_ANY);
-
-		if (ListUtil.isEmpty(discussionMBMessages)) {
-			return;
-		}
-
-		int importedDiscussionMBMessagesCount =
-			MBMessageLocalServiceUtil.getDiscussionMessagesCount(
-				ExportImportClassedModelUtil.getClassName(importedStagedModel),
-				ExportImportClassedModelUtil.getClassPK(importedStagedModel),
-				WorkflowConstants.STATUS_ANY);
-
-		Assert.assertEquals(
-			discussionMBMessages.size(), importedDiscussionMBMessagesCount + 1);
-
-		for (MBMessage discussionMBMessage : discussionMBMessages) {
-			if (discussionMBMessage.isRoot()) {
-				continue;
-			}
-
-			MBMessage importedDiscussionMBMessage =
-				MBMessageLocalServiceUtil.fetchMBMessageByUuidAndGroupId(
-					discussionMBMessage.getUuid(), group.getGroupId());
-
-			Assert.assertNotNull(importedDiscussionMBMessage);
-		}
 	}
 
 	protected void validateExport(
@@ -548,51 +464,9 @@ public abstract class BaseStagedModelDataHandlerTestCase {
 
 		Assert.assertNotNull(importedStagedModel);
 
-		validateAssets(importedStagedModel, stagedModelAssets, group);
-
-		validateComments(stagedModel, importedStagedModel, group);
+		validateAssets(importedStagedModel.getUuid(), stagedModelAssets, group);
 
 		validateImport(dependentStagedModelsMap, group);
-
-		validateRatings(stagedModel, importedStagedModel);
-	}
-
-	protected void validateRatings(
-			StagedModel stagedModel, StagedModel importedStagedModel)
-		throws Exception {
-
-		List<RatingsEntry> ratingsEntries =
-			RatingsEntryLocalServiceUtil.getEntries(
-				ExportImportClassedModelUtil.getClassName(stagedModel),
-				ExportImportClassedModelUtil.getClassPK(stagedModel),
-				WorkflowConstants.STATUS_ANY);
-
-		List<RatingsEntry> importedRatingsEntries =
-			RatingsEntryLocalServiceUtil.getEntries(
-				ExportImportClassedModelUtil.getClassName(importedStagedModel),
-				ExportImportClassedModelUtil.getClassPK(importedStagedModel),
-				WorkflowConstants.STATUS_ANY);
-
-		Assert.assertEquals(
-			ratingsEntries.size(), importedRatingsEntries.size());
-
-		for (RatingsEntry ratingsEntry : ratingsEntries) {
-			Iterator<RatingsEntry> iterator = importedRatingsEntries.iterator();
-
-			while (iterator.hasNext()) {
-				RatingsEntry importedRatingsEntry = iterator.next();
-
-				if (ratingsEntry.getScore() ==
-						importedRatingsEntry.getScore()) {
-
-					iterator.remove();
-
-					break;
-				}
-			}
-		}
-
-		Assert.assertTrue(importedRatingsEntries.isEmpty());
 	}
 
 	protected Group liveGroup;
