@@ -335,7 +335,7 @@ public class JAASTest extends MainServletExecutionTestListener {
 		MockServletConfig mockServletConfig = new MockServletConfig(
 			_mockServletContext);
 
-		mainServlet = new MainServlet();
+		MainServlet mainServlet = new MainServlet();
 
 		try {
 			mainServlet.init(mockServletConfig);
