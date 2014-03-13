@@ -24,18 +24,22 @@ import com.liferay.portal.test.Sync;
 import com.liferay.portal.test.SynchronousDestinationExecutionTestListener;
 import com.liferay.portal.util.BaseSubscriptionTestCase;
 import com.liferay.portal.util.TestPropsValues;
+import com.liferay.portal.util.rules.BaseIgnoreMethodRule;
+import com.liferay.portal.util.rules.subscriptionstestrules.ContainerModelSubscriptionNotSupported;
+import com.liferay.portal.util.rules.subscriptionstestrules.RootContainerModelSubscriptionNotSupported;
 import com.liferay.portlet.wiki.model.WikiNode;
 import com.liferay.portlet.wiki.model.WikiPage;
 import com.liferay.portlet.wiki.util.WikiTestUtil;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.Rule;
 import org.junit.runner.RunWith;
 
 /**
  * @author Sergio González
  * @author Roberto Díaz
  */
+@ContainerModelSubscriptionNotSupported
+@RootContainerModelSubscriptionNotSupported
 @ExecutionTestListeners(
 	listeners = {
 		MainServletExecutionTestListener.class,
@@ -45,41 +49,9 @@ import org.junit.runner.RunWith;
 @Sync
 public class WikiSubscriptionTest extends BaseSubscriptionTestCase {
 
-	@Ignore
-	@Override
-	@Test
-	public void testSubscriptionBaseModelWhenInRootContainerModel() {
-	}
-
-	@Ignore
-	@Override
-	@Test
-	public void testSubscriptionContainerModelWhenInRootContainerModel() {
-	}
-
-	@Ignore
-	@Override
-	@Test
-	public void testSubscriptionContainerModelWhenInSubcontainerModel() {
-	}
-
-	@Ignore
-	@Override
-	@Test
-	public void testSubscriptionRootContainerModelWhenInContainerModel() {
-	}
-
-	@Ignore
-	@Override
-	@Test
-	public void testSubscriptionRootContainerModelWhenInRootContainerModel() {
-	}
-
-	@Ignore
-	@Override
-	@Test
-	public void testSubscriptionRootContainerModelWhenInSubcontainerModel() {
-	}
+	@Rule
+	public BaseIgnoreMethodRule ignoreMethodRule = new BaseIgnoreMethodRule(
+		WikiSubscriptionTest.class);
 
 	@Override
 	protected long addBaseModel(long containerModelId) throws Exception {

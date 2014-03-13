@@ -17,6 +17,10 @@ package com.liferay.portal.util;
 import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.util.rules.Ignorable;
+import com.liferay.portal.util.rules.subscriptionstestrules.BaseModelSubscriptionNotSupportedCondition;
+import com.liferay.portal.util.rules.subscriptionstestrules.ContainerModelSubscriptionNotSupportedCondition;
+import com.liferay.portal.util.rules.subscriptionstestrules.RootContainerModelSubscriptionNotSupportedCondition;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -49,6 +53,9 @@ public abstract class BaseSubscriptionTestCase extends BaseMailTestCase {
 		GroupLocalServiceUtil.deleteGroup(group);
 	}
 
+	@Ignorable(conditions = {
+		BaseModelSubscriptionNotSupportedCondition.class,
+	})
 	@Test
 	public void testSubscriptionBaseModelWhenInContainerModel()
 		throws Exception {
@@ -72,6 +79,11 @@ public abstract class BaseSubscriptionTestCase extends BaseMailTestCase {
 		Assert.assertEquals("Sending email", logRecord.getMessage());
 	}
 
+	@Ignorable(
+		conditions = {
+			BaseModelSubscriptionNotSupportedCondition.class,
+			RootContainerModelSubscriptionNotSupportedCondition.class
+		})
 	@Test
 	public void testSubscriptionBaseModelWhenInRootContainerModel()
 		throws Exception {
@@ -92,6 +104,8 @@ public abstract class BaseSubscriptionTestCase extends BaseMailTestCase {
 		Assert.assertEquals("Sending email", logRecord.getMessage());
 	}
 
+	@Ignorable(
+		conditions = ContainerModelSubscriptionNotSupportedCondition.class)
 	@Test
 	public void testSubscriptionContainerModelWhenInContainerModel()
 		throws Exception {
@@ -113,6 +127,11 @@ public abstract class BaseSubscriptionTestCase extends BaseMailTestCase {
 		Assert.assertEquals("Sending email", logRecord.getMessage());
 	}
 
+	@Ignorable(
+		conditions = {
+			ContainerModelSubscriptionNotSupportedCondition.class,
+			RootContainerModelSubscriptionNotSupportedCondition.class
+		})
 	@Test
 	public void testSubscriptionContainerModelWhenInRootContainerModel()
 		throws Exception {
@@ -130,6 +149,8 @@ public abstract class BaseSubscriptionTestCase extends BaseMailTestCase {
 		Assert.assertEquals(0, logRecords.size());
 	}
 
+	@Ignorable(
+		conditions = ContainerModelSubscriptionNotSupportedCondition.class)
 	@Test
 	public void testSubscriptionContainerModelWhenInSubcontainerModel()
 		throws Exception {
@@ -153,6 +174,11 @@ public abstract class BaseSubscriptionTestCase extends BaseMailTestCase {
 		Assert.assertEquals("Sending email", logRecord.getMessage());
 	}
 
+	@Ignorable(
+		conditions = {
+			ContainerModelSubscriptionNotSupportedCondition.class,
+			RootContainerModelSubscriptionNotSupportedCondition.class
+		})
 	@Test
 	public void testSubscriptionRootContainerModelWhenInContainerModel()
 		throws Exception {
@@ -174,6 +200,10 @@ public abstract class BaseSubscriptionTestCase extends BaseMailTestCase {
 		Assert.assertEquals("Sending email", logRecord.getMessage());
 	}
 
+	@Ignorable(
+		conditions = {
+			RootContainerModelSubscriptionNotSupportedCondition.class
+		})
 	@Test
 	public void testSubscriptionRootContainerModelWhenInRootContainerModel()
 		throws Exception {
@@ -192,6 +222,11 @@ public abstract class BaseSubscriptionTestCase extends BaseMailTestCase {
 		Assert.assertEquals("Sending email", logRecord.getMessage());
 	}
 
+	@Ignorable(
+		conditions = {
+			ContainerModelSubscriptionNotSupportedCondition.class,
+			RootContainerModelSubscriptionNotSupportedCondition.class
+		})
 	@Test
 	public void testSubscriptionRootContainerModelWhenInSubcontainerModel()
 		throws Exception {

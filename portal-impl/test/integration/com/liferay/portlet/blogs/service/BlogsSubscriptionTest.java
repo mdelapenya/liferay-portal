@@ -21,17 +21,21 @@ import com.liferay.portal.test.Sync;
 import com.liferay.portal.test.SynchronousDestinationExecutionTestListener;
 import com.liferay.portal.util.BaseSubscriptionTestCase;
 import com.liferay.portal.util.TestPropsValues;
+import com.liferay.portal.util.rules.BaseIgnoreMethodRule;
+import com.liferay.portal.util.rules.subscriptionstestrules.BaseModelSubscriptionNotSupported;
+import com.liferay.portal.util.rules.subscriptionstestrules.ContainerModelSubscriptionNotSupported;
 import com.liferay.portlet.blogs.model.BlogsEntry;
 import com.liferay.portlet.blogs.util.BlogsTestUtil;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.Rule;
 import org.junit.runner.RunWith;
 
 /**
  * @author Sergio González
  * @author Roberto Díaz
  */
+@BaseModelSubscriptionNotSupported
+@ContainerModelSubscriptionNotSupported
 @ExecutionTestListeners(
 	listeners = {
 		MainServletExecutionTestListener.class,
@@ -41,47 +45,9 @@ import org.junit.runner.RunWith;
 @Sync
 public class BlogsSubscriptionTest extends BaseSubscriptionTestCase {
 
-	@Ignore
-	@Override
-	@Test
-	public void testSubscriptionBaseModelWhenInContainerModel() {
-	}
-
-	@Ignore
-	@Override
-	@Test
-	public void testSubscriptionBaseModelWhenInRootContainerModel() {
-	}
-
-	@Ignore
-	@Override
-	@Test
-	public void testSubscriptionContainerModelWhenInContainerModel() {
-	}
-
-	@Ignore
-	@Override
-	@Test
-	public void testSubscriptionContainerModelWhenInRootContainerModel() {
-	}
-
-	@Ignore
-	@Override
-	@Test
-	public void testSubscriptionContainerModelWhenInSubcontainerModel() {
-	}
-
-	@Ignore
-	@Override
-	@Test
-	public void testSubscriptionRootContainerModelWhenInContainerModel() {
-	}
-
-	@Ignore
-	@Override
-	@Test
-	public void testSubscriptionRootContainerModelWhenInSubcontainerModel() {
-	}
+	@Rule
+	public BaseIgnoreMethodRule ignoreMethodRule = new BaseIgnoreMethodRule(
+		BlogsSubscriptionTest.class);
 
 	@Override
 	protected long addBaseModel(long containerModelId) throws Exception {

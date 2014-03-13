@@ -24,16 +24,18 @@ import com.liferay.portal.test.Sync;
 import com.liferay.portal.test.SynchronousDestinationExecutionTestListener;
 import com.liferay.portal.util.BaseSubscriptionTestCase;
 import com.liferay.portal.util.TestPropsValues;
+import com.liferay.portal.util.rules.BaseIgnoreMethodRule;
+import com.liferay.portal.util.rules.subscriptionstestrules.BaseModelSubscriptionNotSupported;
 import com.liferay.portlet.documentlibrary.util.DLAppTestUtil;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.Rule;
 import org.junit.runner.RunWith;
 
 /**
  * @author Sergio González
  * @author Roberto Díaz
  */
+@BaseModelSubscriptionNotSupported
 @ExecutionTestListeners(
 	listeners = {
 		MainServletExecutionTestListener.class,
@@ -43,17 +45,9 @@ import org.junit.runner.RunWith;
 @Sync
 public class DLSubscriptionTest extends BaseSubscriptionTestCase {
 
-	@Ignore
-	@Override
-	@Test
-	public void testSubscriptionBaseModelWhenInContainerModel() {
-	}
-
-	@Ignore
-	@Override
-	@Test
-	public void testSubscriptionBaseModelWhenInRootContainerModel() {
-	}
+	@Rule
+	public BaseIgnoreMethodRule ignoreMethodRule = new BaseIgnoreMethodRule(
+		DLSubscriptionTest.class);
 
 	@Override
 	protected long addBaseModel(long containerModelId) throws Exception {
