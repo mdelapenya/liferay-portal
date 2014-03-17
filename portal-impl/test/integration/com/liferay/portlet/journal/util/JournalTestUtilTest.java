@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.journal.util;
 
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.transaction.Transactional;
@@ -23,6 +24,7 @@ import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.security.auth.CompanyThreadLocal;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.Sync;
@@ -40,6 +42,7 @@ import com.liferay.portlet.dynamicdatamapping.util.DDMTemplateTestUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalFolder;
 
+import java.util.Locale;
 import java.util.Map;
 
 import org.junit.Assert;
@@ -128,9 +131,12 @@ public class JournalTestUtilTest {
 
 	@Test
 	public void testAddDDMStructureWithNonexistingLocale() throws Exception {
+		Locale[] availableLocales = LanguageUtil.getAvailableLocales();
+
+		long companyId = CompanyThreadLocal.getCompanyId();
+
 		try {
-			CompanyTestUtil.resetCompanyLocales(
-				PortalUtil.getDefaultCompanyId(), "en_US");
+			CompanyTestUtil.resetCompanyLocales(companyId, "en_US");
 
 			DDMStructureTestUtil.addStructure(
 				JournalArticle.class.getName(), LocaleUtil.CANADA);
@@ -138,6 +144,9 @@ public class JournalTestUtilTest {
 			Assert.fail();
 		}
 		catch (StructureNameException sne) {
+		}
+		finally {
+			CompanyTestUtil.resetCompanyLocales(companyId, availableLocales);
 		}
 	}
 
