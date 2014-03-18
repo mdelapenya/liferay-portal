@@ -26,6 +26,7 @@ import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
 import com.liferay.portal.model.VirtualLayoutConstants;
+import com.liferay.portal.security.auth.CompanyThreadLocal;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
@@ -62,8 +63,10 @@ public class PortalImplLocalizedFriendlyURLTest {
 	public static void setUpClass() throws Exception {
 		_availableLocales = LanguageUtil.getAvailableLocales();
 
+		_companyId = CompanyThreadLocal.getCompanyId();
+
 		CompanyTestUtil.resetCompanyLocales(
-			PortalUtil.getDefaultCompanyId(),
+			_companyId,
 			new Locale[] {
 				LocaleUtil.CANADA_FRENCH, LocaleUtil.SPAIN, LocaleUtil.US});
 
@@ -82,8 +85,7 @@ public class PortalImplLocalizedFriendlyURLTest {
 
 	@AfterClass
 	public static void tearDownClass() throws Exception {
-		CompanyTestUtil.resetCompanyLocales(
-			PortalUtil.getDefaultCompanyId(), _availableLocales);
+		CompanyTestUtil.resetCompanyLocales(_companyId, _availableLocales);
 	}
 
 	@Test
@@ -845,6 +847,7 @@ public class PortalImplLocalizedFriendlyURLTest {
 	private static final String _PUBLIC_GROUP_SERVLET_MAPPING =
 		PropsValues.LAYOUT_FRIENDLY_URL_PUBLIC_SERVLET_MAPPING;
 
+	private static long _companyId;
 	private static Locale[] _availableLocales;
 	private static Map<Locale, String> _friendlyURLMap;
 	private static Map<Locale, String> _nameMap;
