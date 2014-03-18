@@ -15,12 +15,9 @@
 package com.liferay.portal.test;
 
 import com.liferay.portal.kernel.annotation.AnnotationLocator;
-import com.liferay.portal.kernel.messaging.BaseAsyncDestination;
 import com.liferay.portal.kernel.messaging.Destination;
-import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.MessageBus;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
-import com.liferay.portal.kernel.messaging.SynchronousDestination;
 import com.liferay.portal.kernel.messaging.proxy.ProxyModeThreadLocal;
 import com.liferay.portal.kernel.test.AbstractExecutionTestListener;
 import com.liferay.portal.kernel.test.TestContext;
@@ -82,30 +79,6 @@ public class SynchronousDestinationExecutionTestListener
 			}
 
 			ProxyModeThreadLocal.setForceSync(true);
-
-			replaceDestination(DestinationNames.ASYNC_SERVICE);
-			replaceDestination(DestinationNames.BACKGROUND_TASK);
-			replaceDestination(
-				DestinationNames.DOCUMENT_LIBRARY_RAW_METADATA_PROCESSOR);
-			replaceDestination(DestinationNames.SUBSCRIPTION_SENDER);
-		}
-
-		protected void replaceDestination(String destinationName) {
-			MessageBus messageBus = MessageBusUtil.getMessageBus();
-
-			Destination destination = messageBus.getDestination(
-				destinationName);
-
-			if (destination instanceof BaseAsyncDestination) {
-				_asyncServiceDestinations.add(destination);
-
-				SynchronousDestination synchronousDestination =
-					new SynchronousDestination();
-
-				synchronousDestination.setName(destinationName);
-
-				messageBus.replace(synchronousDestination);
-			}
 		}
 
 		public void restorePreviousSync() {
