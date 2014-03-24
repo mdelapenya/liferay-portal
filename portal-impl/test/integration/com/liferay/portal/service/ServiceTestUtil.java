@@ -199,7 +199,7 @@ public class ServiceTestUtil {
 
 		// Indexers
 
-		PortalRegisterTestUtil.registerIndexers();
+		// PortalRegisterTestUtil.registerIndexers();
 
 		// Upgrade
 
@@ -272,15 +272,15 @@ public class ServiceTestUtil {
 
 		// Trash
 
-		PortalRegisterTestUtil.registerTrashHandlers();
+		// PortalRegisterTestUtil.registerTrashHandlers();
 
 		// Workflow
 
-		PortalRegisterTestUtil.registerWorkflowHandlers();
+		// PortalRegisterTestUtil.registerWorkflowHandlers();
 
 		// AssetRenderers
 
-		PortalRegisterTestUtil.registerAssetRendererFactories();
+		// PortalRegisterTestUtil.registerAssetRendererFactories();
 
 		// Company
 
