@@ -73,6 +73,13 @@ import com.liferay.portlet.wiki.workflow.WikiPageWorkflowHandler;
  */
 public class PortalRegisterTestUtil {
 
+	public void afterPropertiesSet() {
+		registerAssetRendererFactories();
+		registerIndexers();
+		registerTrashHandlers();
+		registerWorkflowHandlers();
+	}
+
 	protected static void registerAssetRendererFactories() {
 		for (Class<?> clazz : _ASSET_RENDERER_FACTORY_CLASSES) {
 			try {

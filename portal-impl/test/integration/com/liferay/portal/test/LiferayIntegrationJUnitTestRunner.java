@@ -20,6 +20,9 @@ import com.liferay.portal.util.InitUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
@@ -81,6 +84,10 @@ public class LiferayIntegrationJUnitTestRunner
 			}
 
 		};
+	}
+
+	protected List<String> getExtraBeanDefinitions() {
+		return Arrays.asList("META-INF/portal-registries-spring.xml");
 	}
 
 	private static final Method _createInheritedMapMethod;
