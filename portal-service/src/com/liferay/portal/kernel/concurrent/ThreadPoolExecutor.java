@@ -479,15 +479,19 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
 
 				if (state == _SHUTDOWN) {
 					runnable = _taskQueue.poll();
+					System.out.println(">>>> [" + this + "] SHUTDOWN-POLL(): Actual size: " + _taskQueue.size());
 				}
 				else if ((_poolSize > _corePoolSize) ||
 						 _allowCoreThreadTimeout) {
 
-					runnable = _taskQueue.poll(
-						_keepAliveTime, TimeUnit.NANOSECONDS);
+					runnable = _taskQueue.poll();
+//					runnable = _taskQueue.poll(
+//						_keepAliveTime, TimeUnit.NANOSECONDS);
+					System.out.println(">>>> [" + this + "] CONDITIONAL-POLL(): " + _taskQueue.size());
 				}
 				else {
 					runnable = _taskQueue.take();
+					System.out.println(">>>> [" + this + "] ELSE: Actual size: " + _taskQueue.size());
 				}
 
 				if (runnable != null) {
