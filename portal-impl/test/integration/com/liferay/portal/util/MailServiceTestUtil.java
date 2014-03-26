@@ -14,8 +14,8 @@
 
 package com.liferay.portal.util;
 
-import com.dumbster.smtp.SimpleSmtpServer;
-import com.dumbster.smtp.SmtpMessage;
+import com.dumbster.smtp.SmtpServer;
+import com.dumbster.smtp.MailMessage;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -30,34 +30,34 @@ public class MailServiceTestUtil {
 		return _simpleSmtpServer.getReceivedEmailSize();
 	}
 
-	public static List<SmtpMessage> getMessages(
+	public static List<MailMessage> getMessages(
 		String headerName, String headerValue) {
 
-		List<SmtpMessage> smtpMessages = new ArrayList<SmtpMessage>();
+		List<MailMessage> messages = new ArrayList<MailMessage>();
 
-		Iterator<SmtpMessage> iterator = _simpleSmtpServer.getReceivedEmail();
+		Iterator<MailMessage> iterator = _simpleSmtpServer.getReceivedEmail();
 
 		while (iterator.hasNext()) {
-			SmtpMessage smtpMessage = iterator.next();
+			MailMessage message = iterator.next();
 
 			if (headerName.equals("Body")) {
-				String body = smtpMessage.getBody();
+				String body = message.getBody();
 
 				if (body.equals(headerValue)) {
-					smtpMessages.add(smtpMessage);
+					messages.add(message);
 				}
 			}
 			else {
-				String smtpMessageHeaderValue = smtpMessage.getHeaderValue(
+				String messageHeaderValue = message.getFirstHeaderValue(
 					headerName);
 
-				if (smtpMessageHeaderValue.equals(headerValue)) {
-					smtpMessages.add(smtpMessage);
+				if (messageHeaderValue.equals(headerValue)) {
+					messages.add(message);
 				}
 			}
 		}
 
-		return smtpMessages;
+		return messages;
 	}
 
 	public static void start() {
