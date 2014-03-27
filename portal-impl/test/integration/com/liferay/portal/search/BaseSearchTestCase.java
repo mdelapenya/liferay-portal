@@ -19,7 +19,6 @@ import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.SearchContext;
-import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.StringPool;
@@ -36,7 +35,6 @@ import com.liferay.portal.security.permission.PermissionThreadLocal;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
-import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.util.GroupTestUtil;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portal.util.UserTestUtil;
@@ -69,9 +67,7 @@ public abstract class BaseSearchTestCase {
 	public void tearDown() throws Exception {
 		GroupLocalServiceUtil.deleteGroup(group);
 
-		for(User user: users) {
-			UserLocalServiceUtil.deleteUser(user);
-		}
+		UserTestUtil.deleteTestUsers(users);
 	}
 
 	@Test
@@ -203,6 +199,14 @@ public abstract class BaseSearchTestCase {
 			serviceContext.getScopeGroupId(), getBaseModelClassName(),
 			getBaseModelClassPK(classedModel), message.getThreadId(),
 			message.getMessageId(), message.getSubject(), body, serviceContext);
+	}
+
+	protected User addUser() throws Exception {
+		User user = UserTestUtil.addUser(null, 0);
+
+		users.add(user);
+
+		return user;
 	}
 
 	protected void expireBaseModelVersions(
@@ -890,16 +894,6 @@ public abstract class BaseSearchTestCase {
 
 	protected BaseModel<?> baseModel;
 	protected Group group;
-
-	protected User addUser() throws Exception {
-		User user = UserTestUtil.addUser(null, 0);
-
-		users.add(user);
-
-		return user;
-	}
-
 	protected List<User> users;
-
 
 }
