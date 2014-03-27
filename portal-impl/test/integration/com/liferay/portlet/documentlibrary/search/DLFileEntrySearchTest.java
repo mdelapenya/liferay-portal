@@ -79,7 +79,6 @@ public class DLFileEntrySearchTest extends BaseSearchTestCase {
 	}
 
 	@Test
-	@Transactional
 	public void testSearchTikaRawMetadata() throws Exception {
 		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
 			group.getGroupId());
