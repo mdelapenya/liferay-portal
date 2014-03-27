@@ -36,12 +36,14 @@ import com.liferay.portal.security.permission.PermissionThreadLocal;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.util.GroupTestUtil;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portal.util.UserTestUtil;
 import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.After;
@@ -59,21 +61,25 @@ public abstract class BaseSearchTestCase {
 		FinderCacheUtil.clearCache();
 
 		group = GroupTestUtil.addGroup();
+
+		users = new ArrayList<User>();
 	}
 
 	@After
 	public void tearDown() throws Exception {
 		GroupLocalServiceUtil.deleteGroup(group);
+
+		for(User user: users) {
+			UserLocalServiceUtil.deleteUser(user);
+		}
 	}
 
 	@Test
-	@Transactional
 	public void testBaseModelUserPermissions() throws Exception {
 		testUserPermissions(false, true);
 	}
 
 	@Test
-	@Transactional
 	public void testParentBaseModelUserPermissions() throws Exception {
 		testUserPermissions(true, false);
 	}
@@ -99,55 +105,46 @@ public abstract class BaseSearchTestCase {
 	}
 
 	@Test
-	@Transactional
 	public void testSearchByKeywordsInsideParentBaseModel() throws Exception {
 		searchByKeywordsInsideParentBaseModel();
 	}
 
 	@Test
-	@Transactional
 	public void testSearchComments() throws Exception {
 		searchComments();
 	}
 
 	@Test
-	@Transactional
 	public void testSearchExpireAllVersions() throws Exception {
 		searchExpireVersions(false);
 	}
 
 	@Test
-	@Transactional
 	public void testSearchExpireLatestVersion() throws Exception {
 		searchExpireVersions(true);
 	}
 
 	@Test
-	@Transactional
 	public void testSearchMyEntries() throws Exception {
 		searchMyEntries();
 	}
 
 	@Test
-	@Transactional
 	public void testSearchRecentEntries() throws Exception {
 		searchRecentEntries();
 	}
 
 	@Test
-	@Transactional
 	public void testSearchStatus() throws Exception {
 		searchStatus();
 	}
 
 	@Test
-	@Transactional
 	public void testSearchVersions() throws Exception {
 		searchVersions();
 	}
 
 	@Test
-	@Transactional
 	public void testSearchWithinDDMStructure() throws Exception {
 		searchWithinDDMStructure();
 	}
@@ -542,12 +539,12 @@ public abstract class BaseSearchTestCase {
 	}
 
 	protected void searchMyEntries() throws Exception {
-		User user1 = UserTestUtil.addUser(null, 0);
+		User user1 = addUser();
 
 		long initialUser1SearchGroupEntriesCount = searchGroupEntriesCount(
 			group.getGroupId(), user1.getUserId());
 
-		User user2 = UserTestUtil.addUser(null, 0);
+		User user2 = addUser();
 
 		long initialUser2SearchGroupEntriesCount = searchGroupEntriesCount(
 			group.getGroupId(), user2.getUserId());
@@ -642,7 +639,7 @@ public abstract class BaseSearchTestCase {
 		String name = PrincipalThreadLocal.getName();
 
 		try {
-			User user1 = UserTestUtil.addUser(null, 0);
+			User user1 = addUser();
 
 			PrincipalThreadLocal.setName(user1.getUserId());
 
@@ -656,7 +653,7 @@ public abstract class BaseSearchTestCase {
 				parentBaseModel2, true, ServiceTestUtil.randomString(),
 				serviceContext);
 
-			User user2 = UserTestUtil.addUser(null, 0);
+			User user2 = addUser();
 
 			PrincipalThreadLocal.setName(user2.getUserId());
 
@@ -847,7 +844,7 @@ public abstract class BaseSearchTestCase {
 		baseModel = addBaseModel(
 			parentBaseModel, true, getSearchKeywords(), serviceContext);
 
-		User user = UserTestUtil.addUser(null, 0);
+		User user = addUser();
 
 		PermissionChecker originalPermissionChecker =
 			PermissionThreadLocal.getPermissionChecker();
@@ -893,5 +890,16 @@ public abstract class BaseSearchTestCase {
 
 	protected BaseModel<?> baseModel;
 	protected Group group;
+
+	protected User addUser() throws Exception {
+		User user = UserTestUtil.addUser(null, 0);
+
+		users.add(user);
+
+		return user;
+	}
+
+	protected List<User> users;
+
 
 }
