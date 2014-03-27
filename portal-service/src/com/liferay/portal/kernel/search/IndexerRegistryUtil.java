@@ -17,6 +17,7 @@ package com.liferay.portal.kernel.search;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.ClassUtil;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
 import com.liferay.registry.ServiceReference;
@@ -115,6 +116,17 @@ public class IndexerRegistryUtil {
 		return set;
 	}
 
+	private String _composeServiceRegistrationKey(Set<String> classNames) {
+		StringBundler sb = new StringBundler(classNames.size());
+
+		for (String className : classNames) {
+			sb.append(className);
+
+		};
+
+		return sb.toString();
+	}
+
 	private Indexer _nullSafeGetIndexer(String className) {
 		Indexer indexer = _indexers.get(className);
 
@@ -147,18 +159,20 @@ public class IndexerRegistryUtil {
 		ServiceRegistration<Indexer> serviceRegistration =
 			registry.registerService(Indexer.class, indexer, properties);
 
-		for (String curClassName : classNames) {
-			_serviceRegistrations.put(curClassName, serviceRegistration);
-		}
+		String serviceRegistrationKey = _composeServiceRegistrationKey(
+			classNames);
+
+		_serviceRegistrations.put(serviceRegistrationKey, serviceRegistration);
 	}
 
 	private void _unregister(Indexer indexer) {
 		Set<String> classNames = _aggregrateClassNames(
 			indexer.getClassNames(), ClassUtil.getClassName(indexer));
 
-		for (String className : classNames) {
-			_unregister(className);
-		}
+		String serviceRegistrationKey = _composeServiceRegistrationKey(
+			classNames);
+
+		_unregister(serviceRegistrationKey);
 	}
 
 	private void _unregister(String className) {
