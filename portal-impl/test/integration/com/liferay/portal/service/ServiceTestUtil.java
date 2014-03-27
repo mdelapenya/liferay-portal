@@ -122,6 +122,22 @@ public class ServiceTestUtil {
 
 	public static void destroyServices() {
 		_deleteDirectories();
+
+		// Indexers
+
+		PortalRegisterTestUtil.unregisterIndexers();
+
+		// Trash
+
+		PortalRegisterTestUtil.unregisterTrashHandlers();
+
+		// Workflow
+
+		PortalRegisterTestUtil.unregisterWorkflowHandlers();
+
+		// AssetRenderers
+
+		PortalRegisterTestUtil.unregisterAssetRendererFactories();
 	}
 
 	public static SearchContext getSearchContext() throws Exception {

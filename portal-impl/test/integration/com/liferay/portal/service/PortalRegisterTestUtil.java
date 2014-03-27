@@ -15,8 +15,12 @@
 package com.liferay.portal.service;
 
 import com.liferay.portal.asset.LayoutRevisionAssetRendererFactory;
+import com.liferay.portal.kernel.search.BaseIndexer;
+import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
+import com.liferay.portal.kernel.workflow.WorkflowHandler;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
 import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
 import com.liferay.portlet.asset.model.AssetRendererFactory;
@@ -68,12 +72,23 @@ import com.liferay.portlet.wiki.util.WikiNodeIndexer;
 import com.liferay.portlet.wiki.util.WikiPageIndexer;
 import com.liferay.portlet.wiki.workflow.WikiPageWorkflowHandler;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * @author Roberto Díaz
  */
 public class PortalRegisterTestUtil {
 
 	protected static void registerAssetRendererFactories() {
+		if (_ASSET_RENDER_FACTORIES != null) {
+			throw new IllegalStateException("Already initialized");
+		}
+
+		_ASSET_RENDER_FACTORIES = new ArrayList<AssetRendererFactory>(
+			_ASSET_RENDERER_FACTORY_CLASSES.length);
+
 		for (Class<?> clazz : _ASSET_RENDERER_FACTORY_CLASSES) {
 			try {
 				AssetRendererFactory assetRendererFactory =
@@ -82,7 +97,7 @@ public class PortalRegisterTestUtil {
 				assetRendererFactory.setClassName(
 					assetRendererFactory.getClassName());
 
-				AssetRendererFactoryRegistryUtil.register(assetRendererFactory);
+				_ASSET_RENDER_FACTORIES.add(assetRendererFactory);
 			}
 			catch (IllegalAccessException iae) {
 				iae.printStackTrace();
@@ -91,50 +106,44 @@ public class PortalRegisterTestUtil {
 				ie.printStackTrace();
 			}
 		}
+
+		AssetRendererFactoryRegistryUtil.register(_ASSET_RENDER_FACTORIES);
 	}
 
 	protected static void registerIndexers() {
-		IndexerRegistryUtil.register(new AssetIndexer());
-		IndexerRegistryUtil.register(new BlogsIndexer());
-		IndexerRegistryUtil.register(new ContactIndexer());
-		IndexerRegistryUtil.register(new BookmarksEntryIndexer());
-		IndexerRegistryUtil.register(new BookmarksFolderIndexer());
-		IndexerRegistryUtil.register(new DDLIndexer());
-		IndexerRegistryUtil.register(new DLFileEntryIndexer());
-		IndexerRegistryUtil.register(new DLFolderIndexer());
-		IndexerRegistryUtil.register(new JournalArticleIndexer());
-		IndexerRegistryUtil.register(new JournalFolderIndexer());
-		IndexerRegistryUtil.register(new MBMessageIndexer());
-		IndexerRegistryUtil.register(new OrganizationIndexer());
-		IndexerRegistryUtil.register(new TrashIndexer());
-		IndexerRegistryUtil.register(new UserIndexer());
-		IndexerRegistryUtil.register(new WikiNodeIndexer());
-		IndexerRegistryUtil.register(new WikiPageIndexer());
+		for (Indexer indexer : _INDEXERS) {
+			IndexerRegistryUtil.register(indexer);
+		}
 	}
 
 	protected static void registerTrashHandlers() {
-		TrashHandlerRegistryUtil.register(new BlogsEntryTrashHandler());
-		TrashHandlerRegistryUtil.register(new DLFileEntryTrashHandler());
-		TrashHandlerRegistryUtil.register(new DLFileShortcutTrashHandler());
-		TrashHandlerRegistryUtil.register(new DLFolderTrashHandler());
-		TrashHandlerRegistryUtil.register(new JournalArticleTrashHandler());
-		TrashHandlerRegistryUtil.register(new MBCategoryTrashHandler());
-		TrashHandlerRegistryUtil.register(new MBMessageTrashHandler());
-		TrashHandlerRegistryUtil.register(new MBThreadTrashHandler());
-		TrashHandlerRegistryUtil.register(new WikiNodeTrashHandler());
-		TrashHandlerRegistryUtil.register(new WikiPageTrashHandler());
+		TrashHandlerRegistryUtil.register(_TRASH_HANDLERS);
 	}
 
 	protected static void registerWorkflowHandlers() {
-		WorkflowHandlerRegistryUtil.register(new BlogsEntryWorkflowHandler());
-		WorkflowHandlerRegistryUtil.register(new DDLRecordWorkflowHandler());
-		WorkflowHandlerRegistryUtil.register(new DLFileEntryWorkflowHandler());
-		WorkflowHandlerRegistryUtil.register(
-			new JournalArticleWorkflowHandler());
-		WorkflowHandlerRegistryUtil.register(new MBDiscussionWorkflowHandler());
-		WorkflowHandlerRegistryUtil.register(new MBMessageWorkflowHandler());
-		WorkflowHandlerRegistryUtil.register(new UserWorkflowHandler());
-		WorkflowHandlerRegistryUtil.register(new WikiPageWorkflowHandler());
+		WorkflowHandlerRegistryUtil.register(_WORKFLOW_HANDLERS);
+	}
+
+	protected static void unregisterAssetRendererFactories() {
+		if (_ASSET_RENDER_FACTORIES == null) {
+			throw new IllegalStateException("Non initialized factories");
+		}
+
+		AssetRendererFactoryRegistryUtil.unregister(_ASSET_RENDER_FACTORIES);
+	}
+
+	protected static void unregisterIndexers() {
+		for (Indexer indexer : _INDEXERS) {
+			IndexerRegistryUtil.unregister(indexer);
+		}
+	}
+
+	protected static void unregisterTrashHandlers() {
+		TrashHandlerRegistryUtil.unregister(_TRASH_HANDLERS);
+	}
+
+	protected static void unregisterWorkflowHandlers() {
+		WorkflowHandlerRegistryUtil.unregister(_WORKFLOW_HANDLERS);
 	}
 
 	private static final Class<?>[] _ASSET_RENDERER_FACTORY_CLASSES = {
@@ -152,5 +161,34 @@ public class PortalRegisterTestUtil {
 		MBMessageAssetRendererFactory.class, UserAssetRendererFactory.class,
 		WikiPageAssetRendererFactory.class
 	};
+
+	private static final BaseIndexer[] _INDEXERS = {
+		new AssetIndexer(), new BlogsIndexer(), new ContactIndexer(),
+		new BookmarksEntryIndexer(), new BookmarksFolderIndexer(),
+		new DDLIndexer(), new DLFileEntryIndexer(), new DLFolderIndexer(),
+		new JournalArticleIndexer(), new JournalFolderIndexer(),
+		new MBMessageIndexer(), new OrganizationIndexer(), new TrashIndexer(),
+		new UserIndexer(), new WikiNodeIndexer(), new WikiPageIndexer()
+	};
+
+	private static final List<TrashHandler> _TRASH_HANDLERS =
+		Arrays.<TrashHandler>asList(
+			new BlogsEntryTrashHandler(), new DLFileEntryTrashHandler(),
+			new DLFileShortcutTrashHandler(), new DLFolderTrashHandler(),
+			new JournalArticleTrashHandler(), new MBCategoryTrashHandler(),
+			new MBMessageTrashHandler(), new MBThreadTrashHandler(),
+			new WikiNodeTrashHandler(), new WikiPageTrashHandler()
+		);
+
+	private static final List<WorkflowHandler> _WORKFLOW_HANDLERS =
+		Arrays.<WorkflowHandler>asList(
+			new BlogsEntryWorkflowHandler(), new DDLRecordWorkflowHandler(),
+			new DLFileEntryWorkflowHandler(),
+			new JournalArticleWorkflowHandler(),
+			new MBDiscussionWorkflowHandler(), new MBMessageWorkflowHandler(),
+			new UserWorkflowHandler(), new WikiPageWorkflowHandler()
+		);
+
+	private static List<AssetRendererFactory> _ASSET_RENDER_FACTORIES;
 
 }
