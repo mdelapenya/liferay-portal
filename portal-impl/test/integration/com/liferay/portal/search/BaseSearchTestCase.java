@@ -69,9 +69,7 @@ public abstract class BaseSearchTestCase {
 	public void tearDown() throws Exception {
 		GroupLocalServiceUtil.deleteGroup(group);
 
-		for(User user: users) {
-			UserLocalServiceUtil.deleteUser(user);
-		}
+		UserTestUtil.deleteTestUsers(users);
 	}
 
 	@Test
@@ -203,6 +201,14 @@ public abstract class BaseSearchTestCase {
 			serviceContext.getScopeGroupId(), getBaseModelClassName(),
 			getBaseModelClassPK(classedModel), message.getThreadId(),
 			message.getMessageId(), message.getSubject(), body, serviceContext);
+	}
+
+	protected User addUser() throws Exception {
+		User user = UserTestUtil.addUser(null, 0);
+
+		users.add(user);
+
+		return user;
 	}
 
 	protected void expireBaseModelVersions(
@@ -890,16 +896,6 @@ public abstract class BaseSearchTestCase {
 
 	protected BaseModel<?> baseModel;
 	protected Group group;
-
-	protected User addUser() throws Exception {
-		User user = UserTestUtil.addUser(null, 0);
-
-		users.add(user);
-
-		return user;
-	}
-
 	protected List<User> users;
-
 
 }
