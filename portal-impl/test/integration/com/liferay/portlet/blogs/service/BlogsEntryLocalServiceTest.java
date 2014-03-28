@@ -23,7 +23,9 @@ import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.service.SubscriptionLocalServiceUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.Sync;
@@ -75,7 +77,18 @@ public class BlogsEntryLocalServiceTest {
 	@After
 	public void tearDown() throws Exception {
 		GroupLocalServiceUtil.deleteGroup(_group);
+
+		if(_user != null) {
+			UserLocalServiceUtil.deleteUser(_user);
+		}
+
+		if(_organization != null) {
+			UserLocalServiceUtil.deleteUser(_organization.getUserId());
+
+			OrganizationLocalServiceUtil.deleteOrganization(_organization);
+		}
 	}
+
 
 	@Test
 	public void testAddEntryWithoutSmallImage() throws Exception {
@@ -685,22 +698,22 @@ public class BlogsEntryLocalServiceTest {
 			queryDefinition = _statusAnyQueryDefinition;
 		}
 
-		Organization organization = OrganizationTestUtil.addOrganization();
+		_organization = OrganizationTestUtil.addOrganization();
 
-		User user = UserTestUtil.addOrganizationOwnerUser(organization);
+		_user = UserTestUtil.addOrganizationOwnerUser(_organization);
 
 		List<BlogsEntry> initialEntries =
 			BlogsEntryLocalServiceUtil.getOrganizationEntries(
-				organization.getOrganizationId(), new Date(), queryDefinition);
+				_organization.getOrganizationId(), new Date(), queryDefinition);
 
 		int initialCount = initialEntries.size();
 
-		addEntry(user.getUserId(), false);
-		addEntry(user.getUserId(), true);
+		addEntry(_user.getUserId(), false);
+		addEntry(_user.getUserId(), true);
 
 		List<BlogsEntry> actualEntries =
 			BlogsEntryLocalServiceUtil.getOrganizationEntries(
-				organization.getOrganizationId(), new Date(), queryDefinition);
+				_organization.getOrganizationId(), new Date(), queryDefinition);
 
 		Assert.assertEquals(initialCount + 1, actualEntries.size());
 
@@ -716,27 +729,29 @@ public class BlogsEntryLocalServiceTest {
 			queryDefinition = _statusAnyQueryDefinition;
 		}
 
-		Organization organization = OrganizationTestUtil.addOrganization();
+		_organization = OrganizationTestUtil.addOrganization();
 
-		User user = UserTestUtil.addOrganizationOwnerUser(organization);
+		_user = UserTestUtil.addOrganizationOwnerUser(_organization);
 
 		int initialCount =
 			BlogsEntryLocalServiceUtil.getOrganizationEntriesCount(
-				organization.getOrganizationId(), new Date(), queryDefinition);
+				_organization.getOrganizationId(), new Date(), queryDefinition);
 
-		addEntry(user.getUserId(), false);
-		addEntry(user.getUserId(), true);
+		addEntry(_user.getUserId(), false);
+		addEntry(_user.getUserId(), true);
 
 		int actualCount =
 			BlogsEntryLocalServiceUtil.getOrganizationEntriesCount(
-				organization.getOrganizationId(), new Date(), queryDefinition);
+				_organization.getOrganizationId(), new Date(), queryDefinition);
 
 		Assert.assertEquals(initialCount + 1, actualCount);
 	}
 
 	private Group _group;
+	private Organization _organization;
 	private QueryDefinition _statusAnyQueryDefinition;
 	private QueryDefinition _statusApprovedQueryDefinition;
 	private QueryDefinition _statusInTrashQueryDefinition;
+	private User _user;
 
 }
