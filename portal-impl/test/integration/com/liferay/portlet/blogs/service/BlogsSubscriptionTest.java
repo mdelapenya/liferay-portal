@@ -118,11 +118,6 @@ public class BlogsSubscriptionTest extends BaseSubscriptionTestCase {
 	}
 
 	@Override
-	protected String getPortletId() {
-		return PortletKeys.BLOGS;
-	}
-
-	@Override
 	protected String getSubscriptionBodyPreferenceName() throws Exception {
 		return "emailEntryAddedBody";
 	}
