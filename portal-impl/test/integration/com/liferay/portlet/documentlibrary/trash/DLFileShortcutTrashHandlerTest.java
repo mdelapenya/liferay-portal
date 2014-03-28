@@ -16,7 +16,6 @@ package com.liferay.portlet.documentlibrary.trash;
 
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
-import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.BaseModel;
@@ -28,7 +27,6 @@ import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.Sync;
 import com.liferay.portal.test.SynchronousDestinationExecutionTestListener;
-import com.liferay.portal.util.GroupTestUtil;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
@@ -76,7 +74,6 @@ public class DLFileShortcutTrashHandlerTest extends BaseTrashHandlerTestCase {
 	}
 
 	@Test
-	@Transactional
 	public void testTrashFileEntry() throws Exception {
 		trashFileEntry();
 	}
@@ -259,8 +256,6 @@ public class DLFileShortcutTrashHandlerTest extends BaseTrashHandlerTestCase {
 	}
 
 	protected void trashFileEntry() throws Exception {
-		Group group = GroupTestUtil.addGroup();
-
 		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
 			group.getGroupId());
 
