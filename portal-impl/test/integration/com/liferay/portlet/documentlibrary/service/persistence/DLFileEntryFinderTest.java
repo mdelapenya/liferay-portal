@@ -29,6 +29,7 @@ import com.liferay.portal.repository.liferayrepository.model.LiferayFileEntry;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.spring.hibernate.LastSessionRecorderUtil;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
@@ -92,11 +93,11 @@ public class DLFileEntryFinderTest {
 
 		DLAppServiceUtil.moveFolderToTrash(folder.getFolderId());
 
-		User user = UserTestUtil.addUser(
+		_user = UserTestUtil.addUser(
 			ServiceTestUtil.randomString(), _group.getGroupId());
 
 		FileEntry fileEntry = DLAppTestUtil.addFileEntry(
-			user.getUserId(), _group.getGroupId(), _folder.getFolderId(),
+			_user.getUserId(), _group.getGroupId(), _folder.getFolderId(),
 			"FE1.txt", ContentTypes.TEXT_PLAIN, "FE1.txt", null,
 			DLFileEntryTypeConstants.FILE_ENTRY_TYPE_ID_BASIC_DOCUMENT,
 			WorkflowConstants.ACTION_PUBLISH);
@@ -145,6 +146,8 @@ public class DLFileEntryFinderTest {
 	@After
 	public void tearDown() throws Exception {
 		GroupLocalServiceUtil.deleteGroup(_group);
+
+		UserLocalServiceUtil.deleteUser(_user);
 	}
 
 	@Test
@@ -422,5 +425,6 @@ public class DLFileEntryFinderTest {
 	private DLFileVersion _dlFileVersion;
 	private Folder _folder;
 	private Group _group;
+	private User _user;
 
 }
