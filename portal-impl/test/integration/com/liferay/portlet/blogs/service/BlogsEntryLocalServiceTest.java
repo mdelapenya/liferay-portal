@@ -78,17 +78,16 @@ public class BlogsEntryLocalServiceTest {
 	public void tearDown() throws Exception {
 		GroupLocalServiceUtil.deleteGroup(_group);
 
-		if(_user != null) {
+		if (_user != null) {
 			UserLocalServiceUtil.deleteUser(_user);
 		}
 
-		if(_organization != null) {
+		if (_organization != null) {
 			UserLocalServiceUtil.deleteUser(_organization.getUserId());
 
 			OrganizationLocalServiceUtil.deleteOrganization(_organization);
 		}
 	}
-
 
 	@Test
 	public void testAddEntryWithoutSmallImage() throws Exception {
@@ -676,15 +675,13 @@ public class BlogsEntryLocalServiceTest {
 		}
 
 		int initialCount = BlogsEntryLocalServiceUtil.getGroupUserEntriesCount(
-			_group.getGroupId(), user.getUserId(), new Date(),
-			queryDefinition);
+			_group.getGroupId(), user.getUserId(), new Date(), queryDefinition);
 
 		addEntry(false);
 		addEntry(true);
 
 		int actualCount = BlogsEntryLocalServiceUtil.getGroupUserEntriesCount(
-			_group.getGroupId(), user.getUserId(), new Date(),
-			queryDefinition);
+			_group.getGroupId(), user.getUserId(), new Date(), queryDefinition);
 
 		Assert.assertEquals(initialCount + 1, actualCount);
 	}
