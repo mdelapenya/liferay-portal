@@ -29,6 +29,7 @@ import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.ActionKeys;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
@@ -99,6 +100,8 @@ public class DLCheckInCheckOutTest {
 
 		UserLocalServiceUtil.deleteUser(_authorUser.getUserId());
 		UserLocalServiceUtil.deleteUser(_overriderUser.getUserId());
+
+		GroupLocalServiceUtil.deleteGroup(_group);
 	}
 
 	@Test
