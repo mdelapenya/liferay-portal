@@ -29,6 +29,7 @@ import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.LayoutSetPrototype;
 import com.liferay.portal.model.User;
+import com.liferay.portal.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.TransactionalExecutionTestListener;
@@ -171,21 +172,27 @@ public class CompanyLocalServiceTest {
 
 		long companyId = company.getCompanyId();
 
-		long userId = UserLocalServiceUtil.getDefaultUserId(companyId);
+		long principalThreadLocalUserId = PrincipalThreadLocal.getUserId();
+
+		User omniAdminUser = UserTestUtil.addOmniAdmin(companyId);
+
+		PrincipalThreadLocal.setName(omniAdminUser.getUserId());
 
 		Group group = GroupTestUtil.addGroup(
-			companyId, userId, GroupConstants.DEFAULT_PARENT_GROUP_ID,
+			companyId, omniAdminUser.getUserId(),
+			GroupConstants.DEFAULT_PARENT_GROUP_ID,
 			ServiceTestUtil.randomString(), ServiceTestUtil.randomString());
 
 		LayoutSetPrototype layoutSetPrototype = addLayoutSetPrototype(
-			companyId, userId, ServiceTestUtil.randomString());
+			companyId, omniAdminUser.getUserId(),
+			ServiceTestUtil.randomString());
 
 		SitesUtil.updateLayoutSetPrototypesLinks(
 			group, layoutSetPrototype.getLayoutSetPrototypeId(), 0, true,
 			false);
 
 		addUser(
-			companyId, userId, group.getGroupId(),
+			companyId, omniAdminUser.getUserId(), group.getGroupId(),
 			getServiceContext(companyId));
 
 		CompanyLocalServiceUtil.deleteCompany(companyId);
@@ -195,6 +202,10 @@ public class CompanyLocalServiceTest {
 				layoutSetPrototype.getLayoutSetPrototypeId());
 
 		Assert.assertNull(layoutSetPrototype);
+
+		UserLocalServiceUtil.deleteUser(omniAdminUser);
+
+		PrincipalThreadLocal.setName(principalThreadLocalUserId);
 	}
 
 	@Test
