@@ -51,6 +51,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -79,8 +80,15 @@ public class CompanyLocalServiceTest {
 		_mockServletContext = new MockServletContext(
 			"file:" + file.getAbsolutePath(), new FileSystemResourceLoader());
 
+		_threadLocalCompanyId = CompanyThreadLocal.getCompanyId();
+
 		CompanyThreadLocal.setCompanyId((
 			PortalInstances.getDefaultCompanyId()));
+	}
+
+	@After
+	public void tearDown() {
+		CompanyThreadLocal.setCompanyId(_threadLocalCompanyId);
 	}
 
 	@Test
@@ -457,6 +465,7 @@ public class CompanyLocalServiceTest {
 		CompanyLocalServiceUtil.deleteCompany(company.getCompanyId());
 	}
 
+	private long _threadLocalCompanyId;
 	private MockServletContext _mockServletContext;
 
 }
