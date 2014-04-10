@@ -64,14 +64,18 @@ public class UserTestUtil {
 	}
 
 	public static User addOmniAdmin() throws Exception {
+		return addOmniAdmin(PortalInstances.getDefaultCompanyId());
+	}
+
+	public static User addOmniAdmin(long companyId) throws Exception {
 		User user = addUser();
 
-		user.setCompanyId(PortalInstances.getDefaultCompanyId());
+		user.setCompanyId(companyId);
 
 		UserLocalServiceUtil.updateUser(user);
 
 		Role administratorRole = RoleLocalServiceUtil.getRole(
-			PortalInstances.getDefaultCompanyId(), RoleConstants.ADMINISTRATOR);
+			companyId, RoleConstants.ADMINISTRATOR);
 
 		UserLocalServiceUtil.addRoleUser(administratorRole.getRoleId(), user);
 
