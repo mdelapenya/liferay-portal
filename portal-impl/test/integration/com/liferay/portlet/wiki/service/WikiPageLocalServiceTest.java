@@ -426,6 +426,154 @@ public class WikiPageLocalServiceTest {
 	}
 
 	@Test
+	public void testRestoreExplicitlyTrashedPageAndRedirectPageFromTrash()
+		throws Exception {
+
+		WikiPage[] wikiPages = addTrashedPageWithTrashedRedirectPage(true);
+
+		WikiPage page = wikiPages[0];
+		WikiPage redirectPage = wikiPages[1];
+
+		WikiPageLocalServiceUtil.restorePageFromTrash(
+			TestPropsValues.getUserId(), page);
+
+		page = WikiPageLocalServiceUtil.getPageByPageId(page.getPageId());
+		redirectPage = WikiPageLocalServiceUtil.getPageByPageId(
+			redirectPage.getPageId());
+
+		Assert.assertFalse(page.isInTrash());
+		Assert.assertTrue(redirectPage.isInTrashExplicitly());
+		Assert.assertEquals(redirectPage.getRedirectTitle(), page.getTitle());
+
+		WikiPageLocalServiceUtil.restorePageFromTrash(
+			TestPropsValues.getUserId(), redirectPage);
+
+		redirectPage = WikiPageLocalServiceUtil.getPageByPageId(
+			redirectPage.getPageId());
+
+		Assert.assertFalse(redirectPage.isInTrash());
+		Assert.assertEquals(redirectPage.getRedirectTitle(), page.getTitle());
+	}
+
+	@Test
+	public void
+		testRestoreExplicitlyTrashedParentAndChildAndRedirectPageToTrash()
+			throws Exception {
+
+		WikiPage[] wikiPages = addTrashedParentPageWithTrashedRedirectPage(
+			true, true);
+
+		WikiPage parentPage = wikiPages[0];
+		WikiPage childPage = wikiPages[1];
+		WikiPage redirectPage = wikiPages[2];
+
+		WikiPageLocalServiceUtil.restorePageFromTrash(
+			TestPropsValues.getUserId(), parentPage);
+
+		parentPage = WikiPageLocalServiceUtil.getPageByPageId(
+			parentPage.getPageId());
+		childPage = WikiPageLocalServiceUtil.getPageByPageId(
+			childPage.getPageId());
+		redirectPage = WikiPageLocalServiceUtil.getPageByPageId(
+			redirectPage.getPageId());
+
+		Assert.assertFalse(parentPage.isInTrash());
+		Assert.assertTrue(childPage.isInTrashExplicitly());
+		Assert.assertEquals(childPage.getParentTitle(), parentPage.getTitle());
+		Assert.assertTrue(redirectPage.isInTrashExplicitly());
+		Assert.assertEquals(
+			redirectPage.getRedirectTitle(), parentPage.getTitle());
+
+		WikiPageLocalServiceUtil.restorePageFromTrash(
+			TestPropsValues.getUserId(), childPage);
+
+		childPage = WikiPageLocalServiceUtil.getPageByPageId(
+			childPage.getPageId());
+
+		Assert.assertFalse(childPage.isInTrash());
+		Assert.assertEquals(childPage.getParentTitle(), parentPage.getTitle());
+
+		WikiPageLocalServiceUtil.restorePageFromTrash(
+			TestPropsValues.getUserId(), redirectPage);
+
+		redirectPage = WikiPageLocalServiceUtil.getPageByPageId(
+			redirectPage.getPageId());
+
+		Assert.assertFalse(redirectPage.isInTrash());
+		Assert.assertEquals(
+			redirectPage.getRedirectTitle(), parentPage.getTitle());
+	}
+
+	@Test
+	public void testRestoreExplicitlyTrashedParentAndChildPageFromTrash()
+		throws Exception {
+
+		WikiPage[] wikiPages = addTrashedPageWithTrashedChildPage(true);
+
+		WikiPage page = wikiPages[0];
+		WikiPage childPage = wikiPages[1];
+
+		WikiPageLocalServiceUtil.restorePageFromTrash(
+			TestPropsValues.getUserId(), page);
+
+		page = WikiPageLocalServiceUtil.getPageByPageId(page.getPageId());
+		childPage = WikiPageLocalServiceUtil.getPageByPageId(
+			childPage.getPageId());
+
+		Assert.assertFalse(page.isInTrash());
+		Assert.assertTrue(childPage.isInTrashExplicitly());
+		Assert.assertEquals(childPage.getParentTitle(), page.getTitle());
+
+		WikiPageLocalServiceUtil.restorePageFromTrash(
+			TestPropsValues.getUserId(), childPage);
+
+		childPage = WikiPageLocalServiceUtil.getPageByPageId(
+			childPage.getPageId());
+
+		Assert.assertFalse(childPage.isInTrash());
+		Assert.assertEquals(childPage.getParentTitle(), page.getTitle());
+	}
+
+	@Test
+	public void testRestoreExplicitlyTrashedRedirectAndParentPageFromTrash()
+		throws Exception {
+
+		WikiPage[] wikiPages = addTrashedParentPageWithTrashedRedirectPage(
+			false, true);
+
+		WikiPage parentPage = wikiPages[0];
+		WikiPage childPage = wikiPages[1];
+		WikiPage redirectPage = wikiPages[2];
+
+		WikiPageLocalServiceUtil.restorePageFromTrash(
+			TestPropsValues.getUserId(), parentPage);
+
+		parentPage = WikiPageLocalServiceUtil.getPageByPageId(
+			parentPage.getPageId());
+		childPage = WikiPageLocalServiceUtil.getPageByPageId(
+			childPage.getPageId());
+		redirectPage = WikiPageLocalServiceUtil.getPageByPageId(
+			redirectPage.getPageId());
+
+		Assert.assertFalse(parentPage.isInTrash());
+		Assert.assertFalse(childPage.isInTrash());
+		Assert.assertEquals(childPage.getParentTitle(), parentPage.getTitle());
+		Assert.assertTrue(redirectPage.isInTrashExplicitly());
+		Assert.assertEquals(
+			redirectPage.getRedirectTitle(), parentPage.getTitle());
+
+		WikiPageLocalServiceUtil.restorePageFromTrash(
+			TestPropsValues.getUserId(), redirectPage);
+
+		redirectPage = WikiPageLocalServiceUtil.getPageByPageId(
+			redirectPage.getPageId());
+
+		Assert.assertFalse(redirectPage.isInTrash());
+		Assert.assertEquals(
+			redirectPage.getRedirectTitle(), parentPage.getTitle());
+	}
+
+	@Test
 	public void testRestorePageFromTrash() throws Exception {
 		testRestorePageFromTrash(false);
 	}
@@ -433,6 +581,84 @@ public class WikiPageLocalServiceTest {
 	@Test
 	public void testRestorePageFromTrashWithExpando() throws Exception {
 		testRestorePageFromTrash(true);
+	}
+
+	@Test
+	public void
+		testRestorePageWithRedirectAndExplicitlyTrashedChildPageFromTrash()
+			throws Exception {
+
+		WikiPage[] wikiPages = addTrashedParentPageWithTrashedRedirectPage(
+			true, false);
+
+		WikiPage parentPage = wikiPages[0];
+		WikiPage childPage = wikiPages[1];
+		WikiPage redirectPage = wikiPages[2];
+
+		WikiPageLocalServiceUtil.restorePageFromTrash(
+			TestPropsValues.getUserId(), parentPage);
+
+		parentPage = WikiPageLocalServiceUtil.getPageByPageId(
+			parentPage.getPageId());
+		childPage = WikiPageLocalServiceUtil.getPageByPageId(
+			childPage.getPageId());
+		redirectPage = WikiPageLocalServiceUtil.getPageByPageId(
+			redirectPage.getPageId());
+
+		Assert.assertFalse(parentPage.isInTrash());
+		Assert.assertTrue(childPage.isInTrashExplicitly());
+		Assert.assertEquals(childPage.getParentTitle(), parentPage.getTitle());
+		Assert.assertFalse(redirectPage.isInTrash());
+		Assert.assertEquals(
+			redirectPage.getRedirectTitle(), parentPage.getTitle());
+
+		WikiPageLocalServiceUtil.restorePageFromTrash(
+			TestPropsValues.getUserId(), childPage);
+
+		childPage = WikiPageLocalServiceUtil.getPageByPageId(
+			childPage.getPageId());
+
+		Assert.assertFalse(childPage.isInTrash());
+		Assert.assertEquals(childPage.getParentTitle(), parentPage.getTitle());
+	}
+
+	@Test
+	public void testRestorePageWithRedirectPageFromTrash() throws Exception {
+		WikiPage[] wikiPages = addTrashedPageWithTrashedRedirectPage(false);
+
+		WikiPage page = wikiPages[0];
+		WikiPage redirectPage = wikiPages[1];
+
+		WikiPageLocalServiceUtil.restorePageFromTrash(
+			TestPropsValues.getUserId(), page);
+
+		page = WikiPageLocalServiceUtil.getPageByPageId(page.getPageId());
+		redirectPage = WikiPageLocalServiceUtil.getPageByPageId(
+			redirectPage.getPageId());
+
+		Assert.assertFalse(page.isInTrash());
+		Assert.assertFalse(redirectPage.isInTrash());
+		Assert.assertEquals(redirectPage.getRedirectTitle(), page.getTitle());
+	}
+
+	@Test
+	public void testRestoreParentPageFromTrash() throws Exception {
+		WikiPage[] wikiPages = addTrashedPageWithTrashedChildPage(false);
+
+		WikiPage parentPage = wikiPages[0];
+		WikiPage childPage = wikiPages[1];
+
+		WikiPageLocalServiceUtil.restorePageFromTrash(
+			TestPropsValues.getUserId(), parentPage);
+
+		parentPage = WikiPageLocalServiceUtil.getPageByPageId(
+			parentPage.getPageId());
+		childPage = WikiPageLocalServiceUtil.getPageByPageId(
+			childPage.getPageId());
+
+		Assert.assertFalse(parentPage.isInTrash());
+		Assert.assertFalse(childPage.isInTrash());
+		Assert.assertEquals(childPage.getParentTitle(), parentPage.getTitle());
 	}
 
 	@Test
