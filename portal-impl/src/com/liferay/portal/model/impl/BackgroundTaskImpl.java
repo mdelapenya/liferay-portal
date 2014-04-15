@@ -147,16 +147,7 @@ public class BackgroundTaskImpl extends BackgroundTaskBaseImpl {
 
 	@Override
 	public Map<String, Serializable> getTaskContextMap() {
-		if (_taskContextMap != null) {
-			return _taskContextMap;
-		}
-
-		String taskContext = getTaskContext();
-
-		_taskContextMap =
-			(Map<String, Serializable>)JSONFactoryUtil.deserialize(taskContext);
-
-		return _taskContextMap;
+		return getTaskContext();
 	}
 
 	@Override
