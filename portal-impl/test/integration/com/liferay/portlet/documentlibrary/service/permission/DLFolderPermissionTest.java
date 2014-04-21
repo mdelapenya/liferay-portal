@@ -48,7 +48,11 @@ public class DLFolderPermissionTest extends BasePermissionTestCase {
 			DLFolderPermission.contains(
 				permissionChecker, _subfolder, ActionKeys.VIEW));
 
-		removePortletModelViewPermission();
+		removePortletModelViewPermission(ResourceConstants.SCOPE_GROUP);
+
+		// See LPS-44724
+
+		removePortletModelViewPermission(ResourceConstants.SCOPE_INDIVIDUAL);
 
 		Assert.assertFalse(
 			DLFolderPermission.contains(

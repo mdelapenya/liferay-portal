@@ -49,7 +49,11 @@ public class DLFileEntryPermissionTest extends BasePermissionTestCase {
 			DLFileEntryPermission.contains(
 				permissionChecker, _subfileEntry, ActionKeys.VIEW));
 
-		removePortletModelViewPermission();
+		removePortletModelViewPermission(ResourceConstants.SCOPE_GROUP);
+
+		// See LPS-44724
+
+		removePortletModelViewPermission(ResourceConstants.SCOPE_INDIVIDUAL);
 
 		Assert.assertFalse(
 			DLFileEntryPermission.contains(
