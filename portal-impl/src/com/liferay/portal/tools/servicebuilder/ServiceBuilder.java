@@ -83,6 +83,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.net.URL;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -430,6 +432,10 @@ public class ServiceBuilder {
 			jalopyXmlFile = new File("../../misc/jalopy.xml");
 		}
 
+		if (!jalopyXmlFile.exists()) {
+			jalopyXmlFile = _readJalopyXmlFromClassLoader();
+		}
+
 		try {
 			Jalopy.setConvention(jalopyXmlFile);
 		}
@@ -584,9 +590,11 @@ public class ServiceBuilder {
 
 			_springNamespaces = springNamespaces;
 
-			if (!ArrayUtil.contains(_springNamespaces, "beans")) {
+			if (!ArrayUtil.contains(
+					_springNamespaces, _SPRING_NAMESPACE_BEANS)) {
+
 				_springNamespaces = ArrayUtil.append(
-					_springNamespaces, "beans");
+					_springNamespaces, _SPRING_NAMESPACE_BEANS);
 			}
 
 			_apiDir = apiDir;
@@ -1729,6 +1737,20 @@ public class ServiceBuilder {
 		fileName = fileName.substring(x + 4, y);
 
 		return StringUtil.replace(fileName, "/", ".");
+	}
+
+	private static File _readJalopyXmlFromClassLoader() {
+		ClassLoader classLoader = ServiceBuilder.class.getClassLoader();
+
+		URL url = classLoader.getResource("jalopy.xml");
+
+		try {
+			return new File(url.toURI());
+		}
+		catch (Exception e) {
+			throw new RuntimeException(
+				"Unable to load jalopy.xml from the class loader", e);
+		}
 	}
 
 	private void _addIndexMetadata(
@@ -3186,8 +3208,7 @@ public class ServiceBuilder {
 			"\tdefault-init-method=\"afterPropertiesSet\"\n" +
 			_getSpringNamespacesDeclarations() +
 			"\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
-			_getSpringSchemaLocations() +
-			">\n" +
+			"\txsi:schemaLocation=\"" + _getSpringSchemaLocations() + "\">\n" +
 			"</beans>";
 
 		if (!xmlFile.exists()) {
@@ -4209,8 +4230,13 @@ public class ServiceBuilder {
 		StringBundler sb = new StringBundler(_springNamespaces.length * 4);
 
 		for (String namespace : _springNamespaces) {
-			sb.append("\txmlns:");
-			sb.append(namespace);
+			sb.append("\txmlns");
+
+			if (!_SPRING_NAMESPACE_BEANS.equals(namespace)) {
+				sb.append(":");
+				sb.append(namespace);
+			}
+
 			sb.append("=\"http://www.springframework.org/schema/");
 			sb.append(namespace);
 			sb.append("\"\n");
@@ -4932,6 +4958,8 @@ public class ServiceBuilder {
 	private static final int _SESSION_TYPE_LOCAL = 1;
 
 	private static final int _SESSION_TYPE_REMOTE = 0;
+
+	private static final String _SPRING_NAMESPACE_BEANS = "beans";
 
 	private static final String _SQL_CREATE_TABLE = "create table ";
 
