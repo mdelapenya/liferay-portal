@@ -48,11 +48,19 @@ public class BuildtimeClasspathResolver implements ClasspathResolver {
 
 		URL[] jarURLs = new URL[jarFileNames.length];
 
+		System.out.println("--------------------------------");
+		System.out.println("--------------------------------");
+
 		for (int i = 0; i < jarURLs.length; i++) {
 			URI jarURI = projectRootURI.resolve(jarFileNames[i]);
 
+			System.out.println("Using jar file " + jarURI);
+
 			jarURLs[i] = jarURI.toURL();
 		}
+
+		System.out.println("--------------------------------");
+		System.out.println("--------------------------------");
 
 		return jarURLs;
 	}
