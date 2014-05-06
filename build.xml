@@ -25,7 +25,6 @@
 	xsi:schemaLocation="http://www.zeroturnaround.com http://www.zeroturnaround.com/alderaan/rebel-2_0.xsd"
 >
 	<classpath>
-		<dir name="${basedir}/osgi/bootstrap/classes" />
 		<dir name="${basedir}/portal-impl/classes" />
 		<dir name="${basedir}/portal-pacl/classes" />
 		<dir name="${basedir}/util-java/classes" />
@@ -65,6 +64,125 @@
 		</sequential>
 	</macrodef>
 
+	<macrodef name="setup-sdk">
+		<sequential>
+			<delete failonerror="false" includeemptydirs="true">
+				<fileset
+					dir="${project.dir}/tools/sdk"
+					excludes=".ivy/**"
+				/>
+			</delete>
+
+			<unzip
+				dest="${project.dir}/tools"
+				src="${project.dir}/tools/liferay-plugins-sdk-7.0.0.zip"
+			>
+				<mapper
+					type="glob"
+					from="liferay-plugins-sdk-7.0.0/*"
+					to="sdk/*"
+				/>
+			</unzip>
+
+			<if>
+				<or>
+					<available file="app.server.${user.name}.properties" />
+					<available file="app.server.${env.COMPUTERNAME}.properties" />
+					<available file="app.server.${env.HOST}.properties" />
+					<available file="app.server.${env.HOSTNAME}.properties" />
+				</or>
+				<then>
+					<if>
+						<available file="app.server.${user.name}.properties" />
+						<then>
+							<copy
+								file="app.server.${user.name}.properties"
+								overwrite="true"
+								tofile="${project.dir}/tools/sdk/build.${user.name}.properties"
+							/>
+						</then>
+					</if>
+
+					<if>
+						<available file="app.server.${env.COMPUTERNAME}.properties" />
+						<then>
+							<copy
+								file="app.server.${env.COMPUTERNAME}.properties"
+								overwrite="true"
+								tofile="${project.dir}/tools/sdk/build.${env.COMPUTERNAME}.properties"
+							/>
+						</then>
+					</if>
+
+					<if>
+						<available file="app.server.${env.HOST}.properties" />
+						<then>
+							<copy
+								file="app.server.${env.HOST}.properties"
+								overwrite="true"
+								tofile="${project.dir}/tools/sdk/build.${env.HOST}.properties"
+							/>
+						</then>
+					</if>
+
+					<if>
+						<available file="app.server.${env.HOSTNAME}.properties" />
+						<then>
+							<copy
+								file="app.server.${env.HOSTNAME}.properties"
+								overwrite="true"
+								tofile="${project.dir}/tools/sdk/build.${env.HOSTNAME}.properties"
+							/>
+						</then>
+					</if>
+				</then>
+				<else>
+					<echo file="${project.dir}/tools/sdk/build.${user.name}.properties">
+						app.server.parent.dir=${app.server.parent.dir}
+						app.server.type=${app.server.type}
+					</echo>
+				</else>
+			</if>
+
+			<echo
+				append="true"
+				file="${project.dir}/tools/sdk/build.${user.name}.properties"
+			>
+				auto.deploy.dir=${liferay.home}/osgi/apps
+				clean.delete.ivy.md5=true
+				clean.delete.lib=true
+				liferay.home=${liferay.home}
+			</echo>
+
+			<if>
+				<not>
+					<available file="${app.server.dir}" />
+				</not>
+				<then>
+					<if>
+						<equals arg1="${app.server.type}" arg2="tomcat" />
+						<then>
+							<ant antfile="build-dist.xml" target="unzip-tomcat" inheritAll="false" />
+						</then>
+					</if>
+				</then>
+			</if>
+
+			<!--
+			This is a temporary workaround needed so that registry-api can
+			compile because the SDK assumes a deployed portal, but we are
+			compiling registry-api before the portal is deployed.
+			-->
+
+			<mkdir dir="${app.server.lib.global.dir}" />
+			<mkdir dir="${app.server.lib.portal.dir}" />
+		</sequential>
+	</macrodef>
+
+	<target name="setup-sdk">
+		<setup-sdk />
+	</target>
+
 	<target name="all">
 		<antcall target="clean" />
 		<antcall target="start" />
@@ -72,9 +190,9 @@
 	</target>
 
 	<target name="clean">
-		<ant dir="classes" target="clean" inheritAll="false" />
+		<setup-sdk />
 
-		<ant dir="osgi/modules" target="clean" inheritAll="false" />
+		<ant dir="classes" target="clean" inheritAll="false" />
 
 		<ant dir="portal-service" target="clean" inheritAll="false" />
 
@@ -86,8 +204,6 @@
 		<ant dir="portal-impl" target="clean" inheritAll="false" />
 		<ant dir="portal-pacl" target="clean" inheritAll="false" />
 
-		<ant dir="osgi/bootstrap" target="clean" inheritAll="false" />
-
 		<ant dir="portal-web" target="clean" inheritAll="false" />
 
 		<ant dir="sql" target="clean" inheritAll="false" />
@@ -98,7 +214,7 @@
 			<fileset dir="." includes="*.ear,*.jar,*.war,*.zip" />
 		</delete>
 
-		<delete includeemptydirs="true" failonerror="false">
+		<delete failonerror="false" includeemptydirs="true">
 			<fileset
 				dir="${app.server.bin.dir}"
 				includes="*.log*"
@@ -112,7 +228,7 @@
 			/>
 		</delete>
 
-		<delete dir="${module.framework.base.dir}" />
+		<delete dir="${liferay.home}/osgi" />
 
 		<delete dir="test-coverage" />
 
@@ -158,7 +274,7 @@
 			/>
 		</delete>
 
-		<delete includeemptydirs="true" failonerror="false">
+		<delete failonerror="false" includeemptydirs="true">
 			<fileset
 				dir="${app.server.deploy.dir}"
 				includes="*-ext/**,*-ext.war/**,*-hook/**,*-hook.war/**,*-layouttpl/**,*-layouttpl.war/**,*-portlet/**,*-portlet.war/**,*-theme/**,*-theme.war/**,*-web/**,*-web.war/**"
@@ -213,6 +329,11 @@
 			</then>
 		</if>
 
+		<ant-execute
+			ant.dir="${project.dir}/modules"
+			ant.target="clean"
+		/>
+
 		<antcall target="print-current-time" />
 	</target>
 
@@ -226,9 +347,6 @@
 
 		<ant dir="portal-impl" target="compile" inheritAll="false" />
 		<ant dir="portal-pacl" target="compile" inheritAll="false" />
-
-		<ant dir="osgi/bootstrap" target="deploy" inheritAll="false" />
-		<ant dir="osgi/modules" target="deploy" inheritAll="false" />
 	</target>
 
 	<target name="compile-test">
@@ -268,8 +386,6 @@ ${app.server.tomcat.dir}, then run "ant -buildfile build-dist.xml unzip-tomcat".
 				</fail>
 			</then>
 		</if>
-
-		<ant dir="osgi/modules" target="deploy" inheritAll="false" />
 
 		<ant dir="portal-service" target="deploy" inheritAll="false" />
 
@@ -642,6 +758,11 @@ print AdminControl.invoke(appManager, 'startApplication', 'liferay-portal')
 			</then>
 		</if>
 
+		<ant-execute
+			ant.dir="${project.dir}/modules"
+			ant.target="deploy"
+		/>
+
 		<antcall target="print-current-time" />
 	</target>
 
@@ -697,8 +818,6 @@ print AdminControl.invoke(appManager, 'startApplication', 'liferay-portal')
 	</target>
 
 	<target name="jar">
-		<ant dir="osgi/modules" target="jar" inheritAll="false" />
-
 		<ant dir="portal-service" target="jar" inheritAll="false" />
 
 		<ant dir="util-bridges" target="jar" inheritAll="false" />
@@ -931,6 +1050,13 @@ print AdminControl.invoke(appManager, 'startApplication', 'liferay-portal')
 	</target>
 
 	<target name="start">
+		<setup-sdk />
+
+		<ant-execute
+			ant.dir="${project.dir}/modules/core/registry-api"
+			ant.target="compile"
+		/>
+
 		<antcall target="compile" />
 
 		<ant dir="util-taglib" target="jar" inheritAll="false" />
