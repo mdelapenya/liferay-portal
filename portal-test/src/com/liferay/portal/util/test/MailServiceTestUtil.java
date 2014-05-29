@@ -19,6 +19,8 @@ import com.dumbster.smtp.ServerOptions;
 import com.dumbster.smtp.SmtpServer;
 import com.dumbster.smtp.SmtpServerFactory;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
@@ -88,6 +90,8 @@ public class MailServiceTestUtil {
 		else {
 			if (_smtpServer != null) {
 				try {
+					_log.warn("Retrying for " + (3 - retryCount + 1) + "time");
+
 					Thread.sleep(500);
 				}
 				catch (InterruptedException e) {
@@ -103,6 +107,8 @@ public class MailServiceTestUtil {
 			_smtpServer = SmtpServerFactory.startServer(opts);
 		}
 	}
+
+	private static Log _log = LogFactoryUtil.getLog(MailServiceTestUtil.class);
 
 	private static SmtpServer _smtpServer;
 
