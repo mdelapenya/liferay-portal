@@ -22,6 +22,7 @@ import com.dumbster.smtp.SmtpServerFactory;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.util.PropsValues;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,16 +66,9 @@ public class MailServiceTestUtil {
 	}
 
 	public static void start() {
-		if (_smtpServer != null) {
-			throw new IllegalStateException("Server is already running");
-		}
+		int retryCount = GetterUtil.getInteger(PropsUtil.get("mail.retry.count"));
 
-		ServerOptions opts = new ServerOptions();
-
-		opts.port = GetterUtil.getInteger(
-			PropsUtil.get(PropsKeys.MAIL_SESSION_MAIL_SMTP_PORT));
-
-		_smtpServer = SmtpServerFactory.startServer(opts);
+		_retryStart(retryCount);
 	}
 
 	public static void stop() {
@@ -85,6 +79,29 @@ public class MailServiceTestUtil {
 		_smtpServer.stop();
 
 		_smtpServer = null;
+	}
+
+	private static void _retryStart(int retryCount) {
+		if (retryCount == 0) {
+			throw new IllegalStateException("Server is already running");
+		}
+		else {
+			if (_smtpServer != null) {
+				try {
+					Thread.sleep(500);
+				}
+				catch (InterruptedException e) {
+					// nothing, retry again
+				}
+
+				_retryStart(retryCount--);
+			}
+
+			ServerOptions opts = new ServerOptions();
+			opts.port = PropsValues.MAIL_SESSION_MAIL_SMTP_PORT;
+
+			_smtpServer = SmtpServerFactory.startServer(opts);
+		}
 	}
 
 	private static SmtpServer _smtpServer;
