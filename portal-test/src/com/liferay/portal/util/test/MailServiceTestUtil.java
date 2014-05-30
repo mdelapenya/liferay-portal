@@ -68,9 +68,10 @@ public class MailServiceTestUtil {
 	}
 
 	public static void start() {
-		int retryCount = GetterUtil.getInteger(PropsUtil.get("mail.retry.count"));
+		int retryCount = GetterUtil.getInteger(PropsUtil.get(MAIL_RETRY_COUNT));
+		int retrySleep = GetterUtil.getInteger(PropsUtil.get(MAIL_RETRY_SLEEP));
 
-		_retryStart(retryCount);
+		_retryStart(retryCount, retrySleep);
 	}
 
 	public static void stop() {
@@ -83,7 +84,7 @@ public class MailServiceTestUtil {
 		_smtpServer = null;
 	}
 
-	private static void _retryStart(int retryCount) {
+	private static void _retryStart(int retryCount, int retrySleep) {
 		if (retryCount == 0) {
 			throw new IllegalStateException("Server is already running");
 		}
@@ -92,13 +93,13 @@ public class MailServiceTestUtil {
 				try {
 					_log.warn("Retrying for " + (3 - retryCount + 1) + "time");
 
-					Thread.sleep(500);
+					Thread.sleep(retrySleep);
 				}
 				catch (InterruptedException e) {
 					// nothing, retry again
 				}
 
-				_retryStart(retryCount--);
+				_retryStart(retryCount--, retrySleep);
 			}
 
 			ServerOptions opts = new ServerOptions();
@@ -107,6 +108,10 @@ public class MailServiceTestUtil {
 			_smtpServer = SmtpServerFactory.startServer(opts);
 		}
 	}
+
+	private static final String MAIL_RETRY_COUNT = "mail.retry.count";
+
+	private static final String MAIL_RETRY_SLEEP = "mail.retry.sleep";
 
 	private static Log _log = LogFactoryUtil.getLog(MailServiceTestUtil.class);
 
