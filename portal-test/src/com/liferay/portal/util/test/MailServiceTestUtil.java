@@ -22,7 +22,6 @@ import com.dumbster.smtp.SmtpServerFactory;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.util.PropsValues;
 
@@ -68,10 +67,10 @@ public class MailServiceTestUtil {
 	}
 
 	public static void start() {
-		int retryCount = GetterUtil.getInteger(PropsUtil.get(MAIL_RETRY_COUNT));
-		int retrySleep = GetterUtil.getInteger(PropsUtil.get(MAIL_RETRY_SLEEP));
+		ServerOptions opts = new ServerOptions();
+		opts.port = PropsValues.MAIL_SESSION_MAIL_SMTP_PORT;
 
-		_retryStart(retryCount, retrySleep);
+		_smtpServer = SmtpServerFactory.startServer(opts);
 	}
 
 	public static void stop() {
@@ -81,39 +80,38 @@ public class MailServiceTestUtil {
 
 		_smtpServer.stop();
 
-		_smtpServer = null;
-	}
-
-	private static void _retryStart(int retryCount, int retrySleep) {
-		if (retryCount == 0) {
-			throw new IllegalStateException("Server is already running");
+		if (waitForClose()) {
+			_smtpServer = null;
 		}
 		else {
-			if (_smtpServer != null) {
-				try {
-					int initialRetryCount =
-						GetterUtil.getInteger(PropsUtil.get(MAIL_RETRY_COUNT));
+			throw new IllegalStateException(
+				"Couldn't close the mail service after retries");
+		}
+	}
 
-					if (_log.isWarnEnabled()) {
-						_log.warn(
-							"Retrying for " +
-								(initialRetryCount - retryCount + 1) + "time");
-					}
+	protected static boolean waitForClose() {
+		int retryCount = GetterUtil.getInteger(PropsUtil.get(MAIL_RETRY_COUNT));
+		int retrySleep = GetterUtil.getInteger(PropsUtil.get(MAIL_RETRY_SLEEP));
 
-					Thread.sleep(retrySleep);
-				}
-				catch (InterruptedException e) {
-					// nothing, retry again
-				}
+		int currentRetry = 0;
 
-				_retryStart(retryCount--, retrySleep);
+		while (!_smtpServer.isStopped() && currentRetry < retryCount) {
+			if (_log.isWarnEnabled()) {
+				_log.warn("Waiting for mail server close... " +
+					"(retry #" + (currentRetry + 1) + ")");
 			}
 
-			ServerOptions opts = new ServerOptions();
-			opts.port = PropsValues.MAIL_SESSION_MAIL_SMTP_PORT;
+			try {
+				Thread.sleep(retrySleep);
+			}
+			catch (InterruptedException e) {
+				// nothing, retry again
+			}
 
-			_smtpServer = SmtpServerFactory.startServer(opts);
+			currentRetry++;
 		}
+
+		return _smtpServer.isStopped();
 	}
 
 	private static final String MAIL_RETRY_COUNT = "mail.retry.count";
