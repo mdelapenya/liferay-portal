@@ -91,7 +91,14 @@ public class MailServiceTestUtil {
 		else {
 			if (_smtpServer != null) {
 				try {
-					_log.warn("Retrying for " + (3 - retryCount + 1) + "time");
+					int initialRetryCount =
+						GetterUtil.getInteger(PropsUtil.get(MAIL_RETRY_COUNT));
+
+					if (_log.isWarnEnabled()) {
+						_log.warn(
+							"Retrying for " +
+								(initialRetryCount - retryCount + 1) + "time");
+					}
 
 					Thread.sleep(retrySleep);
 				}
