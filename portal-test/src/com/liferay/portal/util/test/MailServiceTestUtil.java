@@ -67,6 +67,10 @@ public class MailServiceTestUtil {
 	}
 
 	public static void start() {
+		if ((_smtpServer != null) && !_smtpServer.isStopped()) {
+			return;
+		}
+
 		ServerOptions opts = new ServerOptions();
 		opts.port = PropsValues.MAIL_SESSION_MAIL_SMTP_PORT;
 
@@ -74,8 +78,8 @@ public class MailServiceTestUtil {
 	}
 
 	public static void stop() {
-		if ((_smtpServer != null) && _smtpServer.isStopped()) {
-			throw new IllegalStateException("Server is already stopped");
+		if ((_smtpServer == null) || _smtpServer.isStopped()) {
+			return;
 		}
 
 		_smtpServer.stop();
