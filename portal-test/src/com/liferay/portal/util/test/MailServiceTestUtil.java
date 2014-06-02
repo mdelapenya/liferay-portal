@@ -22,8 +22,8 @@ import com.dumbster.smtp.SmtpServerFactory;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
-import com.liferay.portal.util.PropsValues;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +72,9 @@ public class MailServiceTestUtil {
 		}
 
 		ServerOptions opts = new ServerOptions();
-		opts.port = PropsValues.MAIL_SESSION_MAIL_SMTP_PORT;
+
+		opts.port = GetterUtil.getInteger(
+			PropsUtil.get(PropsKeys.MAIL_SESSION_MAIL_SMTP_PORT));
 
 		_smtpServer = SmtpServerFactory.startServer(opts);
 	}
