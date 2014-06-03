@@ -34,6 +34,10 @@ import java.util.List;
  */
 public class MailServiceTestUtil {
 
+	public static void clearMessages() {
+		_smtpServer.clearMessages();
+	}
+
 	public static int getInboxSize() {
 		return _smtpServer.getEmailCount();
 	}
