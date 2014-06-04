@@ -26,8 +26,15 @@ public class SynchronousMailExecutionTestListener
 	extends SynchronousDestinationExecutionTestListener {
 
 	@Override
-	public void runAfterTest(TestContext testContext) {
+	public void runAfterClass(TestContext testContext) {
+		super.runAfterClass(testContext);
+
 		MailServiceTestUtil.stop();
+	}
+
+	@Override
+	public void runAfterTest(TestContext testContext) {
+		MailServiceTestUtil.clearMessages();
 
 		super.runAfterTest(testContext);
 	}
@@ -36,14 +43,14 @@ public class SynchronousMailExecutionTestListener
 	public void runBeforeClass(TestContext testContext) {
 		super.runBeforeClass(testContext);
 
+		MailServiceTestUtil.start();
+
 		classSyncHandler.replaceDestination(DestinationNames.MAIL);
 	}
 
 	@Override
 	public void runBeforeTest(TestContext testContext) {
 		super.runBeforeTest(testContext);
-
-		MailServiceTestUtil.start();
 
 		methodSyncHandler.replaceDestination(DestinationNames.MAIL);
 	}
