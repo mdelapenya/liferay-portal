@@ -24,6 +24,12 @@
 					<encoding>UTF-8</encoding>
 				</source-folder>
 				<source-folder>
+					<label>modules\util\jsp\src</label>
+					<type>java</type>
+					<location>modules/util/jsp/src</location>
+					<encoding>UTF-8</encoding>
+				</source-folder>
+				<source-folder>
 					<label>portal-impl\src</label>
 					<type>java</type>
 					<location>portal-impl/src</location>
@@ -150,8 +156,12 @@
 			<view>
 				<items>
 					<source-folder style="packages">
-						<label>modules\core\registry\registry-api\src</label>
-						<location>modules/core/registry/registry-api/src</location>
+						<label>modules\core\registry-api\src</label>
+						<location>modules/core/registry-api/src</location>
+					</source-folder>
+					<source-folder style="packages">
+						<label>modules\util\jsp\src</label>
+						<location>modules/util/jsp/src</location>
 					</source-folder>
 					<source-folder style="packages">
 						<label>portal-impl\src</label>
