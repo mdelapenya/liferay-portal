@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<ivy-module
+	version="2.0"
+	xmlns:m2="http://ant.apache.org/ivy/maven"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd"
+>
+	<info module="${plugin.name}" organisation="com.liferay" />
+
+	<dependencies defaultconf="default">
+		<dependency name="javax.servlet-api" org="javax.servlet" rev="3.0.1" />
+		<dependency name="jsp-api" org="javax.servlet.jsp" rev="2.1" />
+	</dependencies>
+</ivy-module>
