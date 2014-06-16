@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class is used by SOAP remote services, specifically {@link com.liferay.portal.service.http.BackgroundTaskServiceSoap}.
@@ -187,11 +188,11 @@ public class BackgroundTaskSoap implements Serializable {
 		_taskExecutorClassName = taskExecutorClassName;
 	}
 
-	public String getTaskContext() {
+	public Map getTaskContext() {
 		return _taskContext;
 	}
 
-	public void setTaskContext(String taskContext) {
+	public void setTaskContext(Map taskContext) {
 		_taskContext = taskContext;
 	}
 
@@ -242,7 +243,7 @@ public class BackgroundTaskSoap implements Serializable {
 	private String _name;
 	private String _servletContextNames;
 	private String _taskExecutorClassName;
-	private String _taskContext;
+	private Map _taskContext;
 	private boolean _completed;
 	private Date _completionDate;
 	private int _status;

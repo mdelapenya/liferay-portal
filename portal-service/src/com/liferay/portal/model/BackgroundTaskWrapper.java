@@ -142,7 +142,7 @@ public class BackgroundTaskWrapper implements BackgroundTask,
 			setTaskExecutorClassName(taskExecutorClassName);
 		}
 
-		String taskContext = (String)attributes.get("taskContext");
+		Map taskContext = (Map)attributes.get("taskContext");
 
 		if (taskContext != null) {
 			setTaskContext(taskContext);
@@ -439,7 +439,7 @@ public class BackgroundTaskWrapper implements BackgroundTask,
 	* @return the task context of this background task
 	*/
 	@Override
-	public java.lang.String getTaskContext() {
+	public java.util.Map getTaskContext() {
 		return _backgroundTask.getTaskContext();
 	}
 
@@ -449,7 +449,7 @@ public class BackgroundTaskWrapper implements BackgroundTask,
 	* @param taskContext the task context of this background task
 	*/
 	@Override
-	public void setTaskContext(java.lang.String taskContext) {
+	public void setTaskContext(java.util.Map taskContext) {
 		_backgroundTask.setTaskContext(taskContext);
 	}
 
