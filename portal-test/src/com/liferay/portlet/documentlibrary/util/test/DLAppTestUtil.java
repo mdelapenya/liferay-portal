@@ -171,6 +171,8 @@ public abstract class DLAppTestUtil {
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(groupId);
 
+		serviceContext.setRequest(null);
+
 		if (fileEntryTypeId !=
 				DLFileEntryTypeConstants.FILE_ENTRY_TYPE_ID_ALL) {
 
