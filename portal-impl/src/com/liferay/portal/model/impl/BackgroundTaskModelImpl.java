@@ -293,7 +293,7 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 			setTaskExecutorClassName(taskExecutorClassName);
 		}
 
-		String taskContext = (String)attributes.get("taskContext");
+		Map taskContext = (Map)attributes.get("taskContext");
 
 		if (taskContext != null) {
 			setTaskContext(taskContext);
@@ -529,17 +529,12 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 
 	@JSON
 	@Override
-	public String getTaskContext() {
-		if (_taskContext == null) {
-			return StringPool.BLANK;
-		}
-		else {
-			return _taskContext;
-		}
+	public Map getTaskContext() {
+		return _taskContext;
 	}
 
 	@Override
-	public void setTaskContext(String taskContext) {
+	public void setTaskContext(Map taskContext) {
 		_taskContext = taskContext;
 	}
 
@@ -820,12 +815,6 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 
 		backgroundTaskCacheModel.taskContext = getTaskContext();
 
-		String taskContext = backgroundTaskCacheModel.taskContext;
-
-		if ((taskContext != null) && (taskContext.length() == 0)) {
-			backgroundTaskCacheModel.taskContext = null;
-		}
-
 		backgroundTaskCacheModel.completed = getCompleted();
 
 		Date completionDate = getCompletionDate();
@@ -990,7 +979,7 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 	private String _servletContextNames;
 	private String _taskExecutorClassName;
 	private String _originalTaskExecutorClassName;
-	private String _taskContext;
+	private Map _taskContext;
 	private boolean _completed;
 	private boolean _originalCompleted;
 	private boolean _setOriginalCompleted;
