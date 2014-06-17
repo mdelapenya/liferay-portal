@@ -2557,14 +2557,9 @@ public class PortalImpl implements Portal {
 	public String getFirstPageLayoutTypes(HttpServletRequest request) {
 		StringBundler sb = new StringBundler();
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
 		for (String type : PropsValues.LAYOUT_TYPES) {
 			if (isLayoutFirstPageable(type)) {
-				sb.append(
-					LanguageUtil.get(
-						themeDisplay.getLocale(), "layout.types." + type));
+				sb.append(LanguageUtil.get(request, "layout.types." + type));
 				sb.append(StringPool.COMMA);
 				sb.append(StringPool.SPACE);
 			}
