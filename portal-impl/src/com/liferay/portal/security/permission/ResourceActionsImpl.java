@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UniqueList;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentType;
 import com.liferay.portal.kernel.xml.Element;
@@ -48,6 +49,7 @@ import com.liferay.portal.service.GroupServiceUtil;
 import com.liferay.portal.service.PortletLocalService;
 import com.liferay.portal.service.ResourceActionLocalService;
 import com.liferay.portal.service.RoleLocalService;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.PortletResourceBundles;
@@ -67,7 +69,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.jsp.PageContext;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Brian Wing Shun Chan
@@ -152,13 +154,17 @@ public class ResourceActionsImpl implements ResourceActions {
 	}
 
 	@Override
-	public String getAction(PageContext pageContext, String action) {
+	public String getAction(HttpServletRequest request, String action) {
 		String key = getActionNamePrefix() + action;
 
-		String value = LanguageUtil.get(pageContext, key, null);
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		String value = LanguageUtil.get(themeDisplay.getLocale(), key, null);
 
 		if ((value == null) || value.equals(key)) {
-			value = PortletResourceBundles.getString(pageContext, key);
+			value = PortletResourceBundles.getString(
+				themeDisplay.getLocale(), key);
 		}
 
 		if (value == null) {
@@ -175,12 +181,12 @@ public class ResourceActionsImpl implements ResourceActions {
 
 	@Override
 	public List<String> getActionsNames(
-		PageContext pageContext, List<String> actions) {
+		HttpServletRequest request, List<String> actions) {
 
 		List<String> actionNames = new UniqueList<String>();
 
 		for (String action : actions) {
-			actionNames.add(getAction(pageContext, action));
+			actionNames.add(getAction(request, action));
 		}
 
 		return actionNames;
@@ -188,7 +194,7 @@ public class ResourceActionsImpl implements ResourceActions {
 
 	@Override
 	public List<String> getActionsNames(
-		PageContext pageContext, String name, long actionIds) {
+		HttpServletRequest request, String name, long actionIds) {
 
 		try {
 			List<ResourceAction> resourceActions =
@@ -204,7 +210,7 @@ public class ResourceActionsImpl implements ResourceActions {
 				}
 			}
 
-			return getActionsNames(pageContext, actions);
+			return getActionsNames(request, actions);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -248,13 +254,17 @@ public class ResourceActionsImpl implements ResourceActions {
 	}
 
 	@Override
-	public String getModelResource(PageContext pageContext, String name) {
+	public String getModelResource(HttpServletRequest request, String name) {
 		String key = getModelResourceNamePrefix() + name;
 
-		String value = LanguageUtil.get(pageContext, key, null);
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		String value = LanguageUtil.get(themeDisplay.getLocale(), key, null);
 
 		if ((value == null) || value.equals(key)) {
-			value = PortletResourceBundles.getString(pageContext, key);
+			value = PortletResourceBundles.getString(
+				themeDisplay.getLocale(), key);
 		}
 
 		if (value == null) {
