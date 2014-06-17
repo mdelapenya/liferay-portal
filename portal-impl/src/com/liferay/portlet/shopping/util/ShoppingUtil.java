@@ -74,6 +74,7 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 
 /**
@@ -581,9 +582,12 @@ public class ShoppingUtil {
 			//categoriesURL.setWindowState(WindowState.MAXIMIZED);
 		}
 
+		HttpServletRequest request =
+			(HttpServletRequest)pageContext.getRequest();
+
 		String categoriesLink =
 			"<a href=\"" + categoriesURL.toString() + "\">" +
-				LanguageUtil.get(pageContext, "categories") + "</a>";
+				LanguageUtil.get(request, "categories") + "</a>";
 
 		if (category == null) {
 			return "<span class=\"first last\">" + categoriesLink + "</span>";
@@ -971,7 +975,10 @@ public class ShoppingUtil {
 			ppPaymentStatus = StringUtil.toLowerCase(ppPaymentStatus);
 		}
 
-		return LanguageUtil.get(pageContext, HtmlUtil.escape(ppPaymentStatus));
+		HttpServletRequest request =
+			(HttpServletRequest)pageContext.getRequest();
+
+		return LanguageUtil.get(request, HtmlUtil.escape(ppPaymentStatus));
 	}
 
 	public static String getPpPaymentStatus(String ppPaymentStatus) {

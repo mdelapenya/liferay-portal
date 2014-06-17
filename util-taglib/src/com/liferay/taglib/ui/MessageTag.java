@@ -51,20 +51,20 @@ public class MessageTag extends TagSupport {
 					value = _key;
 				}
 				else if (_unicode) {
-					value = UnicodeLanguageUtil.get(pageContext, _key);
+					value = UnicodeLanguageUtil.get(request, _key);
 				}
 				else {
-					value = LanguageUtil.get(pageContext, _key);
+					value = LanguageUtil.get(request, _key);
 				}
 			}
 			else {
 				if (_unicode) {
 					value = UnicodeLanguageUtil.format(
-						pageContext, _key, _arguments, _translateArguments);
+						request, _key, _arguments, _translateArguments);
 				}
 				else {
 					value = LanguageUtil.format(
-						pageContext, _key, _arguments, _translateArguments);
+						request, _key, _arguments, _translateArguments);
 				}
 			}
 

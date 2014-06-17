@@ -82,7 +82,7 @@ public class InputSearchTag extends IncludeTag {
 		String buttonLabel = _buttonLabel;
 
 		if (Validator.isNull(buttonLabel)) {
-			buttonLabel = LanguageUtil.get(pageContext, "search");
+			buttonLabel = LanguageUtil.get(request, "search");
 		}
 
 		String cssClass = _cssClass;
@@ -108,7 +108,7 @@ public class InputSearchTag extends IncludeTag {
 		String title = _title;
 
 		if (title == null) {
-			title = LanguageUtil.get(pageContext, "search");
+			title = LanguageUtil.get(request, "search");
 		}
 
 		request.setAttribute(

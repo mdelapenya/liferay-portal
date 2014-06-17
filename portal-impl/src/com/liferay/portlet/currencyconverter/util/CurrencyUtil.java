@@ -52,7 +52,7 @@ public class CurrencyUtil {
 		symbols = new TreeMap<String, String>();
 
 		for (String symbol : _instance._currencyIds) {
-			symbols.put(LanguageUtil.get(pageContext, symbol), symbol);
+			symbols.put(LanguageUtil.get(request, symbol), symbol);
 		}
 
 		_symbolsPool.put(key, symbols);

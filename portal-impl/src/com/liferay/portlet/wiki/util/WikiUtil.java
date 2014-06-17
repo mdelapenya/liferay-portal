@@ -88,6 +88,7 @@ import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 
 /**
@@ -213,13 +214,16 @@ public class WikiUtil {
 			}
 		}
 
+		HttpServletRequest request =
+			(HttpServletRequest)pageContext.getRequest();
+
 		List<DiffVersion> diffVersions = new ArrayList<DiffVersion>();
 
 		for (WikiPage page : pages) {
 			String extraInfo = StringPool.BLANK;
 
 			if (page.isMinorEdit()) {
-				extraInfo = LanguageUtil.get(pageContext, "minor-edit");
+				extraInfo = LanguageUtil.get(request, "minor-edit");
 			}
 
 			DiffVersion diffVersion = new DiffVersion(
