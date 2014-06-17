@@ -57,10 +57,10 @@ private String _getActionLabel(PageContext pageContext, ThemeDisplay themeDispla
 		if (Validator.isNull(controlPanelCategory)) {
 		}
 		else if (controlPanelCategory.startsWith(PortletCategoryKeys.SITE_ADMINISTRATION)) {
-			actionLabel = LanguageUtil.get(pageContext, "access-in-site-administration");
+			actionLabel = LanguageUtil.get(request, "access-in-site-administration");
 		}
 		else if (controlPanelCategory.equals(PortletCategoryKeys.MY)) {
-			actionLabel = LanguageUtil.get(pageContext, "access-in-my-account");
+			actionLabel = LanguageUtil.get(request, "access-in-my-account");
 		}
 	}
 

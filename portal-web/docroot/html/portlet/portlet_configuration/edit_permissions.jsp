@@ -50,11 +50,11 @@ if (Validator.isNull(modelResource)) {
 
 	selResource = portlet.getRootPortletId();
 	selResourceDescription = PortalUtil.getPortletTitle(portlet, application, locale);
-	selResourceName = LanguageUtil.get(pageContext, "portlet");
+	selResourceName = LanguageUtil.get(request, "portlet");
 }
 else {
 	PortalUtil.addPortletBreadcrumbEntry(request, HtmlUtil.unescape(selResourceDescription), null);
-	PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(pageContext, "permissions"), currentURL);
+	PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "permissions"), currentURL);
 }
 
 long groupId = themeDisplay.getScopeGroupId();
@@ -373,7 +373,7 @@ definePermissionsURL.setRefererPlid(plid);
 						String dataMessage = StringPool.BLANK;
 
 						if (Validator.isNotNull(preselectedMsg)) {
-							dataMessage = HtmlUtil.escapeAttribute(LanguageUtil.format(pageContext, preselectedMsg, new Object[] {role.getTitle(locale), ResourceActionsUtil.getAction(pageContext, action), Validator.isNull(modelResource) ? selResourceDescription : ResourceActionsUtil.getModelResource(locale, resource.getName()), HtmlUtil.escape(group.getDescriptiveName(locale))}, false));
+							dataMessage = HtmlUtil.escapeAttribute(LanguageUtil.format(request, preselectedMsg, new Object[] {role.getTitle(locale), ResourceActionsUtil.getAction(pageContext, action), Validator.isNull(modelResource) ? selResourceDescription : ResourceActionsUtil.getModelResource(locale, resource.getName()), HtmlUtil.escape(group.getDescriptiveName(locale))}, false));
 						}
 
 						String actionSeparator = Validator.isNotNull(preselectedMsg) ? ActionUtil.PRESELECTED : ActionUtil.ACTION;

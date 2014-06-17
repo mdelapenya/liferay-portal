@@ -89,7 +89,7 @@ portletURL.setParameter("modelResource", modelResource);
 			<c:when test="<%= column != null %>">
 				<aui:input name="type" type="hidden" value="<%= type %>" />
 
-				<aui:input name="type" type="resource" value="<%= LanguageUtil.get(pageContext, ExpandoColumnConstants.getTypeLabel(type)) %>" />
+				<aui:input name="type" type="resource" value="<%= LanguageUtil.get(request, ExpandoColumnConstants.getTypeLabel(type)) %>" />
 			</c:when>
 			<c:otherwise>
 				<aui:select helpMessage="custom-field-type-help" name="type">
@@ -294,5 +294,5 @@ if (column != null) {
 	PortalUtil.addPortletBreadcrumbEntry(request, column.getName(), null);
 }
 
-PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(pageContext, ((column == null) ? "add-attribute" : "edit")), currentURL);
+PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, ((column == null) ? "add-attribute" : "edit")), currentURL);
 %>

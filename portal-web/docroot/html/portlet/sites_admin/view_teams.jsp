@@ -43,7 +43,7 @@ pageContext.setAttribute("portletURL", portletURL);
 		backURL="<%= backURL %>"
 		escapeXml="<%= false %>"
 		localizeTitle="<%= false %>"
-		title='<%= HtmlUtil.escape(group.getDescriptiveName(locale)) + StringPool.COLON + StringPool.SPACE + LanguageUtil.get(pageContext, "manage-memberships") %>'
+		title='<%= HtmlUtil.escape(group.getDescriptiveName(locale)) + StringPool.COLON + StringPool.SPACE + LanguageUtil.get(request, "manage-memberships") %>'
 	/>
 </c:if>
 
@@ -133,5 +133,5 @@ else {
 	PortalUtil.addPortletBreadcrumbEntry(request, group.getDescriptiveName(locale), null);
 }
 
-PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(pageContext, "manage-teams"), currentURL);
+PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "manage-teams"), currentURL);
 %>

@@ -77,7 +77,7 @@ if (message == null) {
 }
 
 if (useDialog && Validator.isNull(data.get("title"))) {
-	data.put("title", HtmlUtil.stripHtml(localizeMessage ? LanguageUtil.get(pageContext, message) : message));
+	data.put("title", HtmlUtil.stripHtml(localizeMessage ? LanguageUtil.get(request, message) : message));
 }
 
 if (Validator.isNull(method)) {
@@ -123,7 +123,7 @@ if (Validator.isNull(srcHover) && Validator.isNotNull(imageHover)) {
 String details = null;
 
 if (alt != null) {
-	details = " alt=\"" + LanguageUtil.get(pageContext, alt) + "\"";
+	details = " alt=\"" + LanguageUtil.get(request, alt) + "\"";
 }
 else if (label) {
 	details = " alt=\"\"";
@@ -132,17 +132,17 @@ else {
 	StringBundler sb = new StringBundler(6);
 
 	sb.append(" alt=\"");
-	sb.append(LanguageUtil.get(pageContext, message));
+	sb.append(LanguageUtil.get(request, message));
 	sb.append("\"");
 
 	if (toolTip) {
 		sb.append(" onmouseover=\"Liferay.Portal.ToolTip.show(this, '");
-		sb.append(UnicodeLanguageUtil.get(pageContext, message));
+		sb.append(UnicodeLanguageUtil.get(request, message));
 		sb.append("')\"");
 	}
 	else {
 		sb.append(" title=\"");
-		sb.append(LanguageUtil.get(pageContext, message));
+		sb.append(LanguageUtil.get(request, message));
 		sb.append("\"");
 	}
 

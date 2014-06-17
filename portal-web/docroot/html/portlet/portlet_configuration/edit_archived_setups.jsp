@@ -118,5 +118,5 @@ portletURL.setParameter("portletResource", portletResource);
 </aui:form>
 
 <%
-PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(pageContext, "archived"), currentURL);
+PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "archived"), currentURL);
 %>

@@ -121,7 +121,7 @@ String portletURLString = portletURL.toString();
 
 		// Type
 
-		row.addText(LanguageUtil.get(pageContext, role.getTypeLabel()), rowURL);
+		row.addText(LanguageUtil.get(request, role.getTypeLabel()), rowURL);
 
 		// Subtype
 
@@ -129,7 +129,7 @@ String portletURLString = portletURL.toString();
 			(PropsValues.ROLES_REGULAR_SUBTYPES.length > 0) ||
 			(PropsValues.ROLES_SITE_SUBTYPES.length > 0)) {
 
-			row.addText(LanguageUtil.get(pageContext, role.getSubtype()), rowURL);
+			row.addText(LanguageUtil.get(request, role.getSubtype()), rowURL);
 		}
 
 		// Description

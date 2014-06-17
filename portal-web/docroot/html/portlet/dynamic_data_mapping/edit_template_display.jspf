@@ -30,7 +30,7 @@ if (Validator.isNotNull(scriptContent)) {
 			<c:if test="<%= DDMTemplateHelperUtil.isAutocompleteEnabled(language) %>">
 				<div class="lfr-template-palette-container pull-left" id="<portlet:namespace />templatePaletteContainer">
 					<div class="search" id="<portlet:namespace />paletteSearchContainer">
-						<input class="col-md-12 field search-query" id="<portlet:namespace />paletteSearch" placeholder='<%= LanguageUtil.get(pageContext, "search") %>' type="text">
+						<input class="col-md-12 field search-query" id="<portlet:namespace />paletteSearch" placeholder='<%= LanguageUtil.get(request, "search") %>' type="text">
 					</div>
 
 					<div class="lfr-template-palette" id="<portlet:namespace />paletteDataContainer">
@@ -170,7 +170,7 @@ if (Validator.isNotNull(scriptContent)) {
 
 			var getNoResultsNode = function() {
 				if (!noResultsNode) {
-					noResultsNode = A.Node.create('<div class="alert"><%= UnicodeLanguageUtil.get(pageContext, "there-are-no-results") %></div>');
+					noResultsNode = A.Node.create('<div class="alert"><%= UnicodeLanguageUtil.get(request, "there-are-no-results") %></div>');
 				}
 
 				return noResultsNode;
@@ -550,7 +550,7 @@ private String _getPaletteItemTitle(PageContext pageContext, String label, Class
 	String className = clazz.getName();
 
 	sb.append("<br />");
-	sb.append(LanguageUtil.get(pageContext, label));
+	sb.append(LanguageUtil.get(request, label));
 	sb.append(StringPool.COLON);
 	sb.append("&nbsp;");
 
@@ -583,23 +583,23 @@ private String _getPaletteItemTitle(PageContext pageContext, TemplateVariableDef
 
 	if (Validator.isNotNull(help)) {
 		sb.append("<p>");
-		sb.append(LanguageUtil.get(pageContext, help));
+		sb.append(LanguageUtil.get(request, help));
 		sb.append("</p>");
 	}
 
 	if (templateVariableDefinition.isCollection()) {
 		sb.append("<p><i>*");
-		sb.append(LanguageUtil.get(pageContext, "this-is-a-collection-of-fields"));
+		sb.append(LanguageUtil.get(request, "this-is-a-collection-of-fields"));
 		sb.append("</i></p>");
 	}
 	else if (templateVariableDefinition.isRepeatable()) {
 		sb.append("<p><i>*");
-		sb.append(LanguageUtil.get(pageContext, "this-is-a-repeatable-field"));
+		sb.append(LanguageUtil.get(request, "this-is-a-repeatable-field"));
 		sb.append("</i></p>");
 	}
 
 	if (!Validator.equals(templateVariableDefinition.getDataType(), "service-locator")) {
-		sb.append(LanguageUtil.get(pageContext, "variable"));
+		sb.append(LanguageUtil.get(request, "variable"));
 		sb.append(StringPool.COLON);
 		sb.append("&nbsp;");
 		sb.append(templateVariableDefinition.getName());

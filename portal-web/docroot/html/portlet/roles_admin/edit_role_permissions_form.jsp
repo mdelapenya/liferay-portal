@@ -36,7 +36,7 @@ if (Validator.isNotNull(portletResource)) {
 	String portletId = portlet.getPortletId();
 
 	if (portletId.equals(PortletKeys.PORTAL)) {
-		portletResourceLabel = LanguageUtil.get(pageContext, "general-permissions");
+		portletResourceLabel = LanguageUtil.get(request, "general-permissions");
 	}
 	else {
 		portletResourceLabel = PortalUtil.getPortletLongTitle(portlet, application, locale);
@@ -188,7 +188,7 @@ definePermissionsURL.setParameter(Constants.CMD, Constants.VIEW);
 definePermissionsURL.setParameter("redirect", backURL);
 definePermissionsURL.setParameter("roleId", String.valueOf(role.getRoleId()));
 
-PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(pageContext, "define-permissions"), definePermissionsURL.toString());
+PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "define-permissions"), definePermissionsURL.toString());
 
 if (Validator.isNotNull(portletResource)) {
 	PortletURL resourceURL = liferayPortletResponse.createRenderURL();

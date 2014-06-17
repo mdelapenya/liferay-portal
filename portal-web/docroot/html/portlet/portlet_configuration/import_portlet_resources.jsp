@@ -164,10 +164,10 @@ ManifestSummary manifestSummary = ExportImportHelperUtil.getManifestSummary(them
 
 									<liferay-util:buffer var="badgeHTML">
 										<span class="badge badge-info"><%= importModelCount > 0 ? importModelCount : StringPool.BLANK %></span>
-										<span class="badge badge-warning deletions"><%= modelDeletionCount > 0 ? (modelDeletionCount + StringPool.SPACE + LanguageUtil.get(pageContext, "deletions")) : StringPool.BLANK %></span>
+										<span class="badge badge-warning deletions"><%= modelDeletionCount > 0 ? (modelDeletionCount + StringPool.SPACE + LanguageUtil.get(request, "deletions")) : StringPool.BLANK %></span>
 									</liferay-util:buffer>
 
-									<aui:input label='<%= LanguageUtil.get(pageContext, "content") + badgeHTML %>' name="<%= PortletDataHandlerKeys.PORTLET_DATA + StringPool.UNDERLINE + selPortlet.getRootPortletId() %>" type="checkbox" value="<%= true %>" />
+									<aui:input label='<%= LanguageUtil.get(request, "content") + badgeHTML %>' name="<%= PortletDataHandlerKeys.PORTLET_DATA + StringPool.UNDERLINE + selPortlet.getRootPortletId() %>" type="checkbox" value="<%= true %>" />
 
 									<%
 									PortletDataHandlerControl[] importControls = portletDataHandler.getImportControls();
@@ -284,7 +284,7 @@ ManifestSummary manifestSummary = ExportImportHelperUtil.getManifestSummary(them
 												<c:if test="<%= modelDeletionCount != 0 %>">
 
 													<%
-													String deletionsLabel = LanguageUtil.get(pageContext, "deletions") + (modelDeletionCount > 0 ? " (" + modelDeletionCount + ")" : StringPool.BLANK);
+													String deletionsLabel = LanguageUtil.get(request, "deletions") + (modelDeletionCount > 0 ? " (" + modelDeletionCount + ")" : StringPool.BLANK);
 													%>
 
 													<aui:input data-name="<%= deletionsLabel %>" helpMessage="deletions-help" label="<%= deletionsLabel %>" name="<%= PortletDataHandlerKeys.DELETIONS %>" type="checkbox" />

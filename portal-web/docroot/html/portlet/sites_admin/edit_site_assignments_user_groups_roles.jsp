@@ -43,7 +43,7 @@ portletURL.setParameter("userGroupId", String.valueOf(userGroupId));
 	backURL="<%= redirect %>"
 	escapeXml="<%= false %>"
 	localizeTitle="<%= false %>"
-	title='<%= LanguageUtil.get(pageContext, "edit-site-roles-for-user-group") + ": " + HtmlUtil.escape(userGroup.getName()) %>'
+	title='<%= LanguageUtil.get(request, "edit-site-roles-for-user-group") + ": " + HtmlUtil.escape(userGroup.getName()) %>'
 />
 
 <%
@@ -107,7 +107,7 @@ for (int i = 0; i < results.size(); i++) {
 
 	// Type
 
-	row.addText(LanguageUtil.get(pageContext, role.getTypeLabel()));
+	row.addText(LanguageUtil.get(request, role.getTypeLabel()));
 
 	// Description
 
