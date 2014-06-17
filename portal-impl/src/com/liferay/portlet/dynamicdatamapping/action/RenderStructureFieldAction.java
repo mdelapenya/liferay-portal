@@ -63,7 +63,7 @@ public class RenderStructureFieldAction extends Action {
 			request.setAttribute("aui:form:portletNamespace", portletNamespace);
 
 			String fieldHTML = DDMXSDUtil.getFieldHTMLByName(
-				pageContext, classNameId, classPK, fieldName, null,
+				request, response, classNameId, classPK, fieldName, null,
 				portletNamespace, namespace, null, readOnly,
 				themeDisplay.getLocale());
 
