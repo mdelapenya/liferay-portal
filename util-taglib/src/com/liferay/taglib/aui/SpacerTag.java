@@ -14,7 +14,7 @@
 
 package com.liferay.taglib.aui;
 
-import com.liferay.portal.kernel.servlet.taglib.TagSupport;
+import com.liferay.taglib.TagSupport;
 import com.liferay.portal.kernel.util.StringPool;
 
 import javax.servlet.jsp.JspException;

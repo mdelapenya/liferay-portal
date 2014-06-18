@@ -14,7 +14,7 @@
 
 package com.liferay.taglib.aui;
 
-import com.liferay.portal.kernel.servlet.taglib.aui.ToolTag;
+import com.liferay.taglib.aui.ToolTag;
 import com.liferay.taglib.aui.base.BaseToolTagImpl;
 
 /**

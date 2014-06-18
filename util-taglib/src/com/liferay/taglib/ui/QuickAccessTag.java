@@ -14,7 +14,7 @@
 
 package com.liferay.taglib.ui;
 
-import com.liferay.portal.kernel.servlet.taglib.ui.QuickAccessEntry;
+import com.liferay.taglib.ui.QuickAccessEntry;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.taglib.util.IncludeTag;
 

@@ -15,8 +15,8 @@
 package com.liferay.taglib.ui;
 
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.servlet.taglib.BaseBodyTagSupport;
-import com.liferay.portal.kernel.servlet.taglib.ui.QuickAccessEntry;
+import com.liferay.taglib.BaseBodyTagSupport;
+import com.liferay.taglib.ui.QuickAccessEntry;
 import com.liferay.portal.kernel.util.ServerDetector;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;

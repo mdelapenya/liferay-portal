@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.kernel.servlet.taglib.util;
+package com.liferay.taglib.util;
 
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Mergeable;

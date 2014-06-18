@@ -14,7 +14,7 @@
 
 package com.liferay.taglib.aui;
 
-import com.liferay.portal.kernel.servlet.taglib.aui.ValidatorTag;
+import com.liferay.taglib.aui.ValidatorTag;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;

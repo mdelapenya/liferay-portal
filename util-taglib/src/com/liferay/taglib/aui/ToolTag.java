@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.kernel.servlet.taglib.aui;
+package com.liferay.taglib.aui;
 
 /**
  * @author Brian Wing Shun Chan

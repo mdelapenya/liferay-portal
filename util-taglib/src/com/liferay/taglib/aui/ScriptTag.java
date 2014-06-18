@@ -16,12 +16,11 @@ package com.liferay.taglib.aui;
 
 import com.liferay.portal.kernel.servlet.BodyContentWrapper;
 import com.liferay.portal.kernel.servlet.PortalIncludeUtil;
-import com.liferay.portal.kernel.servlet.taglib.FileAvailabilityUtil;
-import com.liferay.portal.kernel.servlet.taglib.aui.ScriptData;
 import com.liferay.portal.kernel.util.ServerDetector;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Portlet;
+import com.liferay.taglib.FileAvailabilityUtil;
 import com.liferay.taglib.aui.base.BaseScriptTag;
 
 import javax.servlet.http.HttpServletRequest;

@@ -15,7 +15,7 @@
 package com.liferay.taglib.ui;
 
 import com.liferay.portal.kernel.servlet.PortalIncludeUtil;
-import com.liferay.portal.kernel.servlet.taglib.BaseBodyTagSupport;
+import com.liferay.taglib.BaseBodyTagSupport;
 import com.liferay.portal.kernel.util.IntegerWrapper;
 import com.liferay.portal.kernel.util.ServerDetector;
 import com.liferay.portal.kernel.util.StringUtil;

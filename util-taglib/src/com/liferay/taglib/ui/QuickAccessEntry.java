@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.kernel.servlet.taglib.ui;
+package com.liferay.taglib.ui;
 
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.Validator;
