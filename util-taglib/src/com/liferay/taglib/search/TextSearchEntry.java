@@ -63,7 +63,13 @@ public class TextSearchEntry extends SearchEntry {
 	}
 
 	@Override
-	public void print(PageContext pageContext) throws Exception {
+	public void print(Object object) throws Exception {
+		if (!(object instanceof PageContext)) {
+			return;
+		}
+
+		PageContext pageContext = (PageContext)object;
+
 		if (_href == null) {
 			pageContext.getOut().print(getName(pageContext));
 		}
