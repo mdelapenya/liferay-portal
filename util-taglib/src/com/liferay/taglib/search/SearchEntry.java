@@ -12,63 +12,63 @@
  * details.
  */
 
-package com.liferay.portal.kernel.dao.search;
-
-import com.liferay.portal.kernel.util.StringPool;
-
-import javax.servlet.jsp.PageContext;
+package com.liferay.taglib.search;
 
 /**
  * @author Brian Wing Shun Chan
  */
-public abstract class SearchEntry implements Cloneable {
+public abstract class SearchEntry
+	implements Cloneable, com.liferay.portal.kernel.dao.search.SearchEntry {
 
-	public static final String DEFAULT_ALIGN = "left";
-
-	public static final int DEFAULT_COLSPAN = 1;
-
-	public static final String DEFAULT_CSS_CLASS = StringPool.BLANK;
-
-	public static final String DEFAULT_VALIGN = "middle";
-
+	@Override
 	public String getAlign() {
 		return _align;
 	}
 
+	@Override
 	public int getColspan() {
 		return _colspan;
 	}
 
+	@Override
 	public String getCssClass() {
 		return _cssClass;
 	}
 
+	@Override
 	public int getIndex() {
 		return _index;
 	}
 
+	@Override
 	public String getValign() {
 		return _valign;
 	}
 
-	public abstract void print(PageContext pageContext) throws Exception;
+	@Override
+	public abstract void print(Object object) throws Exception;
 
+	@Override
 	public void setAlign(String align) {
 		_align = align;
 	}
 
+	@Override
 	public void setColspan(int colspan) {
 		_colspan = colspan;
 	}
 
+	@Override
 	public void setCssClass(String cssClass) {
 		_cssClass = cssClass;
 	}
 
+	@Override
 	public void setIndex(int index) {
 		_index = index;
 	}
 
+	@Override
 	public void setValign(String valign) {
 		_valign = valign;
 	}

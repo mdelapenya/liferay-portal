@@ -14,14 +14,15 @@
 
 package com.liferay.taglib.aui;
 
-import com.liferay.portal.kernel.servlet.BodyContentWrapper;
-import com.liferay.portal.kernel.servlet.PortalIncludeUtil;
+import com.liferay.portal.kernel.servlet.taglib.aui.ScriptData;
 import com.liferay.portal.kernel.util.ServerDetector;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Portlet;
+import com.liferay.taglib.BodyContentWrapper;
 import com.liferay.taglib.FileAvailabilityUtil;
 import com.liferay.taglib.aui.base.BaseScriptTag;
+import com.liferay.taglib.util.PortalIncludeUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
@@ -115,7 +116,7 @@ public class ScriptTag extends BaseScriptTag {
 			String use = getUse();
 
 			if (isPositionInLine()) {
-				ScriptData scriptData = new ScriptData();
+				ScriptData scriptData = new com.liferay.taglib.aui.ScriptData();
 
 				scriptData.append(portletId, bodyContentSB, use);
 
@@ -135,7 +136,7 @@ public class ScriptTag extends BaseScriptTag {
 					WebKeys.AUI_SCRIPT_DATA);
 
 				if (scriptData == null) {
-					scriptData = new ScriptData();
+					scriptData = new com.liferay.taglib.aui.ScriptData();
 
 					request.setAttribute(WebKeys.AUI_SCRIPT_DATA, scriptData);
 				}

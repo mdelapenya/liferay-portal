@@ -16,7 +16,7 @@
 
 <%@ include file="/html/taglib/init.jsp" %>
 
-<%@ page import="com.liferay.portal.kernel.servlet.taglib.ui.QuickAccessEntry" %>
+<%@ page import="com.liferay.taglib.ui.QuickAccessEntry" %>
 
 <%
 String contentId = (String)request.getAttribute("liferay-ui:quick-access:contentId");

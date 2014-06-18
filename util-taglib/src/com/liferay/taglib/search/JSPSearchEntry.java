@@ -12,11 +12,11 @@
  * details.
  */
 
-package com.liferay.portal.kernel.dao.search;
+package com.liferay.taglib.search;
 
 import com.liferay.portal.kernel.bean.BeanPropertiesUtil;
 import com.liferay.portal.kernel.servlet.DirectRequestDispatcherFactoryUtil;
-import com.liferay.portal.kernel.servlet.PipingServletResponse;
+import com.liferay.taglib.servlet.PipingServletResponse;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;

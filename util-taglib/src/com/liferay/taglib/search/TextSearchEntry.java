@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.kernel.dao.search;
+package com.liferay.taglib.search;
 
 import com.liferay.portal.kernel.bean.BeanPropertiesUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;

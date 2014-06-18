@@ -15,11 +15,11 @@
 package com.liferay.taglib.aui;
 
 import com.liferay.portal.kernel.servlet.BrowserSnifferUtil;
+import com.liferay.portal.kernel.servlet.taglib.aui.PortletScriptData;
 import com.liferay.portal.kernel.util.Mergeable;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.io.IOException;
@@ -28,6 +28,7 @@ import java.io.Writer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,36 +40,50 @@ import javax.servlet.http.HttpServletRequest;
  * @author Brian Wing Shun Chan
  * @author Shuyang Zhou
  */
-public class ScriptData implements Mergeable<ScriptData>, Serializable {
+public class ScriptData
+	implements
+		Mergeable<com.liferay.portal.kernel.servlet.taglib.aui.ScriptData>,
+		Serializable, com.liferay.portal.kernel.servlet.taglib.aui.ScriptData {
 
+	@Override
 	public void append(String portletId, String content, String use) {
-		PortletData portletData = _getPortletData(portletId);
+		PortletScriptData portletData = _getPortletData(portletId);
 
 		portletData.append(content, use);
 	}
 
+	@Override
 	public void append(String portletId, StringBundler contentSB, String use) {
-		PortletData portletData = _getPortletData(portletId);
+		PortletScriptData portletData = _getPortletData(portletId);
 
 		portletData.append(contentSB, use);
 	}
 
+	@Override
+	public Map<String, PortletScriptData> getPortletScriptDataMap() {
+		return _portletDataMap;
+	}
+
+	@Override
 	public void mark() {
-		for (PortletData portletData : _portletDataMap.values()) {
-			_addToSBIndexList(portletData._callbackSB);
-			_addToSBIndexList(portletData._rawSB);
+		for (PortletScriptData portletData : _portletDataMap.values()) {
+			_addToSBIndexList(portletData.getCallbackSB());
+			_addToSBIndexList(portletData.getRawSB());
 		}
 	}
 
 	@Override
-	public ScriptData merge(ScriptData scriptData) {
+	public com.liferay.portal.kernel.servlet.taglib.aui.ScriptData merge(
+		com.liferay.portal.kernel.servlet.taglib.aui.ScriptData scriptData) {
+
 		if ((scriptData != null) && (scriptData != this)) {
-			_portletDataMap.putAll(scriptData._portletDataMap);
+			_portletDataMap.putAll(scriptData.getPortletScriptDataMap());
 		}
 
 		return this;
 	}
 
+	@Override
 	public void reset() {
 		for (ObjectValuePair<StringBundler, Integer> ovp : _sbIndexList) {
 			StringBundler sb = ovp.getKey();
@@ -77,6 +92,7 @@ public class ScriptData implements Mergeable<ScriptData>, Serializable {
 		}
 	}
 
+	@Override
 	public void writeTo(HttpServletRequest request, Writer writer)
 		throws IOException {
 
@@ -84,10 +100,10 @@ public class ScriptData implements Mergeable<ScriptData>, Serializable {
 
 		StringBundler callbackSB = new StringBundler(_portletDataMap.size());
 
-		for (PortletData portletData : _portletDataMap.values()) {
-			portletData._rawSB.writeTo(writer);
+		for (PortletScriptData portletData : _portletDataMap.values()) {
+			portletData.getRawSB().writeTo(writer);
 
-			callbackSB.append(portletData._callbackSB);
+			callbackSB.append(portletData.getCallbackSB());
 		}
 
 		if (callbackSB.index() == 0) {
@@ -110,8 +126,8 @@ public class ScriptData implements Mergeable<ScriptData>, Serializable {
 
 		Set<String> useSet = new TreeSet<String>();
 
-		for (PortletData portletData : _portletDataMap.values()) {
-			useSet.addAll(portletData._useSet);
+		for (PortletScriptData portletData : _portletDataMap.values()) {
+			useSet.addAll(portletData.getUseSet());
 		}
 
 		for (String use : useSet) {
@@ -146,17 +162,17 @@ public class ScriptData implements Mergeable<ScriptData>, Serializable {
 		}
 	}
 
-	private PortletData _getPortletData(String portletId) {
+	private PortletScriptData _getPortletData(String portletId) {
 		if (Validator.isNull(portletId)) {
 			portletId = StringPool.BLANK;
 		}
 
-		PortletData portletData = _portletDataMap.get(portletId);
+		PortletScriptData portletData = _portletDataMap.get(portletId);
 
 		if (portletData == null) {
-			portletData = new PortletData();
+			portletData = new PortletScriptData();
 
-			PortletData oldPortletData = _portletDataMap.putIfAbsent(
+			PortletScriptData oldPortletData = _portletDataMap.putIfAbsent(
 				portletId, portletData);
 
 			if (oldPortletData != null) {
@@ -169,53 +185,9 @@ public class ScriptData implements Mergeable<ScriptData>, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private ConcurrentMap<String, PortletData> _portletDataMap =
-		new ConcurrentHashMap<String, PortletData>();
+	private ConcurrentMap<String, PortletScriptData> _portletDataMap =
+		new ConcurrentHashMap<String, PortletScriptData>();
 	private List<ObjectValuePair<StringBundler, Integer>> _sbIndexList =
 		new ArrayList<ObjectValuePair<StringBundler, Integer>>();
-
-	private class PortletData implements Serializable {
-
-		public void append(String content, String use) {
-			if (Validator.isNull(use)) {
-				_rawSB.append(content);
-			}
-			else {
-				_callbackSB.append("(function() {");
-				_callbackSB.append(content);
-				_callbackSB.append("})();");
-
-				String[] useArray = StringUtil.split(use);
-
-				for (int i = 0; i < useArray.length; i++) {
-					_useSet.add(StringUtil.trim(useArray[i]));
-				}
-			}
-		}
-
-		public void append(StringBundler contentSB, String use) {
-			if (Validator.isNull(use)) {
-				_rawSB.append(contentSB);
-			}
-			else {
-				_callbackSB.append("(function() {");
-				_callbackSB.append(contentSB);
-				_callbackSB.append("})();");
-
-				String[] useArray = StringUtil.split(use);
-
-				for (int i = 0; i < useArray.length; i++) {
-					_useSet.add(StringUtil.trim(useArray[i]));
-				}
-			}
-		}
-
-		private static final long serialVersionUID = 1L;
-
-		private StringBundler _callbackSB = new StringBundler();
-		private StringBundler _rawSB = new StringBundler();
-		private Set<String> _useSet = new TreeSet<String>();
-
-	}
 
 }
