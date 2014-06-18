@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.language.UnicodeLanguageUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ServerDetector;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import javax.servlet.http.HttpServletRequest;
@@ -68,9 +69,11 @@ public class MessageTag extends TagSupport {
 				}
 			}
 
-			JspWriter jspWriter = pageContext.getOut();
+			if (Validator.isNotNull(value)) {
+				JspWriter jspWriter = pageContext.getOut();
 
-			jspWriter.write(value);
+				jspWriter.write(value);
+			}
 
 			return EVAL_PAGE;
 		}
