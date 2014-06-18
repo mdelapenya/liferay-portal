@@ -85,7 +85,7 @@ PasswordPolicy passwordPolicy = user.getPasswordPolicy();
 					</c:if>
 
 					<c:if test="<%= upe.getType() == UserPasswordException.PASSWORD_TOO_YOUNG %>">
-						<%= LanguageUtil.format(request, "you-cannot-change-your-password-yet-please-wait-at-least-x-before-changing-your-password-again", LanguageUtil.getTimeDescription(pageContext, passwordPolicy.getMinAge() * 1000), false) %>
+						<%= LanguageUtil.format(request, "you-cannot-change-your-password-yet-please-wait-at-least-x-before-changing-your-password-again", LanguageUtil.getTimeDescription(request, passwordPolicy.getMinAge() * 1000), false) %>
 					</c:if>
 
 					<c:if test="<%= upe.getType() == UserPasswordException.PASSWORDS_DO_NOT_MATCH %>">

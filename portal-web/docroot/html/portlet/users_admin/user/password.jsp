@@ -96,7 +96,7 @@ else {
 		}
 		%>
 
-		<%= LanguageUtil.format(request, "you-cannot-change-your-password-yet-please-wait-at-least-x-before-changing-your-password-again", LanguageUtil.getTimeDescription(pageContext, passwordPolicyMinAge * 1000), false) %>
+		<%= LanguageUtil.format(request, "you-cannot-change-your-password-yet-please-wait-at-least-x-before-changing-your-password-again", LanguageUtil.getTimeDescription(request, passwordPolicyMinAge * 1000), false) %>
 	</c:if>
 
 	<c:if test="<%= upe.getType() == UserPasswordException.PASSWORDS_DO_NOT_MATCH %>">

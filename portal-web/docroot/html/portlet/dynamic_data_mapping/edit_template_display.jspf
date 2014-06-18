@@ -56,7 +56,7 @@ if (Validator.isNotNull(scriptContent)) {
 										%>
 
 											<li class="palette-item-container">
-												<span class="palette-item" data-content1="<%= HtmlUtil.escapeAttribute(dataContentArray[0]) %>" <c:if test="<%= Validator.isNotNull(dataContentArray[1]) %>">data-content2="<%= HtmlUtil.escapeAttribute(dataContentArray[1]) %>"</c:if> <c:if test="<%= Validator.isNotNull(dataContentArray[2]) %>">data-content3="<%= HtmlUtil.escapeAttribute(dataContentArray[2]) %>"</c:if> data-title="<%= HtmlUtil.escapeAttribute(_getPaletteItemTitle(pageContext, templateVariableDefinition)) %>">
+												<span class="palette-item" data-content1="<%= HtmlUtil.escapeAttribute(dataContentArray[0]) %>" <c:if test="<%= Validator.isNotNull(dataContentArray[1]) %>">data-content2="<%= HtmlUtil.escapeAttribute(dataContentArray[1]) %>"</c:if> <c:if test="<%= Validator.isNotNull(dataContentArray[2]) %>">data-content3="<%= HtmlUtil.escapeAttribute(dataContentArray[2]) %>"</c:if> data-title="<%= HtmlUtil.escapeAttribute(_getPaletteItemTitle(request, templateVariableDefinition)) %>">
 													<liferay-ui:message key="<%= templateVariableDefinition.getLabel() %>" /><c:if test="<%= templateVariableDefinition.isCollection() || templateVariableDefinition.isRepeatable() %>">*</c:if>
 												</span>
 											</li>
@@ -540,7 +540,7 @@ private String[] _getListCodeArray(
 	return listCodeArray;
 }
 
-private String _getPaletteItemTitle(PageContext pageContext, String label, Class<?> clazz) {
+private String _getPaletteItemTitle(HttpServletRequest request, String label, Class<?> clazz) {
 	StringBundler sb = new StringBundler(10);
 
 	if (clazz == null) {
@@ -576,7 +576,7 @@ private String _getPaletteItemTitle(PageContext pageContext, String label, Class
 	return sb.toString();
 }
 
-private String _getPaletteItemTitle(PageContext pageContext, TemplateVariableDefinition templateVariableDefinition) {
+private String _getPaletteItemTitle(HttpServletRequest request, TemplateVariableDefinition templateVariableDefinition) {
 	StringBundler sb = new StringBundler(12);
 
 	String help = templateVariableDefinition.getHelp();
@@ -605,12 +605,12 @@ private String _getPaletteItemTitle(PageContext pageContext, TemplateVariableDef
 		sb.append(templateVariableDefinition.getName());
 	}
 
-	sb.append(_getPaletteItemTitle(pageContext, "class", templateVariableDefinition.getClazz()));
+	sb.append(_getPaletteItemTitle(request, "class", templateVariableDefinition.getClazz()));
 
 	if (templateVariableDefinition.isCollection()) {
 		TemplateVariableDefinition itemTemplateVariableDefinition = templateVariableDefinition.getItemTemplateVariableDefinition();
 
-		sb.append(_getPaletteItemTitle(pageContext, "items-class", itemTemplateVariableDefinition.getClazz()));
+		sb.append(_getPaletteItemTitle(request, "items-class", itemTemplateVariableDefinition.getClazz()));
 	}
 
 	return sb.toString();

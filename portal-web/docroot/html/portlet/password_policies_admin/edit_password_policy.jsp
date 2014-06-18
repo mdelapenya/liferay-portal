@@ -66,7 +66,7 @@ boolean defaultPolicy = BeanParamUtil.getBoolean(passwordPolicy, request, "defau
 						for (int i = 0; i < 15; i++) {
 						%>
 
-							<aui:option label="<%= LanguageUtil.getTimeDescription(pageContext, _DURATIONS[i] * 1000) %>" value="<%= _DURATIONS[i] %>" />
+							<aui:option label="<%= LanguageUtil.getTimeDescription(request, _DURATIONS[i] * 1000) %>" value="<%= _DURATIONS[i] %>" />
 
 						<%
 						}
@@ -82,7 +82,7 @@ boolean defaultPolicy = BeanParamUtil.getBoolean(passwordPolicy, request, "defau
 					for (int i = 0; i < 15; i++) {
 					%>
 
-						<aui:option label="<%= LanguageUtil.getTimeDescription(pageContext, _DURATIONS[i] * 1000) %>" value="<%= _DURATIONS[i] %>" />
+						<aui:option label="<%= LanguageUtil.getTimeDescription(request, _DURATIONS[i] * 1000) %>" value="<%= _DURATIONS[i] %>" />
 
 					<%
 					}
@@ -156,7 +156,7 @@ boolean defaultPolicy = BeanParamUtil.getBoolean(passwordPolicy, request, "defau
 						for (int i = 15; i < _DURATIONS.length; i++) {
 						%>
 
-							<aui:option label="<%= LanguageUtil.getTimeDescription(pageContext, _DURATIONS[i] * 1000) %>" value="<%= _DURATIONS[i] %>" />
+							<aui:option label="<%= LanguageUtil.getTimeDescription(request, _DURATIONS[i] * 1000) %>" value="<%= _DURATIONS[i] %>" />
 
 						<%
 						}
@@ -170,7 +170,7 @@ boolean defaultPolicy = BeanParamUtil.getBoolean(passwordPolicy, request, "defau
 						for (int i = 7; i < 16; i++) {
 						%>
 
-							<aui:option label="<%= LanguageUtil.getTimeDescription(pageContext, _DURATIONS[i] * 1000) %>" value="<%= _DURATIONS[i] %>" />
+							<aui:option label="<%= LanguageUtil.getTimeDescription(request, _DURATIONS[i] * 1000) %>" value="<%= _DURATIONS[i] %>" />
 
 						<%
 						}
@@ -197,7 +197,7 @@ boolean defaultPolicy = BeanParamUtil.getBoolean(passwordPolicy, request, "defau
 						for (int i = 0; i < 15; i++) {
 						%>
 
-							<aui:option label="<%= LanguageUtil.getTimeDescription(pageContext, _DURATIONS[i] * 1000) %>" value="<%= _DURATIONS[i] %>" />
+							<aui:option label="<%= LanguageUtil.getTimeDescription(request, _DURATIONS[i] * 1000) %>" value="<%= _DURATIONS[i] %>" />
 
 						<%
 						}
@@ -212,7 +212,7 @@ boolean defaultPolicy = BeanParamUtil.getBoolean(passwordPolicy, request, "defau
 						for (int i = 0; i < 15; i++) {
 						%>
 
-							<aui:option label="<%= LanguageUtil.getTimeDescription(pageContext, _DURATIONS[i] * 1000) %>" value="<%= _DURATIONS[i] %>" />
+							<aui:option label="<%= LanguageUtil.getTimeDescription(request, _DURATIONS[i] * 1000) %>" value="<%= _DURATIONS[i] %>" />
 
 						<%
 						}

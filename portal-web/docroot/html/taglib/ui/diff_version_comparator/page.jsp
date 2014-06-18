@@ -172,7 +172,7 @@ if (Validator.isNotNull(languageId)) {
 
 						User userDisplay = UserLocalServiceUtil.getUser(diffVersion.getUserId());
 
-						String displayDate = LanguageUtil.format(request, "x-ago", LanguageUtil.getTimeDescription(pageContext, System.currentTimeMillis() - diffVersion.getModifiedDate().getTime(), true), false);
+						String displayDate = LanguageUtil.format(request, "x-ago", LanguageUtil.getTimeDescription(request, System.currentTimeMillis() - diffVersion.getModifiedDate().getTime(), true), false);
 					%>
 
 						<div class="<%= (diffVersion.getVersion() >= targetVersion) ? "last" : StringPool.BLANK %> version-item" data-display-date="<%= displayDate %>" data-source-version="<%= previousSourceVersion %>" data-user-name="<%= HtmlUtil.escape(userDisplay.getFullName()) %>" data-version="<%= diffVersion.getVersion() %>" data-version-name="<%= LanguageUtil.format(request, "version-x", diffVersion.getVersion()) %>">

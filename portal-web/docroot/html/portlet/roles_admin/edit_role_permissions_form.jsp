@@ -95,7 +95,7 @@ if (Validator.isNotNull(portletResource)) {
 			for (int i = 0; i < modelResources.size(); i++) {
 				String curModelResource = (String)modelResources.get(i);
 
-				String curModelResourceName = ResourceActionsUtil.getModelResource(pageContext, curModelResource);
+				String curModelResourceName = ResourceActionsUtil.getModelResource(request, curModelResource);
 			%>
 
 				<h5 id="<%= _getResourceHtmlId(curModelResource) %>"><%= curModelResourceName %></h5>
@@ -158,7 +158,7 @@ if (Validator.isNotNull(portletResource)) {
 
 				relatedPortletResources.add(curPortlet.getPortletId());
 
-				row.addText(PortalUtil.getPortletLongTitle(curPortlet, application, locale) + ": " + _getActionLabel(pageContext, themeDisplay, resource, actionId));
+				row.addText(PortalUtil.getPortletLongTitle(curPortlet, application, locale) + ": " + _getActionLabel(request, themeDisplay, resource, actionId));
 
 				row.addJSP("/html/portlet/roles_admin/edit_role_permissions_resource_scope.jsp");
 
