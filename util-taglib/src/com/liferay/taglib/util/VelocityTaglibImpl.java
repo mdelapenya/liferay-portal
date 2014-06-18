@@ -448,6 +448,7 @@ public class VelocityTaglibImpl implements VelocityTaglib {
 		return mySitesTag;
 	}
 
+	@Override
 	public PageContext getPageContext() {
 		return _pageContext;
 	}
