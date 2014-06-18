@@ -15,6 +15,7 @@
 package com.liferay.taglib;
 
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
+import com.liferay.portal.kernel.servlet.taglib.PortalBodyContentWrapper;
 import com.liferay.portal.kernel.util.StringBundler;
 
 import java.io.IOException;
@@ -27,7 +28,8 @@ import javax.servlet.jsp.tagext.BodyContent;
 /**
  * @author Shuyang Zhou
  */
-public class BodyContentWrapper extends BodyContent {
+public class BodyContentWrapper extends BodyContent
+	implements PortalBodyContentWrapper {
 
 	public BodyContentWrapper(
 		BodyContent bodyContent, UnsyncStringWriter unsyncStringWriter) {

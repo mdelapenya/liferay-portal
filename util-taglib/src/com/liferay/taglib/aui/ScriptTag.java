@@ -14,12 +14,12 @@
 
 package com.liferay.taglib.aui;
 
+import com.liferay.portal.kernel.servlet.taglib.PortalBodyContentWrapper;
 import com.liferay.portal.kernel.servlet.taglib.aui.ScriptData;
 import com.liferay.portal.kernel.util.ServerDetector;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Portlet;
-import com.liferay.taglib.BodyContentWrapper;
 import com.liferay.taglib.FileAvailabilityUtil;
 import com.liferay.taglib.aui.base.BaseScriptTag;
 import com.liferay.taglib.util.PortalIncludeUtil;
@@ -43,7 +43,7 @@ public class ScriptTag extends BaseScriptTag {
 		String previousBodyContentString = null;
 
 		if ((previousBodyContent != null) &&
-			!(previousBodyContent instanceof BodyContentWrapper)) {
+			!(previousBodyContent instanceof PortalBodyContentWrapper)) {
 
 			// LPS-22413
 
@@ -72,7 +72,11 @@ public class ScriptTag extends BaseScriptTag {
 
 			// LPS-22413
 
-			previousBodyContent.clear();
+			if ((previousBodyContent != null) &&
+				!(previousBodyContent instanceof PortalBodyContentWrapper)) {
+
+				previousBodyContent.clear();
+			}
 
 			previousBodyContent.append(previousBodyContentString);
 		}
