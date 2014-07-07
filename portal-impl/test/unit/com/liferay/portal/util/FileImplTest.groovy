@@ -25,12 +25,24 @@ public class FileImplTest extends Specification {
 
 	def "when the last slash of the fullFileName is a forward slash, the path should be the string before that slash"() {
 		expect:
-		_fileImpl.getPath("aaa\\bbb/ccc\\ddd/eee.fff") == "aaa\\bbb/ccc\\ddd";
+		_fileImpl.getPath(fullFileName) == path;
+
+		where:
+		fullFileName | path
+		"aaa\\bbb/ccc\\ddd/eee.fff" | "aaa\\bbb/ccc\\ddd"
+		"aaa/bbb/ccc/ddd/eee.fff" | "aaa/bbb/ccc/ddd"
+		"aaa\\bbb\\ccc\\ddd/eee.fff" |"aaa\\bbb\\ccc\\ddd"
 	}
 
 	def "when the last slash of the fullFileName is a back slash, the path should be the string before that slash"() {
 		expect:
-		_fileImpl.getPath("aaa/bbb\\ccc/ddd\\eee.fff") == "aaa/bbb\\ccc/ddd";
+		_fileImpl.getPath(fullFileName) == path;
+
+		where:
+		fullFileName | path
+		"aaa/bbb\\ccc/ddd\\eee.fff" | "aaa/bbb\\ccc/ddd"
+		"aaa\\bbb\\ccc\\ddd\\eee.fff" | "aaa\\bbb\\ccc\\ddd"
+		"aaa/bbb/ccc/ddd\\eee.fff" | "aaa/bbb/ccc/ddd"
 	}
 
 	def "when the fullFileName doesn't have any slash, the path should be the forward slash"() {
@@ -40,12 +52,24 @@ public class FileImplTest extends Specification {
 
 	def "when the last slash of the fullFileName is a forward slash, the shortFileName should be the string after that slash"() {
 		expect:
-		_fileImpl.getShortFileName("aaa\\bbb/ccc\\ddd/eee.fff") == "eee.fff";
+		_fileImpl.getShortFileName(fullFileName) == path;
+
+		where:
+		fullFileName | path
+		"aaa\\bbb/ccc\\ddd/eee.fff" | "eee.fff"
+		"aaa/bbb/ccc/ddd/eee.fff" | "eee.fff"
+		"aaa\\bbb\\ccc\\ddd/eee.fff" |"eee.fff"
 	}
 
 	def "when the last slash of the fullFileName is a back slash, the shortFileName should be the string after that slash"() {
 		expect:
-		_fileImpl.getShortFileName("aaa/bbb\\ccc/ddd\\eee.fff") == "eee.fff"
+		_fileImpl.getShortFileName(fullFileName) == path;
+
+		where:
+		fullFileName | path
+		"aaa\\bbb/ccc\\ddd\\eee.fff" | "eee.fff"
+		"aaa/bbb/ccc/ddd\\eee.fff" | "eee.fff"
+		"aaa\\bbb\\ccc\\ddd\\eee.fff" |"eee.fff"
 	}
 
 	def "when the fullFileName doesn't have any slash, the shortFileName should be the fullFileName"() {
