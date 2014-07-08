@@ -16,47 +16,41 @@ package com.liferay.portal.util;
 
 import com.liferay.portal.kernel.util.StringPool;
 
-import org.junit.Assert;
-import org.junit.Test;
+import spock.lang.Specification;
 
 /**
  * @author Brian Wing Shun Chan
  */
-public class FileImplTest {
+public class FileImplTest extends Specification {
 
-	@Test
-	public void testGetPathBackSlashForwardSlash() {
-		Assert.assertEquals(
-			"aaa\\bbb/ccc\\ddd",
-			_fileImpl.getPath("aaa\\bbb/ccc\\ddd/eee.fff"));
+	def "when the last slash of the fullFileName is a forward slash, the path should be the string before that slash"() {
+		expect:
+		_fileImpl.getPath("aaa\\bbb/ccc\\ddd/eee.fff") == "aaa\\bbb/ccc\\ddd";
 	}
 
-	@Test
-	public void testGetPathForwardSlashBackSlash() {
-		Assert.assertEquals(
-			"aaa/bbb\\ccc/ddd", _fileImpl.getPath("aaa/bbb\\ccc/ddd\\eee.fff"));
+	def "when the last slash of the fullFileName is a back slash, the path should be the string before that slash"() {
+		expect:
+		_fileImpl.getPath("aaa/bbb\\ccc/ddd\\eee.fff") == "aaa/bbb\\ccc/ddd";
 	}
 
-	@Test
-	public void testGetPathNoPath() {
-		Assert.assertEquals(StringPool.SLASH, _fileImpl.getPath("aaa.bbb"));
+	def "when the fullFileName doesn't have any slash, the path should be the forward slash"() {
+		expect:
+		_fileImpl.getPath("aaa.bbb") == StringPool.SLASH ;
 	}
 
-	@Test
-	public void testGetShortFileNameBackSlashForwardSlash() {
-		Assert.assertEquals(
-			"eee.fff", _fileImpl.getShortFileName("aaa\\bbb/ccc\\ddd/eee.fff"));
+	def "when the last slash of the fullFileName is a forward slash, the shortFileName should be the string after that slash"() {
+		expect:
+		_fileImpl.getShortFileName("aaa\\bbb/ccc\\ddd/eee.fff") == "eee.fff";
 	}
 
-	@Test
-	public void testGetShortFileNameForwardSlashBackSlash() {
-		Assert.assertEquals(
-			"eee.fff", _fileImpl.getShortFileName("aaa/bbb\\ccc/ddd\\eee.fff"));
+	def "when the last slash of the fullFileName is a back slash, the shortFileName should be the string after that slash"() {
+		expect:
+		_fileImpl.getShortFileName("aaa/bbb\\ccc/ddd\\eee.fff") == "eee.fff"
 	}
 
-	@Test
-	public void testGetShortFileNameNoPath() {
-		Assert.assertEquals("aaa.bbb", _fileImpl.getShortFileName("aaa.bbb"));
+	def "when the fullFileName doesn't have any slash, the shortFileName should be the fullFileName"() {
+		expect:
+		_fileImpl.getShortFileName("aaa.bbb") == "aaa.bbb";
 	}
 
 	private FileImpl _fileImpl = new FileImpl();
