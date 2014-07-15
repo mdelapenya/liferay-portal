@@ -26,6 +26,7 @@ import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.UserServiceUtil;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
+import com.liferay.portal.test.ResetDatabaseExecutionTestListener;
 import com.liferay.portal.util.test.RandomTestUtil;
 import com.liferay.portal.util.test.ServiceContextTestUtil;
 import com.liferay.portal.util.test.TestPropsValues;
@@ -42,7 +43,11 @@ import org.junit.runner.RunWith;
 /**
  * @author Roberto Díaz
  */
-@ExecutionTestListeners(listeners = {MainServletExecutionTestListener.class})
+@ExecutionTestListeners(
+	listeners = {
+		MainServletExecutionTestListener.class,
+		ResetDatabaseExecutionTestListener.class
+	})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 public class SiteMembershipPolicyMembershipsTest
 	extends BaseSiteMembershipPolicyTestCase {

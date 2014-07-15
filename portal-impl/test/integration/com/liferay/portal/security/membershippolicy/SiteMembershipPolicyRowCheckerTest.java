@@ -23,6 +23,7 @@ import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
+import com.liferay.portal.test.ResetDatabaseExecutionTestListener;
 import com.liferay.portal.util.test.RandomTestUtil;
 import com.liferay.portal.util.test.UserTestUtil;
 import com.liferay.portlet.sites.search.UserGroupRoleRoleChecker;
@@ -40,7 +41,11 @@ import org.powermock.api.mockito.PowerMockito;
 /**
  * @author Roberto Díaz
  */
-@ExecutionTestListeners(listeners = {MainServletExecutionTestListener.class})
+@ExecutionTestListeners(
+	listeners = {
+		MainServletExecutionTestListener.class,
+		ResetDatabaseExecutionTestListener.class
+	})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 public class SiteMembershipPolicyRowCheckerTest
 	extends BaseSiteMembershipPolicyTestCase {
