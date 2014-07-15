@@ -17,7 +17,6 @@ package com.liferay.portal.repository;
 import com.liferay.portal.NoSuchRepositoryEntryException;
 import com.liferay.portal.kernel.repository.RepositoryFactoryUtil;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
-import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.permission.AlwaysDenyingPermissionChecker;
@@ -47,7 +46,6 @@ import org.junit.runner.RunWith;
 		ResetDatabaseExecutionTestListener.class,
 	})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
-@Transactional
 public class RepositoryFactoryTest {
 
 	@Before
