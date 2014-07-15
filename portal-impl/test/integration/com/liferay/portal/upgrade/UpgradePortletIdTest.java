@@ -35,6 +35,7 @@ import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.service.ResourcePermissionServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
+import com.liferay.portal.test.DeleteAfterTestRun;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.upgrade.util.UpgradePortletId;
@@ -50,6 +51,7 @@ import java.util.Map;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -62,6 +64,11 @@ import org.junit.runner.RunWith;
 	})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 public class UpgradePortletIdTest extends UpgradePortletId {
+
+	@Before
+	public void setUp() throws Exception {
+		_group = GroupTestUtil.addGroup();
+	}
 
 	@After
 	public void tearDown() throws Exception {
@@ -98,10 +105,8 @@ public class UpgradePortletIdTest extends UpgradePortletId {
 	}
 
 	protected Layout addLayout() throws Exception {
-		Group group = GroupTestUtil.addGroup();
-
 		return LayoutTestUtil.addLayout(
-			group.getGroupId(), RandomTestUtil.randomString(), false);
+			_group.getGroupId(), RandomTestUtil.randomString(), false);
 	}
 
 	protected void addPortletPreferences(Layout layout, String portletId)
@@ -255,6 +260,9 @@ public class UpgradePortletIdTest extends UpgradePortletId {
 	private static final String _INSTANCE_ID = "_INSTANCE_LhZwzy867qfr";
 
 	private static final String[] _PORTLET_IDS = {"20", "47", "71"};
+
+	@DeleteAfterTestRun
+	private Group _group;
 
 	private boolean _testInstanceable = true;
 

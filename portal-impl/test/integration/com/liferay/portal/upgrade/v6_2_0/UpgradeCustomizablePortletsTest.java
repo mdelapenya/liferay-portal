@@ -23,6 +23,7 @@ import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.model.PortletPreferences;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.PortletPreferencesLocalServiceUtil;
+import com.liferay.portal.test.DeleteAfterTestRun;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.ResetDatabaseExecutionTestListener;
@@ -43,6 +44,7 @@ import java.util.List;
 import jodd.util.ArraysUtil;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -57,6 +59,11 @@ import org.junit.runner.RunWith;
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 public class UpgradeCustomizablePortletsTest
 	extends UpgradeCustomizablePortlets {
+
+	@Before
+	public void setUp() throws Exception {
+		_group = GroupTestUtil.addGroup();
+	}
 
 	@Test
 	public void testBasicPreferencesExtraction() throws Exception {
@@ -203,10 +210,8 @@ public class UpgradeCustomizablePortletsTest
 	}
 
 	protected Layout getLayout() throws Exception {
-		Group group = GroupTestUtil.addGroup();
-
 		return LayoutTestUtil.addLayout(
-			group.getGroupId(), RandomTestUtil.randomString(), false);
+			_group.getGroupId(), RandomTestUtil.randomString(), false);
 	}
 
 	protected PortalPreferencesWrapper getPortalPreferences(
@@ -265,6 +270,9 @@ public class UpgradeCustomizablePortletsTest
 		"23", "71_INSTANCE_LhZwzy867qfr", "56_INSTANCE_LhZwzy867qqb",
 		"56_INSTANCE_LhZwzy867qxc"
 	};
+
+	@DeleteAfterTestRun
+	private Group _group;
 
 	private boolean _invokeSuper;
 	private List<String> _newPortletIds = new UniqueList<String>();

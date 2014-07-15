@@ -24,6 +24,7 @@ import com.liferay.portal.model.LayoutPrototype;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.persistence.CompanyUtil;
+import com.liferay.portal.test.DeleteAfterTestRun;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.test.GroupTestUtil;
 import com.liferay.portal.util.test.LayoutTestUtil;
@@ -267,7 +268,10 @@ public abstract class BasePrototypePropagationTestCase {
 
 	protected long globalGroupId;
 	protected JournalArticle globalJournalArticle;
+
+	@DeleteAfterTestRun
 	protected Group group;
+
 	protected String initialLayoutTemplateId = "2_2_columns";
 	protected JournalArticle journalArticle;
 	protected String journalContentPortletId;

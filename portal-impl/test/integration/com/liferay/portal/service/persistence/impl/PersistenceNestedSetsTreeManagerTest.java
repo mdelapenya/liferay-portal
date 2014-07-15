@@ -25,7 +25,7 @@ import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.log.CaptureAppender;
 import com.liferay.portal.log.Log4JLoggerTestUtil;
 import com.liferay.portal.model.Group;
-import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.test.DeleteAfterTestRun;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.util.PropsValues;
@@ -105,8 +105,6 @@ public class PersistenceNestedSetsTreeManagerTest {
 	@After
 	public void tearDown() throws PortalException {
 		PropsValues.SPRING_HIBERNATE_SESSION_DELEGATED = true;
-
-		GroupLocalServiceUtil.deleteGroup(_group);
 
 		_assetCategoryPersistence.setRebuildTreeEnabled(true);
 	}
@@ -705,7 +703,10 @@ public class PersistenceNestedSetsTreeManagerTest {
 	private AssetCategory[] _assetCategories;
 	private AssetCategoryPersistence _assetCategoryPersistence;
 	private AssetVocabulary _assetVocabulary;
+
+	@DeleteAfterTestRun
 	private Group _group;
+
 	private NestedSetsTreeManager<AssetCategory> _nestedSetsTreeManager;
 	private SessionFactoryInvocationHandler _sessionFactoryInvocationHandler;
 

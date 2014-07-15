@@ -427,6 +427,8 @@ public class DLCheckInCheckOutTest {
 
 	private FileEntry _fileEntry;
 	private Folder _folder;
+
+	@DeleteAfterTestRun
 	private Group _group;
 
 	@DeleteAfterTestRun

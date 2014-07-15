@@ -37,6 +37,7 @@ import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.service.ResourcePermissionServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.servlet.filters.cache.CacheUtil;
+import com.liferay.portal.test.DeleteAfterTestRun;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.ResetDatabaseExecutionTestListener;
@@ -646,9 +647,15 @@ public class LayoutSetPrototypePropagationTest
 	private int _initialLayoutCount;
 	private int _initialPrototypeLayoutCount;
 	private String _journalContentPortletId;
+
+	@DeleteAfterTestRun
 	private Layout _layout;
+
 	private LayoutSetPrototype _layoutSetPrototype;
+
+	@DeleteAfterTestRun
 	private Group _layoutSetPrototypeGroup;
+
 	private JournalArticle _layoutSetPrototypeJournalArticle;
 	private Layout _prototypeLayout;
 

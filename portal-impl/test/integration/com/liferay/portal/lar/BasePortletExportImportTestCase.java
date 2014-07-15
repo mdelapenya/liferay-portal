@@ -164,7 +164,12 @@ public abstract class BasePortletExportImportTestCase
 
 		Group group2 = GroupTestUtil.addGroup();
 
-		testExportImportDisplayStyle(group2.getGroupId(), StringPool.BLANK);
+		try {
+			testExportImportDisplayStyle(group2.getGroupId(), StringPool.BLANK);
+		}
+		finally {
+			GroupLocalServiceUtil.deleteGroup(group2);
+		}
 	}
 
 	@Test
