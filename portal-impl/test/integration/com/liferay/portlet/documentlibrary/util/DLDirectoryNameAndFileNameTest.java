@@ -41,11 +41,7 @@ import org.junit.runner.RunWith;
 /**
  * @author Everest Liu
  */
-@ExecutionTestListeners(
-	listeners = {
-		MainServletExecutionTestListener.class,
-		MainServletExecutionTestListener.class
-	})
+@ExecutionTestListeners(listeners = {MainServletExecutionTestListener.class})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 public class DLDirectoryNameAndFileNameTest {
 
