@@ -96,6 +96,7 @@ public class CommentsSubscriptionTest {
 	@DeleteAfterTestRun
 	private Group _group;
 
+	@DeleteAfterTestRun
 	private User _user;
 
 }
