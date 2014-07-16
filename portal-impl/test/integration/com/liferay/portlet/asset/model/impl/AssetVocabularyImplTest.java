@@ -17,6 +17,7 @@ package com.liferay.portlet.asset.model.impl;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.test.DeleteAfterTestRun;
+import com.liferay.portal.test.DeleteAfterTestRunRule;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.util.test.GroupTestUtil;
@@ -27,6 +28,7 @@ import com.liferay.portlet.asset.util.test.AssetTestUtil;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -180,6 +182,10 @@ public class AssetVocabularyImplTest {
 		Assert.assertFalse(
 			vocabulary.isRequired(2, AssetCategoryConstants.ALL_CLASS_TYPE_PK));
 	}
+
+	@Rule
+	public DeleteAfterTestRunRule _deleteAfterTestRunRule =
+		new DeleteAfterTestRunRule(this);
 
 	@DeleteAfterTestRun
 	private Group _group;

@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.test.DeleteAfterTestRun;
+import com.liferay.portal.test.DeleteAfterTestRunRule;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.Sync;
@@ -35,6 +36,7 @@ import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import java.io.ByteArrayInputStream;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -202,6 +204,10 @@ public class DLFileEntryServiceTest {
 			dlFileEntry.getFileEntryId(), destFolder.getFolderId(),
 			serviceContext);
 	}
+
+	@Rule
+	public DeleteAfterTestRunRule _deleteAfterTestRunRule =
+		new DeleteAfterTestRunRule(this);
 
 	protected DLFileEntry addDLFileEntry(long folderId, boolean appendExtension)
 		throws Exception {

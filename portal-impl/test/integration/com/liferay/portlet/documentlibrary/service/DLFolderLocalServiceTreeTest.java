@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.model.TreeModel;
 import com.liferay.portal.service.BaseLocalServiceTreeTestCase;
+import com.liferay.portal.test.DeleteAfterTestRunRule;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.util.test.TestPropsValues;
@@ -25,6 +26,7 @@ import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.util.test.DLAppTestUtil;
 
+import org.junit.Rule;
 import org.junit.runner.RunWith;
 
 /**
@@ -33,6 +35,10 @@ import org.junit.runner.RunWith;
 @ExecutionTestListeners(listeners = {MainServletExecutionTestListener.class})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 public class DLFolderLocalServiceTreeTest extends BaseLocalServiceTreeTestCase {
+
+	@Rule
+	public DeleteAfterTestRunRule _deleteAfterTestRunRule =
+		new DeleteAfterTestRunRule(this);
 
 	@Override
 	protected TreeModel addTreeModel(TreeModel parentTreeModel)

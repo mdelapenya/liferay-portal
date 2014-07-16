@@ -28,6 +28,7 @@ import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Repository;
 import com.liferay.portal.repository.liferayrepository.LiferayRepository;
 import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.test.DeleteAfterTestRunRule;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.util.PortalUtil;
@@ -50,6 +51,7 @@ import com.liferay.portlet.dynamicdatamapping.util.test.DDMStructureTestUtil;
 import java.util.Map;
 
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -130,6 +132,10 @@ public class DLPortletDataHandlerTest extends BasePortletDataHandlerTestCase {
 
 		Assert.assertEquals(0, foldersCount);
 	}
+
+	@Rule
+	public DeleteAfterTestRunRule _deleteAfterTestRunRule =
+		new DeleteAfterTestRunRule(this);
 
 	protected void addRepositoryEntries() throws Exception {
 		long classNameId = PortalUtil.getClassNameId(

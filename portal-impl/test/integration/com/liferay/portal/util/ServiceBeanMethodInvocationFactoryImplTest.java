@@ -23,6 +23,7 @@ import com.liferay.portal.model.EmailAddress;
 import com.liferay.portal.service.EmailAddressLocalServiceUtil;
 import com.liferay.portal.service.persistence.EmailAddressUtil;
 import com.liferay.portal.test.DeleteAfterTestRun;
+import com.liferay.portal.test.DeleteAfterTestRunRule;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.util.test.RandomTestUtil;
@@ -34,6 +35,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -85,6 +87,10 @@ public class ServiceBeanMethodInvocationFactoryImplTest {
 		Assert.assertEquals(
 			2, EmailAddressLocalServiceUtil.getEmailAddressesCount());
 	}
+
+	@Rule
+	public DeleteAfterTestRunRule _deleteAfterTestRunRule =
+		new DeleteAfterTestRunRule(this);
 
 	protected Method getSaveMethod() throws Exception {
 		Class<?> clazz = getClass();

@@ -21,6 +21,7 @@ import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.StagedModel;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.test.DeleteAfterTestRunRule;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.TransactionalTestRule;
@@ -41,6 +42,7 @@ import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.runner.RunWith;
 
 /**
@@ -73,6 +75,10 @@ public class MDRActionStagedModelDataHandlerTest
 			_layout.getType(), _layout.getHidden(), _layout.getFriendlyURL(),
 			serviceContext);
 	}
+
+	@Rule
+	public DeleteAfterTestRunRule _deleteAfterTestRunRule =
+		new DeleteAfterTestRunRule(this);
 
 	@Override
 	protected Map<String, List<StagedModel>> addDependentStagedModelsMap(

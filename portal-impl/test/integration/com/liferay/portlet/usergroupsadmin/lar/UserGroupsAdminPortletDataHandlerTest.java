@@ -17,10 +17,12 @@ package com.liferay.portlet.usergroupsadmin.lar;
 import com.liferay.portal.kernel.lar.PortletDataHandler;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.lar.BasePortletDataHandlerTestCase;
+import com.liferay.portal.test.DeleteAfterTestRunRule;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.util.PortletKeys;
 
+import org.junit.Rule;
 import org.junit.runner.RunWith;
 
 /**
@@ -30,6 +32,10 @@ import org.junit.runner.RunWith;
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 public class UserGroupsAdminPortletDataHandlerTest
 	extends BasePortletDataHandlerTestCase {
+
+	@Rule
+	public DeleteAfterTestRunRule _deleteAfterTestRunRule =
+		new DeleteAfterTestRunRule(this);
 
 	@Override
 	protected void addStagedModels() throws Exception {

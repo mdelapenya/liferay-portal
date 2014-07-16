@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.repository.model.FileVersion;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.test.DeleteAfterTestRunRule;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portlet.documentlibrary.InvalidFileVersionException;
@@ -29,6 +30,7 @@ import com.liferay.portlet.documentlibrary.util.test.DLAppTestUtil;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -78,6 +80,10 @@ public class DLFileVersionHistoryTest extends BaseDLAppTestCase {
 	public void testRevertTwoVersionsOnePWC() throws Exception {
 		revertVersion(true, true);
 	}
+
+	@Rule
+	public DeleteAfterTestRunRule _deleteAfterTestRunRule =
+		new DeleteAfterTestRunRule(this);
 
 	protected void assertFileEntryTitle(String fileName)
 		throws PortalException {

@@ -17,6 +17,7 @@ package com.liferay.portlet.blogs.social;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.test.DeleteAfterTestRunRule;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.Sync;
@@ -30,6 +31,7 @@ import com.liferay.portlet.social.BaseSocialActivityInterpreterTestCase;
 import com.liferay.portlet.social.model.SocialActivityConstants;
 import com.liferay.portlet.social.model.SocialActivityInterpreter;
 
+import org.junit.Rule;
 import org.junit.runner.RunWith;
 
 /**
@@ -44,6 +46,10 @@ import org.junit.runner.RunWith;
 @Sync
 public class BlogsActivityInterpreterTest
 	extends BaseSocialActivityInterpreterTestCase {
+
+	@Rule
+	public DeleteAfterTestRunRule _deleteAfterTestRunRule =
+		new DeleteAfterTestRunRule(this);
 
 	@Override
 	protected void addActivities() throws Exception {

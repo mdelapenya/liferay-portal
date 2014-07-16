@@ -17,6 +17,7 @@ package com.liferay.portlet.shopping.service.permission;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.service.permission.BasePermissionTestCase;
+import com.liferay.portal.test.DeleteAfterTestRunRule;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portlet.shopping.model.ShoppingCategory;
@@ -24,6 +25,7 @@ import com.liferay.portlet.shopping.model.ShoppingItem;
 import com.liferay.portlet.shopping.util.test.ShoppingTestUtil;
 
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -53,6 +55,10 @@ public class ShoppingItemPermissionTest extends BasePermissionTestCase {
 			ShoppingItemPermission.contains(
 				permissionChecker, _subitem, ActionKeys.VIEW));
 	}
+
+	@Rule
+	public DeleteAfterTestRunRule _deleteAfterTestRunRule =
+		new DeleteAfterTestRunRule(this);
 
 	@Override
 	protected void doSetUp() throws Exception {

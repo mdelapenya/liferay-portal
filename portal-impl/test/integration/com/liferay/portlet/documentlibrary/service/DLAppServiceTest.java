@@ -43,6 +43,7 @@ import com.liferay.portal.security.permission.DoAsUserThread;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.DeleteAfterTestRun;
+import com.liferay.portal.test.DeleteAfterTestRunRule;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.Sync;
@@ -73,6 +74,7 @@ import org.hibernate.util.JDBCExceptionReporter;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -513,6 +515,10 @@ public class DLAppServiceTest extends BaseDLAppTestCase {
 			"Version label incorrect after major update", "2.0",
 			fileEntry.getVersion());
 	}
+
+	@Rule
+	public DeleteAfterTestRunRule _deleteAfterTestRunRule =
+		new DeleteAfterTestRunRule(this);
 
 	protected FileEntry addFileEntry(boolean rootFolder) throws Exception {
 		long folderId = DLFolderConstants.DEFAULT_PARENT_FOLDER_ID;

@@ -21,6 +21,7 @@ import com.liferay.portal.model.Layout;
 import com.liferay.portal.service.CompanyLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.test.DeleteAfterTestRun;
+import com.liferay.portal.test.DeleteAfterTestRunRule;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.test.GroupTestUtil;
 import com.liferay.portal.util.test.LayoutTestUtil;
@@ -28,6 +29,7 @@ import com.liferay.portal.util.test.RandomTestUtil;
 import com.liferay.portal.util.test.TestPropsValues;
 
 import org.junit.Before;
+import org.junit.Rule;
 
 /**
  * @author Vilmos Papp
@@ -52,6 +54,10 @@ public class PortalImplBaseURLTestCase {
 		publicLayout = LayoutTestUtil.addLayout(
 			group.getGroupId(), RandomTestUtil.randomString());
 	}
+
+	@Rule
+	public DeleteAfterTestRunRule _deleteAfterTestRunRule =
+		new DeleteAfterTestRunRule(this);
 
 	protected ThemeDisplay initThemeDisplay(
 			Company company, Group group, Layout layout,

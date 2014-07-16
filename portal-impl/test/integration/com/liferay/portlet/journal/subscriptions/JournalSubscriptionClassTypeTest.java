@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.service.CompanyLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.test.DeleteAfterTestRunRule;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.Sync;
@@ -40,6 +41,7 @@ import com.liferay.portlet.journal.util.test.JournalTestUtil;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.runner.RunWith;
 
 /**
@@ -55,6 +57,10 @@ import org.junit.runner.RunWith;
 @Sync
 public class JournalSubscriptionClassTypeTest
 	extends BaseSubscriptionClassTypeTestCase {
+
+	@Rule
+	public DeleteAfterTestRunRule _deleteAfterTestRunRule =
+		new DeleteAfterTestRunRule(this);
 
 	@Override
 	protected long addBaseModelWithClassType(long containerId, long classTypeId)

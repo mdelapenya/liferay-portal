@@ -15,10 +15,12 @@
 package com.liferay.portal.security.membershippolicy;
 
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
+import com.liferay.portal.test.DeleteAfterTestRunRule;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -69,5 +71,9 @@ public class RoleMembershipPolicyBasicTest
 			RoleMembershipPolicyUtil.isRoleRequired(
 				userIds[0], requiredRoleIds[0]));
 	}
+
+	@Rule
+	public DeleteAfterTestRunRule _deleteAfterTestRunRule =
+		new DeleteAfterTestRunRule(this);
 
 }
