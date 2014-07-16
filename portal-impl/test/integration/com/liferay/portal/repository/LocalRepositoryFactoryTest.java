@@ -20,7 +20,6 @@ import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.test.DeleteAfterTestRun;
-import com.liferay.portal.test.DeleteAfterTestRunRule;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.ResetDatabaseExecutionTestListener;
@@ -32,7 +31,6 @@ import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.util.test.DLTestUtil;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -127,10 +125,6 @@ public class LocalRepositoryFactoryTest {
 
 		LocalRepositoryFactoryUtil.create(repositoryId);
 	}
-
-	@Rule
-	public DeleteAfterTestRunRule _deleteAfterTestRunRule =
-		new DeleteAfterTestRunRule(this);
 
 	@DeleteAfterTestRun
 	private Group _group;

@@ -416,10 +416,6 @@ public class LayoutExportImportTest extends BaseExportImportTestCase {
 		exportImportLayouts(layoutIds, getImportParameterMap());
 	}
 
-	@Rule
-	public DeleteAfterTestRunRule _deleteAfterTestRunRule =
-		new DeleteAfterTestRunRule(this);
-
 	protected void exportImportLayouts(
 			long[] layoutIds, Map<String, String[]> parameterMap)
 		throws Exception {

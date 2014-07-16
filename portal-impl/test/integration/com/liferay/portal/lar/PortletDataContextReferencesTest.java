@@ -29,7 +29,6 @@ import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.service.PortletLocalServiceUtil;
 import com.liferay.portal.test.DeleteAfterTestRun;
-import com.liferay.portal.test.DeleteAfterTestRunRule;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.ResetDatabaseExecutionTestListener;
@@ -49,7 +48,6 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -340,10 +338,6 @@ public class PortletDataContextReferencesTest {
 					referenceElement.attributeValue("missing")));
 		}
 	}
-
-	@Rule
-	public DeleteAfterTestRunRule _deleteAfterTestRunRule =
-		new DeleteAfterTestRunRule(this);
 
 	private BookmarksEntry _bookmarksEntry;
 	private BookmarksFolder _bookmarksFolder;
