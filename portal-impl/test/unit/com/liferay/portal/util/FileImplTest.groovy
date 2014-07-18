@@ -35,10 +35,10 @@ public class FileImplTest extends Specification {
 
 	def "when the last slash of the fullFileName is a back slash, the path should be the string before that slash"() {
 		expect:
-		_fileImpl.getPath(fullFileName) == path;
+		_fileImpl.getPath(actualFullFileName) == expectedPath;
 
 		where:
-		fullFileName | path
+		actualFullFileName | expectedPath
 		"aaa/bbb\\ccc/ddd\\eee.fff" | "aaa/bbb\\ccc/ddd"
 		"aaa\\bbb\\ccc\\ddd\\eee.fff" | "aaa\\bbb\\ccc\\ddd"
 		"aaa/bbb/ccc/ddd\\eee.fff" | "aaa/bbb/ccc/ddd"
@@ -46,10 +46,10 @@ public class FileImplTest extends Specification {
 
 	def "when the last slash of the fullFileName is a back slash, the shortFileName should be the string after that slash"() {
 		expect:
-		_fileImpl.getShortFileName(fullFileName) == shortFileName;
+		_fileImpl.getShortFileName(actualFullFileName) == expectedShortFileName;
 
 		where:
-		fullFileName | shortFileName
+		actualFullFileName | expectedShortFileName
 		"aaa\\bbb/ccc\\ddd\\eee.fff" | "eee.fff"
 		"aaa/bbb/ccc/ddd\\eee.fff" | "eee.fff"
 		"aaa\\bbb\\ccc\\ddd\\eee.fff" |"eee.fff"
@@ -57,10 +57,10 @@ public class FileImplTest extends Specification {
 
 	def "when the last slash of the fullFileName is a forward slash, the path should be the string before that slash"() {
 		expect:
-		_fileImpl.getPath(fullFileName) == path;
+		_fileImpl.getPath(actualFullFileName) == expectedPath;
 
 		where:
-		fullFileName | path
+		actualFullFileName | expectedPath
 		"aaa\\bbb/ccc\\ddd/eee.fff" | "aaa\\bbb/ccc\\ddd"
 		"aaa/bbb/ccc/ddd/eee.fff" | "aaa/bbb/ccc/ddd"
 		"aaa\\bbb\\ccc\\ddd/eee.fff" |"aaa\\bbb\\ccc\\ddd"
@@ -68,10 +68,10 @@ public class FileImplTest extends Specification {
 
 	def "when the last slash of the fullFileName is a forward slash, the shortFileName should be the string after that slash"() {
 		expect:
-		_fileImpl.getShortFileName(fullFileName) == shortFileName;
+		_fileImpl.getShortFileName(actualFullFileName) == expectedShortFileName;
 
 		where:
-		fullFileName | shortFileName
+		actualFullFileName | expectedShortFileName
 		"aaa\\bbb/ccc\\ddd/eee.fff" | "eee.fff"
 		"aaa/bbb/ccc/ddd/eee.fff" | "eee.fff"
 		"aaa\\bbb\\ccc\\ddd/eee.fff" |"eee.fff"
