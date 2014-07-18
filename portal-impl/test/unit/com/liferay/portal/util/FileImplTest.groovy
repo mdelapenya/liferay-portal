@@ -23,15 +23,14 @@ import spock.lang.Specification;
  */
 public class FileImplTest extends Specification {
 
-	def "when the last slash of the fullFileName is a forward slash, the path should be the string before that slash" () {
+	def "when the fullFileName doesn't have any slash, the path should be the forward slash" () {
 		expect:
-			_fileImpl.getPath(fullFileName).equals(path);
+			_fileImpl.getPath("aaa.bbb").equals(StringPool.SLASH);
+	}
 
-		where:
-			fullFileName | path
-			"aaa\\bbb/ccc\\ddd/eee.fff" | "aaa\\bbb/ccc\\ddd"
-			"aaa/bbb/ccc/ddd/eee.fff" | "aaa/bbb/ccc/ddd"
-			"aaa\\bbb\\ccc\\ddd/eee.fff" |"aaa\\bbb\\ccc\\ddd"
+	def "when the fullFileName doesn't have any slash, the shortFileName should be the fullFileName" () {
+		expect:
+			_fileImpl.getShortFileName("aaa.bbb").equals("aaa.bbb");
 	}
 
 	def "when the last slash of the fullFileName is a back slash, the path should be the string before that slash" () {
@@ -45,22 +44,6 @@ public class FileImplTest extends Specification {
 			"aaa/bbb/ccc/ddd\\eee.fff" | "aaa/bbb/ccc/ddd"
 	}
 
-	def "when the fullFileName doesn't have any slash, the path should be the forward slash" () {
-		expect:
-			_fileImpl.getPath("aaa.bbb").equals(StringPool.SLASH);
-	}
-
-	def "when the last slash of the fullFileName is a forward slash, the shortFileName should be the string after that slash" () {
-		expect:
-			_fileImpl.getShortFileName(fullFileName).equals(path);
-
-		where:
-			fullFileName | path
-			"aaa\\bbb/ccc\\ddd/eee.fff" | "eee.fff"
-			"aaa/bbb/ccc/ddd/eee.fff" | "eee.fff"
-			"aaa\\bbb\\ccc\\ddd/eee.fff" |"eee.fff"
-	}
-
 	def "when the last slash of the fullFileName is a back slash, the shortFileName should be the string after that slash" () {
 		expect:
 			_fileImpl.getShortFileName(fullFileName).equals(path);
@@ -72,9 +55,26 @@ public class FileImplTest extends Specification {
 			"aaa\\bbb\\ccc\\ddd\\eee.fff" |"eee.fff"
 	}
 
-	def "when the fullFileName doesn't have any slash, the shortFileName should be the fullFileName" () {
+	def "when the last slash of the fullFileName is a forward slash, the path should be the string before that slash" () {
 		expect:
-			_fileImpl.getShortFileName("aaa.bbb").equals("aaa.bbb");
+			_fileImpl.getPath(fullFileName).equals(path);
+
+		where:
+			fullFileName | path
+			"aaa\\bbb/ccc\\ddd/eee.fff" | "aaa\\bbb/ccc\\ddd"
+			"aaa/bbb/ccc/ddd/eee.fff" | "aaa/bbb/ccc/ddd"
+			"aaa\\bbb\\ccc\\ddd/eee.fff" |"aaa\\bbb\\ccc\\ddd"
+	}
+
+	def "when the last slash of the fullFileName is a forward slash, the shortFileName should be the string after that slash" () {
+		expect:
+			_fileImpl.getShortFileName(fullFileName).equals(path);
+
+		where:
+			fullFileName | path
+			"aaa\\bbb/ccc\\ddd/eee.fff" | "eee.fff"
+			"aaa/bbb/ccc/ddd/eee.fff" | "eee.fff"
+			"aaa\\bbb\\ccc\\ddd/eee.fff" |"eee.fff"
 	}
 
 	private FileImpl _fileImpl = new FileImpl();
