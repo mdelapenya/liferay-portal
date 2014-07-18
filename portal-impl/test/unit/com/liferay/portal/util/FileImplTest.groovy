@@ -46,10 +46,10 @@ public class FileImplTest extends Specification {
 
 	def "when the last slash of the fullFileName is a back slash, the shortFileName should be the string after that slash"() {
 		expect:
-		_fileImpl.getShortFileName(fullFileName) == path;
+		_fileImpl.getShortFileName(fullFileName) == shortFileName;
 
 		where:
-		fullFileName | path
+		fullFileName | shortFileName
 		"aaa\\bbb/ccc\\ddd\\eee.fff" | "eee.fff"
 		"aaa/bbb/ccc/ddd\\eee.fff" | "eee.fff"
 		"aaa\\bbb\\ccc\\ddd\\eee.fff" |"eee.fff"
@@ -68,10 +68,10 @@ public class FileImplTest extends Specification {
 
 	def "when the last slash of the fullFileName is a forward slash, the shortFileName should be the string after that slash"() {
 		expect:
-		_fileImpl.getShortFileName(fullFileName) == path;
+		_fileImpl.getShortFileName(fullFileName) == shortFileName;
 
 		where:
-		fullFileName | path
+		fullFileName | shortFileName
 		"aaa\\bbb/ccc\\ddd/eee.fff" | "eee.fff"
 		"aaa/bbb/ccc/ddd/eee.fff" | "eee.fff"
 		"aaa\\bbb\\ccc\\ddd/eee.fff" |"eee.fff"
