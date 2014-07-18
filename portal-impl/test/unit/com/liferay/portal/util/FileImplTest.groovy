@@ -20,6 +20,7 @@ import spock.lang.Specification;
 
 /**
  * @author Brian Wing Shun Chan
+ * @author Cristina González
  */
 public class FileImplTest extends Specification {
 
