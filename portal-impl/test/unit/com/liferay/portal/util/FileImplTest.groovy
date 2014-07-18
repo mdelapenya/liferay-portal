@@ -25,17 +25,23 @@ public class FileImplTest extends Specification {
 
 	def "when the fullFileName doesn't have any slash, the path should be the forward slash" () {
 		expect:
-			_fileImpl.getPath("aaa.bbb").equals(StringPool.SLASH);
+			String path = _fileImpl.getPath("aaa.bbb");
+
+			path.equals(StringPool.SLASH);
 	}
 
 	def "when the fullFileName doesn't have any slash, the shortFileName should be the fullFileName" () {
 		expect:
-			_fileImpl.getShortFileName("aaa.bbb").equals("aaa.bbb");
+			String shortFileName = _fileImpl.getShortFileName("aaa.bbb");
+
+			shortFileName.equals("aaa.bbb");
 	}
 
 	def "when the last slash of the fullFileName is a back slash, the path should be the string before that slash" () {
 		expect:
-			_fileImpl.getPath(actualFullFileName).equals(expectedPath);
+			String path = _fileImpl.getPath(actualFullFileName);
+
+			path.equals(expectedPath);
 
 		where:
 			actualFullFileName | expectedPath
@@ -46,7 +52,10 @@ public class FileImplTest extends Specification {
 
 	def "when the last slash of the fullFileName is a back slash, the shortFileName should be the string after that slash" () {
 		expect:
-			_fileImpl.getShortFileName(actualFullFileName).equals(expectedShortFileName);
+			String shortFileName = _fileImpl.getShortFileName(
+				actualFullFileName);
+
+			shortFileName.equals(expectedShortFileName);
 
 		where:
 			actualFullFileName | expectedShortFileName
@@ -57,7 +66,9 @@ public class FileImplTest extends Specification {
 
 	def "when the last slash of the fullFileName is a forward slash, the path should be the string before that slash" () {
 		expect:
-			_fileImpl.getPath(actualFullFileName).equals(expectedPath);
+			String path = _fileImpl.getPath(actualFullFileName);
+
+			path.equals(expectedPath);
 
 		where:
 			actualFullFileName | expectedPath
@@ -68,7 +79,10 @@ public class FileImplTest extends Specification {
 
 	def "when the last slash of the fullFileName is a forward slash, the shortFileName should be the string after that slash" () {
 		expect:
-			_fileImpl.getShortFileName(actualFullFileName).equals(expectedShortFileName);
+			String shortFileName = _fileImpl.getShortFileName(
+				actualFullFileName);
+
+			shortFileName.equals(expectedShortFileName);
 
 		where:
 			actualFullFileName | expectedShortFileName
