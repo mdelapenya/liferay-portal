@@ -53,6 +53,7 @@ public class DeleteAfterTestRunRule implements TestRule {
 
 	public DeleteAfterTestRunRule(Object instance) {
 		super();
+
 		_instance = instance;
 	}
 
@@ -177,17 +178,17 @@ public class DeleteAfterTestRunRule implements TestRule {
 		final Statement statement, final Description description) {
 
 		return new Statement() {
+
 			@Override
 			public void evaluate() throws Throwable {
-				//Before test
 				try {
 					statement.evaluate();
 				}
 				finally {
-					//After test
 					after(description);
 				}
 			}
+
 		};
 	}
 
