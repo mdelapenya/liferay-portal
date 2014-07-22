@@ -94,6 +94,7 @@ public class AssetEntryServiceTest {
 
 		AssetEntryQuery assetEntryQuery = new AssetEntryQuery();
 
+		assetEntryQuery.setGroupIds(new long[] {_group.getGroupId()});
 		assetEntryQuery.setOrderByCol1("publishDate");
 		assetEntryQuery.setOrderByType1("DESC");
 
@@ -112,6 +113,7 @@ public class AssetEntryServiceTest {
 
 		AssetEntryQuery assetEntryQuery = new AssetEntryQuery();
 
+		assetEntryQuery.setGroupIds(new long[] {_group.getGroupId()});
 		assetEntryQuery.setOrderByCol1("ratings");
 		assetEntryQuery.setOrderByType1("DESC");
 
