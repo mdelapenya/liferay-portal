@@ -52,14 +52,6 @@ public class MainServletExecutionTestListener
 	}
 
 	@Override
-	public void runAfterTest(TestContext testContext) {
-		DeleteAfterTestRunRule deleteAfterTestRunRule =
-			new DeleteAfterTestRunRule(testContext.getInstance());
-
-		deleteAfterTestRunRule.after(testContext.getClazz());
-	}
-
-	@Override
 	public void runBeforeClass(TestContext testContext) {
 		ServiceTestUtil.initServices();
 
