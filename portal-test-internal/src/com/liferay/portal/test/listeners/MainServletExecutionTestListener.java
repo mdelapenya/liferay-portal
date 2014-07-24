@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.test.TestContext;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.servlet.MainServlet;
+import com.liferay.portal.test.mock.AutoDeployMockServletContext;
 import com.liferay.portal.test.rule.DeleteAfterTestRunRule;
 import com.liferay.portal.util.test.TestPropsValues;
 
@@ -77,8 +78,7 @@ public class MainServletExecutionTestListener
 		}
 
 		MockServletContext mockServletContext =
-			new AutoDeployMockServletContext(
-				getResourceBasePath(), new FileSystemResourceLoader());
+			new AutoDeployMockServletContext(new FileSystemResourceLoader());
 
 		ServletContextPool.put(StringPool.BLANK, mockServletContext);
 
@@ -94,12 +94,6 @@ public class MainServletExecutionTestListener
 			throw new RuntimeException(
 				"The main servlet could not be initialized");
 		}
-	}
-
-	protected String getResourceBasePath() {
-		File file = new File("portal-web/docroot");
-
-		return "file:" + file.getAbsolutePath();
 	}
 
 	protected static MainServlet mainServlet;
@@ -124,21 +118,6 @@ public class MainServletExecutionTestListener
 
 		private Class<?> _fieldClass;
 		private List<Field> _fields = new ArrayList<Field>();
-
-	}
-
-	protected class AutoDeployMockServletContext extends MockServletContext {
-
-		public AutoDeployMockServletContext(
-			String resourceBasePath, ResourceLoader resourceLoader) {
-
-			super(resourceBasePath, resourceLoader);
-		}
-
-		/**
-		 * @see com.liferay.portal.server.capabilities.TomcatServerCapabilities
-		 */
-		protected Boolean autoDeploy = Boolean.TRUE;
 
 	}
 
