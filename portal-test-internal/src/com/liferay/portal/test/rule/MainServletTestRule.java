@@ -12,35 +12,39 @@
  * details.
  */
 
-package com.liferay.portal.test.listeners;
+package com.liferay.portal.test.rule;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.servlet.ServletContextPool;
-import com.liferay.portal.kernel.test.AbstractExecutionTestListener;
-import com.liferay.portal.kernel.test.TestContext;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.servlet.MainServlet;
 import com.liferay.portal.test.mock.AutoDeployMockServletContext;
-import com.liferay.portal.test.rule.DeleteAfterTestRunRule;
 import com.liferay.portal.util.test.TestPropsValues;
 
-import javax.servlet.ServletException;
+import org.junit.rules.TestRule;
+import org.junit.runner.Description;
+import org.junit.runners.model.Statement;
 
 import org.springframework.core.io.FileSystemResourceLoader;
 import org.springframework.mock.web.MockServletConfig;
 import org.springframework.mock.web.MockServletContext;
 
+import javax.servlet.ServletException;
+
 /**
  * @author Miguel Pastor
+ * @author Cristina González
  */
-public class MainServletExecutionTestListener
-	extends AbstractExecutionTestListener {
+public class MainServletTestRule implements TestRule {
 
-	@Override
-	public void runAfterClass(TestContext testContext) {
+	public MainServletTestRule() {
+		super();
+	}
+
+	public void after() {
 		ServiceTestUtil.destroyServices();
 
 		try {
@@ -51,8 +55,7 @@ public class MainServletExecutionTestListener
 		}
 	}
 
-	@Override
-	public void runBeforeClass(TestContext testContext) {
+	public void before() {
 		ServiceTestUtil.initServices();
 
 		ServiceTestUtil.initPermissions();
@@ -80,9 +83,29 @@ public class MainServletExecutionTestListener
 		}
 	}
 
-	private static Log _log = LogFactoryUtil.getLog(
-		MainServletExecutionTestListener.class);
+	@Override
+	public Statement apply(
+		final Statement statement, final Description description) {
+
+		return new Statement() {
+
+			@Override
+			public void evaluate() throws Throwable {
+				before();
+				try {
+					statement.evaluate();
+				}
+				finally {
+					after();
+				}
+			}
+
+		};
+	}
 
 	private static MainServlet _mainServlet;
+
+	private static Log _log = LogFactoryUtil.getLog(
+		MainServletTestRule.class);
 
 }
