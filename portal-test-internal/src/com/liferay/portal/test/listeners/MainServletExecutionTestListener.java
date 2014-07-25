@@ -73,7 +73,7 @@ public class MainServletExecutionTestListener
 
 		ServiceTestUtil.initPermissions();
 
-		if (mainServlet != null) {
+		if (_mainServlet != null) {
 			return;
 		}
 
@@ -85,10 +85,10 @@ public class MainServletExecutionTestListener
 		MockServletConfig mockServletConfig = new MockServletConfig(
 			mockServletContext);
 
-		mainServlet = new MainServlet();
+		_mainServlet = new MainServlet();
 
 		try {
-			mainServlet.init(mockServletConfig);
+			_mainServlet.init(mockServletConfig);
 		}
 		catch (ServletException se) {
 			throw new RuntimeException(
@@ -96,7 +96,7 @@ public class MainServletExecutionTestListener
 		}
 	}
 
-	protected static MainServlet mainServlet;
+	private static MainServlet _mainServlet;
 
 	protected static class FieldBag {
 
