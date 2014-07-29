@@ -11,34 +11,32 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+package com.liferay.portlet.documentlibrary.webdav.rule;
 
-package com.liferay.portlet.documentlibrary.webdav;
-
-import com.liferay.portal.kernel.test.TestContext;
 import com.liferay.portal.kernel.util.Tuple;
 import com.liferay.portal.kernel.webdav.methods.Method;
-import com.liferay.portal.test.listeners.MainServletExecutionTestListener;
+import com.liferay.portal.test.rule.MainServletTestRule;
+import com.liferay.portlet.documentlibrary.webdav.BaseWebDAVTestCase;
+import org.junit.Assert;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.junit.Assert;
-
 /**
  * @author Miguel Pastor
+ * @author Cristina González
  */
-public class WebDAVEnvironmentConfigTestListener
-	extends MainServletExecutionTestListener {
+public class WebDAVEnvironmentConfigTestRule extends MainServletTestRule {
 
 	@Override
-	public void runAfterClass(TestContext testContext) {
+	public void after() {
 		_baseWebDAVTestCase.service(Method.DELETE, "", null, null);
 
-		super.runAfterClass(testContext);
+		super.after();
 	}
 
 	@Override
-	public void runBeforeClass(TestContext testContext) {
-		super.runBeforeClass(testContext);
+	public void before() {
+		super.before();
 
 		Tuple tuple = _baseWebDAVTestCase.service(Method.MKCOL, "", null, null);
 
@@ -56,5 +54,6 @@ public class WebDAVEnvironmentConfigTestListener
 	}
 
 	private BaseWebDAVTestCase _baseWebDAVTestCase = new BaseWebDAVTestCase();
+
 
 }
