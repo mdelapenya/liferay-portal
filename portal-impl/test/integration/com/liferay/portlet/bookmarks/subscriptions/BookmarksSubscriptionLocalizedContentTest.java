@@ -23,7 +23,7 @@ import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.test.Sync;
 import com.liferay.portal.test.SynchronousMailExecutionTestListener;
-import com.liferay.portal.test.listeners.MainServletExecutionTestListener;
+import com.liferay.portal.test.rule.MainServletTestRule;
 import com.liferay.portal.test.runners.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.subscriptions.BaseSubscriptionLocalizedContentTestCase;
@@ -34,6 +34,7 @@ import com.liferay.portlet.bookmarks.service.BookmarksFolderLocalServiceUtil;
 import com.liferay.portlet.bookmarks.util.BookmarksConstants;
 import com.liferay.portlet.bookmarks.util.test.BookmarksTestUtil;
 
+import org.junit.ClassRule;
 import org.junit.runner.RunWith;
 
 /**
@@ -41,13 +42,16 @@ import org.junit.runner.RunWith;
  */
 @ExecutionTestListeners(
 	listeners = {
-		MainServletExecutionTestListener.class,
 		SynchronousMailExecutionTestListener.class
 	})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 @Sync
 public class BookmarksSubscriptionLocalizedContentTest
 	extends BaseSubscriptionLocalizedContentTestCase {
+
+	@ClassRule
+	public static MainServletTestRule mainServletTestRule =
+		new MainServletTestRule();
 
 	@Override
 	protected long addBaseModel(long containerModelId) throws Exception {

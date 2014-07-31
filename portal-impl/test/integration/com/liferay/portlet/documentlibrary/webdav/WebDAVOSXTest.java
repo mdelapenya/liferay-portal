@@ -14,12 +14,13 @@
 
 package com.liferay.portlet.documentlibrary.webdav;
 
-import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.Tuple;
 import com.liferay.portal.kernel.webdav.WebDAVUtil;
 import com.liferay.portal.kernel.webdav.methods.Method;
 import com.liferay.portal.test.runners.LiferayIntegrationJUnitTestRunner;
+
+import com.liferay.portlet.documentlibrary.webdav.rule.WebDAVEnvironmentConfigTestRule;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +28,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.junit.Assert;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -37,9 +39,13 @@ import org.junit.runner.RunWith;
  *
  * @author Alexander Chow
  */
-@ExecutionTestListeners(listeners = {WebDAVEnvironmentConfigTestListener.class})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 public class WebDAVOSXTest extends BaseWebDAVTestCase {
+
+	@ClassRule
+	public static
+		WebDAVEnvironmentConfigTestRule webDAVEnvironmentConfigTestRule =
+			new WebDAVEnvironmentConfigTestRule();
 
 	@Test
 	public void testMSOffice0Setup() throws Exception {

@@ -26,6 +26,7 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 
+import com.liferay.portal.test.rule.DeleteAfterTestRunRule;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
@@ -125,6 +126,15 @@ public class LiferayIntegrationJUnitTestRunner
 		List<TestRule> testRules = super.classRules();
 
 		testRules.add(_testRule);
+
+		return testRules;
+	}
+
+	@Override
+	protected List<TestRule> getTestRules(Object target) {
+		List<TestRule> testRules = super.getTestRules(target);
+
+		testRules.add(new DeleteAfterTestRunRule(target));
 
 		return testRules;
 	}
