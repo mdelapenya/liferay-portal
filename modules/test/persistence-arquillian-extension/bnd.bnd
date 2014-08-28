@@ -1,0 +1,5 @@
+Bundle-Name: Liferay Persistence Arquillian
+Bundle-SymbolicName: com.liferay.persistence.arquillian
+Bundle-Version: 1.0.0
+Export-Package: com.liferay.persistence.arquilian
+Include-Resource: classes
