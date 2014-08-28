@@ -21,5 +21,8 @@
 		/>
 
 		<copy file="${plugin.file}" tofile="../../../lib/development/${plugin.name}.jar" />
+
+		<antcall target="publish-local-m2-snapshot" />
+
 	</target>
 </project>
