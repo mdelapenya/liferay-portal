@@ -15,6 +15,7 @@
 package com.liferay.portal.service.persistence;
 
 import com.liferay.persistence.arquillian.annotation.PersistenceTest;
+import com.liferay.persistence.arquillian.transactional.annotation.Transactional;
 
 import com.liferay.portal.NoSuchUserGroupGroupRoleException;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
@@ -24,18 +25,16 @@ import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.transaction.Propagation;
+import com.liferay.portal.kernel.transaction.TransactionDefinition;
 import com.liferay.portal.kernel.util.IntegerWrapper;
 import com.liferay.portal.model.UserGroupGroupRole;
 import com.liferay.portal.service.UserGroupGroupRoleLocalServiceUtil;
-import com.liferay.portal.test.TransactionalTestRule;
 import com.liferay.portal.util.test.RandomTestUtil;
 
 import org.jboss.arquillian.junit.Arquillian;
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
 
 import org.junit.runner.RunWith;
@@ -50,14 +49,12 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @generated
- */
+* @generated
+*/
 @PersistenceTest
 @RunWith(Arquillian.class)
+@Transactional(propagation = TransactionDefinition.PROPAGATION_REQUIRED)
 public class UserGroupGroupRolePersistenceTest {
-	@Rule
-	public TransactionalTestRule transactionalTestRule = new TransactionalTestRule(Propagation.REQUIRED);
-
 	@After
 	public void tearDown() throws Exception {
 		Iterator<UserGroupGroupRole> iterator = _userGroupGroupRoles.iterator();
