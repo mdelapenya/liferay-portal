@@ -15,7 +15,8 @@
 package com.liferay.persistence.arquillian.extension;
 
 import com.liferay.persistence.arquillian.observer.InitializePersistenceTestObserver;
-
+import com.liferay.persistence.arquillian.transactional.observer.TransactionUtilProducer;
+import com.liferay.persistence.arquillian.transactional.observer.TransactionalObserver;
 import org.jboss.arquillian.core.spi.LoadableExtension;
 
 /**
@@ -27,6 +28,14 @@ public class PersistenceTestScenarioExtension implements LoadableExtension {
 	public void register(ExtensionBuilder builder) {
 		builder.observer(
 			InitializePersistenceTestObserver.class
+		);
+
+		builder.observer(
+			TransactionUtilProducer.class
+		);
+
+		builder.observer(
+			TransactionalObserver.class
 		);
 	}
 
