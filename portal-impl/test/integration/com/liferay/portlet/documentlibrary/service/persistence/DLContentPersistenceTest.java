@@ -15,7 +15,6 @@
 package com.liferay.portlet.documentlibrary.service.persistence;
 
 import com.liferay.persistence.arquillian.annotation.PersistenceTest;
-import com.liferay.persistence.arquillian.transactional.annotation.Transactional;
 
 import com.liferay.portal.kernel.dao.jdbc.OutputBlob;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
@@ -27,7 +26,6 @@ import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.transaction.TransactionDefinition;
 import com.liferay.portal.kernel.util.IntegerWrapper;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.OrderByComparatorFactoryUtil;
@@ -66,7 +64,6 @@ import java.util.Set;
 */
 @PersistenceTest
 @RunWith(Arquillian.class)
-@Transactional(propagation = TransactionDefinition.PROPAGATION_REQUIRED)
 public class DLContentPersistenceTest {
 	@After
 	public void tearDown() throws Exception {

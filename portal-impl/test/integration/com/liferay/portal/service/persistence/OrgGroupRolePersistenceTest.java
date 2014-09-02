@@ -15,7 +15,6 @@
 package com.liferay.portal.service.persistence;
 
 import com.liferay.persistence.arquillian.annotation.PersistenceTest;
-import com.liferay.persistence.arquillian.transactional.annotation.Transactional;
 
 import com.liferay.portal.NoSuchOrgGroupRoleException;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -24,7 +23,6 @@ import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.transaction.TransactionDefinition;
 import com.liferay.portal.model.OrgGroupRole;
 import com.liferay.portal.util.test.RandomTestUtil;
 
@@ -50,7 +48,6 @@ import java.util.Set;
 */
 @PersistenceTest
 @RunWith(Arquillian.class)
-@Transactional(propagation = TransactionDefinition.PROPAGATION_REQUIRED)
 public class OrgGroupRolePersistenceTest {
 	@After
 	public void tearDown() throws Exception {

@@ -15,7 +15,6 @@
 package com.liferay.portlet.dynamicdatalists.service.persistence;
 
 import com.liferay.persistence.arquillian.annotation.PersistenceTest;
-import com.liferay.persistence.arquillian.transactional.annotation.Transactional;
 
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
@@ -24,7 +23,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.transaction.TransactionDefinition;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.OrderByComparatorFactoryUtil;
 import com.liferay.portal.kernel.util.StringPool;
@@ -59,7 +57,6 @@ import java.util.Set;
 */
 @PersistenceTest
 @RunWith(Arquillian.class)
-@Transactional(propagation = TransactionDefinition.PROPAGATION_REQUIRED)
 public class DDLRecordVersionPersistenceTest {
 	@After
 	public void tearDown() throws Exception {
