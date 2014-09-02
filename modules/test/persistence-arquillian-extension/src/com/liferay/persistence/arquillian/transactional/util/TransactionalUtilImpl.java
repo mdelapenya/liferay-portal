@@ -14,82 +14,35 @@
 
 package com.liferay.persistence.arquillian.transactional.util;
 
-import com.liferay.persistence.arquillian.transactional.annotation.Transactional;
+import com.liferay.persistence.arquillian.annotation.PersistenceTest;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.TransactionAttribute;
 import com.liferay.portal.kernel.transaction.TransactionInvokerUtil;
 
-import java.lang.reflect.Method;
-
 import java.util.concurrent.Callable;
 
 import org.jboss.arquillian.core.spi.EventContext;
 import org.jboss.arquillian.test.spi.TestClass;
 import org.jboss.arquillian.test.spi.event.suite.ClassEvent;
-import org.jboss.arquillian.test.spi.event.suite.TestEvent;
 
 /**
  * @author Cristina González
  */
 public class TransactionalUtilImpl implements TransactionalUtil {
 
-	public void invokeTransaction(EventContext eventContext) throws Throwable {
-		Transactional transactionalAnnotation = getAnnotation(
-			eventContext.getEvent());
-
-		invokeTransaction(transactionalAnnotation, eventContext);
-	}
-
-	protected Transactional getAnnotation(ClassEvent testEvent) {
-		TestClass testClass = testEvent.getTestClass();
-
-		return testClass.getAnnotation(Transactional.class);
-	}
-
-	protected Transactional getAnnotation(Object testEvent) {
-		if (testEvent instanceof TestEvent) {
-			return getAnnotation((TestEvent)testEvent);
-		}
-		else if (testEvent instanceof ClassEvent) {
-			return getAnnotation((ClassEvent)testEvent);
-		}
-		else {
-			throw new RuntimeException(
-				"The type of the event should be TestEvent or ClassEvent");
-		}
-	}
-
-	protected Transactional getAnnotation(TestEvent testEvent) {
-		Transactional transactionalAnnotation = getAnnotation(
-			(ClassEvent)testEvent);
-
-		Method testMethod = testEvent.getTestMethod();
-
-		Transactional transactionalAnnotationMethod = testMethod.getAnnotation(
-			Transactional.class);
-
-		if (transactionalAnnotationMethod != null) {
-			transactionalAnnotation = transactionalAnnotationMethod;
-		}
-
-		return transactionalAnnotation;
-	}
-
-	protected void invokeTransaction(
-			Transactional transactionalAnnotation,
-			final EventContext eventContext)
+	public void invokeTransaction(final EventContext eventContext)
 		throws Throwable {
 
-		if (transactionalAnnotation != null) {
+		PersistenceTest persistenceTestAnnotation = getAnnotation(
+			(ClassEvent)eventContext.getEvent());
+
+		if (persistenceTestAnnotation != null) {
 			TransactionAttribute.Builder builder =
 				new TransactionAttribute.Builder();
 
-			Propagation propagation = Propagation.getPropagation(
-				transactionalAnnotation.propagation());
-
-			builder.setPropagation(propagation);
+			builder.setPropagation(Propagation.REQUIRED);
 			builder.setRollbackForClasses(
 				PortalException.class, SystemException.class);
 
@@ -106,6 +59,12 @@ public class TransactionalUtilImpl implements TransactionalUtil {
 		else {
 			eventContext.proceed();
 		}
+	}
+
+	protected PersistenceTest getAnnotation(ClassEvent testEvent) {
+		TestClass testClass = testEvent.getTestClass();
+
+		return testClass.getAnnotation(PersistenceTest.class);
 	}
 
 }
