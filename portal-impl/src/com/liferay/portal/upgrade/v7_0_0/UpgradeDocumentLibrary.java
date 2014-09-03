@@ -19,7 +19,7 @@ import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.upgrade.v7_0_0.util.DLFileEntryTable;
 import com.liferay.portal.upgrade.v7_0_0.util.DLFileVersionTable;
-import com.liferay.portlet.documentlibrary.util.DLAppUtil;
+import com.liferay.portlet.documentlibrary.util.DLUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -104,8 +104,7 @@ public class UpgradeDocumentLibrary extends UpgradeProcess {
 					rs.getString("extension"));
 				String title = GetterUtil.getString(rs.getString("title"));
 
-				String filename = DLAppUtil.getSanitizedFilename(
-					title, extension);
+				String filename = DLUtil.getFilename(title, extension);
 
 				updateFileEntryFilename(fileEntryId, filename);
 			}
@@ -115,8 +114,7 @@ public class UpgradeDocumentLibrary extends UpgradeProcess {
 		}
 	}
 
-	protected void updateFileVersionFilename(
-			long fileVersionId, String filename)
+	protected void updateFileVersionFilename(long fileVersionId, String filename)
 		throws Exception {
 
 		Connection con = null;
@@ -158,8 +156,7 @@ public class UpgradeDocumentLibrary extends UpgradeProcess {
 					rs.getString("extension"));
 				String title = GetterUtil.getString(rs.getString("title"));
 
-				String filename = DLAppUtil.getSanitizedFilename(
-					title, extension);
+				String filename = DLUtil.getFilename(title, extension);
 
 				updateFileVersionFilename(fileVersionId, filename);
 			}

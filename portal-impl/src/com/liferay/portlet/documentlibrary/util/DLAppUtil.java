@@ -19,8 +19,6 @@ import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
-import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.io.File;
@@ -52,19 +50,6 @@ public class DLAppUtil {
 		}
 
 		return mimeType;
-	}
-
-	public static String getSanitizedFilename(String title, String extension) {
-		String filename = StringUtil.replace(
-			title, StringPool.SLASH, StringPool.UNDERLINE);
-
-		if (Validator.isNotNull(extension) &&
-			!filename.endsWith(StringPool.PERIOD + extension)) {
-
-			filename += StringPool.PERIOD + extension;
-		}
-
-		return filename;
 	}
 
 	public static boolean isMajorVersion(

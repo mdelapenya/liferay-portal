@@ -170,7 +170,7 @@ public class DLFileEntryLocalServiceImpl
 		String name = String.valueOf(
 			counterLocalService.increment(DLFileEntry.class.getName()));
 		String extension = DLAppUtil.getExtension(title, sourceFileName);
-		String filename = DLAppUtil.getSanitizedFilename(title, extension);
+		String filename = DLUtil.getFilename(title, extension);
 
 		if (fileEntryTypeId == -1) {
 			fileEntryTypeId =
@@ -2346,7 +2346,7 @@ public class DLFileEntryLocalServiceImpl
 				}
 			}
 
-			String filename = DLAppUtil.getSanitizedFilename(title, extension);
+			String filename = DLUtil.getFilename(title, extension);
 
 			Date now = new Date();
 
