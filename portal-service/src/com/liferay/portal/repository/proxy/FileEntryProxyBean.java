@@ -130,11 +130,6 @@ public class FileEntryProxyBean
 	}
 
 	@Override
-	public String getFilename() {
-		return _fileEntry.getFilename();
-	}
-
-	@Override
 	public FileVersion getFileVersion() throws PortalException {
 		FileVersion fileVersion = _fileEntry.getFileVersion();
 
