@@ -118,11 +118,6 @@ public class FileVersionWrapper
 	}
 
 	@Override
-	public String getFileName() {
-		return _fileVersion.getFileName();
-	}
-
-	@Override
 	public long getFileVersionId() {
 		return _fileVersion.getFileVersionId();
 	}
