@@ -71,7 +71,6 @@ public class DLFileEntryWrapper implements DLFileEntry,
 		attributes.put("extension", getExtension());
 		attributes.put("mimeType", getMimeType());
 		attributes.put("title", getTitle());
-		attributes.put("filename", getFilename());
 		attributes.put("description", getDescription());
 		attributes.put("extraSettings", getExtraSettings());
 		attributes.put("fileEntryTypeId", getFileEntryTypeId());
@@ -189,12 +188,6 @@ public class DLFileEntryWrapper implements DLFileEntry,
 
 		if (title != null) {
 			setTitle(title);
-		}
-
-		String filename = (String)attributes.get("filename");
-
-		if (filename != null) {
-			setFilename(filename);
 		}
 
 		String description = (String)attributes.get("description");
@@ -458,16 +451,6 @@ public class DLFileEntryWrapper implements DLFileEntry,
 	@Override
 	public int getFileVersionsCount(int status) {
 		return _dlFileEntry.getFileVersionsCount(status);
-	}
-
-	/**
-	* Returns the filename of this document library file entry.
-	*
-	* @return the filename of this document library file entry
-	*/
-	@Override
-	public java.lang.String getFilename() {
-		return _dlFileEntry.getFilename();
 	}
 
 	@Override
@@ -988,16 +971,6 @@ public class DLFileEntryWrapper implements DLFileEntry,
 	@Override
 	public void setFileEntryTypeId(long fileEntryTypeId) {
 		_dlFileEntry.setFileEntryTypeId(fileEntryTypeId);
-	}
-
-	/**
-	* Sets the filename of this document library file entry.
-	*
-	* @param filename the filename of this document library file entry
-	*/
-	@Override
-	public void setFilename(java.lang.String filename) {
-		_dlFileEntry.setFilename(filename);
 	}
 
 	/**

@@ -69,7 +69,6 @@ public class DLFileVersionWrapper implements DLFileVersion,
 		attributes.put("extension", getExtension());
 		attributes.put("mimeType", getMimeType());
 		attributes.put("title", getTitle());
-		attributes.put("filename", getFilename());
 		attributes.put("description", getDescription());
 		attributes.put("changeLog", getChangeLog());
 		attributes.put("extraSettings", getExtraSettings());
@@ -175,12 +174,6 @@ public class DLFileVersionWrapper implements DLFileVersion,
 
 		if (title != null) {
 			setTitle(title);
-		}
-
-		String filename = (String)attributes.get("filename");
-
-		if (filename != null) {
-			setFilename(filename);
 		}
 
 		String description = (String)attributes.get("description");
@@ -396,16 +389,6 @@ public class DLFileVersionWrapper implements DLFileVersion,
 	@Override
 	public long getFileVersionId() {
 		return _dlFileVersion.getFileVersionId();
-	}
-
-	/**
-	* Returns the filename of this document library file version.
-	*
-	* @return the filename of this document library file version
-	*/
-	@Override
-	public java.lang.String getFilename() {
-		return _dlFileVersion.getFilename();
 	}
 
 	@Override
@@ -846,16 +829,6 @@ public class DLFileVersionWrapper implements DLFileVersion,
 	@Override
 	public void setFileVersionId(long fileVersionId) {
 		_dlFileVersion.setFileVersionId(fileVersionId);
-	}
-
-	/**
-	* Sets the filename of this document library file version.
-	*
-	* @param filename the filename of this document library file version
-	*/
-	@Override
-	public void setFilename(java.lang.String filename) {
-		_dlFileVersion.setFilename(filename);
 	}
 
 	/**

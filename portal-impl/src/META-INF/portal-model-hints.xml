@@ -1562,7 +1562,6 @@
 		<field name="title" type="String">
 			<hint name="max-length">255</hint>
 		</field>
-		<field name="filename" type="String" />
 		<field name="description" type="String">
 			<hint-collection name="TEXTAREA" />
 		</field>
@@ -1656,7 +1655,6 @@
 		<field name="title" type="String">
 			<hint name="max-length">255</hint>
 		</field>
-		<field name="filename" type="String" />
 		<field name="description" type="String">
 			<hint-collection name="TEXTAREA" />
 		</field>
