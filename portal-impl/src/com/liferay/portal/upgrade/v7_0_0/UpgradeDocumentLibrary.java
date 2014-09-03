@@ -114,7 +114,7 @@ public class UpgradeDocumentLibrary extends UpgradeProcess {
 		}
 	}
 
-	protected void updateFileVersionFilename(long fileVersionId, String filename)
+	protected void updateFileVersionFilename(long fileEntryId, String filename)
 		throws Exception {
 
 		Connection con = null;
@@ -128,7 +128,7 @@ public class UpgradeDocumentLibrary extends UpgradeProcess {
 					"fileVersionId = ?");
 
 			ps.setString(1, filename);
-			ps.setLong(2, fileVersionId);
+			ps.setLong(2, fileEntryId);
 
 			ps.executeUpdate();
 		}
@@ -151,14 +151,14 @@ public class UpgradeDocumentLibrary extends UpgradeProcess {
 			rs = ps.executeQuery();
 
 			while (rs.next()) {
-				long fileVersionId = rs.getLong("fileVersionId");
+				long fileEntryId = rs.getLong("fileVersionId");
 				String extension = GetterUtil.getString(
 					rs.getString("extension"));
 				String title = GetterUtil.getString(rs.getString("title"));
 
 				String filename = DLUtil.getFilename(title, extension);
 
-				updateFileVersionFilename(fileVersionId, filename);
+				updateFileEntryFilename(fileEntryId, filename);
 			}
 		}
 		finally {
