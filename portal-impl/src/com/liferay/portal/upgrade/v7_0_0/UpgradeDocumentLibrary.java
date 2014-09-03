@@ -17,8 +17,7 @@ package com.liferay.portal.upgrade.v7_0_0;
 import com.liferay.portal.kernel.dao.jdbc.DataAccess;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.upgrade.v7_0_0.util.DLFileEntryTable;
-import com.liferay.portal.upgrade.v7_0_0.util.DLFileVersionTable;
+import com.liferay.portal.upgrade.v6_2_0.util.DLFileEntryTypeTable;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
 
 import java.sql.Connection;
@@ -34,32 +33,22 @@ public class UpgradeDocumentLibrary extends UpgradeProcess {
 	@Override
 	protected void doUpgrade() throws Exception {
 
-		// DLFileEntry
+		// DLFileEntryType
 
 		try {
 			runSQL("alter table DLFileEntry add filename VARCHAR(255) null");
-		}
-		catch (SQLException sqle) {
-			upgradeTable(
-				DLFileEntryTable.TABLE_NAME, DLFileEntryTable.TABLE_COLUMNS,
-				DLFileEntryTable.TABLE_SQL_CREATE,
-				DLFileEntryTable.TABLE_SQL_ADD_INDEXES);
-		}
 
-		updateFileEntryFilenames();
-
-		// DLFileVersion
-
-		try {
 			runSQL("alter table DLFileVersion add filename VARCHAR(255) null");
 		}
 		catch (SQLException sqle) {
 			upgradeTable(
-				DLFileVersionTable.TABLE_NAME, DLFileVersionTable.TABLE_COLUMNS,
-				DLFileVersionTable.TABLE_SQL_CREATE,
-				DLFileVersionTable.TABLE_SQL_ADD_INDEXES);
+				DLFileEntryTypeTable.TABLE_NAME,
+				DLFileEntryTypeTable.TABLE_COLUMNS,
+				DLFileEntryTypeTable.TABLE_SQL_CREATE,
+				DLFileEntryTypeTable.TABLE_SQL_ADD_INDEXES);
 		}
 
+		updateFileEntryFilenames();
 		updateFileVersionFilenames();
 	}
 
