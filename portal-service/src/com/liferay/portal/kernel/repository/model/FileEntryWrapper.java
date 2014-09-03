@@ -116,8 +116,8 @@ public class FileEntryWrapper implements FileEntry, ModelWrapper<FileEntry> {
 	}
 
 	@Override
-	public String getFileName() {
-		return _fileEntry.getFileName();
+	public String getFilename() {
+		return _fileEntry.getFilename();
 	}
 
 	@Override

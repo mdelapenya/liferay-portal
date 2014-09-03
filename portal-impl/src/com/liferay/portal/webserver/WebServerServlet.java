@@ -894,7 +894,7 @@ public class WebServerServlet extends HttpServlet {
 			return;
 		}
 
-		String fileName = fileVersion.getFileName();
+		String fileName = fileVersion.getFilename();
 
 		// Handle requested conversion
 

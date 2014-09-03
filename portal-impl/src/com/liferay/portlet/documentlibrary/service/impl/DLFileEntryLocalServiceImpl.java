@@ -170,7 +170,7 @@ public class DLFileEntryLocalServiceImpl
 		String name = String.valueOf(
 			counterLocalService.increment(DLFileEntry.class.getName()));
 		String extension = DLAppUtil.getExtension(title, sourceFileName);
-		String fileName = DLAppUtil.getSanitizedFileName(title, extension);
+		String filename = DLAppUtil.getSanitizedFilename(title, extension);
 
 		if (fileEntryTypeId == -1) {
 			fileEntryTypeId =
@@ -184,7 +184,7 @@ public class DLFileEntryLocalServiceImpl
 			fileEntryTypeId);
 
 		validateFile(
-			groupId, folderId, 0, title, fileName, extension, sourceFileName,
+			groupId, folderId, 0, title, filename, extension, sourceFileName,
 			file, is);
 
 		long fileEntryId = counterLocalService.increment();
@@ -227,7 +227,7 @@ public class DLFileEntryLocalServiceImpl
 		dlFileEntry.setExtension(extension);
 		dlFileEntry.setMimeType(mimeType);
 		dlFileEntry.setTitle(title);
-		dlFileEntry.setFileName(fileName);
+		dlFileEntry.setFilename(filename);
 		dlFileEntry.setDescription(description);
 		dlFileEntry.setFileEntryTypeId(fileEntryTypeId);
 		dlFileEntry.setVersion(DLFileEntryConstants.VERSION_DEFAULT);
@@ -240,7 +240,7 @@ public class DLFileEntryLocalServiceImpl
 
 		addFileVersion(
 			user, dlFileEntry, serviceContext.getModifiedDate(now), extension,
-			mimeType, title, fileName, description, changeLog, StringPool.BLANK,
+			mimeType, title, filename, description, changeLog, StringPool.BLANK,
 			fileEntryTypeId, fieldsMap, DLFileEntryConstants.VERSION_DEFAULT,
 			size, WorkflowConstants.STATUS_DRAFT, serviceContext);
 
@@ -559,7 +559,7 @@ public class DLFileEntryLocalServiceImpl
 					existingDLFileVersion.getExtension(),
 					existingDLFileVersion.getMimeType(),
 					existingDLFileVersion.getTitle(),
-					existingDLFileVersion.getFileName(),
+					existingDLFileVersion.getFilename(),
 					existingDLFileVersion.getDescription(),
 					existingDLFileVersion.getChangeLog(),
 					existingDLFileVersion.getExtraSettings(),
@@ -575,7 +575,7 @@ public class DLFileEntryLocalServiceImpl
 				dlFileVersion = addFileVersion(
 					user, dlFileEntry, serviceContext.getModifiedDate(null),
 					dlFileVersion.getExtension(), dlFileVersion.getMimeType(),
-					dlFileVersion.getTitle(), dlFileVersion.getFileName(),
+					dlFileVersion.getTitle(), dlFileVersion.getFilename(),
 					dlFileVersion.getDescription(),
 					dlFileVersion.getChangeLog(),
 					dlFileVersion.getExtraSettings(),
@@ -1820,7 +1820,7 @@ public class DLFileEntryLocalServiceImpl
 
 	protected DLFileVersion addFileVersion(
 			User user, DLFileEntry dlFileEntry, Date modifiedDate,
-			String extension, String mimeType, String title, String fileName,
+			String extension, String mimeType, String title, String filename,
 			String description, String changeLog, String extraSettings,
 			long fileEntryTypeId, Map<String, Fields> fieldsMap, String version,
 			long size, int status, ServiceContext serviceContext)
@@ -1848,7 +1848,7 @@ public class DLFileEntryLocalServiceImpl
 		dlFileVersion.setTreePath(dlFileVersion.buildTreePath());
 		dlFileVersion.setExtension(extension);
 		dlFileVersion.setMimeType(mimeType);
-		dlFileVersion.setFileName(fileName);
+		dlFileVersion.setFilename(filename);
 		dlFileVersion.setTitle(title);
 		dlFileVersion.setDescription(description);
 		dlFileVersion.setChangeLog(changeLog);
@@ -2212,7 +2212,7 @@ public class DLFileEntryLocalServiceImpl
 
 		validateFile(
 			dlFileEntry.getGroupId(), newFolderId, dlFileEntry.getFileEntryId(),
-			dlFileEntry.getTitle(), dlFileEntry.getFileName(),
+			dlFileEntry.getTitle(), dlFileEntry.getFilename(),
 			dlFileEntry.getExtension());
 
 		if (DLStoreUtil.hasFile(
@@ -2346,13 +2346,13 @@ public class DLFileEntryLocalServiceImpl
 				}
 			}
 
-			String fileName = DLAppUtil.getSanitizedFileName(title, extension);
+			String filename = DLAppUtil.getSanitizedFilename(title, extension);
 
 			Date now = new Date();
 
 			validateFile(
 				dlFileEntry.getGroupId(), dlFileEntry.getFolderId(),
-				dlFileEntry.getFileEntryId(), title, fileName, extension,
+				dlFileEntry.getFileEntryId(), title, filename, extension,
 				sourceFileName, file, is);
 
 			// File version
@@ -2365,7 +2365,7 @@ public class DLFileEntryLocalServiceImpl
 
 			updateFileVersion(
 				user, dlFileVersion, sourceFileName, extension, mimeType, title,
-				fileName, description, changeLog, extraSettings,
+				filename, description, changeLog, extraSettings,
 				fileEntryTypeId, fieldsMap, version, size,
 				dlFileVersion.getStatus(), serviceContext.getModifiedDate(now),
 				serviceContext);
@@ -2478,7 +2478,7 @@ public class DLFileEntryLocalServiceImpl
 
 	protected DLFileVersion updateFileVersion(
 			User user, DLFileVersion dlFileVersion, String sourceFileName,
-			String extension, String mimeType, String title, String fileName,
+			String extension, String mimeType, String title, String filename,
 			String description, String changeLog, String extraSettings,
 			long fileEntryTypeId, Map<String, Fields> fieldsMap, String version,
 			long size, int status, Date statusDate,
@@ -2520,7 +2520,7 @@ public class DLFileEntryLocalServiceImpl
 
 	protected void validateFile(
 			long groupId, long folderId, long fileEntryId, String title,
-			String fileName, String extension)
+			String filename, String extension)
 		throws PortalException {
 
 		DLFolder dlFolder = dlFolderPersistence.fetchByG_P_N(
@@ -2555,7 +2555,7 @@ public class DLFileEntryLocalServiceImpl
 		}
 
 		dlFileEntry = dlFileEntryPersistence.fetchByG_F_FN(
-			groupId, folderId, fileName);
+			groupId, folderId, filename);
 
 		if ((dlFileEntry != null) &&
 			(dlFileEntry.getFileEntryId() != fileEntryId)) {
@@ -2566,7 +2566,7 @@ public class DLFileEntryLocalServiceImpl
 
 	protected void validateFile(
 			long groupId, long folderId, long fileEntryId, String title,
-			String fileName, String extension, String sourceFileName, File file,
+			String filename, String extension, String sourceFileName, File file,
 			InputStream is)
 		throws PortalException {
 
@@ -2590,7 +2590,7 @@ public class DLFileEntryLocalServiceImpl
 		DLStoreUtil.validate(title, false);
 
 		validateFile(
-			groupId, folderId, fileEntryId, title, fileName, extension);
+			groupId, folderId, fileEntryId, title, filename, extension);
 	}
 
 	protected void validateFileEntryTypeId(

@@ -174,8 +174,8 @@ public class CMISFileVersion extends CMISModel implements FileVersion {
 	}
 
 	@Override
-	public String getFileName() {
-		return DLAppUtil.getSanitizedFileName(getTitle(), getExtension());
+	public String getFilename() {
+		return DLAppUtil.getSanitizedFilename(getTitle(), getExtension());
 	}
 
 	@Override

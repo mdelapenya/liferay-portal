@@ -130,8 +130,8 @@ public class FileEntryProxyBean
 	}
 
 	@Override
-	public String getFileName() {
-		return _fileEntry.getFileName();
+	public String getFilename() {
+		return _fileEntry.getFilename();
 	}
 
 	@Override
