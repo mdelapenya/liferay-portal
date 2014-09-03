@@ -174,7 +174,7 @@ public class CMISFileVersion extends CMISModel implements FileVersion {
 
 	@Override
 	public String getFilename() {
-		return getTitle();
+		return _document.getName();
 	}
 
 	@Override
