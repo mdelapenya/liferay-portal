@@ -896,6 +896,14 @@ public class WebServerServlet extends HttpServlet {
 
 		String fileName = fileVersion.getFilename();
 
+		String extension = fileVersion.getExtension();
+
+		if (Validator.isNotNull(extension) &&
+			!fileName.endsWith(StringPool.PERIOD + extension)) {
+
+			fileName += StringPool.PERIOD + extension;
+		}
+
 		// Handle requested conversion
 
 		boolean converted = false;
@@ -1004,8 +1012,7 @@ public class WebServerServlet extends HttpServlet {
 
 			if (Validator.isNotNull(targetExtension)) {
 				File convertedFile = DocumentConversionUtil.convert(
-					tempFileId, inputStream, fileVersion.getExtension(),
-					targetExtension);
+					tempFileId, inputStream, extension, targetExtension);
 
 				if (convertedFile != null) {
 					fileName = FileUtil.stripExtension(fileName).concat(
