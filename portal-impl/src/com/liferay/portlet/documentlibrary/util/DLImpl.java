@@ -827,13 +827,13 @@ public class DLImpl implements DL {
 		sb.append(fileEntry.getFolderId());
 		sb.append(StringPool.SLASH);
 
-		String filename = fileEntry.getFilename();
+		String title = fileEntry.getTitle();
 
 		if (fileEntry.isInTrash()) {
-			filename = TrashUtil.getOriginalTitle(fileEntry.getFilename());
+			title = TrashUtil.getOriginalTitle(fileEntry.getTitle());
 		}
 
-		sb.append(HttpUtil.encodeURL(HtmlUtil.unescape(filename)));
+		sb.append(HttpUtil.encodeURL(HtmlUtil.unescape(title)));
 
 		sb.append(StringPool.SLASH);
 		sb.append(HttpUtil.encodeURL(fileEntry.getUuid()));
@@ -1076,12 +1076,22 @@ public class DLImpl implements DL {
 			webDavURL.append(MANUAL_CHECK_IN_REQUIRED_PATH);
 		}
 
-		String fileEntryFilename = null;
+		String fileEntryTitle = null;
 
 		Group group = null;
 
 		if (fileEntry != null) {
-			fileEntryFilename = HtmlUtil.unescape(fileEntry.getFilename());
+			String extension = fileEntry.getExtension();
+
+			fileEntryTitle = HtmlUtil.unescape(fileEntry.getTitle());
+
+			if (openDocumentUrl && isOfficeExtension(extension) &&
+				!fileEntryTitle.endsWith(StringPool.PERIOD + extension)) {
+
+				webDavURL.append(OFFICE_EXTENSION_PATH);
+
+				fileEntryTitle += StringPool.PERIOD + extension;
+			}
 
 			group = GroupLocalServiceUtil.getGroup(fileEntry.getGroupId());
 		}
@@ -1117,7 +1127,7 @@ public class DLImpl implements DL {
 
 		if (fileEntry != null) {
 			sb.append(StringPool.SLASH);
-			sb.append(HttpUtil.encodeURL(fileEntryFilename, true));
+			sb.append(HttpUtil.encodeURL(fileEntryTitle, true));
 		}
 
 		webDavURL.append(sb.toString());
