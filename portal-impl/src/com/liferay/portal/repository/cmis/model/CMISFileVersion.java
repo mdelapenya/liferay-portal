@@ -32,7 +32,6 @@ import com.liferay.portal.service.CMISRepositoryLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.NoSuchFileEntryException;
 import com.liferay.portlet.documentlibrary.service.DLAppHelperLocalServiceUtil;
-import com.liferay.portlet.documentlibrary.util.DLAppUtil;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
 import com.liferay.portlet.expando.model.ExpandoBridge;
 
@@ -175,7 +174,7 @@ public class CMISFileVersion extends CMISModel implements FileVersion {
 
 	@Override
 	public String getFilename() {
-		return DLAppUtil.getSanitizedFilename(getTitle(), getExtension());
+		return getTitle();
 	}
 
 	@Override
