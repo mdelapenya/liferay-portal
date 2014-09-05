@@ -19,6 +19,8 @@ import com.liferay.arquillian.extension.descriptor.SpringDescriptorImpl;
 import com.liferay.arquillian.persistence.extension.databaseBuilder.descriptor.SpringDescriptorBasabaseBuilderImpl;
 import com.liferay.arquillian.persistence.extension.databaseBuilder.observer.InitializeDatabaseObserver;
 
+import com.liferay.arquillian.persistence.extension.transactional.observer.TransactionUtilProducer;
+import com.liferay.arquillian.persistence.extension.transactional.observer.TransactionalObserver;
 import org.jboss.arquillian.core.spi.LoadableExtension;
 
 /**
@@ -32,7 +34,11 @@ public class PersistenceTestScenarioExtension implements LoadableExtension {
 
 		builder.override(
 			SpringDescriptor.class, SpringDescriptorImpl.class,
-			SpringDescriptorBasabaseBuilderImpl.class);
+			SpringDescriptorBasabaseBuilderImpl.class);;
+
+		builder.observer(TransactionalObserver.class);
+
+		builder.observer(TransactionUtilProducer.class);
 	}
 
 }
