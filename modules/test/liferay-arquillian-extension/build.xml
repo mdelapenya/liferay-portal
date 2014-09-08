@@ -2,7 +2,7 @@
 <!DOCTYPE project>
 
 <project>
-	<property name="auto.deploy.dir" value="../../../tools/sdk/dependencies/com.liferay.portal.arquillian.extension/lib" />
+	<property name="auto.deploy.dir" value="../../../tools/sdk/dependencies/com.liferay.arquillian.extension/lib" />
 
 	<import file="../../../tools/sdk/build-common-osgi-plugin.xml" />
 
@@ -15,11 +15,26 @@
 		<fileset dir="${sdk.dir}/lib" includes="activation.jar,javax.servlet-api.jar,jsp-api.jar,mail.jar" />
 	</path>
 
-	<target name="deploy">
-		<deploy
+	<target name="jar">
+		<jar-macro
 			module.dir="${basedir}"
 		/>
 
-		<antcall target="publish-local-m2-snapshot" />
+		<echo>${plugin.javadoc.file}</echo>
+
+		<antcall target="javadoc"/>
+
+		<jar-javadoc
+			module.dir="${basedir}"
+		/>
+
+		<jar-source
+			module.dir="${basedir}"
+		/>
+
+		<antcall target="build-common-ivy.publish">
+			<param name="ivy.publish.resolver" value="local-m2" />
+			<param name="plugin.release.qualifier" value="-SNAPSHOT" />
+		</antcall>
 	</target>
 </project>
