@@ -791,21 +791,6 @@ public class WikiPageDependentsTrashHandlerTest {
 			newParentPage.getTitle(), restoredPage.getParentTitle());
 	}
 
-	protected WikiPage movePage(WikiPage trashedPage, WikiPage newParentPage) throws PortalException {
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
-			WikiPage.class.getName());
-
-		ServiceContext serviceContext =
-			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
-
-		trashHandler.moveEntry(
-			TestPropsValues.getUserId(), trashedPage.getResourcePrimKey(),
-			newParentPage.getResourcePrimKey(), serviceContext);
-
-		return WikiPageLocalServiceUtil.getPage(
-			trashedPage.getResourcePrimKey());
-	}
-
 	@Test
 	public void
 			testRestoreParentPageWithExplicitlyTrashedRedirectPageFromTrash()
@@ -1126,6 +1111,23 @@ public class WikiPageDependentsTrashHandlerTest {
 		relatedPages.setRedirectPage(redirectPage);
 
 		return relatedPages;
+	}
+
+	protected WikiPage movePage(WikiPage trashedPage, WikiPage newParentPage)
+		throws PortalException {
+
+		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+			WikiPage.class.getName());
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
+
+		trashHandler.moveEntry(
+			TestPropsValues.getUserId(), trashedPage.getResourcePrimKey(),
+			newParentPage.getResourcePrimKey(), serviceContext);
+
+		return WikiPageLocalServiceUtil.getPage(
+			trashedPage.getResourcePrimKey());
 	}
 
 	protected WikiPage movePageToTrash(WikiPage page)
