@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.wiki.trash;
 
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
@@ -779,9 +780,18 @@ public class WikiPageDependentsTrashHandlerTest {
 		WikiPage trashedPage = WikiPageLocalServiceUtil.getPage(
 			relatedPages.getPageResourcePrimKey());
 
-		WikiPage parentPage = WikiTestUtil.addPage(
+		WikiPage newParentPage = WikiTestUtil.addPage(
 			_group.getGroupId(), _node.getNodeId(), true);
 
+		WikiPage restoredPage = movePage(trashedPage, newParentPage);
+
+		Assert.assertFalse(restoredPage.isInTrash());
+
+		Assert.assertEquals(
+			newParentPage.getTitle(), restoredPage.getParentTitle());
+	}
+
+	protected WikiPage movePage(WikiPage trashedPage, WikiPage newParentPage) throws PortalException {
 		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
 			WikiPage.class.getName());
 
@@ -790,15 +800,10 @@ public class WikiPageDependentsTrashHandlerTest {
 
 		trashHandler.moveEntry(
 			TestPropsValues.getUserId(), trashedPage.getResourcePrimKey(),
-			parentPage.getResourcePrimKey(), serviceContext);
+			newParentPage.getResourcePrimKey(), serviceContext);
 
-		WikiPage restoredPage = WikiPageLocalServiceUtil.getPage(
+		return WikiPageLocalServiceUtil.getPage(
 			trashedPage.getResourcePrimKey());
-
-		Assert.assertTrue(restoredPage.isApproved());
-
-		Assert.assertEquals(
-			parentPage.getTitle(), restoredPage.getParentTitle());
 	}
 
 	@Test
