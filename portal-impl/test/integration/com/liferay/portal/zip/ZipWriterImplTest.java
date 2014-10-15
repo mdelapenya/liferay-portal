@@ -354,6 +354,15 @@ public class ZipWriterImplTest {
 		file.delete();
 	}
 
+	/**
+	 * Tests if the zip writer executes when a file is not set. If the file is a
+	 * <code>true</code> archive file, and not a <code>false</code> positive,
+	 * including RAES encrypted ZIP files for which key prompting has been
+	 * cancelled or disabled, an <code>ArchiveFileNotFoundException</code> is
+	 * thrown.
+	 *
+	 * @throws Exception if an exception occurred
+	 */
 	@Test
 	public void testFinishIfZipFileIsSet() throws Exception {
 		File tempZipFile = new File(_tempZipFilePath);
