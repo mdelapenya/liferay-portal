@@ -1025,13 +1025,27 @@ Please set the environment variable ANT_OPTS to the recommended value of
 	</macrodef>
 
 	<macrodef name="setup-test-classpath">
+		<attribute name="persistence.suite" default="false" />
+
 		<sequential>
+			<if>
+				<equals arg1="@{persistence.suite}" arg2="true" />
+				<then>
 			<ivy:resolve log="download-only">
 				<dependency name="arquillian-junit-container" org="org.jboss.arquillian.junit" rev="1.1.2.Final" />
 				<dependency name="com.liferay.arquillian.persistence.extension" org="com.liferay" rev="latest.integration" />
 				<dependency name="com.liferay.arquillian.transactional.extension" org="com.liferay" rev="latest.integration" />
 				<exclude org="junit" />
 			</ivy:resolve>
+				</then>
+				<else>
+					<ivy:resolve log="download-only">
+						<dependency name="arquillian-junit-container" org="org.jboss.arquillian.junit" rev="1.1.2.Final" />
+						<dependency name="com.liferay.arquillian.transactional.extension" org="com.liferay" rev="latest.integration" />
+						<exclude org="junit" />
+					</ivy:resolve>
+				</else>
+			</if>
 
 			<path id="test-ivy.classpath">
 				<ivy:resources type="bundle,jar,orbit" />
@@ -1142,7 +1156,7 @@ rerun your task.
 		<if>
 			<available file="test/${test.type}" type="dir" />
 			<then>
-				<setup-test-classpath />
+				<setup-test-classpath persistence.suite="true"/>
 
 				<mkdir dir="test-classes/${test.type}" />
 				<mkdir dir="test-results/${test.type}" />
@@ -1493,7 +1507,26 @@ rerun your task.
 				</resourcecount>
 
 				<fileset
-						id="test.without.security.fileset"
+						id="test.with.persistence.fileset"
+						dir="test-classes/${test.dir}"
+						includes="**/${test.class}.class"
+						>
+					<exclude name="**/DLAppServiceHttpTest.class" />
+					<exclude name="**/DLAppServiceJsonTest.class" />
+					<exclude name="**/DLAppServiceSoapTest.class" />
+					<exclude name="**/UserServiceHttpTest.class" />
+					<exclude name="**/UserServiceSoapTest.class" />
+					<exclude name="${test.excludes}" />
+					<filename regex="${junit.test.excludes}" negate="true" />
+					<filename regex=".*/[\w]+PersistenceTest.class" negate="false" />
+				</fileset>
+
+				<resourcecount property="test.with.persistence.count">
+					<fileset refid="test.with.persistence.fileset"/>
+				</resourcecount>
+
+				<fileset
+						id="test.without.security.or.persistence.fileset"
 						dir="test-classes/${test.dir}"
 						includes="**/${test.class}.class"
 						>
@@ -1508,7 +1541,7 @@ rerun your task.
 					<filename regex=".*/[\w]+PersistenceTest.class" negate="true" />
 				</fileset>
 
-				<resourcecount property="test.without.security.count">
+				<resourcecount property="test.without.security.or.persistence.count">
 					<fileset refid="test.without.security.or.persistence.fileset"/>
 				</resourcecount>
 
@@ -1520,6 +1553,17 @@ rerun your task.
 						<setup-test-classpath/>
 
 						<junit-test-cmd security.manager="-Djava.security.manager" java.security.policy="-Djava.security.policy=${basedir}/test-classes/${test.type}/com/liferay/portal/security/pacl/security.policy" fileset="test.with.security.fileset" />
+					</then>
+				</if>
+
+				<if>
+					<not>
+						<equals arg1="${test.with.persistence.count}" arg2="0" />
+					</not>
+					<then>
+						<setup-test-classpath persistence.suite="true"/>
+
+						<junit-test-cmd fileset="test.with.persistence.fileset" />
 					</then>
 				</if>
 
@@ -1616,7 +1660,15 @@ rerun your task.
 			replace="com."
 		/>
 
-		<setup-test-classpath />
+		<if>
+			<contains string="${test.class.name}" substring="PersistenceTest"/>
+			<then>
+				<setup-test-classpath persistence.suite="true"/>
+			</then>
+			<else>
+				<setup-test-classpath/>
+			</else>
+		</if>
 
 		<junit dir="${project.dir}" fork="on" forkmode="once" haltonfailure="${junit.halt.on.failure}" jvm="${junit.jvm}" outputtoformatters="false" printsummary="on" showoutput="true">
 			<sysproperty key="junit.aspectj.dump" file="woven-classes" />
