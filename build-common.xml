@@ -829,9 +829,9 @@ Please set the environment variable ANT_OPTS to the recommended value of
 
 	<macrodef name="junit-test-cmd">
 		<attribute name="security.manager" default="" />
-		<attribute name="java.security.policy" default=""/>
-		<attribute name="fork.mode" default="once"/>
-		<attribute name="fileset"/>
+		<attribute name="java.security.policy" default="" />
+		<attribute name="fork.mode" default="once" />
+		<attribute name="fileset" />
 
 		<sequential>
 			<junit dir="${project.dir}" fork="on" forkmode="@{fork.mode}" haltonfailure="${junit.halt.on.failure}" jvm="${junit.jvm}" outputtoformatters="false" printsummary="on" showoutput="true">
@@ -859,7 +859,7 @@ Please set the environment variable ANT_OPTS to the recommended value of
 				<formatter type="brief" usefile="false" />
 				<formatter type="xml" />
 				<batchtest todir="test-results/${test.type}">
-					<fileset refid="@{fileset}"/>
+					<fileset refid="@{fileset}" />
 				</batchtest>
 			</junit>
 		</sequential>
@@ -1056,12 +1056,12 @@ Please set the environment variable ANT_OPTS to the recommended value of
 			<if>
 				<equals arg1="@{persistence.suite}" arg2="true" />
 				<then>
-			<ivy:resolve log="download-only">
-				<dependency name="arquillian-junit-container" org="org.jboss.arquillian.junit" rev="1.1.2.Final" />
-				<dependency name="com.liferay.arquillian.persistence.extension" org="com.liferay" rev="1.0.0-SNAPSHOT" />
-				<dependency name="com.liferay.arquillian.transactional.extension" org="com.liferay" rev="1.0.0-SNAPSHOT" />
-				<exclude org="junit" />
-			</ivy:resolve>
+					<ivy:resolve log="download-only">
+						<dependency name="arquillian-junit-container" org="org.jboss.arquillian.junit" rev="1.1.2.Final" />
+						<dependency name="com.liferay.arquillian.persistence.extension" org="com.liferay" rev="1.0.0-SNAPSHOT" />
+						<dependency name="com.liferay.arquillian.transactional.extension" org="com.liferay" rev="1.0.0-SNAPSHOT" />
+						<exclude org="junit" />
+					</ivy:resolve>
 				</then>
 				<else>
 					<ivy:resolve log="download-only">
@@ -1480,7 +1480,7 @@ rerun your task.
 				</fileset>
 
 				<resourcecount property="test.with.security.count">
-					<fileset refid="test.with.security.fileset"/>
+					<fileset refid="test.with.security.fileset" />
 				</resourcecount>
 
 				<fileset
@@ -1499,7 +1499,7 @@ rerun your task.
 				</fileset>
 
 				<resourcecount property="test.with.persistence.count">
-					<fileset refid="test.with.persistence.fileset"/>
+					<fileset refid="test.with.persistence.fileset" />
 				</resourcecount>
 
 				<fileset
@@ -1519,7 +1519,7 @@ rerun your task.
 				</fileset>
 
 				<resourcecount property="test.without.security.or.persistence.count">
-					<fileset refid="test.without.security.or.persistence.fileset"/>
+					<fileset refid="test.without.security.or.persistence.fileset" />
 				</resourcecount>
 
 				<if>
@@ -1558,7 +1558,7 @@ rerun your task.
 							test.type="${test.type}"
 						/>
 
-						<junit-test-cmd fileset="test.without.security.or.persistence.fileset" fork.mode="${junit.forkmode}"/>
+						<junit-test-cmd fileset="test.without.security.or.persistence.fileset" fork.mode="${junit.forkmode}" />
 					</then>
 				</if>
 			</then>
@@ -1645,12 +1645,9 @@ rerun your task.
 		/>
 
 		<if>
-			<contains string="${test.class.name}" substring="PersistenceTest"/>
+			<contains string="${test.class.name}" substring="PersistenceTest" />
 			<then>
-				<setup-test-classpath 
-					persistence.suite="true"
-					test.type="${test.type}"
-				/>
+				<setup-test-classpath persistence.suite="true"/>
 			</then>
 			<else>
 				<setup-test-classpath
