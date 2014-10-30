@@ -23,10 +23,14 @@ import com.liferay.portal.kernel.test.TestContext;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.servlet.MainServlet;
+import com.liferay.portal.spring.context.PortalContextLoaderListener;
 import com.liferay.portal.test.mock.AutoDeployMockServletContext;
 import com.liferay.portal.test.rule.DeleteAfterTestRunRule;
 import com.liferay.portal.util.test.TestPropsValues;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import javax.servlet.ServletException;
 
 import org.springframework.core.io.FileSystemResourceLoader;
@@ -69,17 +73,21 @@ public class MainServletExecutionTestListener
 			return;
 		}
 
-		MockServletContext mockServletContext =
+		ServletContext servletContext =
 			new AutoDeployMockServletContext(new FileSystemResourceLoader());
 
-		ServletContextPool.put(StringPool.BLANK, mockServletContext);
+		ServletContextPool.put(StringPool.BLANK, servletContext);
 
 		MockServletConfig mockServletConfig = new MockServletConfig(
-			mockServletContext);
+			servletContext);
 
 		_mainServlet = new MainServlet();
+		_servletContextListener = new PortalContextLoaderListener();
 
 		try {
+			_servletContextListener.contextInitialized(
+				new ServletContextEvent(servletContext));
+
 			_mainServlet.init(mockServletConfig);
 		}
 		catch (ServletException se) {
@@ -92,5 +100,6 @@ public class MainServletExecutionTestListener
 		MainServletExecutionTestListener.class);
 
 	private static MainServlet _mainServlet;
+	private static ServletContextListener _servletContextListener;
 
 }
