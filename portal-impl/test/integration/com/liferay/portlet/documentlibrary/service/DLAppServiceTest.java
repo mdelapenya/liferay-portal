@@ -795,14 +795,14 @@ public class DLAppServiceTest extends BaseDLAppTestCase {
 			search(fileEntry, false, "liferay", true);
 		}
 
-		@Ignore
+//		@Ignore
 		@Test
 		public void shouldFindFileEntryInRootFolder() throws Exception {
 			searchFile(
 				group.getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
 		}
 
-		@Ignore
+//		@Ignore
 		@Test
 		public void shouldFindFileEntryInSubfolder() throws Exception {
 			searchFile(group.getGroupId(), parentFolder.getFolderId());
