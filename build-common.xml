@@ -1647,7 +1647,7 @@ rerun your task.
 		<if>
 			<contains string="${test.class.name}" substring="PersistenceTest" />
 			<then>
-				<setup-test-classpath persistence.suite="true"/>
+				<setup-test-classpath persistence.suite="true" />
 			</then>
 			<else>
 				<setup-test-classpath
