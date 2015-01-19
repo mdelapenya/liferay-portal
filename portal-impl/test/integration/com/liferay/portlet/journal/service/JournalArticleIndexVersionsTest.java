@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.test.AggregateTestRule;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.model.Group;
@@ -80,7 +81,7 @@ public class JournalArticleIndexVersionsTest {
 		Assert.assertEquals(initialSearchCount + 1, searchCount());
 
 		JournalArticle updateArticle = JournalTestUtil.updateArticle(
-			article, article.getTitle(), article.getContent(), true, true,
+			article, article.getTitle(LocaleUtil.getDefault()), article.getContent(), true, true,
 			ServiceContextTestUtil.getServiceContext());
 
 		Assert.assertEquals(initialSearchCount + 1, searchCount());
@@ -106,7 +107,7 @@ public class JournalArticleIndexVersionsTest {
 			ServiceContextTestUtil.getServiceContext();
 
 		JournalArticle updateArticle = JournalTestUtil.updateArticle(
-			article, article.getTitle(), article.getContent(), true, true,
+			article, article.getTitle(LocaleUtil.getDefault()), article.getContent(), true, true,
 			serviceContext);
 
 		Assert.assertEquals(initialSearchCount + 1, searchCount());
@@ -134,7 +135,7 @@ public class JournalArticleIndexVersionsTest {
 		Assert.assertEquals(initialSearchCount + 1, searchCount());
 
 		JournalArticle updateArticle = JournalTestUtil.updateArticle(
-			article, article.getTitle(), article.getContent(), true, true,
+			article, article.getTitle(LocaleUtil.getDefault()), article.getContent(), true, true,
 			ServiceContextTestUtil.getServiceContext());
 
 		Assert.assertEquals(initialSearchCount + 1, searchCount());
@@ -155,7 +156,7 @@ public class JournalArticleIndexVersionsTest {
 		Assert.assertEquals(initialSearchCount + 1, searchCount());
 
 		JournalArticle updateArticle = JournalTestUtil.updateArticle(
-			article, article.getTitle(), article.getContent(), true, true,
+			article, article.getTitle(LocaleUtil.getDefault()), article.getContent(), true, true,
 			ServiceContextTestUtil.getServiceContext());
 
 		Assert.assertEquals(initialSearchCount + 1, searchCount());
@@ -185,7 +186,7 @@ public class JournalArticleIndexVersionsTest {
 		article.setIndexable(false);
 
 		article = JournalTestUtil.updateArticle(
-			article, article.getTitle(), article.getContent(), true, true,
+			article, article.getTitle(LocaleUtil.getDefault()), article.getContent(), true, true,
 			ServiceContextTestUtil.getServiceContext());
 
 		Assert.assertEquals(initialSearchCount, searchCount());
@@ -193,7 +194,7 @@ public class JournalArticleIndexVersionsTest {
 		article.setIndexable(true);
 
 		JournalTestUtil.updateArticle(
-			article, article.getTitle(), article.getContent(), true, true,
+			article, article.getTitle(LocaleUtil.getDefault()), article.getContent(), true, true,
 			ServiceContextTestUtil.getServiceContext());
 
 		Assert.assertEquals(initialSearchCount + 1, searchCount());
