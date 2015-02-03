@@ -27,6 +27,7 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.test.DeleteAfterTestRun;
 import com.liferay.portal.test.LiferayIntegrationTestRule;
 import com.liferay.portal.test.MainServletTestRule;
+import com.liferay.portal.test.Sync;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.test.GroupTestUtil;
 import com.liferay.portal.util.test.SearchContextTestUtil;
@@ -48,6 +49,7 @@ import org.junit.Test;
 /**
  * @author Eudaldo Alonso
  */
+@Sync
 public class JournalArticleIndexVersionsTest {
 
 	@ClassRule
