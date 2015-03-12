@@ -14,17 +14,19 @@
 
 package com.liferay.portal.deploy.hot;
 
-import com.liferay.portal.kernel.scheduler.SchedulerEntry;
+import com.liferay.portal.kernel.scheduler.SchedulerEngineHelperUtil;
+import com.liferay.portal.kernel.scheduler.messaging.SchedulerResponse;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
+import com.liferay.portal.kernel.test.rule.Sync;
+import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.MainServletTestRule;
 import com.liferay.portal.test.rule.SyntheticBundleRule;
-import com.liferay.registry.Registry;
-import com.liferay.registry.RegistryUtil;
+
+import java.util.List;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -39,28 +41,35 @@ public class SchedulerEntryRegistryTest {
 	public static final AggregateTestRule aggregateTestRule =
 		new AggregateTestRule(
 			new LiferayIntegrationTestRule(), MainServletTestRule.INSTANCE,
+			SynchronousDestinationTestRule.INSTANCE,
 			new SyntheticBundleRule("bundle.schedulerentryregistry"));
-
-	@BeforeClass
-	public static void setUpClass() throws Exception {
-		_schedulerEntryRegistry = new SchedulerEntryRegistry();
-	}
 
 	@AfterClass
 	public static void tearDownClass() throws Exception {
 		_schedulerEntryRegistry.close();
 	}
 
+	@Sync
 	@Test
-	public void testSchedulerWasReplaced() throws Exception {
-		Registry registry = RegistryUtil.getRegistry();
+	public void testJobIsScheduled() throws Exception {
+		_schedulerEntryRegistry = new SchedulerEntryRegistry();
 
-		SchedulerEntry schedulerEntry = registry.getService(
-			SchedulerEntry.class);
+		List<SchedulerResponse> scheduledJobs =
+			SchedulerEngineHelperUtil.getScheduledJobs();
 
-		Assert.assertEquals(
-			"TEST_SCHEDULER_ENTRY_EVENT_LISTENER_CLASS",
-			schedulerEntry.getEventListenerClass());
+		boolean registered = false;
+
+		for (SchedulerResponse scheduledJob : scheduledJobs) {
+			String description = scheduledJob.getDescription();
+
+			if (description.equals("TEST_SCHEDULER_ENTRY_DESCRIPTION")) {
+				registered = true;
+			}
+		}
+
+		if (!registered) {
+			Assert.fail("Job has not been properly scheduled");
+		}
 	}
 
 	private static SchedulerEntryRegistry _schedulerEntryRegistry;
