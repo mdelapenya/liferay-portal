@@ -63,7 +63,7 @@ public class TestSchedulerEntry implements SchedulerEntry, StorageTypeAware {
 	@Override
 	public Trigger getTrigger() throws SchedulerException {
 		return new CronTrigger(
-			"JOB_NAME", "GROUP_NAME", new Date(), "3 * * * *");
+			"JOB_NAME", "GROUP_NAME", new Date(), "3 * * * * *");
 	}
 
 	@Override
