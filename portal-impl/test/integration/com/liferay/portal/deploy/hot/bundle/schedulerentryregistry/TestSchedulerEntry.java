@@ -47,7 +47,7 @@ public class TestSchedulerEntry implements SchedulerEntry, StorageTypeAware {
 
 	@Override
 	public String getEventListenerClass() {
-		return _TEST_SCHEDULER_ENTRY + "_EVENT_LISTENER_CLASS";
+		return TestMessageListener.class.getName();
 	}
 
 	@Override
