@@ -44,8 +44,7 @@ public class SchedulerEntryRegistry {
 		Registry registry = RegistryUtil.getRegistry();
 
 		Filter filter = registry.getFilter(
-			"(&(javax.portlet.name=*)(objectClass=" +
-				SchedulerEntry.class.getName() + "))");
+			"(objectClass=" + SchedulerEntry.class.getName() + ")");
 
 		_serviceTracker = registry.trackServices(
 			filter, new SchedulerEntryServiceTrackerCustomizer());
