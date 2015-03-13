@@ -44,8 +44,7 @@ public class SchedulerEntryRegistry {
 		Registry registry = RegistryUtil.getRegistry();
 
 		Filter filter = registry.getFilter(
-			"(&(javax.portlet.name=*)(objectClass=" +
-				SchedulerEntry.class.getName() + "))");
+			"(objectClass=" + SchedulerEntry.class.getName() + ")");
 
 		_serviceTracker = registry.trackServices(
 			filter, new SchedulerEntryServiceTrackerCustomizer());
@@ -97,8 +96,8 @@ public class SchedulerEntryRegistry {
 
 				return schedulerEntry;
 			}
-			catch (SchedulerException e) {
-				_log.error(e, e);
+			catch (SchedulerException se) {
+				_log.error(se, se);
 			}
 
 			return null;
@@ -132,8 +131,8 @@ public class SchedulerEntryRegistry {
 				SchedulerEngineHelperUtil.unschedule(
 					schedulerEntry, storageType);
 			}
-			catch (SchedulerException e) {
-				_log.error(e, e);
+			catch (SchedulerException se) {
+				_log.error(se, se);
 			}
 		}
 
