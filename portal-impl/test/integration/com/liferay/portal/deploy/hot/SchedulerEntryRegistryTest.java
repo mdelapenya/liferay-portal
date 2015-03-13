@@ -14,6 +14,7 @@
 
 package com.liferay.portal.deploy.hot;
 
+import com.liferay.portal.deploy.hot.bundle.schedulerentryregistry.TestSchedulerEntry;
 import com.liferay.portal.kernel.scheduler.SchedulerEngineHelperUtil;
 import com.liferay.portal.kernel.scheduler.messaging.SchedulerResponse;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
@@ -59,10 +60,12 @@ public class SchedulerEntryRegistryTest {
 
 		boolean registered = false;
 
+		String name = TestSchedulerEntry.class.getName();
+
 		for (SchedulerResponse scheduledJob : scheduledJobs) {
 			String description = scheduledJob.getDescription();
 
-			if (description.equals("TEST_SCHEDULER_ENTRY_DESCRIPTION")) {
+			if (description.equals(name)) {
 				registered = true;
 			}
 		}
