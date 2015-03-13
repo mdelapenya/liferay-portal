@@ -58,9 +58,8 @@ public class SchedulerEntryRegistryTest {
 		List<SchedulerResponse> scheduledJobs =
 			SchedulerEngineHelperUtil.getScheduledJobs();
 
-		boolean registered = false;
-
 		String name = TestSchedulerEntry.class.getName();
+		boolean registered = false;
 
 		for (SchedulerResponse scheduledJob : scheduledJobs) {
 			String description = scheduledJob.getDescription();

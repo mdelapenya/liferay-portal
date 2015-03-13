@@ -14,6 +14,8 @@
 
 package com.liferay.portal.deploy.hot.bundle.schedulerentryregistry;
 
+import com.liferay.portal.kernel.messaging.BaseMessageListener;
+import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.scheduler.CronTrigger;
 import com.liferay.portal.kernel.scheduler.SchedulerEntry;
 import com.liferay.portal.kernel.scheduler.SchedulerException;
@@ -25,10 +27,10 @@ import com.liferay.portal.kernel.scheduler.TriggerType;
 
 import java.util.Date;
 
+import javax.portlet.Portlet;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-
-import javax.portlet.Portlet;
 
 /**
  * @author Manuel de la Peña
@@ -41,7 +43,8 @@ import javax.portlet.Portlet;
 	},
 	service = SchedulerEntry.class
 )
-public class TestSchedulerEntry implements SchedulerEntry, StorageTypeAware {
+public class TestSchedulerEntry extends BaseMessageListener
+	implements SchedulerEntry, StorageTypeAware {
 
 	@Override
 	public String getDescription() {
@@ -50,7 +53,7 @@ public class TestSchedulerEntry implements SchedulerEntry, StorageTypeAware {
 
 	@Override
 	public String getEventListenerClass() {
-		return TestMessageListener.class.getName();
+		return getClass().getName();
 	}
 
 	@Override
@@ -107,7 +110,11 @@ public class TestSchedulerEntry implements SchedulerEntry, StorageTypeAware {
 	public void setTriggerValue(String triggerValue) {
 	}
 
-	@Reference(target="(javax.portlet.name=testportlet)")
+	@Override
+	protected void doReceive(Message message) throws Exception {
+	}
+
+	@Reference(target = "(javax.portlet.name=testportlet)")
 	protected void setPortlet(Portlet portlet) {
 	}
 
