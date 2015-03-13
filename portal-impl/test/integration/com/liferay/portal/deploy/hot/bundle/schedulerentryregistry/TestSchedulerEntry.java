@@ -26,12 +26,20 @@ import com.liferay.portal.kernel.scheduler.TriggerType;
 import java.util.Date;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
+import javax.portlet.Portlet;
 
 /**
  * @author Manuel de la Peña
  */
 @Component(
-	immediate = true, service = SchedulerEntry.class
+	immediate = true,
+	property = {
+		"service.ranking:Integer=" + Integer.MAX_VALUE,
+		"javax.portlet.name:String=testportlet"
+	},
+	service = SchedulerEntry.class
 )
 public class TestSchedulerEntry implements SchedulerEntry, StorageTypeAware {
 
@@ -97,6 +105,10 @@ public class TestSchedulerEntry implements SchedulerEntry, StorageTypeAware {
 
 	@Override
 	public void setTriggerValue(String triggerValue) {
+	}
+
+	@Reference(target="(javax.portlet.name=testportlet)")
+	protected void setPortlet(Portlet portlet) {
 	}
 
 }
