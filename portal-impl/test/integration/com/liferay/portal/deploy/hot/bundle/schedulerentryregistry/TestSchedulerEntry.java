@@ -31,18 +31,13 @@ import org.osgi.service.component.annotations.Component;
  * @author Manuel de la Peña
  */
 @Component(
-	immediate = true,
-	property = {
-		"service.ranking:Integer=" + Integer.MAX_VALUE,
-		"javax.portlet.name:String=TEST_PORTLET"
-	},
-	service = SchedulerEntry.class
+	immediate = true, service = SchedulerEntry.class
 )
 public class TestSchedulerEntry implements SchedulerEntry, StorageTypeAware {
 
 	@Override
 	public String getDescription() {
-		return _TEST_SCHEDULER_ENTRY + "_DESCRIPTION";
+		return TestSchedulerEntry.class.getName();
 	}
 
 	@Override
@@ -63,7 +58,7 @@ public class TestSchedulerEntry implements SchedulerEntry, StorageTypeAware {
 	@Override
 	public Trigger getTrigger() throws SchedulerException {
 		return new CronTrigger(
-			"JOB_NAME", "GROUP_NAME", new Date(), "3 * * * * *");
+			"JOB_NAME", "GROUP_NAME", new Date(), "0 0 12 * * ?");
 	}
 
 	@Override
@@ -73,7 +68,7 @@ public class TestSchedulerEntry implements SchedulerEntry, StorageTypeAware {
 
 	@Override
 	public String getTriggerValue() {
-		return _TEST_SCHEDULER_ENTRY + "_TRIGGER_VALUE";
+		return "11000";
 	}
 
 	@Override
@@ -103,7 +98,5 @@ public class TestSchedulerEntry implements SchedulerEntry, StorageTypeAware {
 	@Override
 	public void setTriggerValue(String triggerValue) {
 	}
-
-	private static final String _TEST_SCHEDULER_ENTRY = "TEST_SCHEDULER_ENTRY";
 
 }
