@@ -49,6 +49,8 @@ import javax.servlet.ServletContext;
 
 import jodd.io.ZipUtil;
 
+import org.apache.commons.io.FileUtils;
+
 import org.jruby.Ruby;
 import org.jruby.RubyInstanceConfig;
 import org.jruby.RubyInstanceConfig.CompileMode;
@@ -86,9 +88,9 @@ public class RubyExecutor extends BaseScriptingExecutor {
 
 			FileUtil.deltree(rubyDir);
 
-			rubyDir.mkdirs();
-
 			try {
+				FileUtils.forceMkdir(rubyDir);
+
 				ZipUtil.unzip(rubyGemsJarFile, rubyDir);
 
 				rubyDir.setLastModified(rubyGemsJarFile.lastModified());
