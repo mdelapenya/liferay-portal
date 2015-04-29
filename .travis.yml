@@ -1,3 +1,6 @@
+env:
+  - ANT_OPTS="-Xmx1024m -XX:MaxPermSize=512m"
+
 before_install: true
 
 install: ant -f build-dist.xml unzip-tomcat
