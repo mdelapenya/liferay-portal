@@ -7,7 +7,7 @@ install: ant -f build-dist.xml unzip-tomcat
 
 before_script: true
 
-script: ant test-unit test-integration
+script: ant all test-unit test-integration
 
 after_success: true
 
