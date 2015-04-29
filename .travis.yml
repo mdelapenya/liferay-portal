@@ -1,6 +1,6 @@
 before_install: true
 
-install: true
+install: ant -f build-dist.xml unzip-tomcat
 
 before_script: true
 
