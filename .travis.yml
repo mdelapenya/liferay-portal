@@ -1,7 +1,12 @@
 env:
   - ANT_OPTS="-Xmx1024m -XX:MaxPermSize=512m"
 
-before_install: true
+before_install:
+  - mysql -e 'create database lportal character set utf8;'
+  - echo 'jdbc.default.driverClassName=com.mysql.jdbc.Driver' > ./portal-impl/test/portal-test-ext.properties
+  - echo 'jdbc.default.url=jdbc:mysql://localhost/lportal?useUnicode=true&characterEncoding=UTF-8&useFastDateParsing=false' >> ./portal-impl/test/portal-test-ext.properties
+  - echo 'jdbc.default.username=root' >> ./portal-impl/test/portal-test-ext.properties
+  - echo 'jdbc.default.password=' >> ./portal-impl/test/portal-test-ext.properties
 
 install: ant -f build-dist.xml unzip-tomcat
 
@@ -21,3 +26,5 @@ jdk:
   - oraclejdk8
 
 language: java
+
+services: mysql
