@@ -6,10 +6,16 @@ env:
 before_install:
   - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'DROP DATABASE IF EXISTS lportal;' -U postgres; fi"
   - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'create database lportal;' -U postgres; fi"
+  - sh -c "if [ '$DB' = 'pgsql' ]; then export JDBC_DEFAULT_DRIVER=org.postgresql.Driver; fi"
+  - sh -c "if [ '$DB' = 'pgsql' ]; then export JDBC_DEFAULT_URL=jdbc:postgresql://localhost:5432/lportal; fi"
+  - sh -c "if [ '$DB' = 'pgsql' ]; then export JDBC_DEFAULT_USERNAME=sa; fi"
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database IF NOT EXISTS lportal character set utf8;'; fi"
-  - echo 'jdbc.default.driverClassName=com.mysql.jdbc.Driver' > ./portal-impl/test/portal-test-ext.properties
-  - echo 'jdbc.default.url=jdbc:mysql://localhost/lportal?useUnicode=true&characterEncoding=UTF-8&useFastDateParsing=false' >> ./portal-impl/test/portal-test-ext.properties
-  - echo 'jdbc.default.username=root' >> ./portal-impl/test/portal-test-ext.properties
+  - sh -c "if [ '$DB' = 'mysql' ]; then export JDBC_DEFAULT_DRIVER=com.mysql.jdbc.Driver; fi"
+  - sh -c "if [ '$DB' = 'mysql' ]; then export JDBC_DEFAULT_URL=jdbc:mysql://localhost/lportal?useUnicode=true&characterEncoding=UTF-8&useFastDateParsing=false; fi"
+  - sh -c "if [ '$DB' = 'mysql' ]; then export JDBC_DEFAULT_USERNAME=root; fi"
+  - echo 'jdbc.default.driverClassName=${JDBC_DEFAULT_DRIVER}' > ./portal-impl/test/portal-test-ext.properties
+  - echo 'jdbc.default.url=${JDBC_DEFAULT_URL}' >> ./portal-impl/test/portal-test-ext.properties
+  - echo 'jdbc.default.username=${JDBC_DEFAULT_USERNAME}' >> ./portal-impl/test/portal-test-ext.properties
   - echo 'jdbc.default.password=' >> ./portal-impl/test/portal-test-ext.properties
 
 install: ant -f build-dist.xml unzip-tomcat
