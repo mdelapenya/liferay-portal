@@ -1,8 +1,12 @@
 env:
   - ANT_OPTS="-Xmx1024m -XX:MaxPermSize=512m"
+  - DB=mysql
+  - DB=postgres
 
 before_install:
-  - mysql -e 'create database lportal character set utf8;'
+  - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'DROP DATABASE IF EXISTS lportal;' -U postgres; fi"
+  - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'create database lportal;' -U postgres; fi"
+  - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database IF NOT EXISTS lportal character set utf8;'; fi"
   - echo 'jdbc.default.driverClassName=com.mysql.jdbc.Driver' > ./portal-impl/test/portal-test-ext.properties
   - echo 'jdbc.default.url=jdbc:mysql://localhost/lportal?useUnicode=true&characterEncoding=UTF-8&useFastDateParsing=false' >> ./portal-impl/test/portal-test-ext.properties
   - echo 'jdbc.default.username=root' >> ./portal-impl/test/portal-test-ext.properties
