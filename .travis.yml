@@ -5,7 +5,7 @@ env:
 
 before_install:
   - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'DROP DATABASE IF EXISTS lportal;' -U postgres; fi"
-  - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'create database lportal;' -U postgres; fi"
+  - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'create database lportal ENCODING 'UTF8';' -U postgres; fi"
   - sh -c "if [ '$DB' = 'pgsql' ]; then export JDBC_DEFAULT_DRIVER=org.postgresql.Driver; fi"
   - sh -c "if [ '$DB' = 'pgsql' ]; then export JDBC_DEFAULT_URL=jdbc:postgresql://localhost:5432/lportal; fi"
   - sh -c "if [ '$DB' = 'pgsql' ]; then export JDBC_DEFAULT_USERNAME=sa; fi"
