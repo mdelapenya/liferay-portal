@@ -3,11 +3,11 @@ env:
   - DB=postgres ANT_OPTS="-Xmx1024m -XX:MaxPermSize=512m"
 
 before_install:
-  - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'DROP DATABASE IF EXISTS lportal;' -U postgres; fi"
-  - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'create database lportal ENCODING 'UTF8';' -U postgres; fi"
-  - sh -c "if [ '$DB' = 'pgsql' ]; then echo 'jdbc.default.driverClassName=org.postgresql.Driver' > ./portal-impl/test/portal-test-ext.properties; fi"
-  - sh -c "if [ '$DB' = 'pgsql' ]; then echo 'jdbc.default.url=jdbc:postgresql://localhost:5432/lportal' >> ./portal-impl/test/portal-test-ext.properties; fi"
-  - sh -c "if [ '$DB' = 'pgsql' ]; then echo 'jdbc.default.username=sa' >> ./portal-impl/test/portal-test-ext.properties; fi"
+  - sh -c "if [ '$DB' = 'postgres' ]; then psql -c 'DROP DATABASE IF EXISTS lportal;' -U postgres; fi"
+  - sh -c "if [ '$DB' = 'postgres' ]; then psql -c 'create database lportal ENCODING '\''UTF8'\'';' -U postgres; fi"
+  - sh -c "if [ '$DB' = 'postgres' ]; then echo 'jdbc.default.driverClassName=org.postgresql.Driver' > ./portal-impl/test/portal-test-ext.properties; fi"
+  - sh -c "if [ '$DB' = 'postgres' ]; then echo 'jdbc.default.url=jdbc:postgresql://localhost:5432/lportal' >> ./portal-impl/test/portal-test-ext.properties; fi"
+  - sh -c "if [ '$DB' = 'postgres' ]; then echo 'jdbc.default.username=sa' >> ./portal-impl/test/portal-test-ext.properties; fi"
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database IF NOT EXISTS lportal character set utf8;'; fi"
   - sh -c "if [ '$DB' = 'mysql' ]; then echo 'jdbc.default.driverClassName=com.mysql.jdbc.Driver' > ./portal-impl/test/portal-test-ext.properties; fi"
   - sh -c "if [ '$DB' = 'mysql' ]; then echo 'jdbc.default.url=jdbc:mysql://localhost/lportal?useUnicode=true&characterEncoding=UTF-8&useFastDateParsing=false' >> ./portal-impl/test/portal-test-ext.properties; fi"
