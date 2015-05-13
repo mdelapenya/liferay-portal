@@ -14,7 +14,9 @@
 
 package com.liferay.portal.security.auth;
 
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.model.CompanyConstants;
 import com.liferay.registry.ServiceReference;
 import com.liferay.registry.collections.ServiceReferenceMapper;
@@ -172,7 +174,7 @@ public class AuthPipeline {
 
 		List<Authenticator> authenticators = _authenticators.getService(key);
 
-		if (authenticators.isEmpty()) {
+		if (ListUtil.isEmpty(authenticators)) {
 			return Authenticator.SUCCESS;
 		}
 
