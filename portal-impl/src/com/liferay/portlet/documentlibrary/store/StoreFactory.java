@@ -221,6 +221,8 @@ public class StoreFactory {
 
 			_stores.put(store.getType(), store);
 
+			_store = store;
+
 			return store;
 		}
 
