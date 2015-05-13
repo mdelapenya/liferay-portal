@@ -36,6 +36,7 @@ import java.io.InputStream;
  * @author Brian Wing Shun Chan
  * @author Alexander Chow
  * @author Edward Han
+ * @author Manuel de la Peña
  */
 public abstract class BaseStore implements Store {
 
@@ -406,6 +407,16 @@ public abstract class BaseStore implements Store {
 	public abstract long getFileSize(
 			long companyId, long repositoryId, String fileName)
 		throws PortalException;
+
+	/**
+	 * Returns the type of this store.
+	 *
+	 * @return the type of this store
+	 */
+	@Override
+	public String getType() {
+		return this.getClass().getName();
+	}
 
 	/**
 	 * Returns <code>true</code> if the directory exists.

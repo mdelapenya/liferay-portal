@@ -320,6 +320,11 @@ public class SafeFileNameStoreWrapper implements Store {
 	}
 
 	@Override
+	public String getType() {
+		return SafeFileNameStoreWrapper.class.getName();
+	}
+
+	@Override
 	public boolean hasDirectory(
 			long companyId, long repositoryId, String dirName)
 		throws PortalException {

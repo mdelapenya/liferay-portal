@@ -25,6 +25,7 @@ import java.io.InputStream;
  *
  * @author Brian Wing Shun Chan
  * @author Edward Han
+ * @author Manuel de la Peña
  * @see    BaseStore
  */
 public interface Store {
@@ -99,6 +100,8 @@ public interface Store {
 
 	public long getFileSize(long companyId, long repositoryId, String fileName)
 		throws PortalException;
+
+	public String getType();
 
 	public boolean hasDirectory(
 			long companyId, long repositoryId, String dirName)
