@@ -29,9 +29,16 @@ import com.liferay.portal.spring.aop.MethodInterceptorInvocationHandler;
 import com.liferay.portal.util.ClassLoaderUtil;
 import com.liferay.portal.util.PropsUtil;
 import com.liferay.portal.util.PropsValues;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceReference;
+import com.liferay.registry.ServiceTracker;
+import com.liferay.registry.ServiceTrackerCustomizer;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 import org.aopalliance.intercept.MethodInterceptor;
 
@@ -129,6 +136,15 @@ public class StoreFactory {
 		_store = store;
 	}
 
+	private StoreFactory() {
+		Registry registry = RegistryUtil.getRegistry();
+
+		_serviceTracker = registry.trackServices(
+			Store.class, new StoreServiceTrackerCustomizer());
+
+		_serviceTracker.open();
+	}
+
 	private Store _getInstance() throws Exception {
 		ClassLoader classLoader = ClassLoaderUtil.getPortalClassLoader();
 
@@ -163,9 +179,6 @@ public class StoreFactory {
 		return store;
 	}
 
-	private StoreFactory() {
-	}
-
 	private static final String[][] _DL_HOOK_STORES = new String[][] {
 		new String[] {
 			"com.liferay.documentlibrary.util.AdvancedFileSystemHook",
@@ -193,5 +206,40 @@ public class StoreFactory {
 
 	private static Store _store;
 	private static boolean _warned;
+
+	private final ServiceTracker<Store, Store> _serviceTracker;
+	private final Map<String, Store> _stores = new ConcurrentSkipListMap<>();
+
+	private class StoreServiceTrackerCustomizer
+		implements ServiceTrackerCustomizer<Store, Store> {
+
+		@Override
+		public Store addingService(ServiceReference<Store> serviceReference) {
+			Registry registry = RegistryUtil.getRegistry();
+
+			Store store = registry.getService(serviceReference);
+
+			_stores.put(store.getType(), store);
+
+			return store;
+		}
+
+		@Override
+		public void modifiedService(
+			ServiceReference<Store> serviceReference, Store service) {
+		}
+
+		@Override
+		public void removedService(
+			ServiceReference<Store> serviceReference, Store store) {
+
+			Registry registry = RegistryUtil.getRegistry();
+
+			registry.ungetService(serviceReference);
+
+			_stores.remove(store.getType());
+		}
+
+	}
 
 }
