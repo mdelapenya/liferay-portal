@@ -38,6 +38,7 @@ import org.aopalliance.intercept.MethodInterceptor;
 /**
  * @author Brian Wing Shun Chan
  * @author Shuyang Zhou
+ * @author Manuel de la Peña
  */
 public class StoreFactory {
 
@@ -95,6 +96,8 @@ public class StoreFactory {
 
 	public static Store getInstance() {
 		if (_store == null) {
+			_instance = new StoreFactory();
+
 			checkProperties();
 
 			if (_log.isDebugEnabled()) {
@@ -160,6 +163,9 @@ public class StoreFactory {
 		return store;
 	}
 
+	private StoreFactory() {
+	}
+
 	private static final String[][] _DL_HOOK_STORES = new String[][] {
 		new String[] {
 			"com.liferay.documentlibrary.util.AdvancedFileSystemHook",
@@ -182,6 +188,8 @@ public class StoreFactory {
 	};
 
 	private static final Log _log = LogFactoryUtil.getLog(StoreFactory.class);
+
+	private static StoreFactory _instance;
 
 	private static Store _store;
 	private static boolean _warned;
