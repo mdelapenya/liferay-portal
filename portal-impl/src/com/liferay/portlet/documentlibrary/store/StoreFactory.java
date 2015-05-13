@@ -105,7 +105,7 @@ public class StoreFactory {
 			}
 
 			try {
-				_store = _getInstance();
+				_store = _instance._getInstance();
 			}
 			catch (Exception e) {
 				_log.error(e, e);
@@ -129,7 +129,7 @@ public class StoreFactory {
 		_store = store;
 	}
 
-	private static Store _getInstance() throws Exception {
+	private Store _getInstance() throws Exception {
 		ClassLoader classLoader = ClassLoaderUtil.getPortalClassLoader();
 
 		Store store = (Store)InstanceFactory.newInstance(
