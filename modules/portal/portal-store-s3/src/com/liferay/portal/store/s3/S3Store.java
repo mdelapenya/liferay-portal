@@ -35,6 +35,7 @@ import com.liferay.portal.util.PropsUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.documentlibrary.NoSuchFileException;
 import com.liferay.portlet.documentlibrary.store.BaseStore;
+import com.liferay.portlet.documentlibrary.store.Store;
 import org.jets3t.service.Jets3tProperties;
 import org.jets3t.service.S3Service;
 import org.jets3t.service.S3ServiceException;
@@ -57,13 +58,19 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import org.osgi.service.component.annotations.Component;
+
 /**
  * @author Brian Wing Shun Chan
  * @author Sten Martinez
  * @author Edward Han
  * @author Vilmos Papp
  * @author Mate Thurzo
+ * @author Manuel de la Peña
  */
+@Component(
+	service = Store.class
+)
 public class S3Store extends BaseStore {
 
 	public S3Store() {
