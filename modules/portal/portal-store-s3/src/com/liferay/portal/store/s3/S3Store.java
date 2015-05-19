@@ -74,7 +74,7 @@ import org.osgi.service.component.annotations.*;
 @Component(
 	configurationPid = "com.liferay.portal.store.s3.S3Configuration",
 	configurationPolicy = ConfigurationPolicy.REQUIRE, immediate = true,
-	service = Store.class
+	property = "store.type=s3", service = Store.class
 )
 public class S3Store extends BaseStore {
 

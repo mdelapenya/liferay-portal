@@ -40,6 +40,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 
+import com.liferay.registry.collections.ServiceTrackerCollections;
+import com.liferay.registry.collections.ServiceTrackerMap;
+import com.liferay.registry.collections.ServiceTrackerMapFactory;
+import com.liferay.registry.collections.ServiceTrackerMapFactoryUtil;
 import org.aopalliance.intercept.MethodInterceptor;
 
 /**
@@ -103,8 +107,6 @@ public class StoreFactory {
 
 	public static Store getInstance() {
 		if (_store == null) {
-			_instance = new StoreFactory();
-
 			checkProperties();
 
 			if (_log.isDebugEnabled()) {
@@ -112,7 +114,7 @@ public class StoreFactory {
 			}
 
 			try {
-				_store = _instance._getInstance();
+				_store = _getInstance();
 			}
 			catch (Exception e) {
 				_log.error(e, e);
@@ -136,16 +138,7 @@ public class StoreFactory {
 		_store = store;
 	}
 
-	private StoreFactory() {
-		Registry registry = RegistryUtil.getRegistry();
-
-		_serviceTracker = registry.trackServices(
-			Store.class, new StoreServiceTrackerCustomizer());
-
-		_serviceTracker.open();
-	}
-
-	private Store _getInstance() throws Exception {
+	private static Store _getInstance() throws Exception {
 		ClassLoader classLoader = ClassLoaderUtil.getPortalClassLoader();
 
 		Store store = (Store)InstanceFactory.newInstance(
@@ -199,46 +192,10 @@ public class StoreFactory {
 
 	private static final Log _log = LogFactoryUtil.getLog(StoreFactory.class);
 
-	private static StoreFactory _instance;
-
 	private static Store _store;
 	private static boolean _warned;
 
-	private final ServiceTracker<Store, Store> _serviceTracker;
-	private final Map<String, Store> _stores = new ConcurrentSkipListMap<>();
-
-	private class StoreServiceTrackerCustomizer
-		implements ServiceTrackerCustomizer<Store, Store> {
-
-		@Override
-		public Store addingService(ServiceReference<Store> serviceReference) {
-			Registry registry = RegistryUtil.getRegistry();
-
-			Store store = registry.getService(serviceReference);
-
-			_stores.put(store.getType(), store);
-
-			_store = store;
-
-			return store;
-		}
-
-		@Override
-		public void modifiedService(
-			ServiceReference<Store> serviceReference, Store service) {
-		}
-
-		@Override
-		public void removedService(
-			ServiceReference<Store> serviceReference, Store store) {
-
-			Registry registry = RegistryUtil.getRegistry();
-
-			registry.ungetService(serviceReference);
-
-			_stores.remove(store.getType());
-		}
-
-	}
+	private static final ServiceTrackerMap<String, Store> _serviceTrackerMap =
+		ServiceTrackerCollections.singleValueMap(Store.class, "store.type");
 
 }

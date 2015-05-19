@@ -409,16 +409,6 @@ public abstract class BaseStore implements Store {
 		throws PortalException;
 
 	/**
-	 * Returns the type of this store.
-	 *
-	 * @return the type of this store
-	 */
-	@Override
-	public String getType() {
-		return this.getClass().getName();
-	}
-
-	/**
 	 * Returns <code>true</code> if the directory exists.
 	 *
 	 * @param  companyId the primary key of the company
