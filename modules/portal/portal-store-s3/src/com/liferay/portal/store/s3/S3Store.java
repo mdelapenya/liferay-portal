@@ -61,10 +61,7 @@ import org.jets3t.service.model.S3Object;
 import org.jets3t.service.model.StorageObject;
 import org.jets3t.service.security.AWSCredentials;
 
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.ConfigurationPolicy;
-import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.component.annotations.*;
 
 /**
  * @author Brian Wing Shun Chan
@@ -432,8 +429,8 @@ public class S3Store extends BaseStore {
 	}
 
 	@Activate
-	@Modified
 	protected void activate(Map<String, Object> properties) {
+
 		_s3Configuration = Configurable.createConfigurable(
 			S3Configuration.class, properties);
 
@@ -444,6 +441,25 @@ public class S3Store extends BaseStore {
 		catch (S3ServiceException s3se) {
 			throw new IllegalArgumentException(s3se);
 		}
+	}
+
+	@Deactivate
+	protected void deactivate() throws ServiceException {
+		if (!_s3Service.isShutdown()) {
+			_s3Service.shutdown();
+		}
+
+		_s3Bucket = null;
+		_s3Configuration = null;
+		_s3Service = null;
+	}
+
+	@Modified
+	protected void modified(Map<String, Object> properties)
+		throws ServiceException {
+
+		deactivate();
+		activate(properties);
 	}
 
 	protected void cleanUpTempFiles() {
