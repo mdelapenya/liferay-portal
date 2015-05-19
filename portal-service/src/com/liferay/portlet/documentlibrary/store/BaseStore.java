@@ -36,6 +36,7 @@ import java.io.InputStream;
  * @author Brian Wing Shun Chan
  * @author Alexander Chow
  * @author Edward Han
+ * @author Manuel de la Peña
  */
 public abstract class BaseStore implements Store {
 

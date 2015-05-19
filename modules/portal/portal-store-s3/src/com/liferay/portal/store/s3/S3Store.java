@@ -12,7 +12,9 @@
  * details.
  */
 
-package com.liferay.portlet.documentlibrary.store;
+package com.liferay.portal.store.s3;
+
+import aQute.bnd.annotation.metatype.Configurable;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -22,7 +24,6 @@ import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.ReleaseInfo;
 import com.liferay.portal.kernel.util.StreamUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -31,9 +32,10 @@ import com.liferay.portal.kernel.util.SystemProperties;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
-import com.liferay.portal.util.PropsUtil;
-import com.liferay.portal.util.PropsValues;
+import com.liferay.portal.store.s3.configuration.S3Configuration;
 import com.liferay.portlet.documentlibrary.NoSuchFileException;
+import com.liferay.portlet.documentlibrary.store.BaseStore;
+import com.liferay.portlet.documentlibrary.store.Store;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -46,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.jets3t.service.Jets3tProperties;
@@ -58,30 +61,22 @@ import org.jets3t.service.model.S3Object;
 import org.jets3t.service.model.StorageObject;
 import org.jets3t.service.security.AWSCredentials;
 
+import org.osgi.service.component.annotations.*;
+
 /**
  * @author Brian Wing Shun Chan
  * @author Sten Martinez
  * @author Edward Han
  * @author Vilmos Papp
  * @author Mate Thurzo
+ * @author Manuel de la Peña
  */
+@Component(
+	configurationPid = "com.liferay.portal.store.s3.S3Configuration",
+	configurationPolicy = ConfigurationPolicy.REQUIRE, immediate = true,
+	property = "store.type=s3", service = Store.class
+)
 public class S3Store extends BaseStore {
-
-	public S3Store() {
-		S3Service s3Service = null;
-		S3Bucket s3Bucket = null;
-
-		try {
-			s3Service = getS3Service();
-			s3Bucket = getS3Bucket();
-		}
-		catch (S3ServiceException s3se) {
-			_log.error(s3se.getMessage());
-		}
-
-		_s3Service = s3Service;
-		_s3Bucket = s3Bucket;
-	}
 
 	@Override
 	public void addDirectory(
@@ -433,12 +428,44 @@ public class S3Store extends BaseStore {
 		}
 	}
 
+	@Activate
+	protected void activate(Map<String, Object> properties) {
+
+		_s3Configuration = Configurable.createConfigurable(
+			S3Configuration.class, properties);
+
+		try {
+			_s3Service = getS3Service();
+			_s3Bucket = getS3Bucket();
+		}
+		catch (S3ServiceException s3se) {
+			throw new IllegalArgumentException(s3se);
+		}
+	}
+
+	@Deactivate
+	protected void deactivate() throws ServiceException {
+		if (!_s3Service.isShutdown()) {
+			_s3Service.shutdown();
+		}
+
+		_s3Bucket = null;
+		_s3Configuration = null;
+		_s3Service = null;
+	}
+
+	@Modified
+	protected void modified(Map<String, Object> properties)
+		throws ServiceException {
+
+		deactivate();
+		activate(properties);
+	}
+
 	protected void cleanUpTempFiles() {
 		_calledGetFileCount++;
 
-		if (_calledGetFileCount <
-				PropsValues.DL_STORE_S3_TEMP_DIR_CLEAN_UP_FREQUENCY) {
-
+		if (_calledGetFileCount < _s3Configuration.tempDirCleanUpFrequency()) {
 			return;
 		}
 
@@ -457,7 +484,7 @@ public class S3Store extends BaseStore {
 			long lastModified = System.currentTimeMillis();
 
 			lastModified -=
-				(PropsValues.DL_STORE_S3_TEMP_DIR_CLEAN_UP_EXPUNGE * Time.DAY);
+				(_s3Configuration.tempDirCleanUpExpunge() * Time.DAY);
 
 			cleanUpTempFiles(tempDir, lastModified);
 		}
@@ -493,12 +520,15 @@ public class S3Store extends BaseStore {
 	}
 
 	protected AWSCredentials getAWSCredentials() throws S3ServiceException {
-		if (Validator.isNull(_ACCESS_KEY) || Validator.isNull(_SECRET_KEY)) {
+		String accessKey = _s3Configuration.accessKey();
+		String secretKey = _s3Configuration.secretKey();
+
+		if (Validator.isNull(accessKey) || Validator.isNull(secretKey)) {
 			throw new S3ServiceException(
 				"S3 access and secret keys are not set");
 		}
 		else {
-			return new AWSCredentials(_ACCESS_KEY, _SECRET_KEY);
+			return new AWSCredentials(accessKey, secretKey);
 		}
 	}
 
@@ -559,9 +589,23 @@ public class S3Store extends BaseStore {
 	}
 
 	protected Jets3tProperties getJets3tProperties() {
+		Properties properties = new Properties();
+
+		properties.put(
+			"httpclient.max-connections",
+			_s3Configuration.httpClientMaxConnections());
+		properties.put(
+			"s3service.default-bucket-location",
+			_s3Configuration.s3serviceDefaultBucketLocation());
+		properties.put(
+			"s3service.default-storage-class",
+			_s3Configuration.s3serviceDefaultStorageClass());
+		properties.put(
+			"s3service.s3-endpoint", _s3Configuration.s3serviceS3Endpoint());
+
 		Jets3tProperties jets3tProperties = new Jets3tProperties();
 
-		jets3tProperties.loadAndReplaceProperties(_jets3tProperties, "liferay");
+		jets3tProperties.loadAndReplaceProperties(properties, "liferay");
 
 		if (_log.isInfoEnabled()) {
 			_log.info("Jets3t properties: " + jets3tProperties.getProperties());
@@ -619,11 +663,13 @@ public class S3Store extends BaseStore {
 	}
 
 	protected S3Bucket getS3Bucket() throws S3ServiceException {
-		if (Validator.isNull(_BUCKET_NAME)) {
+		String bucketName = _s3Configuration.bucketName();
+
+		if (Validator.isNull(bucketName)) {
 			throw new S3ServiceException("S3 bucket name is not set");
 		}
 		else {
-			return getS3Service().getBucket(_BUCKET_NAME);
+			return getS3Service().getBucket(bucketName);
 		}
 	}
 
@@ -686,26 +732,15 @@ public class S3Store extends BaseStore {
 		return tempFile;
 	}
 
-	private static final String _ACCESS_KEY = PropsUtil.get(
-		PropsKeys.DL_STORE_S3_ACCESS_KEY);
-
-	private static final String _BUCKET_NAME = PropsUtil.get(
-		PropsKeys.DL_STORE_S3_BUCKET_NAME);
-
-	private static final String _SECRET_KEY = PropsUtil.get(
-		PropsKeys.DL_STORE_S3_SECRET_KEY);
-
 	private static final String _TEMP_DIR_NAME = "/liferay/s3";
 
 	private static final String _TEMP_DIR_PATTERN = "/yyyy/MM/dd/HH/";
 
 	private static final Log _log = LogFactoryUtil.getLog(S3Store.class);
 
-	private static final Properties _jets3tProperties = PropsUtil.getProperties(
-		PropsKeys.DL_STORE_S3_JETS3T, true);
-
 	private int _calledGetFileCount;
-	private final S3Bucket _s3Bucket;
-	private final S3Service _s3Service;
+	private S3Bucket _s3Bucket;
+	private volatile S3Configuration _s3Configuration;
+	private S3Service _s3Service;
 
 }

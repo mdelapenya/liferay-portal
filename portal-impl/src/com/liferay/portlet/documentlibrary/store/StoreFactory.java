@@ -29,15 +29,27 @@ import com.liferay.portal.spring.aop.MethodInterceptorInvocationHandler;
 import com.liferay.portal.util.ClassLoaderUtil;
 import com.liferay.portal.util.PropsUtil;
 import com.liferay.portal.util.PropsValues;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceReference;
+import com.liferay.registry.ServiceTracker;
+import com.liferay.registry.ServiceTrackerCustomizer;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListMap;
 
+import com.liferay.registry.collections.ServiceTrackerCollections;
+import com.liferay.registry.collections.ServiceTrackerMap;
+import com.liferay.registry.collections.ServiceTrackerMapFactory;
+import com.liferay.registry.collections.ServiceTrackerMapFactoryUtil;
 import org.aopalliance.intercept.MethodInterceptor;
 
 /**
  * @author Brian Wing Shun Chan
  * @author Shuyang Zhou
+ * @author Manuel de la Peña
  */
 public class StoreFactory {
 
@@ -175,9 +187,6 @@ public class StoreFactory {
 		},
 		new String[] {
 			"com.liferay.documentlibrary.util.JCRHook", JCRStore.class.getName()
-		},
-		new String[] {
-			"com.liferay.documentlibrary.util.S3Hook", S3Store.class.getName()
 		}
 	};
 
@@ -185,5 +194,8 @@ public class StoreFactory {
 
 	private static Store _store;
 	private static boolean _warned;
+
+	private static final ServiceTrackerMap<String, Store> _serviceTrackerMap =
+		ServiceTrackerCollections.singleValueMap(Store.class, "store.type");
 
 }

@@ -25,6 +25,7 @@ import java.io.InputStream;
  *
  * @author Brian Wing Shun Chan
  * @author Edward Han
+ * @author Manuel de la Peña
  * @see    BaseStore
  */
 public interface Store {
