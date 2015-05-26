@@ -113,6 +113,19 @@ public abstract class BaseTrashHandlerTestCase {
 
 		Assert.assertEquals(
 			initialTrashEntriesCount, getTrashEntriesCount(group.getGroupId()));
+	}
+
+	@Test
+	public void testAddBaseModelTrashInitialConditionsApprovedIsVisible()
+		throws Exception {
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(group.getGroupId());
+
+		BaseModel<?> parentBaseModel = getParentBaseModel(
+			group, serviceContext);
+
+		baseModel = addBaseModel(parentBaseModel, true, serviceContext);
 
 		baseModel = getBaseModel((Long)baseModel.getPrimaryKeyObj());
 
@@ -160,6 +173,19 @@ public abstract class BaseTrashHandlerTestCase {
 
 		Assert.assertEquals(
 			initialTrashEntriesCount, getTrashEntriesCount(group.getGroupId()));
+	}
+
+	@Test
+	public void testAddBaseModelTrashInitialConditionsDraftIsNotVisible()
+		throws Exception {
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(group.getGroupId());
+
+		BaseModel<?> parentBaseModel = getParentBaseModel(
+			group, serviceContext);
+
+		baseModel = addBaseModel(parentBaseModel, false, serviceContext);
 
 		baseModel = getBaseModel((Long)baseModel.getPrimaryKeyObj());
 
