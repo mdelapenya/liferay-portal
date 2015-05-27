@@ -140,7 +140,7 @@ public abstract class BaseTrashHandlerTestCase {
 
 		baseModel = addBaseModel(parentBaseModel, true, serviceContext);
 
-		baseModel = getBaseModel((Long)baseModel.getPrimaryKeyObj());
+		baseModel = getBaseModel((Long) baseModel.getPrimaryKeyObj());
 
 		if (isAssetableModel()) {
 			Assert.assertTrue(isAssetEntryVisible(baseModel));
@@ -157,8 +157,29 @@ public abstract class BaseTrashHandlerTestCase {
 
 		int initialBaseModelsCount = getNotInTrashBaseModelsCount(
 			parentBaseModel);
-		int initialBaseModelsSearchCount = 0;
 		int initialTrashEntriesCount = getTrashEntriesCount(group.getGroupId());
+
+		baseModel = addBaseModel(parentBaseModel, false, serviceContext);
+
+		Assert.assertEquals(
+			initialBaseModelsCount + 1,
+			getNotInTrashBaseModelsCount(parentBaseModel));
+
+		Assert.assertEquals(
+			initialTrashEntriesCount, getTrashEntriesCount(group.getGroupId()));
+	}
+
+	@Test
+	public void testAddBaseModelTrashInitialConditionsDraftIndexable()
+		throws Exception {
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(group.getGroupId());
+
+		BaseModel<?> parentBaseModel = getParentBaseModel(
+			group, serviceContext);
+
+		int initialBaseModelsSearchCount = 0;
 		int initialTrashEntriesSearchCount = 0;
 
 		if (isIndexableBaseModel()) {
@@ -170,10 +191,6 @@ public abstract class BaseTrashHandlerTestCase {
 
 		baseModel = addBaseModel(parentBaseModel, false, serviceContext);
 
-		Assert.assertEquals(
-			initialBaseModelsCount + 1,
-			getNotInTrashBaseModelsCount(parentBaseModel));
-
 		if (isIndexableBaseModel()) {
 			Assert.assertEquals(
 				initialBaseModelsSearchCount,
@@ -183,9 +200,6 @@ public abstract class BaseTrashHandlerTestCase {
 				initialTrashEntriesSearchCount,
 				searchTrashEntriesCount(getSearchKeywords(), serviceContext));
 		}
-
-		Assert.assertEquals(
-			initialTrashEntriesCount, getTrashEntriesCount(group.getGroupId()));
 	}
 
 	@Test
