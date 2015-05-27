@@ -794,7 +794,7 @@ public abstract class BaseTrashHandlerTestCase {
 
 	@Test
 	public void testTrashIsRestorableBaseModelWithParent1() throws Exception {
-		trashIsRestorableBaseModelWithParentNoDeleteParent(false);
+		trashIsRestorableBaseModelWithParentNoDeleteParentNoMoveParentToTrash();
 	}
 
 	@Test
@@ -804,7 +804,7 @@ public abstract class BaseTrashHandlerTestCase {
 
 	@Test
 	public void testTrashIsRestorableBaseModelWithParent3() throws Exception {
-		trashIsRestorableBaseModelWithParentNoDeleteParent(true);
+		trashIsRestorableBaseModelWithParentNoDeleteParentMoveParentToTrash();
 	}
 
 	@Test
@@ -1439,8 +1439,7 @@ public abstract class BaseTrashHandlerTestCase {
 		Assert.assertFalse(restorable);
 	}
 
-	protected void trashIsRestorableBaseModelWithParentNoDeleteParent(
-			boolean moveParentToTrash)
+	protected void trashIsRestorableBaseModelWithParentNoDeleteParentMoveParentToTrash()
 		throws Exception {
 
 		ServiceContext serviceContext =
@@ -1451,10 +1450,7 @@ public abstract class BaseTrashHandlerTestCase {
 
 		baseModel = addBaseModel(parentBaseModel, true, serviceContext);
 
-		if (moveParentToTrash) {
-			moveParentBaseModelToTrash(
-				(Long)parentBaseModel.getPrimaryKeyObj());
-		}
+		moveParentBaseModelToTrash((Long)parentBaseModel.getPrimaryKeyObj());
 
 		moveBaseModelToTrash((Long)baseModel.getPrimaryKeyObj());
 
@@ -1464,12 +1460,29 @@ public abstract class BaseTrashHandlerTestCase {
 		boolean restorable = trashHandler.isRestorable(
 			getAssetClassPK(baseModel));
 
-		if (moveParentToTrash) {
-			Assert.assertFalse(restorable);
-		}
-		else {
-			Assert.assertTrue(restorable);
-		}
+		Assert.assertFalse(restorable);
+	}
+
+	protected void trashIsRestorableBaseModelWithParentNoDeleteParentNoMoveParentToTrash()
+		throws Exception {
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(group.getGroupId());
+
+		BaseModel<?> parentBaseModel = getParentBaseModel(
+			group, serviceContext);
+
+		baseModel = addBaseModel(parentBaseModel, true, serviceContext);
+
+		moveBaseModelToTrash((Long)baseModel.getPrimaryKeyObj());
+
+		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+			getBaseModelClassName());
+
+		boolean restorable = trashHandler.isRestorable(
+			getAssetClassPK(baseModel));
+
+		Assert.assertTrue(restorable);
 	}
 
 	protected void trashParentBaseModel(
