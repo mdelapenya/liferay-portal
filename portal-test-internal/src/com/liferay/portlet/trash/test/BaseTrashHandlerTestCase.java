@@ -818,7 +818,7 @@ public abstract class BaseTrashHandlerTestCase {
 
 	@Test
 	public void testTrashIsRestorableBaseModelWithParent2() throws Exception {
-		trashIsRestorableBaseModelWithParentDeleteParent(false);
+		trashIsRestorableBaseModelWithParentDeleteParentAndMoveParentToTrash();
 	}
 
 	@Test
@@ -848,7 +848,7 @@ public abstract class BaseTrashHandlerTestCase {
 
 	@Test
 	public void testTrashIsRestorableBaseModelWithParent4() throws Exception {
-		trashIsRestorableBaseModelWithParentDeleteParent(false);
+		trashIsRestorableBaseModelWithParentDeleteParentAndNotMoveParentToTrash();
 	}
 
 	@Test
@@ -1438,8 +1438,7 @@ public abstract class BaseTrashHandlerTestCase {
 		return results.getLength();
 	}
 
-	protected void trashIsRestorableBaseModelWithParentDeleteParent(
-			boolean moveParentToTrash)
+	protected void trashIsRestorableBaseModelWithParentDeleteParentAndMoveParentToTrash()
 		throws Exception {
 
 		ServiceContext serviceContext =
@@ -1450,24 +1449,40 @@ public abstract class BaseTrashHandlerTestCase {
 
 		baseModel = addBaseModel(parentBaseModel, true, serviceContext);
 
-		if (moveParentToTrash) {
-			moveParentBaseModelToTrash(
-				(Long)parentBaseModel.getPrimaryKeyObj());
-		}
+		moveParentBaseModelToTrash((Long)parentBaseModel.getPrimaryKeyObj());
+
+		moveBaseModelToTrash((Long) baseModel.getPrimaryKeyObj());
+
+		TrashHandler parentTrashHandler =
+			TrashHandlerRegistryUtil.getTrashHandler(
+				getParentBaseModelClassName());
+
+		parentTrashHandler.deleteTrashEntry(
+			(Long) parentBaseModel.getPrimaryKeyObj());
+
+		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+			getBaseModelClassName());
+
+		boolean restorable = trashHandler.isRestorable(
+			getAssetClassPK(baseModel));
+
+		Assert.assertFalse(restorable);
+	}
+
+	protected void trashIsRestorableBaseModelWithParentDeleteParentAndNotMoveParentToTrash()
+		throws Exception {
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(group.getGroupId());
+
+		BaseModel<?> parentBaseModel = getParentBaseModel(
+			group, serviceContext);
+
+		baseModel = addBaseModel(parentBaseModel, true, serviceContext);
 
 		moveBaseModelToTrash((Long)baseModel.getPrimaryKeyObj());
 
-		if (moveParentToTrash) {
-			TrashHandler parentTrashHandler =
-				TrashHandlerRegistryUtil.getTrashHandler(
-					getParentBaseModelClassName());
-
-			parentTrashHandler.deleteTrashEntry(
-				(Long)parentBaseModel.getPrimaryKeyObj());
-		}
-		else {
-			deleteParentBaseModel(parentBaseModel, false);
-		}
+		deleteParentBaseModel(parentBaseModel, false);
 
 		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
 			getBaseModelClassName());
