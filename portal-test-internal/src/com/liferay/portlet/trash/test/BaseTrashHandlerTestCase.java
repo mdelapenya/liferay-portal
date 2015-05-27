@@ -72,7 +72,7 @@ public abstract class BaseTrashHandlerTestCase {
 	}
 
 	@Test
-	public void testAddBaseModelTrashInitialConditionsApproved()
+	public void testAddBaseModelApproved()
 		throws Exception {
 
 		ServiceContext serviceContext =
@@ -96,7 +96,7 @@ public abstract class BaseTrashHandlerTestCase {
 	}
 
 	@Test
-	public void testAddBaseModelTrashInitialConditionsApprovedIndexable()
+	public void testAddBaseModelApprovedWithIndexableBaseModel()
 		throws Exception {
 
 		ServiceContext serviceContext =
@@ -129,7 +129,7 @@ public abstract class BaseTrashHandlerTestCase {
 	}
 
 	@Test
-	public void testAddBaseModelTrashInitialConditionsApprovedIsVisible()
+	public void testAddBaseModelApprovedIsVisible()
 		throws Exception {
 
 		ServiceContext serviceContext =
@@ -148,7 +148,7 @@ public abstract class BaseTrashHandlerTestCase {
 	}
 
 	@Test
-	public void testAddBaseModelTrashInitialConditionsDraft() throws Exception {
+	public void testAddBaseModelDraft() throws Exception {
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(group.getGroupId());
 
@@ -170,7 +170,7 @@ public abstract class BaseTrashHandlerTestCase {
 	}
 
 	@Test
-	public void testAddBaseModelTrashInitialConditionsDraftIndexable()
+	public void testAddBaseModelDraftWithIndexableBaseModel()
 		throws Exception {
 
 		ServiceContext serviceContext =
@@ -203,7 +203,7 @@ public abstract class BaseTrashHandlerTestCase {
 	}
 
 	@Test
-	public void testAddBaseModelTrashInitialConditionsDraftIsNotVisible()
+	public void testAddBaseModelDraftIsNotVisible()
 		throws Exception {
 
 		ServiceContext serviceContext =
