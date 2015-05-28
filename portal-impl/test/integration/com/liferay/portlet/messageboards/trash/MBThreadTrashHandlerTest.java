@@ -70,7 +70,19 @@ public class MBThreadTrashHandlerTest extends BaseTrashHandlerTestCase {
 	@Ignore()
 	@Override
 	@Test
-	public void testAddBaseModelTrashInitialConditionsDraft() throws Exception {
+	public void testAddBaseModelDraft() throws Exception {
+	}
+
+	@Ignore()
+	@Override
+	@Test
+	public void testAddBaseModelDraftIsNotVisible() throws Exception {
+	}
+
+	@Ignore()
+	@Override
+	@Test
+	public void testAddBaseModelDraftWithIndexableBaseModel() throws Exception {
 	}
 
 	@Test
