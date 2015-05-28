@@ -72,9 +72,7 @@ public abstract class BaseTrashHandlerTestCase {
 	}
 
 	@Test
-	public void testAddBaseModelApproved()
-		throws Exception {
-
+	public void testAddBaseModelApproved() throws Exception {
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(group.getGroupId());
 
@@ -93,6 +91,23 @@ public abstract class BaseTrashHandlerTestCase {
 
 		Assert.assertEquals(
 			initialTrashEntriesCount, getTrashEntriesCount(group.getGroupId()));
+	}
+
+	@Test
+	public void testAddBaseModelApprovedIsVisible() throws Exception {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(group.getGroupId());
+
+		BaseModel<?> parentBaseModel = getParentBaseModel(
+			group, serviceContext);
+
+		baseModel = addBaseModel(parentBaseModel, true, serviceContext);
+
+		baseModel = getBaseModel((Long)baseModel.getPrimaryKeyObj());
+
+		if (isAssetableModel()) {
+			Assert.assertTrue(isAssetEntryVisible(baseModel));
+		}
 	}
 
 	@Test
@@ -129,25 +144,6 @@ public abstract class BaseTrashHandlerTestCase {
 	}
 
 	@Test
-	public void testAddBaseModelApprovedIsVisible()
-		throws Exception {
-
-		ServiceContext serviceContext =
-			ServiceContextTestUtil.getServiceContext(group.getGroupId());
-
-		BaseModel<?> parentBaseModel = getParentBaseModel(
-			group, serviceContext);
-
-		baseModel = addBaseModel(parentBaseModel, true, serviceContext);
-
-		baseModel = getBaseModel((Long) baseModel.getPrimaryKeyObj());
-
-		if (isAssetableModel()) {
-			Assert.assertTrue(isAssetEntryVisible(baseModel));
-		}
-	}
-
-	@Test
 	public void testAddBaseModelDraft() throws Exception {
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(group.getGroupId());
@@ -170,9 +166,24 @@ public abstract class BaseTrashHandlerTestCase {
 	}
 
 	@Test
-	public void testAddBaseModelDraftWithIndexableBaseModel()
-		throws Exception {
+	public void testAddBaseModelDraftIsNotVisible() throws Exception {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(group.getGroupId());
 
+		BaseModel<?> parentBaseModel = getParentBaseModel(
+			group, serviceContext);
+
+		baseModel = addBaseModel(parentBaseModel, false, serviceContext);
+
+		baseModel = getBaseModel((Long)baseModel.getPrimaryKeyObj());
+
+		if (isAssetableModel()) {
+			Assert.assertFalse(isAssetEntryVisible(baseModel));
+		}
+	}
+
+	@Test
+	public void testAddBaseModelDraftWithIndexableBaseModel() throws Exception {
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(group.getGroupId());
 
@@ -199,25 +210,6 @@ public abstract class BaseTrashHandlerTestCase {
 			Assert.assertEquals(
 				initialTrashEntriesSearchCount,
 				searchTrashEntriesCount(getSearchKeywords(), serviceContext));
-		}
-	}
-
-	@Test
-	public void testAddBaseModelDraftIsNotVisible()
-		throws Exception {
-
-		ServiceContext serviceContext =
-			ServiceContextTestUtil.getServiceContext(group.getGroupId());
-
-		BaseModel<?> parentBaseModel = getParentBaseModel(
-			group, serviceContext);
-
-		baseModel = addBaseModel(parentBaseModel, false, serviceContext);
-
-		baseModel = getBaseModel((Long) baseModel.getPrimaryKeyObj());
-
-		if (isAssetableModel()) {
-			Assert.assertFalse(isAssetEntryVisible(baseModel));
 		}
 	}
 
