@@ -28,6 +28,7 @@ import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.MainServletTestRule;
 import com.liferay.portlet.layoutsadmin.util.test.ExportImportConfigurationTestUtil;
 import com.liferay.portlet.trash.test.BaseTrashHandlerTestCase;
+import com.liferay.portlet.trash.test.WhenIsIndexableBaseModel;
 
 import org.junit.ClassRule;
 import org.junit.Ignore;
@@ -39,7 +40,7 @@ import org.junit.Test;
  */
 @Sync
 public class ExportImportConfigurationTrashHandlerTest
-	extends BaseTrashHandlerTestCase {
+	extends BaseTrashHandlerTestCase implements WhenIsIndexableBaseModel {
 
 	@ClassRule
 	@Rule
