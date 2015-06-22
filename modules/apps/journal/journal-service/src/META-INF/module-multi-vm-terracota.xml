@@ -13,6 +13,6 @@
 		overflowToDisk="false"
 		timeToIdleSeconds="600"
 	>
-		<terracotta />
 	</cache>
+	<terracottaConfig url="localhost:9510" />
 </ehcache>
