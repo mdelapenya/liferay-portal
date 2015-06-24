@@ -112,6 +112,7 @@ public class StoreFactory {
 		if (_store == null) {
 			throw new IllegalStateException("Store is not ready.");
 		}
+
 		return _store;
 	}
 
@@ -148,8 +149,6 @@ public class StoreFactory {
 		_storeWrapperServiceTrackerMap.open();
 	}
 
-	private volatile Store _store = null;
-
 	private static final Log _log = LogFactoryUtil.getLog(StoreFactory.class);
 
 	private static StoreFactory _instance;
@@ -162,5 +161,6 @@ public class StoreFactory {
 				StoreWrapper.class, "store.type");
 	private final ServiceTrackerMap<String, Store> _storeServiceTrackerMap =
 		ServiceTrackerCollections.singleValueMap(Store.class, "store.type");
+	private volatile Store _store = null;
 
 }
