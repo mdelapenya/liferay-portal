@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.dao.db.DBFactoryUtil;
 import com.liferay.portal.kernel.util.ClassLoaderUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.spring.aop.MethodInterceptorInvocationHandler;
+import com.liferay.portlet.documentlibrary.store.DefaultStoreWrapper;
 import com.liferay.portlet.documentlibrary.store.Store;
 import com.liferay.portlet.documentlibrary.store.TempFileMethodInterceptor;
 
@@ -91,9 +92,7 @@ public class DBStoreRegistrator {
 			classLoader, new Class<?>[] {Store.class},
 			new MethodInterceptorInvocationHandler(store, methodInterceptors));
 
-		dbStore.setStoreProxy(store);
-
-		return dbStore;
+		return new DefaultStoreWrapper().wrap(store);
 	}
 
 	private Store _dbStore;
