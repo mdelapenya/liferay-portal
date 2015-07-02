@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.SystemProperties;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.store.jcr.JCRFactory;
@@ -119,7 +120,8 @@ public class JCRFactoryImpl implements JCRFactory {
 			File repositoryRoot = new File(path);
 
 			if (!repositoryRoot.isAbsolute()) {
-				path = PropsUtil.get(PropsKeys.LIFERAY_HOME) + "/" + path;
+				path = PropsUtil.get(PropsKeys.LIFERAY_HOME) +
+					StringPool.SLASH + path;
 			}
 
 			FileUtil.mkdirs(path);

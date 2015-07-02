@@ -616,13 +616,11 @@ public class FileSystemStore extends BaseStore {
 	protected void initializeRootDir() {
 		String path = getRootDirName();
 
-		File rootDir = new File(path);
-
-		if (!rootDir.isAbsolute()) {
-			path = PropsUtil.get(PropsKeys.LIFERAY_HOME) + "/" + path;
-		}
-
 		_rootDir = new File(path);
+
+		if (!_rootDir.isAbsolute()) {
+			_rootDir = new File(PropsUtil.get(PropsKeys.LIFERAY_HOME), path);
+		}
 
 		try {
 			FileUtil.mkdirs(_rootDir);
