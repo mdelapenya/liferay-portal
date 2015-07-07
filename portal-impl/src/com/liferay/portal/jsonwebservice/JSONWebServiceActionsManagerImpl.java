@@ -314,6 +314,7 @@ public class JSONWebServiceActionsManagerImpl
 			if (!contextPath.startsWith(StringPool.SLASH)) {
 +				contextPath = StringPool.SLASH.concat(contextPath);
  			}
+ 			
 
 			beanLocator = PortletBeanLocatorUtil.getBeanLocator(contextName);
 		}
