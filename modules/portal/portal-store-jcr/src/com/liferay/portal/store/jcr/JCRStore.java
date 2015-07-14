@@ -219,10 +219,6 @@ public class JCRStore extends BaseStore {
 
 			Node repositoryNode = getFolderNode(rootNode, repositoryId);
 
-			if (dirName.equals(StringPool.SLASH)) {
-				dirName = StringPool.BLANK;
-			}
-
 			Node dirNode = repositoryNode.getNode(dirName);
 
 			dirNode.remove();
