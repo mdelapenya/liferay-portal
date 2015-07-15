@@ -45,6 +45,7 @@
 		<dirset dir="apps/portlet-display-template" includes="*" />
 		<dirset dir="apps/product-menu" includes="*" />
 		<dirset dir="apps/quick-note" includes="*" />
+		<dirset dir="apps/ratings" includes="*" />
 		<dirset dir="apps/roles" includes="*" />
 		<dirset dir="apps/rss" includes="*" />
 		<dirset dir="apps/search" includes="*" />
@@ -66,6 +67,7 @@
 		<dirset dir="frontend" includes="*" />
 		<dirset dir="portal" excludes="portal-cache-memory,portal-search-solr,portal-taglib-aui-form-extension-sample" includes="*" />
 		<dirset dir="portal-security" includes="*" />
+		<dirset dir="portal-store" includes="*" />
 		<dirset dir="util" includes="pmd,portal-tools-sample-sql-builder,sass-compiler-jni" />
 	</path>
 
