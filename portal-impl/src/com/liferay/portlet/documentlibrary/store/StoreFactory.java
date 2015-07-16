@@ -58,7 +58,7 @@ public class StoreFactory {
 
 		for (String key : _storeServiceTrackerMap.keySet()) {
 			Store store = getStore(key);
-			
+
 			Class<?> clazz = store.getClass();
 
 			String className = clazz.getName();
