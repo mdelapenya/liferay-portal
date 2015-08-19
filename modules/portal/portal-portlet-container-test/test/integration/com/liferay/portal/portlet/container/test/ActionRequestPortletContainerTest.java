@@ -91,7 +91,8 @@ public class ActionRequestPortletContainerTest
 			Map<String, List<String>> responseMap =
 				PortletContainerTestUtil.request(portletURL.toString());
 
-			Assert.assertEquals("200", getString(responseMap, "code"));
+			Assert.assertEquals(
+				"200", PortletContainerTestUtil.getString(responseMap, "code"));
 			Assert.assertTrue(map.containsKey("processAction"));
 		}
 		finally {
@@ -125,7 +126,8 @@ public class ActionRequestPortletContainerTest
 			Map<String, List<String>> responseMap =
 				PortletContainerTestUtil.request(portletURL.toString());
 
-			Assert.assertEquals("200", getString(responseMap, "code"));
+			Assert.assertEquals(
+				"200", PortletContainerTestUtil.getString(responseMap, "code"));
 			Assert.assertTrue(map.containsKey("processAction"));
 		}
 		finally {
@@ -159,7 +161,8 @@ public class ActionRequestPortletContainerTest
 			Map<String, List<String>> responseMap =
 				PortletContainerTestUtil.request(portletURL.toString());
 
-			Assert.assertEquals("200", getString(responseMap, "code"));
+			Assert.assertEquals(
+				"200", PortletContainerTestUtil.getString(responseMap, "code"));
 			Assert.assertTrue(map.containsKey("processAction"));
 		}
 		finally {
@@ -187,7 +190,8 @@ public class ActionRequestPortletContainerTest
 		Map<String, List<String>> responseMap =
 			PortletContainerTestUtil.request(portletURL.toString());
 
-		Assert.assertEquals("200", getString(responseMap, "code"));
+		Assert.assertEquals(
+			"200", PortletContainerTestUtil.getString(responseMap, "code"));
 		Assert.assertTrue(map.containsKey("processAction"));
 	}
 
@@ -225,7 +229,8 @@ public class ActionRequestPortletContainerTest
 						TEST_PORTLET_ID,
 				loggingEvent.getMessage());
 
-			Assert.assertEquals("200", getString(responseMap, "code"));
+			Assert.assertEquals(
+				"200", PortletContainerTestUtil.getString(responseMap, "code"));
 			Assert.assertFalse(map.containsKey("processAction"));
 		}
 	}
@@ -272,7 +277,8 @@ public class ActionRequestPortletContainerTest
 		Map<String, List<String>> responseMap =
 			PortletContainerTestUtil.request(portletURL.toString());
 
-		String portalAuthenticationToken = getString(responseMap, "body");
+		String portalAuthenticationToken = PortletContainerTestUtil.getString(
+			responseMap, "body");
 
 		List<String> cookies = responseMap.get("Set-Cookie");
 
@@ -294,7 +300,8 @@ public class ActionRequestPortletContainerTest
 
 		responseMap = PortletContainerTestUtil.request(url, headers);
 
-		Assert.assertEquals("200", getString(responseMap, "code"));
+		Assert.assertEquals(
+			"200", PortletContainerTestUtil.getString(responseMap, "code"));
 		Assert.assertTrue(map.containsKey("processAction"));
 	}
 
@@ -322,7 +329,8 @@ public class ActionRequestPortletContainerTest
 			Map<String, List<String>> responseMap =
 				PortletContainerTestUtil.request(portletURL.toString());
 
-			Assert.assertEquals("200", getString(responseMap, "code"));
+			Assert.assertEquals(
+				"200", PortletContainerTestUtil.getString(responseMap, "code"));
 			Assert.assertTrue(map.containsKey("processAction"));
 		}
 		finally {
@@ -349,7 +357,8 @@ public class ActionRequestPortletContainerTest
 		Map<String, List<String>> responseMap =
 			PortletContainerTestUtil.request(portletURL.toString());
 
-		Assert.assertEquals("200", getString(responseMap, "code"));
+		Assert.assertEquals(
+			"200", PortletContainerTestUtil.getString(responseMap, "code"));
 		Assert.assertTrue(map.containsKey("processAction"));
 	}
 
@@ -395,7 +404,8 @@ public class ActionRequestPortletContainerTest
 		Map<String, List<String>> responseMap =
 			PortletContainerTestUtil.request(portletURL.toString());
 
-		String portalAuthenticationToken = getString(responseMap, "body");
+		String portalAuthenticationToken =
+			PortletContainerTestUtil.getString(responseMap, "body");
 
 		List<String> cookies = responseMap.get("Set-Cookie");
 
@@ -420,7 +430,8 @@ public class ActionRequestPortletContainerTest
 
 		responseMap = PortletContainerTestUtil.request(url, headers);
 
-		Assert.assertEquals("200", getString(responseMap, "code"));
+		Assert.assertEquals(
+			"200", PortletContainerTestUtil.getString(responseMap, "code"));
 		Assert.assertTrue(map.containsKey("processAction"));
 	}
 

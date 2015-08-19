@@ -54,7 +54,8 @@ public class LayoutRequestPortletContainerTest
 			PortletContainerTestUtil.request(
 				layout.getRegularURL(httpServletRequest));
 
-		Assert.assertEquals("200", getString(responseMap, "code"));
+		Assert.assertEquals(
+			"200", PortletContainerTestUtil.getString(responseMap, "code"));
 		Assert.assertTrue(map.containsKey("render"));
 	}
 

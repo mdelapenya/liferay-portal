@@ -104,7 +104,8 @@ public class ResourceRequestPortletContainerTest
 					" on '\"><script>alert(1)</script>",
 				loggingEvent.getMessage());
 
-			Assert.assertEquals("400", getString(responseMap, "code"));
+			Assert.assertEquals(
+				"400", PortletContainerTestUtil.getString(responseMap, "code"));
 		}
 	}
 
@@ -165,7 +166,8 @@ public class ResourceRequestPortletContainerTest
 		Map<String, List<String>> responseMap =
 			PortletContainerTestUtil.request(portletURL.toString());
 
-		String portletAuthenticationToken = getString(responseMap, "body");
+		String portletAuthenticationToken = PortletContainerTestUtil.getString(
+			responseMap, "body");
 
 		List<String> cookies = responseMap.get("Set-Cookie");
 
@@ -191,7 +193,8 @@ public class ResourceRequestPortletContainerTest
 
 		responseMap = PortletContainerTestUtil.request(url, headers);
 
-		Assert.assertEquals("200", getString(responseMap, "code"));
+		Assert.assertEquals(
+			"200", PortletContainerTestUtil.getString(responseMap, "code"));
 		Assert.assertTrue(map.containsKey("serveResource"));
 	}
 
@@ -209,7 +212,8 @@ public class ResourceRequestPortletContainerTest
 		Map<String, List<String>> responseMap =
 			PortletContainerTestUtil.request(portletURL.toString());
 
-		Assert.assertEquals("200", getString(responseMap, "code"));
+		Assert.assertEquals(
+			"200", PortletContainerTestUtil.getString(responseMap, "code"));
 		Assert.assertTrue(map.containsKey("serveResource"));
 	}
 
@@ -253,7 +257,8 @@ public class ResourceRequestPortletContainerTest
 		Map<String, List<String>> responseMap =
 			PortletContainerTestUtil.request(portletURL.toString());
 
-		Assert.assertEquals("200", getString(responseMap, "code"));
+		Assert.assertEquals(
+			"200", PortletContainerTestUtil.getString(responseMap, "code"));
 		Assert.assertTrue(map.containsKey("render"));
 	}
 

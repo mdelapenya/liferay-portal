@@ -68,6 +68,12 @@ public class PortletContainerTestUtil {
 		return httpServletRequest;
 	}
 
+	public static String getString(Map<String, List<String>> map, String key) {
+		List<String> values = map.get(key);
+
+		return values.get(0);
+	}
+
 	public static Map<String, List<String>> request(String url)
 		throws IOException {
 

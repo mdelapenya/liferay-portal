@@ -103,12 +103,6 @@ public class BasePortletContainerTestCase {
 		return bundle.getBundleContext();
 	}
 
-	protected String getString(Map<String, List<String>> map, String key) {
-		List<String> values = map.get(key);
-
-		return values.get(0);
-	}
-
 	protected void setUpPortlet(
 			Portlet portlet, Dictionary<String, Object> properties,
 			String portletName)
