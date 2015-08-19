@@ -83,7 +83,8 @@ public class ResourceRequestPortletContainerTest
 					SecurityPortletContainerWrapper.class.getName(),
 					Level.WARN)) {
 
-			Map<String, List<String>> responseMap = request(url);
+			Map<String, List<String>> responseMap =
+				PortletContainerTestUtil.request(url);
 
 			List<LoggingEvent> loggingEvents =
 				captureAppender.getLoggingEvents();
@@ -161,7 +162,8 @@ public class ResourceRequestPortletContainerTest
 			httpServletRequest, TEST_PORTLET_ID, layout.getPlid(),
 			PortletRequest.RESOURCE_PHASE);
 
-		Map<String, List<String>> responseMap = request(portletURL.toString());
+		Map<String, List<String>> responseMap =
+			PortletContainerTestUtil.request(portletURL.toString());
 
 		String portletAuthenticationToken = getString(responseMap, "body");
 
@@ -187,7 +189,7 @@ public class ResourceRequestPortletContainerTest
 
 		headers.put("Cookie", cookies);
 
-		responseMap = request(url, headers);
+		responseMap = PortletContainerTestUtil.request(url, headers);
 
 		Assert.assertEquals("200", getString(responseMap, "code"));
 		Assert.assertTrue(map.containsKey("serveResource"));
@@ -204,7 +206,8 @@ public class ResourceRequestPortletContainerTest
 			httpServletRequest, TEST_PORTLET_ID, layout.getPlid(),
 			PortletRequest.RESOURCE_PHASE);
 
-		Map<String, List<String>> responseMap = request(portletURL.toString());
+		Map<String, List<String>> responseMap =
+			PortletContainerTestUtil.request(portletURL.toString());
 
 		Assert.assertEquals("200", getString(responseMap, "code"));
 		Assert.assertTrue(map.containsKey("serveResource"));
@@ -247,7 +250,8 @@ public class ResourceRequestPortletContainerTest
 
 		portletURL.setParameter("testRuntimePortletId", testRuntimePortletId);
 
-		Map<String, List<String>> responseMap = request(portletURL.toString());
+		Map<String, List<String>> responseMap =
+			PortletContainerTestUtil.request(portletURL.toString());
 
 		Assert.assertEquals("200", getString(responseMap, "code"));
 		Assert.assertTrue(map.containsKey("render"));
