@@ -1,0 +1,9 @@
+dependencies {
+	compile group: "org.osgi", name: "org.osgi.compendium", version: "5.0.0"
+	compile group: "org.osgi", name: "org.osgi.core", version: "6.0.0"
+	compile group: "org.osgi", name: "org.osgi.enterprise", version: "5.0.0"
+
+	testCompile group: "com.github.cukespace", name: "cukespace-core", version: "1.6.0"
+	testCompile group: "org.jboss.arquillian.container", name: "arquillian-tomcat-remote-7", version: "1.0.0.CR7"
+	testCompile group: "org.jboss.arquillian.junit", name: "arquillian-junit-container", version: "1.1.8.Final"
+}
