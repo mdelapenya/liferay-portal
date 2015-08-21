@@ -50,7 +50,6 @@ public class UsersTest {
 
 	@Given("^I have a user$")
 	public void setUpUser() throws Exception {
-		user = UserTestUtil.addUser();
 	}
 
 	@When("^I create the user$")
