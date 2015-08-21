@@ -1,4 +1,4 @@
-package com.liferay.portal.portlet.container.features;
+package com.liferay.portal.portlet.container.tests;
 
 import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.model.User;
@@ -14,7 +14,6 @@ import cucumber.runtime.arquillian.api.Features;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 import org.junit.runner.RunWith;
