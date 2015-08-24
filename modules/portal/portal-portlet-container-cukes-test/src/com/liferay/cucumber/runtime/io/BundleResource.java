@@ -6,11 +6,13 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 /**
- * Example: bundleresource://587.fwk715858581:6/cucumber/api/
+ * Example: bundleentry://587.fwk715858581:6/cucumber/io/BundleResource.class
  * 
  * @author Manuel de la Peña
  */
@@ -43,14 +45,18 @@ public class BundleResource implements Resource {
 	public String getClassName(String extension) {
 		String entryURLPath = entryURL.toString();
 
-		if (entryURLPath.contains("$")) {
-			return entryURLPath.substring(entryURLPath.indexOf("$") + 1);
-		}
-		else if (entryURLPath.indexOf("/") != -1) {
-			return entryURLPath.substring(entryURLPath.lastIndexOf("/") + 1);
+		Pattern pattern = Pattern.compile("bundleentry://\\d+\\.\\w+(?::\\d+)?/(\\S+)");
+
+		Matcher matcher = pattern.matcher(entryURLPath);
+
+		if (matcher.matches()) {
+			String fullyQualifiedClassName = matcher.group(1);
+
+			return fullyQualifiedClassName.replace("/", ".");
 		}
 
-		return "";
+		throw new IllegalArgumentException(
+			"The resource is not a valid bundle resource");
 	}
 
 }

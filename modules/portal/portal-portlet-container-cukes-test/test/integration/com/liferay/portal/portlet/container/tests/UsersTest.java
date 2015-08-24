@@ -12,14 +12,10 @@ import cucumber.api.java.en.When;
 import cucumber.runtime.arquillian.CukeSpace;
 import cucumber.runtime.arquillian.api.Features;
 
-import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.core.api.annotation.Inject;
-import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 import org.junit.runner.RunWith;
 
-import static org.jboss.shrinkwrap.api.ShrinkWrap.create;
 import static org.junit.Assert.*;
 
 /**
@@ -34,15 +30,6 @@ public class UsersTest {
 		if (user != null) {
 			UserLocalServiceUtil.deleteUser(user);
 		}
-	}
-
-	@Deployment
-	public static Archive<?> createDeployment() {
-		return create(WebArchive.class)
-			.addPackages(true, "com.liferay.portal.kernel.test")
-			.addAsResource("test-portal-impl.properties")
-			.addAsResource(
-				"com/liferay/portal/portlet/container/features/users.feature");
 	}
 
 	@Inject
