@@ -12,8 +12,6 @@ import cucumber.api.java.en.When;
 import cucumber.runtime.arquillian.CukeSpace;
 import cucumber.runtime.arquillian.api.Features;
 
-import org.jboss.arquillian.core.api.annotation.Inject;
-
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
@@ -32,7 +30,6 @@ public class UsersTest {
 		}
 	}
 
-	@Inject
 	private User user;
 
 	@Given("^I have a user$")

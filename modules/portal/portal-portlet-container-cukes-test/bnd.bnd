@@ -28,5 +28,8 @@ Include-Resource:\
 	@lib/cucumber-jvm-deps.jar,\
 	@lib/cucumber-reporting.jar,\
 	@lib/cukespace-core.jar,\
-	@lib/org.eclipse.osgi.jar,\
-	@lib/gherkin.jar
+	@lib/gherkin.jar,\
+	@lib/jodd-core.jar,\
+	@lib/jodd-http.jar,\
+	@lib/jodd-upload.jar,\
+	@lib/org.eclipse.osgi.jar
