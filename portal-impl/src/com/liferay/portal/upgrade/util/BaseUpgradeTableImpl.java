@@ -17,7 +17,6 @@ package com.liferay.portal.upgrade.util;
 import com.liferay.portal.events.StartupHelperUtil;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBFactoryUtil;
-import com.liferay.portal.kernel.dao.jdbc.DataAccess;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.upgrade.UpgradeException;
@@ -26,7 +25,6 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 /**
  * @author Alexander Chow
@@ -42,22 +40,6 @@ public abstract class BaseUpgradeTableImpl extends Table {
 
 		_sourceConnection = sourceConnection;
 		_targetConnection = targetConnection;
-	}
-
-	public BaseUpgradeTableImpl(String tableName) throws SQLException {
-		super(tableName);
-
-		_sourceConnection = DataAccess.getConnection();
-		_targetConnection = DataAccess.getConnection();
-	}
-
-	public BaseUpgradeTableImpl(String tableName, Object[][] columns)
-		throws SQLException {
-
-		super(tableName, columns);
-
-		_sourceConnection = DataAccess.getConnection();
-		_targetConnection = DataAccess.getConnection();
 	}
 
 	public String[] getIndexesSQL() throws Exception {
