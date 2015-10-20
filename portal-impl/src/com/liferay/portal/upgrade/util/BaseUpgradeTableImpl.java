@@ -89,15 +89,20 @@ public abstract class BaseUpgradeTableImpl extends Table {
 			DB db = DBFactoryUtil.getDB();
 
 			if (Validator.isNotNull(tempFileName)) {
-				String deleteSQL = getDeleteSQL();
+				if (_sourceConnection.equals(_targetConnection)) {
+					String deleteSQL = getDeleteSQL();
 
-				db.runSQL(_sourceConnection, deleteSQL);
+					db.runSQL(_sourceConnection, deleteSQL);
+				}
 			}
 
 			String createSQL = getCreateSQL();
 
 			if (Validator.isNotNull(createSQL)) {
-				db.runSQL(_sourceConnection, "drop table " + getTableName());
+				if (_sourceConnection.equals(_targetConnection)) {
+					db.runSQL(
+						_sourceConnection, "drop table " + getTableName());
+				}
 
 				db.runSQL(_targetConnection, createSQL);
 			}
