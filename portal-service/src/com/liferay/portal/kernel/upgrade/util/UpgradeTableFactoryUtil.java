@@ -16,13 +16,27 @@ package com.liferay.portal.kernel.upgrade.util;
 
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 /**
  * @author Brian Wing Shun Chan
  */
 public class UpgradeTableFactoryUtil {
 
 	public static UpgradeTable getUpgradeTable(
+		Connection sourceConnection, Connection targetConnection,
 		String tableName, Object[][] columns, UpgradeColumn... upgradeColumns) {
+
+		return getUpgradeTableFactory().getUpgradeTable(
+			sourceConnection, targetConnection, tableName, columns,
+			upgradeColumns);
+	}
+
+	public static UpgradeTable getUpgradeTable(
+			String tableName, Object[][] columns,
+			UpgradeColumn... upgradeColumns)
+		throws SQLException {
 
 		return getUpgradeTableFactory().getUpgradeTable(
 			tableName, columns, upgradeColumns);

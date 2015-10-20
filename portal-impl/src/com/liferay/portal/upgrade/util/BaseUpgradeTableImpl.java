@@ -17,6 +17,7 @@ package com.liferay.portal.upgrade.util;
 import com.liferay.portal.events.StartupHelperUtil;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBFactoryUtil;
+import com.liferay.portal.kernel.dao.jdbc.DataAccess;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.upgrade.UpgradeException;
@@ -24,18 +25,39 @@ import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 /**
  * @author Alexander Chow
  * @author Brian Wing Shun Chan
  */
 public abstract class BaseUpgradeTableImpl extends Table {
 
-	public BaseUpgradeTableImpl(String tableName) {
+	public BaseUpgradeTableImpl(
+		Connection sourceConnection, Connection targetConnection,
+		String tableName) {
+
 		super(tableName);
+
+		_sourceConnection = sourceConnection;
+		_targetConnection = targetConnection;
 	}
 
-	public BaseUpgradeTableImpl(String tableName, Object[][] columns) {
+	public BaseUpgradeTableImpl(String tableName) throws SQLException {
+		super(tableName);
+
+		_sourceConnection = DataAccess.getConnection();
+		_targetConnection = DataAccess.getConnection();
+	}
+
+	public BaseUpgradeTableImpl(String tableName, Object[][] columns)
+		throws SQLException {
+
 		super(tableName, columns);
+
+		_sourceConnection = DataAccess.getConnection();
+		_targetConnection = DataAccess.getConnection();
 	}
 
 	public String[] getIndexesSQL() throws Exception {
@@ -77,7 +99,7 @@ public abstract class BaseUpgradeTableImpl extends Table {
 	public void updateTable() throws Exception {
 		_calledUpdateTable = true;
 
-		generateTempFile();
+		generateTempFile(_sourceConnection);
 
 		String tempFileName = getTempFileName();
 
@@ -87,18 +109,18 @@ public abstract class BaseUpgradeTableImpl extends Table {
 			if (Validator.isNotNull(tempFileName)) {
 				String deleteSQL = getDeleteSQL();
 
-				db.runSQL(deleteSQL);
+				db.runSQL(_sourceConnection, deleteSQL);
 			}
 
 			String createSQL = getCreateSQL();
 
 			if (Validator.isNotNull(createSQL)) {
-				db.runSQL("drop table " + getTableName());
+				db.runSQL(_sourceConnection, "drop table " + getTableName());
 
-				db.runSQL(createSQL);
+				db.runSQL(_targetConnection, createSQL);
 			}
 
-			populateTable();
+			populateTable(_targetConnection);
 
 			String[] indexesSQL = getIndexesSQL();
 
@@ -115,7 +137,7 @@ public abstract class BaseUpgradeTableImpl extends Table {
 				}
 
 				try {
-					db.runSQL(indexSQL);
+					db.runSQL(_targetConnection, indexSQL);
 				}
 				catch (Exception e) {
 					if (_log.isWarnEnabled()) {
@@ -142,5 +164,7 @@ public abstract class BaseUpgradeTableImpl extends Table {
 	private boolean _calledUpdateTable;
 	private boolean _deleteTempFile;
 	private String[] _indexesSQL = new String[0];
+	private final Connection _sourceConnection;
+	private final Connection _targetConnection;
 
 }

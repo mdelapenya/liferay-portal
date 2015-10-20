@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.upgrade.util.UpgradeTable;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.tools.comparator.ColumnsComparator;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -100,9 +101,10 @@ public class DefaultUpgradeTableImpl
 	}
 
 	protected DefaultUpgradeTableImpl(
+		Connection sourceConnection, Connection targetConnection,
 		String tableName, Object[][] columns, UpgradeColumn... upgradeColumns) {
 
-		super(tableName);
+		super(sourceConnection, targetConnection, tableName);
 
 		// Sort the column names to ensure they're sorted based on the
 		// constructor's list of columns to upgrade. This is needed if you use

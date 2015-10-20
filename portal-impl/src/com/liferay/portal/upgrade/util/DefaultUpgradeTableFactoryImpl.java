@@ -14,10 +14,14 @@
 
 package com.liferay.portal.upgrade.util;
 
+import com.liferay.portal.kernel.dao.jdbc.DataAccess;
 import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.kernel.upgrade.util.UpgradeColumn;
 import com.liferay.portal.kernel.upgrade.util.UpgradeTable;
 import com.liferay.portal.kernel.upgrade.util.UpgradeTableFactory;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * @author Brian Wing Shun Chan
@@ -27,9 +31,24 @@ public class DefaultUpgradeTableFactoryImpl implements UpgradeTableFactory {
 
 	@Override
 	public UpgradeTable getUpgradeTable(
+		Connection sourceConnection, Connection targetConnection,
 		String tableName, Object[][] columns, UpgradeColumn... upgradeColumns) {
 
-		return new DefaultUpgradeTableImpl(tableName, columns, upgradeColumns);
+		return new DefaultUpgradeTableImpl(
+			sourceConnection, targetConnection, tableName, columns,
+			upgradeColumns);
+	}
+
+	@Override
+	public UpgradeTable getUpgradeTable(
+			String tableName, Object[][] columns,
+			UpgradeColumn... upgradeColumns)
+		throws SQLException {
+
+		Connection connection = DataAccess.getUpgradeOptimizedConnection();
+
+		return getUpgradeTable(
+			connection, connection, tableName, columns, upgradeColumns);
 	}
 
 }
