@@ -14,12 +14,21 @@
 
 package com.liferay.portal.kernel.upgrade.util;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 /**
  * @author Brian Wing Shun Chan
  */
 public interface UpgradeTableFactory {
 
 	public UpgradeTable getUpgradeTable(
+		Connection sourceConnection, Connection targetConnection,
 		String tableName, Object[][] columns, UpgradeColumn... upgradeColumns);
+
+	public UpgradeTable getUpgradeTable(
+			String tableName, Object[][] columns,
+			UpgradeColumn... upgradeColumns)
+		throws SQLException;
 
 }
