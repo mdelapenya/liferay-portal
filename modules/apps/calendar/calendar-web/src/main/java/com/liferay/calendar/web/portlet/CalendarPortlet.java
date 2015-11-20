@@ -52,7 +52,6 @@ import com.liferay.calendar.util.CalendarResourceUtil;
 import com.liferay.calendar.util.CalendarUtil;
 import com.liferay.calendar.util.JCalendarUtil;
 import com.liferay.calendar.util.RSSUtil;
-import com.liferay.calendar.web.upgrade.CalendarWebUpgrade;
 import com.liferay.calendar.workflow.CalendarBookingWorkflowConstants;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
@@ -88,6 +87,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.Release;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.permission.ActionKeys;
@@ -1238,13 +1238,15 @@ public class CalendarPortlet extends MVCPortlet {
 	}
 
 	@Reference(unbind = "-")
-	protected void setCalendarWebUpgrade(
-		CalendarWebUpgrade calendarWebUpgrade) {
-	}
-
-	@Reference(unbind = "-")
 	protected void setGroupLocalService(GroupLocalService groupLocalService) {
 		_groupLocalService = groupLocalService;
+	}
+
+	@Reference(
+		target = "(&(release.bundle.symbolic.name=com.liferay.calendar.web)(release.schema.version=1.1.0))",
+		unbind = "-"
+	)
+	protected void setRelease(Release release) {
 	}
 
 	@Reference(unbind = "-")
