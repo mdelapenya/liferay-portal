@@ -15,6 +15,7 @@
 package com.liferay.portal.tools.shard.builder.exporter;
 
 import com.liferay.portal.tools.shard.builder.db.db2.DB2Provider;
+import com.liferay.portal.tools.shard.builder.db.mssqlserver.MSSQLServerProvider;
 import com.liferay.portal.tools.shard.builder.db.mysql.MySQLProvider;
 import com.liferay.portal.tools.shard.builder.db.oracle.OracleProvider;
 import com.liferay.portal.tools.shard.builder.db.postgresql.PostgreSQLProvider;
@@ -33,6 +34,11 @@ public class ShardExporterFactory {
 
 		if (_DATASOURCE_CLASS_NAME_DB2.equals(dataSourceClassName)) {
 			return new DB2Provider(properties);
+		}
+		else if (_DATASOURCE_CLASS_NAME_MS_SQL_SERVER.equals(
+					dataSourceClassName)) {
+
+			return new MSSQLServerProvider(properties);
 		}
 		else if (_DATASOURCE_CLASS_NAME_MYSQL.equals(dataSourceClassName)) {
 			return new MySQLProvider(properties);
@@ -53,6 +59,9 @@ public class ShardExporterFactory {
 
 	private static final String _DATASOURCE_CLASS_NAME_DB2 =
 		"com.ibm.db2.jcc.DB2SimpleDataSource";
+
+	private static final String _DATASOURCE_CLASS_NAME_MS_SQL_SERVER =
+		"com.microsoft.sqlserver.jdbc.SQLServerDataSource";
 
 	private static final String _DATASOURCE_CLASS_NAME_MYSQL =
 		"com.mysql.jdbc.jdbc2.optional.MysqlDataSource";
