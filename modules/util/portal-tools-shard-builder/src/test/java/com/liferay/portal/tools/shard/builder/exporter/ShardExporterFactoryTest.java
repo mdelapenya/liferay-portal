@@ -14,6 +14,7 @@
 
 package com.liferay.portal.tools.shard.builder.exporter;
 
+import com.liferay.portal.tools.shard.builder.db.db2.DB2Provider;
 import com.liferay.portal.tools.shard.builder.db.mysql.MySQLProvider;
 import com.liferay.portal.tools.shard.builder.db.oracle.OracleProvider;
 import com.liferay.portal.tools.shard.builder.db.postgresql.PostgreSQLProvider;
@@ -36,6 +37,11 @@ public class ShardExporterFactoryTest {
 	@Test(expected = DBProviderNotAvailableException.class)
 	public void testGetShardExporter() throws Exception {
 		ShardExporterFactory.getShardExporter(new Properties());
+	}
+
+	@Test
+	public void testGetShardExporterReturnsDB2Provider() throws Exception {
+		testGetShardExporter("db2", DB2Provider.class);
 	}
 
 	@Test
