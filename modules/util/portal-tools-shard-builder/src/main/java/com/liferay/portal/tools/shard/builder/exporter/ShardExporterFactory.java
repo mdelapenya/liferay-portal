@@ -19,6 +19,7 @@ import com.liferay.portal.tools.shard.builder.db.mssqlserver.MSSQLServerProvider
 import com.liferay.portal.tools.shard.builder.db.mysql.MySQLProvider;
 import com.liferay.portal.tools.shard.builder.db.oracle.OracleProvider;
 import com.liferay.portal.tools.shard.builder.db.postgresql.PostgreSQLProvider;
+import com.liferay.portal.tools.shard.builder.db.sybase.SybaseProvider;
 import com.liferay.portal.tools.shard.builder.exporter.exception.DBProviderNotAvailableException;
 
 import java.util.Properties;
@@ -53,6 +54,9 @@ public class ShardExporterFactory {
 
 			return new PostgreSQLProvider(properties);
 		}
+		else if (_DATASOURCE_CLASS_NAME_SYBASE.equals(dataSourceClassName)) {
+			return new SybaseProvider(properties);
+		}
 
 		throw new DBProviderNotAvailableException();
 	}
@@ -74,5 +78,8 @@ public class ShardExporterFactory {
 
 	private static final String _DATASOURCE_CLASS_NAME_POSTGRESQL_SIMPLE =
 		"org.postgresql.ds.PGSimpleDataSource";
+
+	private static final String _DATASOURCE_CLASS_NAME_SYBASE =
+		"com.sybase.jdbc4.jdbc.SybDataSource";
 
 }

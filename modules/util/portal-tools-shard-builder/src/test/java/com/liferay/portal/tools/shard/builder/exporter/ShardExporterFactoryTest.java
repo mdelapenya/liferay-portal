@@ -19,6 +19,7 @@ import com.liferay.portal.tools.shard.builder.db.mssqlserver.MSSQLServerProvider
 import com.liferay.portal.tools.shard.builder.db.mysql.MySQLProvider;
 import com.liferay.portal.tools.shard.builder.db.oracle.OracleProvider;
 import com.liferay.portal.tools.shard.builder.db.postgresql.PostgreSQLProvider;
+import com.liferay.portal.tools.shard.builder.db.sybase.SybaseProvider;
 import com.liferay.portal.tools.shard.builder.exporter.exception.DBProviderNotAvailableException;
 import com.liferay.portal.tools.shard.builder.internal.util.PropsReader;
 
@@ -67,6 +68,11 @@ public class ShardExporterFactoryTest {
 		throws Exception {
 
 		testGetShardExporter("postgresql", PostgreSQLProvider.class);
+	}
+
+	@Test
+	public void testGetShardExporterReturnsSybaseProvider() throws Exception {
+		testGetShardExporter("sybase", SybaseProvider.class);
 	}
 
 	protected void testGetShardExporter(
