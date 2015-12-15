@@ -14,6 +14,8 @@
 
 package com.liferay.portal.tools.shard.builder.internal;
 
+import java.sql.SQLException;
+
 import javax.sql.DataSource;
 
 /**
@@ -29,6 +31,6 @@ public interface DBProvider {
 
 	public String getTableNameFieldName();
 
-	public String serializeTableField(Object field);
+	public String serializeTableField(Object field) throws SQLException;
 
 }

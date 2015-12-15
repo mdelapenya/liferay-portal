@@ -96,7 +96,7 @@ public abstract class BaseDBProvider
 	}
 
 	@Override
-	public String serializeTableField(Object field) {
+	public String serializeTableField(Object field) throws SQLException {
 		StringBuilder sb = new StringBuilder();
 
 		if (field == null) {
@@ -182,7 +182,7 @@ public abstract class BaseDBProvider
 		return preparedStatement;
 	}
 
-	protected String formatDateTime(Object date) {
+	protected String formatDateTime(Object date) throws SQLException {
 		DateFormat dateFormat = new SimpleDateFormat(getDateTimeFormat());
 
 		return dateFormat.format(date);
