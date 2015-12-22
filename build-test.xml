@@ -959,7 +959,7 @@ counter.jdbc.prefix=jdbc.counter.]]></echo>
 						input="${testray.testcase.warnings}"
 						override="true"
 						property="testray.testcase.warnings"
-						regexp="(?&lt;!&lt;value&gt;)&lt;!\[CDATA\["
+						regexp="(?&lt;!&lt;value&gt;\s?)&lt;!\\?\[CDATA\\?\["
 						replace="&amp;lt;!&amp;#91;CDATA&amp;#91;"
 					/>
 
@@ -968,7 +968,7 @@ counter.jdbc.prefix=jdbc.counter.]]></echo>
 						input="${testray.testcase.warnings}"
 						override="true"
 						property="testray.testcase.warnings"
-						regexp="]]&gt;(?!&lt;\/value&gt;)"
+						regexp="\\?]\\?]&gt;(?!\s*&lt;\/value&gt;)"
 						replace="&amp;#93;&amp;#93;&amp;gt;"
 					/>
 				</then>
@@ -2821,6 +2821,12 @@ org.apache.catalina.startup.ClassLoaderFactory.level=INFO]]>
 					<then>
 						<property name="portal.version.url.path" value="6.1.2-ga3" />
 					</then>
+					<elseif>
+						<equals arg1="${portal.version}" arg2="6.2.3" />
+						<then>
+							<property name="portal.version.url.path" value="6.2.3-ga4" />
+						</then>
+					</elseif>
 					<else>
 						<property name="portal.version.url.path" value="${portal.version}" />
 					</else>
@@ -2830,6 +2836,7 @@ org.apache.catalina.startup.ClassLoaderFactory.level=INFO]]>
 					<or>
 						<equals arg1="${portal.version}" arg2="6.0.6" />
 						<equals arg1="${portal.version}" arg2="6.1.2" />
+						<equals arg1="${portal.version}" arg2="6.2.3" />
 					</or>
 					<then>
 						<propertycopy from="sql.legacy.base.url[ce]" name="sql.legacy.base.url" />
