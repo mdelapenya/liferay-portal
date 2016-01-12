@@ -28,6 +28,7 @@ import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.file.ConfigurableFileCollection;
+import org.gradle.api.file.FileCollection;
 import org.gradle.api.file.FileTree;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.plugins.PluginContainer;
@@ -67,6 +68,19 @@ public class JspCDefaultsPlugin
 
 		GradleUtil.addDependency(
 			project, JspCPlugin.CONFIGURATION_NAME, fileTree);
+
+		String appServerType = liferayExtension.getAppServerType();
+
+		if (appServerType.equals("jonas")) {
+			File dir = new File(
+				liferayExtension.getAppServerDir(), "WEB-INF/lib");
+
+			FileCollection fileCollection = project.files(
+				new File(dir, "xercesImpl.jar"), new File(dir, "xml-apis.jar"));
+
+			GradleUtil.addDependency(
+				project, JspCPlugin.CONFIGURATION_NAME, fileCollection);
+		}
 
 		fileTree = FileUtil.getJarsFileTree(
 			project,
