@@ -22,15 +22,13 @@ import com.liferay.gradle.util.GradleUtil;
 
 import java.io.File;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.file.ConfigurableFileCollection;
+import org.gradle.api.file.FileCollection;
 import org.gradle.api.file.FileTree;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.plugins.PluginContainer;
@@ -74,18 +72,14 @@ public class JspCDefaultsPlugin
 		String appServerType = liferayExtension.getAppServerType();
 
 		if (appServerType.equals("jonas")) {
-			Map<String, Object> args = new HashMap<>();
+			File dir = new File(
+				liferayExtension.getAppServerDir(), "WEB-INF/lib");
 
-			args.put(
-				"dir",
-				new File(liferayExtension.getAppServerDir(), "WEB-INF/lib"));
-			args.put(
-				"includes", Arrays.asList("xercesImpl.jar", "xml-apis.jar"));
-
-			fileTree = project.fileTree(args);
+			FileCollection fileCollection = project.files(
+				new File(dir, "xercesImpl.jar"), new File(dir, "xml-apis.jar"));
 
 			GradleUtil.addDependency(
-				project, JspCPlugin.CONFIGURATION_NAME, fileTree);
+				project, JspCPlugin.CONFIGURATION_NAME, fileCollection);
 		}
 
 		fileTree = FileUtil.getJarsFileTree(
