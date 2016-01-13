@@ -204,6 +204,22 @@ public abstract class BaseDBProvider
 		return tableNames;
 	}
 
+	private PreparedStatement _buildPreparedStatement(
+			Connection connection, String sql, long companyId)
+		throws SQLException {
+
+		PreparedStatement ps = connection.prepareStatement(
+			sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+
+		ps.setFetchSize(getFetchSize());
+
+		if (companyId > 0) {
+			ps.setLong(1, companyId);
+		}
+
+		return ps;
+	}
+
 	private void _write(
 		long companyId, String tableName, OutputStream outputStream) {
 
@@ -213,25 +229,11 @@ public abstract class BaseDBProvider
 			sql += " WHERE companyId = ?";
 		}
 
-		Connection con = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
+		DataSource dataSource = getDataSource();
 
-		try {
-			DataSource dataSource = getDataSource();
-
-			con = dataSource.getConnection();
-
-			ps = con.prepareStatement(
-				sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-
-			ps.setFetchSize(getFetchSize());
-
-			if (companyId > 0) {
-				ps.setLong(1, companyId);
-			}
-
-			rs = ps.executeQuery();
+		try (Connection con = dataSource.getConnection();
+			PreparedStatement ps = _buildPreparedStatement(con, sql, companyId);
+			ResultSet rs = ps.executeQuery() ) {
 
 			ResultSetMetaData metaData = rs.getMetaData();
 
@@ -253,15 +255,11 @@ public abstract class BaseDBProvider
 					"Error exporting the rows for table " + tableName, e);
 			}
 		}
-		finally {
-			_dbManager.cleanUp(con, ps, rs);
-		}
 	}
 
 	private static final Logger _logger = LoggerFactory.getLogger(
 		BaseDBProvider.class);
 
 	private final DataSource _dataSource;
-	private final DBManager _dbManager = new DBManager();
 
 }
