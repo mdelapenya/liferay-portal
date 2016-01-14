@@ -12,23 +12,31 @@
  * details.
  */
 
-package com.liferay.rss.web.configuration;
+package com.liferay.gradle.plugins.extensions;
 
-import aQute.bnd.annotation.metatype.Meta;
+import com.liferay.gradle.plugins.util.FileUtil;
+import com.liferay.gradle.util.GradleUtil;
 
-import com.liferay.configuration.admin.ConfigurationAdmin;
+import java.io.File;
+
+import org.gradle.api.Project;
 
 /**
- * @author Juergen Kappler
+ * @author Manuel de la Peña
  */
-@ConfigurationAdmin(category = "web-experience-management")
-@Meta.OCD(
-	id = "com.liferay.rss.web.configuration.RSSWebConfiguration",
-	localization = "content/Language", name = "%rss.web.configuration.name"
-)
-public interface RSSWebConfiguration {
+public class JOnASAppServer extends AppServer {
 
-	@Meta.AD(deflt = "20", required = false)
-	public int feedTime();
+	public JOnASAppServer(Project project) {
+		super("jonas", project);
+	}
+
+	@Override
+	public void addAdditionalDependencies(String configurationName) {
+		File dir = new File(getDir(), "lib/endorsed");
+
+		GradleUtil.addDependency(
+			project, configurationName,
+			FileUtil.getJarsFileTree(project, dir));
+	}
 
 }

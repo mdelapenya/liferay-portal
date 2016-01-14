@@ -12,33 +12,15 @@
  * details.
  */
 
-package com.liferay.gradle.plugins.extensions;
-
-import org.gradle.api.NamedDomainObjectFactory;
-import org.gradle.api.Project;
+package com.liferay.nested.portlets.web.constants;
 
 /**
- * @author Andrea Di Giorgi
+ * @author Jürgen Kappler
  */
-class AppServerFactory implements NamedDomainObjectFactory<AppServer> {
+public class NestedPortletsWebKeys {
 
-	public AppServerFactory(Project project) {
-		_project = project;
-	}
+	public static final String TEMPLATE_CONTENT = "TEMPLATE_CONTENT";
 
-	@Override
-	public AppServer create(String name) {
-		if (name.equals("jonas")) {
-			return new JOnASAppServer(_project);
-		}
-		else if (name.equals("tomcat")) {
-			return new TomcatAppServer(_project);
-		}
-		else {
-			return new AppServer(name, _project);
-		}
-	}
-
-	private final Project _project;
+	public static final String TEMPLATE_ID = "TEMPLATE_ID";
 
 }
