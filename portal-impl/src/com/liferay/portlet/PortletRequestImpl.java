@@ -311,9 +311,10 @@ public abstract class PortletRequestImpl implements LiferayPortletRequest {
 		return _portletMode;
 	}
 
+	@Deprecated
 	@Override
 	public String getPortletName() {
-		return _portletName;
+		return _portletInstance.getPortletInstanceKey();
 	}
 
 	@Override
