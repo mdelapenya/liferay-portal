@@ -19,11 +19,15 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.PortletConstants;
+import com.liferay.portal.model.PortletInstance;
+import com.liferay.portal.model.PortletPreferences;
+import com.liferay.portal.service.PortletPreferencesLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -158,12 +162,16 @@ public class DefaultFriendlyURLMapper extends BaseFriendlyURLMapper {
 			return;
 		}
 
-		String namespace = null;
-
 		HttpServletRequest request = (HttpServletRequest)requestContext.get(
 			"request");
 
 		long userId = PortalUtil.getUserId(request);
+
+		this.setCustomizablePortletInstance(
+			isCustomizablePortletInstanceFromPortletPreferences(
+				userId, routeParameters));
+
+		String namespace = null;
 
 		String portletId = getPortletId(userId, routeParameters);
 
@@ -350,6 +358,23 @@ public class DefaultFriendlyURLMapper extends BaseFriendlyURLMapper {
 			FriendlyURLMapperThreadLocal.getPRPIdentifiers();
 
 		return routeParameterKeys.containsAll(publicRenderParameters.keySet());
+	}
+
+	protected boolean isCustomizablePortletInstanceFromPortletPreferences(
+		long userId, Map<String, String> routeParameters) {
+
+		String instanceId = routeParameters.get("instanceId");
+
+		PortletInstance portletInstance = new PortletInstance(
+			getPortletId(), userId, instanceId);
+
+		String portletInstanceKey = portletInstance.getPortletInstanceKey();
+
+		List<PortletPreferences> preferences =
+			PortletPreferencesLocalServiceUtil.
+				getPortletPreferencesByPortletInstanceKey(portletInstanceKey);
+
+		return (!preferences.isEmpty() && (preferences.size() == 1));
 	}
 
 	/**
