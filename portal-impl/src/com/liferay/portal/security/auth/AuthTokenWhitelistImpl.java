@@ -109,7 +109,7 @@ public class AuthTokenWhitelistImpl extends BaseAuthTokenWhitelist {
 		LiferayPortletURL liferayPortletURL) {
 
 		String rootPortletId = PortletConstants.getRootPortletId(
-			liferayPortletURL.getPortletId());
+			liferayPortletURL.getPortletInstanceKey());
 
 		return _portletCSRFWhitelist.contains(rootPortletId);
 	}
@@ -119,7 +119,7 @@ public class AuthTokenWhitelistImpl extends BaseAuthTokenWhitelist {
 		LiferayPortletURL liferayPortletURL) {
 
 		return _portletInvocationWhitelist.contains(
-			liferayPortletURL.getPortletId());
+			liferayPortletURL.getPortletInstanceKey());
 	}
 
 	@Override

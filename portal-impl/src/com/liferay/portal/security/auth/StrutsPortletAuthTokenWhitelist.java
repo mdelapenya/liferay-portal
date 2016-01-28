@@ -144,9 +144,11 @@ public class StrutsPortletAuthTokenWhitelist extends BaseAuthTokenWhitelist {
 				return false;
 			}
 
-			String portletId = liferayPortletURL.getPortletId();
+			String portletInstanceKey =
+				liferayPortletURL.getPortletInstanceKey();
 
-			String rootPortletId = PortletConstants.getRootPortletId(portletId);
+			String rootPortletId = PortletConstants.getRootPortletId(
+				portletInstanceKey);
 
 			if (isValidStrutsAction(companyId, rootPortletId, strutsAction)) {
 				return true;
@@ -181,9 +183,12 @@ public class StrutsPortletAuthTokenWhitelist extends BaseAuthTokenWhitelist {
 				return false;
 			}
 
-			String portletId = liferayPortletURL.getPortletId();
+			String portletInstanceKey =
+				liferayPortletURL.getPortletInstanceKey();
 
-			if (isValidStrutsAction(companyId, portletId, strutsAction)) {
+			if (isValidStrutsAction(
+				companyId, portletInstanceKey, strutsAction)) {
+
 				return true;
 			}
 		}

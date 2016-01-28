@@ -36,14 +36,14 @@ public class WAIFriendlyURLMapper implements FriendlyURLMapper {
 
 	@Override
 	public String buildPath(LiferayPortletURL liferayPortletURL) {
-		String portletId = liferayPortletURL.getPortletId();
+		String portletInstanceKey = liferayPortletURL.getPortletInstanceKey();
 
-		String prefix = portletId;
+		String prefix = portletInstanceKey;
 
-		int pos = portletId.indexOf(PortletConstants.WAR_SEPARATOR);
+		int pos = portletInstanceKey.indexOf(PortletConstants.WAR_SEPARATOR);
 
 		if (pos != -1) {
-			prefix = portletId.substring(0, pos);
+			prefix = portletInstanceKey.substring(0, pos);
 		}
 
 		String appUrl = GetterUtil.getString(

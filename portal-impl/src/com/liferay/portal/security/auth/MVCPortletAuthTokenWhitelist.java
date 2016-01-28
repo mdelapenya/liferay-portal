@@ -135,7 +135,7 @@ public class MVCPortletAuthTokenWhitelist extends BaseAuthTokenWhitelist {
 			liferayPortletURL);
 
 		return _containsAll(
-			liferayPortletURL.getPortletId(), _portletCSRFWhitelist,
+			liferayPortletURL.getPortletInstanceKey(), _portletCSRFWhitelist,
 			mvcActionCommandNames);
 	}
 
@@ -143,7 +143,7 @@ public class MVCPortletAuthTokenWhitelist extends BaseAuthTokenWhitelist {
 	public boolean isPortletURLPortletInvocationWhitelisted(
 		LiferayPortletURL liferayPortletURL) {
 
-		String portletId = liferayPortletURL.getPortletId();
+		String portletId = liferayPortletURL.getPortletInstanceKey();
 
 		String lifecycle = liferayPortletURL.getLifecycle();
 

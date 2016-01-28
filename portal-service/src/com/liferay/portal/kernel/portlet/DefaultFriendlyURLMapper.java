@@ -274,7 +274,8 @@ public class DefaultFriendlyURLMapper extends BaseFriendlyURLMapper {
 		// Populate virtual parameters for instanceable portlets
 
 		if (isPortletInstanceable()) {
-			String portletInstanceKey = liferayPortletURL.getPortletId();
+			String portletInstanceKey =
+				liferayPortletURL.getPortletInstanceKey();
 
 			routeParameters.put("p_p_id", portletInstanceKey);
 
