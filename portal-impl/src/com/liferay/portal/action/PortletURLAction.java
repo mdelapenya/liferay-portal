@@ -128,7 +128,7 @@ public class PortletURLAction extends Action {
 			portletURL.setParameter(ActionRequest.ACTION_NAME, name);
 		}
 
-		portletURL.setPortletId(portletId);
+		portletURL.setPortletInstanceKey(portletId);
 
 		if (portletConfiguration) {
 			String portletResource = ParamUtil.getString(

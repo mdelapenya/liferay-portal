@@ -59,7 +59,8 @@ public class PortletURLUtil {
 		LiferayPortletURL newLiferayPortletURL =
 			liferayPortletResponse.createLiferayPortletURL(lifecycle);
 
-		newLiferayPortletURL.setPortletId(liferayPortletURL.getPortletId());
+		newLiferayPortletURL.setPortletInstanceKey(
+			liferayPortletURL.getPortletInstanceKey());
 
 		WindowState windowState = liferayPortletURL.getWindowState();
 
