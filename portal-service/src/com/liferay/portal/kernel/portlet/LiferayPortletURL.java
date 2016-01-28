@@ -69,9 +69,17 @@ public interface LiferayPortletURL
 	/**
 	 * Returns the ID of this URL's target portlet.
 	 *
+	 * @deprecated As of 7.0.0, replaced by {@link #getPortletInstanceKey()}
+	 *
 	 * @return the ID of this URL's target portlet
 	 */
+	@Deprecated
 	public String getPortletId();
+
+	/**
+	 * Returns the key of this URL's target portlet instance.
+	 */
+	public String getPortletInstanceKey();
 
 	public Set<String> getRemovedParameterNames();
 
@@ -294,8 +302,17 @@ public interface LiferayPortletURL
 
 	/**
 	 * Sets the ID of the target portlet.
+	 *
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 * 				#setPortletInstanceKey(String)}
 	 */
-	public void setPortletId(String portletId);
+	@Deprecated
+	public void setPortletId(String portletInstanceKey);
+
+	/**
+	 * Sets the key of this URL's target portlet instance.
+	 */
+	public void setPortletInstanceKey(String portletInstanceKey);
 
 	public void setRefererGroupId(long refererGroupId);
 
