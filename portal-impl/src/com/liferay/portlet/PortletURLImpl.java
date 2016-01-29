@@ -90,38 +90,38 @@ public class PortletURLImpl
 	implements LiferayPortletURL, PortletURL, ResourceURL, Serializable {
 
 	public PortletURLImpl(
-		HttpServletRequest request, String portletId, Layout layout,
+		HttpServletRequest request, String portletInstanceKey, Layout layout,
 		String lifecycle) {
 
-		this(request, portletId, null, layout.getPlid(), lifecycle);
+		this(request, portletInstanceKey, null, layout.getPlid(), lifecycle);
 
 		_layout = layout;
 	}
 
 	public PortletURLImpl(
-		HttpServletRequest request, String portletId, long plid,
+		HttpServletRequest request, String portletInstanceKey, long plid,
 		String lifecycle) {
 
-		this(request, portletId, null, plid, lifecycle);
+		this(request, portletInstanceKey, null, plid, lifecycle);
 	}
 
 	public PortletURLImpl(
-		PortletRequest portletRequest, String portletId, Layout layout,
+		PortletRequest portletRequest, String portletInstanceKey, Layout layout,
 		String lifecycle) {
 
 		this(
-			PortalUtil.getHttpServletRequest(portletRequest), portletId,
+			PortalUtil.getHttpServletRequest(portletRequest), portletInstanceKey,
 			portletRequest, layout.getPlid(), lifecycle);
 
 		_layout = layout;
 	}
 
 	public PortletURLImpl(
-		PortletRequest portletRequest, String portletId, long plid,
+		PortletRequest portletRequest, String portletInstanceKey, long plid,
 		String lifecycle) {
 
 		this(
-			PortalUtil.getHttpServletRequest(portletRequest), portletId,
+			PortalUtil.getHttpServletRequest(portletRequest), portletInstanceKey,
 			portletRequest, plid, lifecycle);
 	}
 
@@ -174,7 +174,7 @@ public class PortletURLImpl
 
 	public String getNamespace() {
 		if (_namespace == null) {
-			_namespace = PortalUtil.getPortletNamespace(_portletId);
+			_namespace = PortalUtil.getPortletNamespace(_portletInstanceKey);
 		}
 
 		return _namespace;
@@ -211,7 +211,7 @@ public class PortletURLImpl
 		if (_portlet == null) {
 			try {
 				_portlet = PortletLocalServiceUtil.getPortletById(
-					PortalUtil.getCompanyId(_request), _portletId);
+					PortalUtil.getCompanyId(_request), _portletInstanceKey);
 			}
 			catch (SystemException se) {
 				_log.error(se.getMessage());
@@ -247,9 +247,18 @@ public class PortletURLImpl
 		return portletFriendlyURLPath;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #getPortletInstanceKey()}
+	 */
 	@Override
+	@Deprecated
 	public String getPortletId() {
-		return _portletId;
+		return _portletInstanceKey;
+	}
+
+	@Override
+	public String getPortletInstanceKey() {
+		return _portletInstanceKey;
 	}
 
 	@Override
@@ -278,7 +287,7 @@ public class PortletURLImpl
 
 		_reservedParameters = new LinkedHashMap<>();
 
-		_reservedParameters.put("p_p_id", _portletId);
+		_reservedParameters.put("p_p_id", _portletInstanceKey);
 
 		if (_lifecycle.equals(PortletRequest.ACTION_PHASE)) {
 			_reservedParameters.put("p_p_lifecycle", "1");
@@ -606,9 +615,19 @@ public class PortletURLImpl
 		clearCache();
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 * 				#setPortletInstanceKey(String)}
+	 */
+	@Deprecated
 	@Override
-	public void setPortletId(String portletId) {
-		_portletId = portletId;
+	public void setPortletId(String portletInstanceKey) {
+		setPortletInstanceKey(portletInstanceKey);
+	}
+
+	@Override
+	public void setPortletInstanceKey(String portletInstanceKey) {
+		_portletInstanceKey = portletInstanceKey;
 
 		clearCache();
 	}
@@ -736,11 +755,11 @@ public class PortletURLImpl
 	}
 
 	protected PortletURLImpl(
-		HttpServletRequest request, String portletId,
+		HttpServletRequest request, String portletInstanceKey,
 		PortletRequest portletRequest, long plid, String lifecycle) {
 
 		_request = request;
-		_portletId = portletId;
+		_portletInstanceKey = portletInstanceKey;
 		_portletRequest = portletRequest;
 		_plid = plid;
 		_lifecycle = lifecycle;
@@ -1078,7 +1097,7 @@ public class PortletURLImpl
 				}
 
 				sb.append("#p_");
-				sb.append(HttpUtil.encodeURL(_portletId));
+				sb.append(HttpUtil.encodeURL(_portletInstanceKey));
 			}
 		}
 
@@ -1182,7 +1201,7 @@ public class PortletURLImpl
 				sb.append("wsrp-fragmentID");
 				sb.append(StringPool.EQUAL);
 				sb.append("#p_");
-				sb.append(HttpUtil.encodeURL(_portletId));
+				sb.append(HttpUtil.encodeURL(_portletInstanceKey));
 				sb.append(StringPool.AMPERSAND);
 			}
 		}
@@ -1379,7 +1398,7 @@ public class PortletURLImpl
 	private Map<String, String[]> _params;
 	private long _plid;
 	private Portlet _portlet;
-	private String _portletId;
+	private String _portletInstanceKey;
 	private String _portletModeString;
 	private final PortletRequest _portletRequest;
 	private long _refererGroupId;

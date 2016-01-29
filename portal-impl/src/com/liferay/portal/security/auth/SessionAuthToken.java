@@ -81,10 +81,10 @@ public class SessionAuthToken implements AuthToken {
 
 		long companyId = PortalUtil.getCompanyId(request);
 
-		String portletId = liferayPortletURL.getPortletId();
+		String portletInstanceKey = liferayPortletURL.getPortletInstanceKey();
 
 		Portlet portlet = PortletLocalServiceUtil.getPortletById(
-			companyId, portletId);
+			companyId, portletInstanceKey);
 
 		if (portlet == null) {
 			return;
@@ -108,7 +108,7 @@ public class SessionAuthToken implements AuthToken {
 			LayoutTypePortlet layoutTypePortlet =
 				(LayoutTypePortlet)layout.getLayoutType();
 
-			if (layoutTypePortlet.hasPortletId(portletId)) {
+			if (layoutTypePortlet.hasPortletId(portletInstanceKey)) {
 				return;
 			}
 		}
@@ -119,7 +119,7 @@ public class SessionAuthToken implements AuthToken {
 		}
 
 		liferayPortletURL.setParameter(
-			"p_p_auth", getToken(request, plid, portletId));
+			"p_p_auth", getToken(request, plid, portletInstanceKey));
 	}
 
 	/**
@@ -153,10 +153,10 @@ public class SessionAuthToken implements AuthToken {
 		}
 
 		if (origin.equals(SecurityPortletContainerWrapper.class.getName())) {
-			String ppid = ParamUtil.getString(request, "p_p_id");
+			String portletInstanceKey = ParamUtil.getString(request, "p_p_id");
 
 			Portlet portlet = PortletLocalServiceUtil.getPortletById(
-				companyId, ppid);
+				companyId, portletInstanceKey);
 
 			if (AuthTokenWhitelistUtil.isPortletCSRFWhitelisted(
 					request, portlet)) {

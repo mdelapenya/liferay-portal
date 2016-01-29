@@ -36,14 +36,14 @@ public class WAIFriendlyURLMapper implements FriendlyURLMapper {
 
 	@Override
 	public String buildPath(LiferayPortletURL liferayPortletURL) {
-		String portletId = liferayPortletURL.getPortletId();
+		String portletInstanceKey = liferayPortletURL.getPortletInstanceKey();
 
-		String prefix = portletId;
+		String prefix = portletInstanceKey;
 
-		int pos = portletId.indexOf(PortletConstants.WAR_SEPARATOR);
+		int pos = portletInstanceKey.indexOf(PortletConstants.WAR_SEPARATOR);
 
 		if (pos != -1) {
-			prefix = portletId.substring(0, pos);
+			prefix = portletInstanceKey.substring(0, pos);
 		}
 
 		String appUrl = GetterUtil.getString(
@@ -60,9 +60,18 @@ public class WAIFriendlyURLMapper implements FriendlyURLMapper {
 		return _MAPPING;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0
+	 */
+	@Deprecated
 	@Override
 	public String getPortletId() {
-		return _portletId;
+		return getPortletName();
+	}
+
+	@Override
+	public String getPortletName() {
+		return _portletName;
 	}
 
 	@Override
@@ -95,9 +104,10 @@ public class WAIFriendlyURLMapper implements FriendlyURLMapper {
 
 		String prefix = friendlyURLPath.substring(x + _MAPPING.length() + 1, y);
 
-		String portletId = prefix + PortletConstants.WAR_SEPARATOR + prefix;
+		String portletInstanceKey =
+			prefix + PortletConstants.WAR_SEPARATOR + prefix;
 
-		parameterMap.put("p_p_id", new String[] {portletId});
+		parameterMap.put("p_p_id", new String[] {portletInstanceKey});
 		parameterMap.put("p_p_lifecycle", new String[] {"0"});
 
 		if (hasBinaryExtension(friendlyURLPath)) {
@@ -113,7 +123,7 @@ public class WAIFriendlyURLMapper implements FriendlyURLMapper {
 		parameterMap.put(
 			"p_p_mode", new String[] {PortletMode.VIEW.toString()});
 
-		String namespace = PortalUtil.getPortletNamespace(portletId);
+		String namespace = PortalUtil.getPortletNamespace(portletInstanceKey);
 
 		String path = friendlyURLPath.substring(y);
 
@@ -124,13 +134,22 @@ public class WAIFriendlyURLMapper implements FriendlyURLMapper {
 	public void setMapping(String mapping) {
 	}
 
+	/**
+	 * @deprecated As of 7.0.0
+	 */
+	@Deprecated
 	@Override
 	public void setPortletId(String portletId) {
-		_portletId = portletId;
+		setPortletName(portletId);
 	}
 
 	@Override
 	public void setPortletInstanceable(boolean portletInstanceable) {
+	}
+
+	@Override
+	public void setPortletName(String portletName) {
+		_portletName = portletName;
 	}
 
 	@Override
@@ -161,6 +180,6 @@ public class WAIFriendlyURLMapper implements FriendlyURLMapper {
 
 	private static final String _MAPPING = "waiapp";
 
-	private String _portletId;
+	private String _portletName;
 
 }
