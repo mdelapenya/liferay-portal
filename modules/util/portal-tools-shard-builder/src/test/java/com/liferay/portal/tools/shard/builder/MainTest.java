@@ -16,8 +16,16 @@ package com.liferay.portal.tools.shard.builder;
 
 import com.beust.jcommander.ParameterException;
 
+import com.liferay.portal.tools.shard.builder.internal.util.PropsReader;
+
 import java.io.File;
 
+import java.net.URL;
+
+import java.util.Properties;
+
+import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -26,6 +34,72 @@ import org.junit.rules.TemporaryFolder;
  * @author Manuel de la Peña
  */
 public class MainTest {
+
+	@Test
+	public void testMainOnDB2() throws Exception {
+		URL url = getClass().getResource("/db2.properties");
+
+		Properties properties = PropsReader.read(url.getFile());
+
+		String schemaName = properties.getProperty("dataSource.user");
+
+		_testMain(url, schemaName);
+	}
+
+	@Test
+	public void testMainOnMSSQLServer() throws Exception {
+		URL url = getClass().getResource("/mssql-server.properties");
+
+		Properties properties = PropsReader.read(url.getFile());
+
+		String schemaName = properties.getProperty("dataSource.databaseName");
+
+		_testMain(url, schemaName);
+	}
+
+	@Test
+	public void testMainOnMySQL() throws Exception {
+		URL url = getClass().getResource("/mysql.properties");
+
+		Properties properties = PropsReader.read(url.getFile());
+
+		String schemaName = properties.getProperty("dataSource.databaseName");
+
+		_testMain(url, schemaName);
+	}
+
+	@Test
+	public void testMainOnOracle() throws Exception {
+		URL url = getClass().getResource("/oracle.properties");
+
+		Properties properties = PropsReader.read(url.getFile());
+
+		String schemaName = properties.getProperty("dataSource.user");
+
+		_testMain(url, schemaName);
+	}
+
+	@Test
+	public void testMainOnPostgreSQL() throws Exception {
+		URL url = getClass().getResource("/postgresql.properties");
+
+		Properties properties = PropsReader.read(url.getFile());
+
+		String schemaName = properties.getProperty("dataSource.databaseName");
+
+		_testMain(url, schemaName);
+	}
+
+	@Test
+	public void testMainOnSybase() throws Exception {
+		URL url = getClass().getResource("/sybase.properties");
+
+		Properties properties = PropsReader.read(url.getFile());
+
+		String schemaName = properties.getProperty("dataSource.databaseName");
+
+		_testMain(url, schemaName);
+	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testValidateEmptyArguments() throws Exception {
@@ -103,6 +177,23 @@ public class MainTest {
 
 	@Rule
 	public TemporaryFolder temporaryFolder = new TemporaryFolder();
+
+	private void _testMain(URL propertiesUrl, String schema) throws Exception {
+		Assume.assumeNotNull(propertiesUrl);
+
+		File outputFolder = temporaryFolder.getRoot();
+
+		String[] args = new String[] {
+			"-P", propertiesUrl.getFile(), "-S", schema, "-C", _COMPANY_ID,
+			"-O", outputFolder.getAbsolutePath()
+		};
+
+		Main.main(args);
+
+		String[] outputFiles = outputFolder.list();
+
+		Assert.assertTrue(outputFiles.length > 0);
+	}
 
 	private static final String _COMPANY_ID = "20156";
 
