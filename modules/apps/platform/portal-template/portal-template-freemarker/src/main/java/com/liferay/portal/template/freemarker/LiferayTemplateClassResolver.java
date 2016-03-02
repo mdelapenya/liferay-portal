@@ -79,7 +79,7 @@ public class LiferayTemplateClassResolver implements TemplateClassResolver {
 			_freemarkerEngineConfiguration.restrictedClasses());
 
 		for (String restrictedClassName : restrictedClassNames) {
-			if (_matchesClassName(restrictedClassName, className)) {
+			if (_match(restrictedClassName, className)) {
 				throw new TemplateException(
 					"Instantiating " + className + " is not allowed in the " +
 						"template for security reasons",
@@ -93,7 +93,7 @@ public class LiferayTemplateClassResolver implements TemplateClassResolver {
 			_freemarkerEngineConfiguration.allowedClasses());
 
 		for (String allowedClassName : allowedClasseNames) {
-			if (_matchesClassName(allowedClassName, className)) {
+			if (_match(allowedClassName, className)) {
 				allowed = true;
 
 				break;
@@ -149,6 +149,32 @@ public class LiferayTemplateClassResolver implements TemplateClassResolver {
 		_classResolverBundleTracker.close();
 	}
 
+	private boolean _match(String className, String matchedClassName) {
+		if (className.equals(StringPool.STAR)) {
+			return true;
+		}
+		else if (className.endsWith(StringPool.STAR)) {
+			className = className.substring(0, className.length() - 1);
+
+			if (matchedClassName.startsWith(className)) {
+				return true;
+			}
+		}
+		else if (className.equals(matchedClassName)) {
+			return true;
+		}
+		else {
+			String classNamePackage = matchedClassName.substring(
+				0, matchedClassName.lastIndexOf("."));
+
+			if (classNamePackage.equals(className)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		LiferayTemplateClassResolver.class);
 
@@ -164,11 +190,11 @@ public class LiferayTemplateClassResolver implements TemplateClassResolver {
 		public ClassLoader addingBundle(
 			Bundle bundle, BundleEvent bundleEvent) {
 
-			Set<ClassLoader> allowedClassLoaders = _findAllowedClassLoaders(
+			Set<ClassLoader> classLoaders = _findClassLoaders(
 				_freemarkerEngineConfiguration.allowedClasses(),
 				bundle.getBundleContext());
 
-			_whiteListedClassloaders.addAll(allowedClassLoaders);
+			_whiteListedClassloaders.addAll(classLoaders);
 
 			BundleWiring bundleWiring = bundle.adapt(BundleWiring.class);
 
@@ -189,8 +215,8 @@ public class LiferayTemplateClassResolver implements TemplateClassResolver {
 			}
 		}
 
-		private Set<ClassLoader> _findAllowedClassLoaders(
-			String allowedClass, BundleContext bundleContext) {
+		private Set<ClassLoader> _findClassLoaders(
+			String clazz, BundleContext bundleContext) {
 
 			Bundle bundle = bundleContext.getBundle();
 
@@ -198,24 +224,25 @@ public class LiferayTemplateClassResolver implements TemplateClassResolver {
 
 			Set<ClassLoader> classLoaders = new HashSet<>();
 
-			List<BundleCapability> capabilities = bundleWiring.getCapabilities(
-				BundleRevision.PACKAGE_NAMESPACE);
+			List<BundleCapability> bundleCapabilities =
+				bundleWiring.getCapabilities(BundleRevision.PACKAGE_NAMESPACE);
 
-			for (BundleCapability capability : capabilities) {
-				Map<String, Object> attributes = capability.getAttributes();
+			for (BundleCapability bundleCapability : bundleCapabilities) {
+				Map<String, Object> attributes =
+					bundleCapability.getAttributes();
 
 				String exportPackage = (String)attributes.get(
 					BundleRevision.PACKAGE_NAMESPACE);
 
-				if (allowedClass.equals(StringPool.STAR)) {
+				if (clazz.equals(StringPool.STAR)) {
 					continue;
 				}
-				else if (allowedClass.endsWith(StringPool.STAR)) {
-					allowedClass = allowedClass.substring(
-						0, allowedClass.length() - 1);
+				else if (clazz.endsWith(StringPool.STAR)) {
+					clazz = clazz.substring(0, clazz.length() - 1);
 
-					if (exportPackage.startsWith(allowedClass)) {
-						BundleRevision provider = capability.getRevision();
+					if (exportPackage.startsWith(clazz)) {
+						BundleRevision provider =
+							bundleCapability.getRevision();
 
 						Bundle providerBundle = provider.getBundle();
 
@@ -225,10 +252,11 @@ public class LiferayTemplateClassResolver implements TemplateClassResolver {
 						classLoaders.add(providerBundleWiring.getClassLoader());
 					}
 				}
-				else if (allowedClass.equals(exportPackage)) {
-					BundleRevision revision = capability.getRevision();
+				else if (clazz.equals(exportPackage)) {
+					BundleRevision bundleRevision =
+						bundleCapability.getRevision();
 
-					Bundle revisionBundle = revision.getBundle();
+					Bundle revisionBundle = bundleRevision.getBundle();
 
 					BundleWiring providerBundleWiring = revisionBundle.adapt(
 						BundleWiring.class);
@@ -236,13 +264,14 @@ public class LiferayTemplateClassResolver implements TemplateClassResolver {
 					classLoaders.add(providerBundleWiring.getClassLoader());
 				}
 				else {
-					String allowedClassPackage = allowedClass.substring(
-						0, allowedClass.lastIndexOf("."));
+					String allowedClassPackage = clazz.substring(
+						0, clazz.lastIndexOf("."));
 
 					if (allowedClassPackage.equals(exportPackage)) {
-						BundleRevision revision = capability.getRevision();
+						BundleRevision bundleRevision =
+							bundleCapability.getRevision();
 
-						Bundle revisionBundle = revision.getBundle();
+						Bundle revisionBundle = bundleRevision.getBundle();
 
 						BundleWiring providerBundleWiring =
 							revisionBundle.adapt(BundleWiring.class);
@@ -253,13 +282,13 @@ public class LiferayTemplateClassResolver implements TemplateClassResolver {
 			}
 
 			if (classLoaders.isEmpty() && _log.isWarnEnabled()) {
-				_log.warn("No bundle exports " + allowedClass);
+				_log.warn("No bundle exports " + clazz);
 			}
 
 			return classLoaders;
 		}
 
-		private Set<ClassLoader> _findAllowedClassLoaders(
+		private Set<ClassLoader> _findClassLoaders(
 			String[] allowedClasses, BundleContext bundleContext) {
 
 			if (allowedClasses == null) {
@@ -270,38 +299,10 @@ public class LiferayTemplateClassResolver implements TemplateClassResolver {
 
 			for (String allowedClass : allowedClasses) {
 				classLoaders.addAll(
-					_findAllowedClassLoaders(allowedClass, bundleContext));
+					_findClassLoaders(allowedClass, bundleContext));
 			}
 
 			return classLoaders;
-		}
-
-		private boolean _matchesClassName(
-			String className, String matchedClassName) {
-
-			if (className.equals(StringPool.STAR)) {
-				return true;
-			}
-			else if (className.endsWith(StringPool.STAR)) {
-				className = className.substring(0, className.length() - 1);
-
-				if (matchedClassName.startsWith(className)) {
-					return true;
-				}
-			}
-			else if (className.equals(matchedClassName)) {
-				return true;
-			}
-			else {
-				String classNamePackage = matchedClassName.substring(
-					0, matchedClassName.lastIndexOf("."));
-
-				if (classNamePackage.equals(className)) {
-					return true;
-				}
-			}
-
-			return false;
 		}
 
 	}
