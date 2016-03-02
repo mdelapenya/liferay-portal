@@ -149,128 +149,13 @@ public class LiferayTemplateClassResolver implements TemplateClassResolver {
 		_classResolverBundleTracker.close();
 	}
 
-	private Set<ClassLoader> _findAllowedClassLoaders(
-		String allowedClass, BundleContext bundleContext) {
-
-		Bundle bundle = bundleContext.getBundle();
-
-		BundleWiring bundleWiring = bundle.adapt(BundleWiring.class);
-
-		Set<ClassLoader> classLoaders = new HashSet<>();
-
-		List<BundleCapability> capabilities = bundleWiring.getCapabilities(
-			BundleRevision.PACKAGE_NAMESPACE);
-
-		for (BundleCapability capability : capabilities) {
-			Map<String, Object> attributes = capability.getAttributes();
-
-			String exportPackage = (String)attributes.get(
-				BundleRevision.PACKAGE_NAMESPACE);
-
-			if (allowedClass.equals(StringPool.STAR)) {
-				continue;
-			}
-			else if (allowedClass.endsWith(StringPool.STAR)) {
-				allowedClass = allowedClass.substring(
-					0, allowedClass.length() - 1);
-
-				if (exportPackage.startsWith(allowedClass)) {
-					BundleRevision provider = capability.getRevision();
-
-					Bundle providerBundle = provider.getBundle();
-
-					BundleWiring providerBundleWiring =
-						providerBundle.adapt(BundleWiring.class);
-
-					classLoaders.add(providerBundleWiring.getClassLoader());
-				}
-			}
-			else if (allowedClass.equals(exportPackage)) {
-				BundleRevision revision = capability.getRevision();
-
-				Bundle revisionBundle = revision.getBundle();
-
-				BundleWiring providerBundleWiring = revisionBundle.adapt(
-					BundleWiring.class);
-
-				classLoaders.add(providerBundleWiring.getClassLoader());
-			}
-			else {
-				String allowedClassPackage = allowedClass.substring(
-					0, allowedClass.lastIndexOf("."));
-
-				if (allowedClassPackage.equals(exportPackage)) {
-					BundleRevision revision = capability.getRevision();
-
-					Bundle revisionBundle = revision.getBundle();
-
-					BundleWiring providerBundleWiring = revisionBundle.adapt(
-						BundleWiring.class);
-
-					classLoaders.add(providerBundleWiring.getClassLoader());
-				}
-			}
-		}
-
-		if (classLoaders.isEmpty() && _log.isWarnEnabled()) {
-			_log.warn("No bundle exports " + allowedClass);
-		}
-
-		return classLoaders;
-	}
-
-	private Set<ClassLoader> _findAllowedClassLoaders(
-		String[] allowedClasses, BundleContext bundleContext) {
-
-		if (allowedClasses == null) {
-			allowedClasses = new String[] {};
-		}
-
-		Set<ClassLoader> classLoaders = new HashSet<>();
-
-		for (String allowedClass : allowedClasses) {
-			classLoaders.addAll(
-				_findAllowedClassLoaders(allowedClass, bundleContext));
-		}
-
-		return classLoaders;
-	}
-
-	private boolean _matchesClassName(
-		String className, String matchedClassName) {
-
-		if (className.equals(StringPool.STAR)) {
-			return true;
-		}
-		else if (className.endsWith(StringPool.STAR)) {
-			className = className.substring(0, className.length() - 1);
-
-			if (matchedClassName.startsWith(className)) {
-				return true;
-			}
-		}
-		else if (className.equals(matchedClassName)) {
-			return true;
-		}
-		else {
-			String classNamePackage = matchedClassName.substring(
-				0, matchedClassName.lastIndexOf("."));
-
-			if (classNamePackage.equals(className)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	private static final Log _log = LogFactoryUtil.getLog(
 		LiferayTemplateClassResolver.class);
 
 	private BundleTracker<ClassLoader> _classResolverBundleTracker;
 	private volatile FreeMarkerEngineConfiguration
 		_freemarkerEngineConfiguration;
-	private Set<ClassLoader> _whiteListedClassloaders = new HashSet<>();
+	private final Set<ClassLoader> _whiteListedClassloaders = new HashSet<>();
 
 	private class ClassResolverBundleTrackerCustomizer
 		implements BundleTrackerCustomizer<ClassLoader> {
@@ -302,6 +187,121 @@ public class LiferayTemplateClassResolver implements TemplateClassResolver {
 			if (_whiteListedClassloaders.contains(classLoader)) {
 				_whiteListedClassloaders.remove(classLoader);
 			}
+		}
+
+		private Set<ClassLoader> _findAllowedClassLoaders(
+			String allowedClass, BundleContext bundleContext) {
+
+			Bundle bundle = bundleContext.getBundle();
+
+			BundleWiring bundleWiring = bundle.adapt(BundleWiring.class);
+
+			Set<ClassLoader> classLoaders = new HashSet<>();
+
+			List<BundleCapability> capabilities = bundleWiring.getCapabilities(
+				BundleRevision.PACKAGE_NAMESPACE);
+
+			for (BundleCapability capability : capabilities) {
+				Map<String, Object> attributes = capability.getAttributes();
+
+				String exportPackage = (String)attributes.get(
+					BundleRevision.PACKAGE_NAMESPACE);
+
+				if (allowedClass.equals(StringPool.STAR)) {
+					continue;
+				}
+				else if (allowedClass.endsWith(StringPool.STAR)) {
+					allowedClass = allowedClass.substring(
+						0, allowedClass.length() - 1);
+
+					if (exportPackage.startsWith(allowedClass)) {
+						BundleRevision provider = capability.getRevision();
+
+						Bundle providerBundle = provider.getBundle();
+
+						BundleWiring providerBundleWiring =
+							providerBundle.adapt(BundleWiring.class);
+
+						classLoaders.add(providerBundleWiring.getClassLoader());
+					}
+				}
+				else if (allowedClass.equals(exportPackage)) {
+					BundleRevision revision = capability.getRevision();
+
+					Bundle revisionBundle = revision.getBundle();
+
+					BundleWiring providerBundleWiring = revisionBundle.adapt(
+						BundleWiring.class);
+
+					classLoaders.add(providerBundleWiring.getClassLoader());
+				}
+				else {
+					String allowedClassPackage = allowedClass.substring(
+						0, allowedClass.lastIndexOf("."));
+
+					if (allowedClassPackage.equals(exportPackage)) {
+						BundleRevision revision = capability.getRevision();
+
+						Bundle revisionBundle = revision.getBundle();
+
+						BundleWiring providerBundleWiring =
+							revisionBundle.adapt(BundleWiring.class);
+
+						classLoaders.add(providerBundleWiring.getClassLoader());
+					}
+				}
+			}
+
+			if (classLoaders.isEmpty() && _log.isWarnEnabled()) {
+				_log.warn("No bundle exports " + allowedClass);
+			}
+
+			return classLoaders;
+		}
+
+		private Set<ClassLoader> _findAllowedClassLoaders(
+			String[] allowedClasses, BundleContext bundleContext) {
+
+			if (allowedClasses == null) {
+				allowedClasses = new String[0];
+			}
+
+			Set<ClassLoader> classLoaders = new HashSet<>();
+
+			for (String allowedClass : allowedClasses) {
+				classLoaders.addAll(
+					_findAllowedClassLoaders(allowedClass, bundleContext));
+			}
+
+			return classLoaders;
+		}
+
+		private boolean _matchesClassName(
+			String className, String matchedClassName) {
+
+			if (className.equals(StringPool.STAR)) {
+				return true;
+			}
+			else if (className.endsWith(StringPool.STAR)) {
+				className = className.substring(0, className.length() - 1);
+
+				if (matchedClassName.startsWith(className)) {
+					return true;
+				}
+			}
+			else if (className.equals(matchedClassName)) {
+				return true;
+			}
+			else {
+				String classNamePackage = matchedClassName.substring(
+					0, matchedClassName.lastIndexOf("."));
+
+				if (classNamePackage.equals(className)) {
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 	}
