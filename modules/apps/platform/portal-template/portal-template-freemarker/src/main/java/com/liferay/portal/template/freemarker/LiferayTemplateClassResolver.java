@@ -16,6 +16,7 @@ package com.liferay.portal.template.freemarker;
 
 import aQute.bnd.annotation.metatype.Configurable;
 
+import com.liferay.portal.kernel.concurrent.ConcurrentHashSet;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.AggregateClassLoader;
@@ -181,7 +182,8 @@ public class LiferayTemplateClassResolver implements TemplateClassResolver {
 	private BundleTracker<Set<ClassLoader>> _classResolverBundleTracker;
 	private volatile FreeMarkerEngineConfiguration
 		_freemarkerEngineConfiguration;
-	private final Set<ClassLoader> _whiteListedClassloaders = new HashSet<>();
+	private final Set<ClassLoader> _whiteListedClassloaders =
+		new ConcurrentHashSet<>();
 
 	private class ClassResolverBundleTrackerCustomizer
 		implements BundleTrackerCustomizer<Set<ClassLoader>> {
