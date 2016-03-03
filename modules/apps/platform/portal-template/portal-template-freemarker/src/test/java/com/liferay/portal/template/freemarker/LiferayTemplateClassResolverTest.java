@@ -21,6 +21,8 @@ import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
 /**
  * @author Tomas Polesovsky
@@ -33,7 +35,8 @@ public class LiferayTemplateClassResolverTest {
 
 		Map<String, Object> properties = new HashMap<>();
 
-		_liferayTemplateClassResolver.activate(properties);
+		_liferayTemplateClassResolver.activate(
+			_bundle.getBundleContext(), properties);
 	}
 
 	@Test()
@@ -44,7 +47,8 @@ public class LiferayTemplateClassResolverTest {
 			"allowedClasses", "freemarker.template.utility.ClassUtil");
 		properties.put("restrictedClasses", "");
 
-		_liferayTemplateClassResolver.activate(properties);
+		_liferayTemplateClassResolver.activate(
+			_bundle.getBundleContext(), properties);
 
 		_liferayTemplateClassResolver.resolve(
 			"freemarker.template.utility.ClassUtil", null, null);
@@ -57,7 +61,8 @@ public class LiferayTemplateClassResolverTest {
 		properties.put("allowedClasses", "freemarker.template.utility.*");
 		properties.put("restrictedClasses", "");
 
-		_liferayTemplateClassResolver.activate(properties);
+		_liferayTemplateClassResolver.activate(
+			_bundle.getBundleContext(), properties);
 
 		_liferayTemplateClassResolver.resolve(
 			"freemarker.template.utility.ClassUtil", null, null);
@@ -82,7 +87,8 @@ public class LiferayTemplateClassResolverTest {
 		properties.put("allowedClasses", "freemarker.template.utility.*");
 		properties.put("restrictedClasses", "");
 
-		_liferayTemplateClassResolver.activate(properties);
+		_liferayTemplateClassResolver.activate(
+			_bundle.getBundleContext(), properties);
 
 		_liferayTemplateClassResolver.resolve(
 			"freemarker.template.utility.Execute", null, null);
@@ -97,11 +103,15 @@ public class LiferayTemplateClassResolverTest {
 		properties.put(
 			"restrictedClasses", "com.liferay.portal.kernel.model.*");
 
-		_liferayTemplateClassResolver.activate(properties);
+		_liferayTemplateClassResolver.activate(
+			_bundle.getBundleContext(), properties);
 
 		_liferayTemplateClassResolver.resolve(
 			"com.liferay.portal.kernel.model.User", null, null);
 	}
+
+	private final Bundle _bundle = FrameworkUtil.getBundle(
+		LiferayTemplateClassResolver.class);
 
 	private LiferayTemplateClassResolver _liferayTemplateClassResolver;
 
