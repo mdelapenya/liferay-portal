@@ -178,16 +178,16 @@ public class LiferayTemplateClassResolver implements TemplateClassResolver {
 	private static final Log _log = LogFactoryUtil.getLog(
 		LiferayTemplateClassResolver.class);
 
-	private BundleTracker<ClassLoader> _classResolverBundleTracker;
+	private BundleTracker<Set<ClassLoader>> _classResolverBundleTracker;
 	private volatile FreeMarkerEngineConfiguration
 		_freemarkerEngineConfiguration;
 	private final Set<ClassLoader> _whiteListedClassloaders = new HashSet<>();
 
 	private class ClassResolverBundleTrackerCustomizer
-		implements BundleTrackerCustomizer<ClassLoader> {
+		implements BundleTrackerCustomizer<Set<ClassLoader>> {
 
 		@Override
-		public ClassLoader addingBundle(
+		public Set<ClassLoader> addingBundle(
 			Bundle bundle, BundleEvent bundleEvent) {
 
 			Set<ClassLoader> classLoaders = _findClassLoaders(
@@ -196,23 +196,21 @@ public class LiferayTemplateClassResolver implements TemplateClassResolver {
 
 			_whiteListedClassloaders.addAll(classLoaders);
 
-			BundleWiring bundleWiring = bundle.adapt(BundleWiring.class);
-
-			return bundleWiring.getClassLoader();
+			return classLoaders;
 		}
 
 		@Override
 		public void modifiedBundle(
-			Bundle bundle, BundleEvent bundleEvent, ClassLoader classLoader) {
+			Bundle bundle, BundleEvent bundleEvent,
+			Set<ClassLoader> classLoaders) {
 		}
 
 		@Override
 		public void removedBundle(
-			Bundle bundle, BundleEvent bundleEvent, ClassLoader classLoader) {
+			Bundle bundle, BundleEvent bundleEvent,
+			Set<ClassLoader> classLoaders) {
 
-			if (_whiteListedClassloaders.contains(classLoader)) {
-				_whiteListedClassloaders.remove(classLoader);
-			}
+			_whiteListedClassloaders.removeAll(classLoaders);
 		}
 
 		private Set<ClassLoader> _findClassLoaders(
