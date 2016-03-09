@@ -49,9 +49,7 @@ patch {
 	fileNames "org/hibernate/hql/classic/QueryTranslatorImpl.java"
 	fileNames "org/hibernate/impl/AbstractSessionImpl.java"
 	fileNames "org/hibernate/impl/SessionFactoryImpl.java"
-	fileNames "org/hibernate/internal/util/collections/BoundedConcurrentHashMap.java"   
+	fileNames "org/hibernate/internal/util/collections/BoundedConcurrentHashMap.java"
 	fileNames "org/hibernate/internal/util/collections/ConcurrentReferenceHashMap.java"
-
-
 	originalLibModuleName = "hibernate-core"
 }

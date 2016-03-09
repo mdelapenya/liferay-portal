@@ -39,6 +39,5 @@ patch {
 	}
 
 	fileNames "org/hibernate/envers/tools/reflection/ReflectionTools.java"
-
 	originalLibModuleName = "hibernate-envers"
 }
