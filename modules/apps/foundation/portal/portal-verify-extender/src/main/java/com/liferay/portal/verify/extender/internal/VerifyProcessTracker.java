@@ -179,16 +179,22 @@ public class VerifyProcessTracker {
 		List<VerifyProcess> verifyProcesses = getVerifyProcesses(
 			verifyProcessName);
 
+		boolean indexReadOnly = IndexWriterHelperUtil.isIndexReadOnly();
+
 		IndexWriterHelperUtil.setIndexReadOnly(
 			_verifyProcessTrackerConfiguration.indexReadOnly());
 
-		for (VerifyProcess verifyProcess : verifyProcesses) {
-			try {
-				verifyProcess.verify();
+		try {
+			for (VerifyProcess verifyProcess : verifyProcesses) {
+				try {
+					verifyProcess.verify();
+				} catch (VerifyException ve) {
+					_log.error(ve, ve);
+				}
 			}
-			catch (VerifyException ve) {
-				_log.error(ve, ve);
-			}
+		}
+		finally {
+			IndexWriterHelperUtil.setIndexReadOnly(indexReadOnly);
 		}
 	}
 
