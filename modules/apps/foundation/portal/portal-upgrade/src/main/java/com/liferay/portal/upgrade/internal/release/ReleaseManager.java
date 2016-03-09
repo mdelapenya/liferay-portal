@@ -20,6 +20,7 @@ import com.liferay.osgi.service.tracker.collections.map.PropertyServiceReference
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapListener;
+import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBContext;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
@@ -325,6 +326,8 @@ public class ReleaseManager {
 
 		@Override
 		public void run() {
+			CacheRegistryUtil.setActive(false);
+
 			for (UpgradeInfo upgradeInfo : _upgradeInfos) {
 				UpgradeStep upgradeStep = upgradeInfo.getUpgradeStep();
 
