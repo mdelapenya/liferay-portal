@@ -195,7 +195,8 @@ public class VerifyProcessTracker {
 			for (VerifyProcess verifyProcess : verifyProcesses) {
 				try {
 					verifyProcess.verify();
-				} catch (VerifyException ve) {
+				}
+				catch (VerifyException ve) {
 					_log.error(ve, ve);
 				}
 			}
