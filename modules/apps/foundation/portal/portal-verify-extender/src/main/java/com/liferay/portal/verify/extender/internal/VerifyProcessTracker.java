@@ -28,7 +28,6 @@ import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
 import com.liferay.portal.kernel.search.IndexWriterHelperUtil;
 import com.liferay.portal.kernel.service.ReleaseLocalService;
 import com.liferay.portal.kernel.util.NotificationThreadLocal;
-import com.liferay.portal.kernel.workflow.WorkflowThreadLocal;
 import com.liferay.portal.output.stream.container.OutputStreamContainer;
 import com.liferay.portal.output.stream.container.OutputStreamContainerFactory;
 import com.liferay.portal.output.stream.container.OutputStreamContainerFactoryTracker;
@@ -189,7 +188,6 @@ public class VerifyProcessTracker {
 
 		NotificationThreadLocal.setEnabled(false);
 		StagingAdvicesThreadLocal.setEnabled(false);
-		WorkflowThreadLocal.setEnabled(false);
 
 		try {
 			for (VerifyProcess verifyProcess : verifyProcesses) {
@@ -206,7 +204,6 @@ public class VerifyProcessTracker {
 
 			NotificationThreadLocal.setEnabled(true);
 			StagingAdvicesThreadLocal.setEnabled(true);
-			WorkflowThreadLocal.setEnabled(true);
 		}
 	}
 
