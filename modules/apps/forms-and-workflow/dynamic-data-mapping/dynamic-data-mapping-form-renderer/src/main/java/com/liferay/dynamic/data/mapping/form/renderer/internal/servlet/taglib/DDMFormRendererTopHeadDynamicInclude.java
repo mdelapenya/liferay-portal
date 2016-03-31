@@ -17,7 +17,6 @@ package com.liferay.dynamic.data.mapping.form.renderer.internal.servlet.taglib;
 import com.liferay.portal.kernel.servlet.taglib.BaseDynamicInclude;
 import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.WebKeys;
 
@@ -52,7 +51,6 @@ public class DDMFormRendererTopHeadDynamicInclude extends BaseDynamicInclude {
 
 		sb.append("<link href=\"");
 		sb.append(themeDisplay.getPortalURL());
-		sb.append(PortalUtil.getPathContext());
 		sb.append(_servletContext.getContextPath());
 		sb.append("/css/main.css");
 		sb.append("\" rel=\"stylesheet\" type = \"text/css\" />");
