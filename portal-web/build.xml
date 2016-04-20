@@ -289,8 +289,6 @@ ${oversize.files.jsp}</fail>
 	</target>
 
 	<target name="deploy" depends="build-dtd">
-		<manifest-macro />
-
 		<antcall target="build-common-web.deploy" />
 
 		<if>
@@ -347,8 +345,6 @@ ${oversize.files.jsp}</fail>
 	</target>
 
 	<target name="war" depends="build-dtd">
-		<manifest-macro />
-
 		<war
 			destfile="${war.file}.war"
 			webxml="docroot/WEB-INF/web.xml"

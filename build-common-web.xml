@@ -3,17 +3,6 @@
 <project name="build-common-web" xmlns:antelope="antlib:ise.antelope.tasks" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
 	<import file="build-common.xml" />
 
-	<macrodef name="manifest-macro">
-		<sequential>
-			<mkdir dir="docroot/WEB-INF/classes/META-INF" />
-
-			<manifest file="docroot/WEB-INF/classes/META-INF/MANIFEST.MF" mode="update">
-				<attribute name="Extension-List" value="crypto" />
-				<attribute name="crypto-Extension-Name" value="javax.crypto" />
-			</manifest>
-		</sequential>
-	</macrodef>
-
 	<target name="clean">
 		<delete dir="docroot/WEB-INF/classes" />
 		<delete file="${war.file}.war" failonerror="false" />
@@ -26,8 +15,6 @@
 	</target>
 
 	<target name="deploy">
-		<manifest-macro />
-
 		<if>
 			<equals arg1="${war.file}" arg2="portal-web" />
 			<then>
@@ -163,8 +150,6 @@
 	</target>
 
 	<target name="war">
-		<manifest-macro />
-
 		<if>
 			<available file="docroot" />
 			<then>
