@@ -15,6 +15,7 @@
 package com.liferay.portal.osgi.web.portlet.container.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
+import com.liferay.portal.kernel.portlet.LiferayPortletURL;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.util.HashMapDictionary;
@@ -63,12 +64,46 @@ import org.junit.runner.RunWith;
  */
 @RunWith(Arquillian.class)
 public class RenderRequestPortletContainerTest
-	extends BasePortletContainerTestCase {
+	extends BasePortletContainerTestCase implements JSR286TestCase {
 
 	@ClassRule
 	@Rule
 	public static final AggregateTestRule aggregateTestRule =
 		new LiferayIntegrationTestRule();
+
+	@Test
+	public void testCopyCurrentRenderParameters() throws Exception {
+		setUpPortlet(
+			testPortlet, new HashMapDictionary<String, Object>(),
+			TEST_PORTLET_ID);
+
+		HttpServletRequest httpServletRequest =
+			PortletContainerTestUtil.getHttpServletRequest(group, layout);
+
+		PortletURL renderURL = new PortletURLImpl(
+			httpServletRequest, TEST_PORTLET_ID, layout.getPlid(),
+			PortletRequest.RENDER_PHASE);
+
+		renderURL.setParameter("testRenderParameter", "testRenderParameter");
+
+		PortletURL portletURL = new PortletURLImpl(
+			httpServletRequest, TEST_PORTLET_ID, layout.getPlid(),
+			PortletRequest.RENDER_PHASE);
+
+		((LiferayPortletURL)portletURL).setCopyCurrentRenderParameters(true);
+
+		Response response = PortletContainerTestUtil.request(
+			renderURL.toString());
+
+		Assert.assertEquals(200, response.getCode());
+		Assert.assertTrue(testPortlet.isCalledRender());
+
+		String url = portletURL.toString();
+
+		Assert.assertTrue(
+			url + " does not contain the parameter",
+			url.contains("testRenderParameter"));
+	}
 
 	@Test
 	public void testInvalidPortletId() throws Exception {
@@ -247,6 +282,81 @@ public class RenderRequestPortletContainerTest
 
 		Assert.assertEquals(200, response.getCode());
 		Assert.assertTrue(testRuntimePortlet.isCalledRender());
+	}
+
+	@Test
+	public void testRemoveCopiedCurrentRenderParameter() throws Exception {
+		setUpPortlet(
+			testPortlet, new HashMapDictionary<String, Object>(),
+			TEST_PORTLET_ID);
+
+		HttpServletRequest httpServletRequest =
+			PortletContainerTestUtil.getHttpServletRequest(group, layout);
+
+		PortletURL renderURL = new PortletURLImpl(
+			httpServletRequest, TEST_PORTLET_ID, layout.getPlid(),
+			PortletRequest.RENDER_PHASE);
+
+		renderURL.setParameter("testRenderParameter", "testRenderParameter");
+
+		PortletURL portletURL = new PortletURLImpl(
+			httpServletRequest, TEST_PORTLET_ID, layout.getPlid(),
+			PortletRequest.RENDER_PHASE);
+
+		((LiferayPortletURL)portletURL).setCopyCurrentRenderParameters(true);
+
+		portletURL.setParameter("testRenderParameter", "");
+
+		Response response = PortletContainerTestUtil.request(
+			renderURL.toString());
+
+		Assert.assertEquals(200, response.getCode());
+		Assert.assertTrue(testPortlet.isCalledRender());
+
+		String url = portletURL.toString();
+
+		Assert.assertFalse(
+			url + " contains the parameter", url.contains("testRenderParameter"));
+	}
+
+	@Test
+	public void testRemoveRegularParameter() throws Exception {
+		setUpPortlet(
+			testPortlet, new HashMapDictionary<String, Object>(),
+			TEST_PORTLET_ID);
+
+		HttpServletRequest httpServletRequest =
+			PortletContainerTestUtil.getHttpServletRequest(group, layout);
+
+		PortletURL renderURL = new PortletURLImpl(
+			httpServletRequest, TEST_PORTLET_ID, layout.getPlid(),
+			PortletRequest.RENDER_PHASE);
+
+		renderURL.setParameter("testRenderParameter", "testRenderParameter");
+
+		PortletURL portletURL = new PortletURLImpl(
+			httpServletRequest, TEST_PORTLET_ID, layout.getPlid(),
+			PortletRequest.RENDER_PHASE);
+
+		((LiferayPortletURL)portletURL).setCopyCurrentRenderParameters(true);
+
+		portletURL.setParameter("name1", "value1");
+		portletURL.setParameter("name2", "value2");
+		portletURL.setParameter("name1", "");
+
+		Response response = PortletContainerTestUtil.request(
+			renderURL.toString());
+
+		Assert.assertEquals(200, response.getCode());
+		Assert.assertTrue(testPortlet.isCalledRender());
+
+		String url = portletURL.toString();
+
+		String message = url + " does not contains the parameter";
+
+		Assert.assertTrue(message, url.contains("testRenderParameter"));
+		Assert.assertFalse(message, url.contains("name1"));
+		Assert.assertTrue(message, url.contains("name2"));
 	}
 
 }
