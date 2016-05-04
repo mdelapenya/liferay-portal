@@ -1,0 +1,43 @@
+import com.liferay.gradle.plugins.patcher.PatchTask
+
+apply plugin: "com.liferay.patcher"
+
+task deployJar(type: Copy)
+task patch(type: PatchTask)
+
+sourceCompatibility = "1.6"
+targetCompatibility = "1.6"
+
+dependencies {
+	compile group: "org.hibernate", name: "hibernate-envers", optional, version: "3.6.10.Final"
+}
+
+deploy {
+	finalizedBy deployJar
+}
+
+deployJar {
+	ext {
+		autoClean = false
+	}
+
+	from jar.outputs
+	into "../../../lib/portal"
+
+	rename {
+		"hibernate-envers.jar"
+	}
+}
+
+liferay {
+	deployDir = file("${liferayHome}/osgi/modules")
+}
+
+patch {
+	ext {
+		autoClean = false
+	}
+
+	fileNames "org/hibernate/envers/tools/reflection/ReflectionTools.java"
+	originalLibModuleName = "hibernate-envers"
+}
