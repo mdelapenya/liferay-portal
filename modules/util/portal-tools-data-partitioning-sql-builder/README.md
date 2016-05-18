@@ -18,7 +18,8 @@ tool:
     field. (Required)
 	
 * The output directory for the generated SQL files, representing the `INSERT`
-    statements to execute in the new database. (Required)
+    statements to execute in the new database, plus the `DELETE` statements
+    to remove that company data in the old database. (Required)
 	
 * Whether the export process generates one SQL file per table type (control or
     partitioned) for the whole database or one SQL file per table. If no
