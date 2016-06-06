@@ -1,6 +1,6 @@
 env:
-  - DB=mysql ANT_OPTS="-Xmx1024m -XX:MaxPermSize=512m"
-  - DB=postgres ANT_OPTS="-Xmx1024m -XX:MaxPermSize=512m"
+  - DB=mysql ANT_OPTS="-Xmx4096m -XX:MaxPermSize=1024m"
+  - DB=postgres ANT_OPTS="-Xmx4096m -XX:MaxPermSize=1024m"
 
 before_install:
   - sh -c "if [ '$DB' = 'postgres' ]; then psql -c 'DROP DATABASE IF EXISTS lportal;' -U postgres; fi"
