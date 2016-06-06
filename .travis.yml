@@ -12,6 +12,7 @@ before_install:
   - sh -c "if [ '$DB' = 'mysql' ]; then echo 'jdbc.default.driverClassName=com.mysql.jdbc.Driver' > ./portal-impl/test/portal-test-ext.properties; fi"
   - sh -c "if [ '$DB' = 'mysql' ]; then echo 'jdbc.default.url=jdbc:mysql://localhost/lportal?useUnicode=true&characterEncoding=UTF-8&useFastDateParsing=false' >> ./portal-impl/test/portal-test-ext.properties; fi"
   - sh -c "if [ '$DB' = 'mysql' ]; then echo 'jdbc.default.username=root' >> ./portal-impl/test/portal-test-ext.properties; fi"
+  - echo 'jpda.settings=' > ./build.$USER.properties
   - echo 'jdbc.default.password=' >> ./portal-impl/test/portal-test-ext.properties
   - cat ./portal-impl/test/portal-test-ext.properties
 
