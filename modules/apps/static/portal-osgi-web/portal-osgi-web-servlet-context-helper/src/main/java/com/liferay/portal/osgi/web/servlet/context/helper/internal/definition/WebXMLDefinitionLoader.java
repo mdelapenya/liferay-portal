@@ -28,6 +28,7 @@ import com.liferay.portal.osgi.web.servlet.context.helper.internal.order.OrderIm
 import com.liferay.portal.osgi.web.servlet.context.helper.internal.order.OrderUtil;
 import com.liferay.portal.osgi.web.servlet.context.helper.order.Order;
 import com.liferay.portal.osgi.web.servlet.context.helper.order.Order.Path;
+import com.liferay.portal.osgi.web.servlet.jsp.compiler.configuration.JspServletConfiguration;
 
 import java.io.InputStream;
 
@@ -68,10 +69,12 @@ import org.xml.sax.helpers.DefaultHandler;
 public class WebXMLDefinitionLoader extends DefaultHandler {
 
 	public WebXMLDefinitionLoader(
-		Bundle bundle, SAXParserFactory saxParserFactory, Logger logger) {
+		Bundle bundle, SAXParserFactory saxParserFactory,
+		JspServletConfiguration jspServletConfiguration, Logger logger) {
 
 		_bundle = bundle;
 		_saxParserFactory = saxParserFactory;
+		_jspServletConfiguration = jspServletConfiguration;
 		_logger = logger;
 
 		_webXMLDefinition = new WebXMLDefinition();
@@ -229,7 +232,8 @@ public class WebXMLDefinitionLoader extends DefaultHandler {
 
 			_servletDefinition.setJSPFile(jspFile);
 
-			_servletDefinition.setServlet(new JspServletWrapper(jspFile));
+			_servletDefinition.setServlet(
+				new JspServletWrapper(jspFile, _jspServletConfiguration));
 		}
 		else if (qName.equals("listener")) {
 			if (_listenerDefinition.getEventListener() != null) {
@@ -464,7 +468,8 @@ public class WebXMLDefinitionLoader extends DefaultHandler {
 
 				WebXMLDefinitionLoader webXMLDefinitionLoader =
 					new WebXMLDefinitionLoader(
-						_bundle, _saxParserFactory, _logger);
+						_bundle, _saxParserFactory, _jspServletConfiguration,
+						_logger);
 
 				webXMLDefinitions.add(
 					webXMLDefinitionLoader.loadWebXMLDefinition(url));
@@ -917,6 +922,7 @@ public class WebXMLDefinitionLoader extends DefaultHandler {
 	private FilterDefinition _filterDefinition;
 	private FilterMapping _filterMapping;
 	private JSPConfig _jspConfig;
+	private final JspServletConfiguration _jspServletConfiguration;
 	private ListenerDefinition _listenerDefinition;
 	private final Logger _logger;
 	private String _name;
