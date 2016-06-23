@@ -14,11 +14,12 @@
 
 package com.liferay.portal.osgi.web.servlet.jsp.compiler;
 
-import com.liferay.portal.kernel.util.JavaDetector;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.osgi.web.servlet.jsp.compiler.configuration.JspServletConfiguration;
 import com.liferay.portal.osgi.web.servlet.jsp.compiler.internal.JspBundleClassloader;
 import com.liferay.portal.osgi.web.servlet.jsp.compiler.internal.JspServletContext;
 import com.liferay.portal.osgi.web.servlet.jsp.compiler.internal.JspTagHandlerPool;
@@ -163,6 +164,18 @@ public class JspServlet extends HttpServlet {
 		}
 	}
 
+	public JspServlet() {
+		this(null);
+	}
+
+	public JspServlet(JspServletConfiguration jspServletConfiguration) {
+		if (jspServletConfiguration == null) {
+			jspServletConfiguration = new DefaultJspServletConfiguration();
+		}
+
+		_jspServletConfiguration = jspServletConfiguration;
+	}
+
 	@Override
 	public void destroy() {
 		_jspServlet.destroy();
@@ -272,24 +285,28 @@ public class JspServlet extends HttpServlet {
 		final Map<String, String> defaults = new HashMap<>();
 
 		defaults.put(
-			"compilerClassName",
-			"com.liferay.portal.osgi.web.servlet.jsp.compiler.internal." +
-				"JspCompiler");
+			"compilerClassName", _jspServletConfiguration.compilerClassName());
+		defaults.put(
+			"compilerSourceVM", _jspServletConfiguration.compilerSourceVM());
+		defaults.put(
+			"compilerTargetVM", _jspServletConfiguration.compilerTargetVM());
+		defaults.put(
+			"development",
+			StringUtil.valueOf(_jspServletConfiguration.development()));
 
-		if (JavaDetector.isJDK7()) {
-			defaults.put("compilerSourceVM", "1.7");
-			defaults.put("compilerTargetVM", "1.7");
-		}
-		else {
-			defaults.put("compilerSourceVM", "1.8");
-			defaults.put("compilerTargetVM", "1.8");
-		}
+		String httpMethods = StringUtil.merge(
+			_jspServletConfiguration.httpMethods());
 
-		defaults.put("development", "false");
-		defaults.put("httpMethods", "GET,POST,HEAD");
-		defaults.put("keepgenerated", "false");
-		defaults.put("logVerbosityLevel", "NONE");
-		defaults.put("saveBytecode", "true");
+		defaults.put("httpMethods", httpMethods);
+
+		defaults.put(
+			"keepgenerated",
+			StringUtil.valueOf(_jspServletConfiguration.keepgenerated()));
+		defaults.put(
+			"logVerbosityLevel", _jspServletConfiguration.logVerbosityLevel());
+		defaults.put(
+			"saveBytecode",
+			StringUtil.valueOf(_jspServletConfiguration.saveBytecode()));
 
 		StringBundler sb = new StringBundler(4);
 
@@ -577,9 +594,57 @@ public class JspServlet extends HttpServlet {
 	private JspBundleClassloader _jspBundleClassloader;
 	private final HttpServlet _jspServlet =
 		new org.apache.jasper.servlet.JspServlet();
+	private final JspServletConfiguration _jspServletConfiguration;
 	private Logger _logger;
 	private final List<ServiceRegistration<?>> _serviceRegistrations =
 		new CopyOnWriteArrayList<>();
+
+	private class DefaultJspServletConfiguration
+		implements JspServletConfiguration {
+
+		@Override
+		public String compilerClassName() {
+			return
+				"com.liferay.portal.osgi.web.servlet.jsp.compiler.internal." +
+					"JspCompiler";
+		}
+
+		@Override
+		public String compilerSourceVM() {
+			return "1.7";
+		}
+
+		@Override
+		public String compilerTargetVM() {
+			return "1.7";
+		}
+
+		@Override
+		public boolean development() {
+			return false;
+		}
+
+		@Override
+		public String[] httpMethods() {
+			return new String[] {"GET", "POST", "HEAD"};
+		}
+
+		@Override
+		public boolean keepgenerated() {
+			return false;
+		}
+
+		@Override
+		public String logVerbosityLevel() {
+			return "NONE";
+		}
+
+		@Override
+		public boolean saveBytecode() {
+			return true;
+		}
+
+	}
 
 	private class DeleteFileVisitor extends SimpleFileVisitor<Path> {
 
