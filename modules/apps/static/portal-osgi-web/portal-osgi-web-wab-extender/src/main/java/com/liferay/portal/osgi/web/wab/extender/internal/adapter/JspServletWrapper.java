@@ -15,6 +15,7 @@
 package com.liferay.portal.osgi.web.wab.extender.internal.adapter;
 
 import com.liferay.portal.osgi.web.servlet.jsp.compiler.JspServlet;
+import com.liferay.portal.osgi.web.servlet.jsp.compiler.configuration.JspServletConfiguration;
 
 import java.io.IOException;
 
@@ -32,7 +33,15 @@ import javax.servlet.http.HttpServlet;
 public class JspServletWrapper extends HttpServlet {
 
 	public JspServletWrapper(String jspFile) {
+		this(jspFile, null);
+	}
+
+	public JspServletWrapper(
+		String jspFile, JspServletConfiguration jspServletConfiguration) {
+
 		this.jspFile = jspFile;
+
+		this._servlet = new JspServlet(jspServletConfiguration);
 	}
 
 	@Override
@@ -72,6 +81,6 @@ public class JspServletWrapper extends HttpServlet {
 
 	protected String jspFile;
 
-	private final Servlet _servlet = new JspServlet();
+	private final Servlet _servlet;
 
 }
