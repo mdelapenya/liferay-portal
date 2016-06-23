@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.osgi.web.servlet.context.helper.ServletContextHelperRegistration;
 import com.liferay.portal.osgi.web.servlet.context.helper.definition.WebXMLDefinition;
 import com.liferay.portal.osgi.web.servlet.context.helper.internal.definition.WebXMLDefinitionLoader;
+import com.liferay.portal.osgi.web.servlet.jsp.compiler.configuration.JspServletConfiguration;
 
 import java.io.IOException;
 
@@ -70,10 +71,12 @@ public class ServletContextHelperRegistrationImpl
 
 	public ServletContextHelperRegistrationImpl(
 		Bundle bundle, Props props, SAXParserFactory saxParserFactory,
-		Logger logger, Map<String, Object> properties) {
+		JspServletConfiguration jspServletConfiguration, Logger logger,
+		Map<String, Object> properties) {
 
 		_bundle = bundle;
 		_props = props;
+		_jspServletConfiguration = jspServletConfiguration;
 		_logger = logger;
 		_properties = properties;
 
@@ -87,7 +90,9 @@ public class ServletContextHelperRegistrationImpl
 			_wabShapedBundle = true;
 
 			WebXMLDefinitionLoader webXMLDefinitionLoader =
-				new WebXMLDefinitionLoader(_bundle, saxParserFactory, _logger);
+				new WebXMLDefinitionLoader(
+					_bundle, saxParserFactory, _jspServletConfiguration,
+					_logger);
 
 			WebXMLDefinition webXMLDefinition = null;
 
@@ -239,7 +244,8 @@ public class ServletContextHelperRegistrationImpl
 			new String[] {"*.jsp", "*.jspx"});
 
 		return _bundleContext.registerService(
-			Servlet.class, new JspServletWrapper(), properties);
+			Servlet.class, new JspServletWrapper(_jspServletConfiguration),
+			properties);
 	}
 
 	protected ServiceRegistration<Servlet> createPortletServlet() {
@@ -399,6 +405,7 @@ public class ServletContextHelperRegistrationImpl
 	private final BundleContext _bundleContext;
 	private final CustomServletContextHelper _customServletContextHelper;
 	private final ServiceRegistration<?> _defaultServletServiceRegistration;
+	private final JspServletConfiguration _jspServletConfiguration;
 	private final ServiceRegistration<Servlet> _jspServletServiceRegistration;
 	private final Logger _logger;
 	private final ServiceRegistration<?>

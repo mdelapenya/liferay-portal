@@ -23,6 +23,7 @@ import com.liferay.portal.osgi.web.servlet.context.helper.definition.ListenerDef
 import com.liferay.portal.osgi.web.servlet.context.helper.definition.ServletDefinition;
 import com.liferay.portal.osgi.web.servlet.context.helper.definition.WebXMLDefinition;
 import com.liferay.portal.osgi.web.servlet.jsp.compiler.JspServlet;
+import com.liferay.portal.osgi.web.servlet.jsp.compiler.configuration.JspServletConfiguration;
 import com.liferay.portal.osgi.web.wab.extender.internal.adapter.FilterExceptionAdapter;
 import com.liferay.portal.osgi.web.wab.extender.internal.adapter.ModifiableServletContext;
 import com.liferay.portal.osgi.web.wab.extender.internal.adapter.ModifiableServletContextAdapter;
@@ -81,8 +82,12 @@ import org.osgi.util.tracker.ServiceTracker;
  */
 public class WabBundleProcessor {
 
-	public WabBundleProcessor(Bundle bundle, Logger logger) {
+	public WabBundleProcessor(
+		Bundle bundle, JspServletConfiguration jspServletConfiguration,
+		Logger logger) {
+
 		_bundle = bundle;
+		_jspServletConfiguration = jspServletConfiguration;
 		_logger = logger;
 
 		BundleWiring bundleWiring = _bundle.adapt(BundleWiring.class);
@@ -143,7 +148,8 @@ public class WabBundleProcessor {
 			ServletContext servletContext =
 				ModifiableServletContextAdapter.createInstance(
 					servletContextHelperRegistration.getServletContext(),
-					_bundle.getBundleContext(), webXMLDefinition, _logger);
+					_bundle.getBundleContext(), webXMLDefinition,
+					_jspServletConfiguration, _logger);
 
 			initServletContainerInitializers(_bundle, servletContext);
 
@@ -762,6 +768,7 @@ public class WabBundleProcessor {
 	private String _contextName;
 	private final Set<ServiceRegistration<Filter>> _filterRegistrations =
 		new ConcurrentSkipListSet<>();
+	private final JspServletConfiguration _jspServletConfiguration;
 	private final Set<ServiceRegistration<?>> _listenerRegistrations =
 		new ConcurrentSkipListSet<>();
 	private final Logger _logger;

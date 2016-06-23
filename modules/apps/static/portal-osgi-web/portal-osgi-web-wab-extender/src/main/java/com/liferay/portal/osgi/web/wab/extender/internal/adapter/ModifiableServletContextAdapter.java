@@ -19,6 +19,7 @@ import com.liferay.portal.osgi.web.servlet.context.helper.definition.FilterDefin
 import com.liferay.portal.osgi.web.servlet.context.helper.definition.ListenerDefinition;
 import com.liferay.portal.osgi.web.servlet.context.helper.definition.ServletDefinition;
 import com.liferay.portal.osgi.web.servlet.context.helper.definition.WebXMLDefinition;
+import com.liferay.portal.osgi.web.servlet.jsp.compiler.configuration.JspServletConfiguration;
 import com.liferay.portal.osgi.web.wab.extender.internal.registration.FilterRegistrationImpl;
 import com.liferay.portal.osgi.web.wab.extender.internal.registration.ServletRegistrationImpl;
 
@@ -57,21 +58,25 @@ public class ModifiableServletContextAdapter
 
 	public static ServletContext createInstance(
 		ServletContext servletContext, BundleContext bundleContext,
-		WebXMLDefinition webXMLDefinition, Logger logger) {
+		WebXMLDefinition webXMLDefinition,
+		JspServletConfiguration jspServletConfiguration, Logger logger) {
 
 		return (ServletContext)Proxy.newProxyInstance(
 			ModifiableServletContextAdapter.class.getClassLoader(), _INTERFACES,
 			new ModifiableServletContextAdapter(
-				servletContext, bundleContext, webXMLDefinition, logger));
+				servletContext, bundleContext, webXMLDefinition,
+				jspServletConfiguration, logger));
 	}
 
 	public ModifiableServletContextAdapter(
 		ServletContext servletContext, BundleContext bundleContext,
-		WebXMLDefinition webXMLDefinition, Logger logger) {
+		WebXMLDefinition webXMLDefinition,
+		JspServletConfiguration jspServletConfiguration, Logger logger) {
 
 		_servletContext = servletContext;
 		_bundleContext = bundleContext;
 		_webXMLDefinition = webXMLDefinition;
+		_jspServletConfiguration = jspServletConfiguration;
 		_logger = logger;
 
 		_bundle = _bundleContext.getBundle();
@@ -445,7 +450,8 @@ public class ModifiableServletContextAdapter
 				Servlet servlet = null;
 
 				if (Validator.isNotNull(jspFile)) {
-					servlet = new JspServletWrapper(jspFile);
+					servlet = new JspServletWrapper(
+						jspFile, _jspServletConfiguration);
 				}
 				else {
 					Class<?> clazz = _bundle.loadClass(servletClassName);
@@ -550,6 +556,7 @@ public class ModifiableServletContextAdapter
 		_eventListeners = new LinkedHashMap<>();
 	private final LinkedHashMap<String, FilterRegistrationImpl>
 		_filterRegistrations = new LinkedHashMap<>();
+	private final JspServletConfiguration _jspServletConfiguration;
 	private final Logger _logger;
 	private final ServletContext _servletContext;
 	private final LinkedHashMap<String, ServletRegistrationImpl>

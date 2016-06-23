@@ -17,6 +17,7 @@ package com.liferay.portal.osgi.web.wab.extender.internal;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
 import com.liferay.portal.osgi.web.servlet.context.helper.ServletContextHelperFactory;
+import com.liferay.portal.osgi.web.servlet.jsp.compiler.configuration.JspServletConfiguration;
 import com.liferay.portal.osgi.web.wab.extender.internal.configuration.WabExtenderConfiguration;
 import com.liferay.portal.osgi.web.wab.extender.internal.event.EventUtil;
 import com.liferay.portal.profile.PortalProfile;
@@ -44,7 +45,10 @@ import org.osgi.service.component.annotations.Reference;
  * @author Raymond Augé
  */
 @Component(
-	configurationPid = "com.liferay.portal.osgi.web.wab.extender.internal.configuration.WabExtenderConfiguration",
+	configurationPid = {
+		"com.liferay.portal.osgi.web.servlet.jsp.compiler.configuration.JspServletConfiguration",
+		"com.liferay.portal.osgi.web.wab.extender.internal.configuration.WabExtenderConfiguration"
+	},
 	configurationPolicy = ConfigurationPolicy.OPTIONAL, immediate = true
 )
 public class WabFactory extends AbstractExtender {
@@ -60,12 +64,16 @@ public class WabFactory extends AbstractExtender {
 		Dictionary<String, Object> properties =
 			componentContext.getProperties();
 
+		_jspServletConfiguration = ConfigurableUtil.createConfigurable(
+			JspServletConfiguration.class, properties);
+
 		_wabExtenderConfiguration = ConfigurableUtil.createConfigurable(
 			WabExtenderConfiguration.class, properties);
 
 		try {
 			_webBundleDeployer = new WebBundleDeployer(
-				_bundleContext, properties, _eventUtil, _logger);
+				_bundleContext, properties, _eventUtil,
+				_jspServletConfiguration, _logger);
 
 			super.start(_bundleContext);
 		}
@@ -118,6 +126,7 @@ public class WabFactory extends AbstractExtender {
 
 	private BundleContext _bundleContext;
 	private EventUtil _eventUtil;
+	private JspServletConfiguration _jspServletConfiguration;
 	private Logger _logger;
 
 	@Reference
