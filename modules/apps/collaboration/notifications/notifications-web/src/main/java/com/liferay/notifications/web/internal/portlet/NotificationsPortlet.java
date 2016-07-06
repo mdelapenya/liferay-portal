@@ -18,7 +18,7 @@ import com.liferay.notifications.web.internal.constants.NotificationsPortletKeys
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Release;
 import com.liferay.portal.kernel.model.UserNotificationEvent;
-import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.portlet.WebSocketPortlet;
 import com.liferay.portal.kernel.service.SubscriptionLocalService;
 import com.liferay.portal.kernel.service.UserNotificationDeliveryLocalService;
 import com.liferay.portal.kernel.service.UserNotificationEventLocalService;
@@ -62,7 +62,7 @@ import org.osgi.service.component.annotations.Reference;
 	},
 	service = Portlet.class
 )
-public class NotificationsPortlet extends MVCPortlet {
+public class NotificationsPortlet extends WebSocketPortlet {
 
 	public void deleteUserNotificationEvent(
 			ActionRequest actionRequest, ActionResponse actionResponse)
