@@ -908,6 +908,18 @@
 				</comments>
 			</library>
 			<library>
+				<file-name>lib/global/javax.websocket-api.jar</file-name>
+				<version>1.1</version>
+				<project-name>javax.websocket-api</project-name>
+				<project-url>https://java.net/projects/websocket-spec/</project-url>
+				<licenses>
+					<license>
+						<license-name>CDDL 1.0</license-name>
+						<license-url>http://glassfish.java.net/public/CDDLv1.0.html</license-url>
+					</license>
+				</licenses>
+			</library>
+			<library>
 				<file-name>lib/global/portlet.jar</file-name>
 				<version>2.1</version>
 				<project-name>JSR 286 Portlet 2.0 Specification</project-name>
