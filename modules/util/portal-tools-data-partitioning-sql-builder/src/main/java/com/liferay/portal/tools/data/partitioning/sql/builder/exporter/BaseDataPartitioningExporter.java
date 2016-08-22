@@ -150,7 +150,8 @@ public abstract class BaseDataPartitioningExporter
 					fields[i] = serializeTableField(resultSet.getObject(i + 1));
 				}
 
-				SQLBuilder insertSQLBuilder = new InsertSQLBuilder();
+				SQLBuilder insertSQLBuilder =
+					DataPartitioningSQLBuilderFactory.getSQLBuilder();
 
 				String insertSql = insertSQLBuilder.build(
 					fields, resultSetMetaData, tableName);
