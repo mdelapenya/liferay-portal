@@ -51,6 +51,7 @@ public abstract class BaseDataPartitioningExporter
 	implements DataPartitioningExporter, DBExporter, DBProvider {
 
 	public BaseDataPartitioningExporter() {
+		_insertSQLBuilder = DataPartitioningSQLBuilderFactory.getSQLBuilder();
 	}
 
 	@Override
@@ -150,10 +151,7 @@ public abstract class BaseDataPartitioningExporter
 					fields[i] = serializeTableField(resultSet.getObject(i + 1));
 				}
 
-				SQLBuilder insertSQLBuilder =
-					DataPartitioningSQLBuilderFactory.getSQLBuilder();
-
-				String insertSql = insertSQLBuilder.build(
+				String insertSql = _insertSQLBuilder.build(
 					fields, resultSetMetaData, tableName);
 
 				outputStream.write(insertSql.getBytes());
@@ -261,5 +259,6 @@ public abstract class BaseDataPartitioningExporter
 		BaseDataPartitioningExporter.class);
 
 	private DataSource _dataSource;
+	private final SQLBuilder _insertSQLBuilder;
 
 }
