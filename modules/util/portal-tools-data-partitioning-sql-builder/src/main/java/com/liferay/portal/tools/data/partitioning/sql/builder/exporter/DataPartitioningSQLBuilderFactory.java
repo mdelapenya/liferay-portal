@@ -17,12 +17,12 @@ package com.liferay.portal.tools.data.partitioning.sql.builder.exporter;
 import com.liferay.portal.tools.data.partitioning.sql.builder.exporter.exception.SQLBuilderNotAvailableException;
 import com.liferay.portal.tools.data.partitioning.sql.builder.internal.exporter.SQLBuilder;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Manuel de la Peña
@@ -30,8 +30,8 @@ import java.util.ServiceLoader;
 public class DataPartitioningSQLBuilderFactory {
 
 	public static SQLBuilder getSQLBuilder() {
-		ServiceLoader<SQLBuilder> serviceLoader =
-			ServiceLoader.load(SQLBuilder.class);
+		ServiceLoader<SQLBuilder> serviceLoader = ServiceLoader.load(
+			SQLBuilder.class);
 
 		List<SQLBuilder> sqlBuilders = new ArrayList<>();
 
