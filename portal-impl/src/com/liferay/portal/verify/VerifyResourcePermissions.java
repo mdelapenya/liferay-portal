@@ -101,8 +101,8 @@ public class VerifyResourcePermissions extends VerifyProcess {
 
 			int total = layouts.size();
 
-			for (int i = 0; i < total; i++) {
-				Layout layout = layouts.get(i);
+			for (int i = 1; i <= total; i++) {
+				Layout layout = layouts.get(i - 1);
 
 				verifyResourcedModel(
 					role.getCompanyId(), Layout.class.getName(),
