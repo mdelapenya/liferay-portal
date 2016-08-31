@@ -1,0 +1,5 @@
+Bundle-Name: JAXRS Sample
+Bundle-SymbolicName: com.liferay.jaxrs
+Bundle-Version: 1.0.0
+Liferay-Releng-Module-Group-Description:
+Liferay-Releng-Module-Group-Title: JAXRS
