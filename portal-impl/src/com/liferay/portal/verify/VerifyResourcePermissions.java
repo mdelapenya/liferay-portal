@@ -19,7 +19,6 @@ import com.liferay.portal.kernel.concurrent.ThrowableAwareRunnable;
 import com.liferay.portal.kernel.dao.jdbc.DataAccess;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.log.LogUtil;
 import com.liferay.portal.kernel.model.Contact;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.ResourceConstants;
@@ -117,21 +116,10 @@ public class VerifyResourcePermissions extends VerifyProcess {
 			long ownerId, int cur, int total)
 		throws Exception {
 
-		if (_log.isInfoEnabled()) {
-			String countBatch = LogUtil.logCountBatch(cur, total, 100);
-
-			if (countBatch != null) {
-				StringBundler sb = new StringBundler(6);
-
-				sb.append("Processed ");
-				sb.append(countBatch);
-				sb.append(" resource permissions for company = ");
-				sb.append(companyId);
-				sb.append(" and model ");
-				sb.append(modelName);
-
-				_log.info(sb.toString());
-			}
+		if (_log.isInfoEnabled() && ((cur % 100) == 0)) {
+			_log.info(
+				"Processed " + cur + " of " + total + " resource permissions " +
+					"for company = " + companyId + " and model " + modelName);
 		}
 
 		ResourcePermission resourcePermission =

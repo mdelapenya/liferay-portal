@@ -132,14 +132,4 @@ public class LogUtil {
 		}
 	}
 
-	public static String logCountBatch(int cur, int total, int batch) {
-		int i = cur;
-
-		if ((i == total) || ((i % batch) == 0)) {
-			return i + " of " + total;
-		}
-
-		return null;
-	}
-
 }
