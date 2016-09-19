@@ -21,9 +21,6 @@ import com.liferay.portal.osgi.web.servlet.context.helper.ServletContextHelperRe
 import com.liferay.portal.osgi.web.servlet.context.helper.definition.WebXMLDefinition;
 import com.liferay.portal.osgi.web.servlet.context.helper.internal.definition.WebXMLDefinitionLoader;
 import com.liferay.portal.osgi.web.servlet.jsp.compiler.configuration.JspServletConfiguration;
-import com.liferay.portal.osgi.web.servlet.jsp.compiler.JspServlet;
-
-import java.io.IOException;
 
 import java.net.URL;
 

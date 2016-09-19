@@ -15,7 +15,6 @@
 package com.liferay.portal.osgi.web.servlet.context.helper;
 
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
-import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.ReflectionUtil;
 import com.liferay.portal.osgi.web.servlet.context.helper.internal.ServletContextHelperRegistrationServiceFactory;
 import com.liferay.portal.osgi.web.servlet.jsp.compiler.configuration.JspServletConfiguration;

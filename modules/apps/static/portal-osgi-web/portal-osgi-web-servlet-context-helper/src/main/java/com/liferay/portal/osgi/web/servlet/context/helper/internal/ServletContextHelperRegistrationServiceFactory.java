@@ -50,8 +50,8 @@ public class ServletContextHelperRegistrationServiceFactory
 		ServiceRegistration<ServletContextHelperRegistration> registration) {
 
 		return new ServletContextHelperRegistrationImpl(
-			bundle, _saxParserFactory, _jspServletConfiguration,
-			_logger, _properties);
+			bundle, _saxParserFactory, _jspServletConfiguration, _logger,
+			_properties);
 	}
 
 	@Override

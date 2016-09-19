@@ -47,9 +47,7 @@ public class JspServletWrapper extends HttpServlet {
 	public JspServletWrapper(
 		String jspFile, JspServletConfiguration jspServletConfiguration) {
 
-		this.jspFile = jspFile;
-
-		this._servlet = new JspServlet(jspServletConfiguration);
+		this._jspFile = jspFile;
 	}
 
 	@Override

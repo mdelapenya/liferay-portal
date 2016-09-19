@@ -41,22 +41,22 @@ public class JspServletWrapper extends HttpServlet {
 
 		this.jspFile = jspFile;
 
-		this._servlet = new JspServlet(jspServletConfiguration);
+		servlet = new JspServlet(jspServletConfiguration);
 	}
 
 	@Override
 	public void destroy() {
-		_servlet.destroy();
+		servlet.destroy();
 	}
 
 	@Override
 	public ServletConfig getServletConfig() {
-		return _servlet.getServletConfig();
+		return servlet.getServletConfig();
 	}
 
 	@Override
 	public void init(ServletConfig servletConfig) throws ServletException {
-		_servlet.init(servletConfig);
+		servlet.init(servletConfig);
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class JspServletWrapper extends HttpServlet {
 		}
 
 		try {
-			_servlet.service(servletRequest, servletResponse);
+			servlet.service(servletRequest, servletResponse);
 		}
 		finally {
 			servletRequest.setAttribute(JspServlet.JSP_FILE, curJspFile);
@@ -80,7 +80,6 @@ public class JspServletWrapper extends HttpServlet {
 	}
 
 	protected String jspFile;
-
-	private final Servlet _servlet;
+	protected Servlet servlet;
 
 }
