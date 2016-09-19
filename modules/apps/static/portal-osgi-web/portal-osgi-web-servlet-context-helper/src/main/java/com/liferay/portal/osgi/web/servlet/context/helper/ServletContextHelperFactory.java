@@ -14,8 +14,10 @@
 
 package com.liferay.portal.osgi.web.servlet.context.helper;
 
+import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.util.ReflectionUtil;
 import com.liferay.portal.osgi.web.servlet.context.helper.internal.ServletContextHelperRegistrationServiceFactory;
+import com.liferay.portal.osgi.web.servlet.jsp.compiler.configuration.JspServletConfiguration;
 
 import java.util.Map;
 
@@ -28,6 +30,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.http.runtime.HttpServiceRuntime;
@@ -38,7 +41,11 @@ import org.xml.sax.SAXNotSupportedException;
 /**
  * @author Raymond Augé
  */
-@Component(immediate = true, service = ServletContextHelperFactory.class)
+@Component(
+	configurationPid = "com.liferay.portal.osgi.web.servlet.jsp.compiler.configuration.JspServletConfiguration",
+	configurationPolicy = ConfigurationPolicy.OPTIONAL, immediate = true,
+	service = ServletContextHelperFactory.class
+)
 public class ServletContextHelperFactory {
 
 	@Activate
@@ -65,10 +72,14 @@ public class ServletContextHelperFactory {
 			ReflectionUtil.throwException(e);
 		}
 
+		_jspServletConfiguration = ConfigurableUtil.createConfigurable(
+			JspServletConfiguration.class, properties);
+
 		_serviceRegistration = bundleContext.registerService(
 			ServletContextHelperRegistration.class.getName(),
 			new ServletContextHelperRegistrationServiceFactory(
-				_saxParserFactory, _logger, properties),
+				_saxParserFactory, _jspServletConfiguration, _logger,
+				properties),
 			null);
 	}
 
@@ -92,6 +103,7 @@ public class ServletContextHelperFactory {
 	@Reference
 	private HttpServiceRuntime _httpServiceRuntime;
 
+	private JspServletConfiguration _jspServletConfiguration;
 	private Logger _logger;
 
 	@Reference

@@ -15,6 +15,7 @@
 package com.liferay.portal.osgi.web.wab.extender.internal.adapter;
 
 import com.liferay.portal.osgi.web.servlet.jsp.compiler.JspServlet;
+import com.liferay.portal.osgi.web.servlet.jsp.compiler.configuration.JspServletConfiguration;
 
 import java.io.IOException;
 
@@ -32,22 +33,30 @@ import javax.servlet.http.HttpServlet;
 public class JspServletWrapper extends HttpServlet {
 
 	public JspServletWrapper(String jspFile) {
+		this(jspFile, null);
+	}
+
+	public JspServletWrapper(
+		String jspFile, JspServletConfiguration jspServletConfiguration) {
+
 		this.jspFile = jspFile;
+
+		servlet = new JspServlet(jspServletConfiguration);
 	}
 
 	@Override
 	public void destroy() {
-		_servlet.destroy();
+		servlet.destroy();
 	}
 
 	@Override
 	public ServletConfig getServletConfig() {
-		return _servlet.getServletConfig();
+		return servlet.getServletConfig();
 	}
 
 	@Override
 	public void init(ServletConfig servletConfig) throws ServletException {
-		_servlet.init(servletConfig);
+		servlet.init(servletConfig);
 	}
 
 	@Override
@@ -63,7 +72,7 @@ public class JspServletWrapper extends HttpServlet {
 		}
 
 		try {
-			_servlet.service(servletRequest, servletResponse);
+			servlet.service(servletRequest, servletResponse);
 		}
 		finally {
 			servletRequest.setAttribute(JspServlet.JSP_FILE, curJspFile);
@@ -71,7 +80,6 @@ public class JspServletWrapper extends HttpServlet {
 	}
 
 	protected String jspFile;
-
-	private final Servlet _servlet = new JspServlet();
+	protected Servlet servlet;
 
 }
