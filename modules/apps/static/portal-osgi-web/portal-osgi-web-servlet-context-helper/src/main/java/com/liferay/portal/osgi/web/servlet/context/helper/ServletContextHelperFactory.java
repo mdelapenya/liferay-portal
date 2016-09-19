@@ -79,7 +79,7 @@ public class ServletContextHelperFactory {
 		_serviceRegistration = bundleContext.registerService(
 			ServletContextHelperRegistration.class.getName(),
 			new ServletContextHelperRegistrationServiceFactory(
-				_props, _saxParserFactory, _jspServletConfiguration, _logger,
+				_saxParserFactory, _jspServletConfiguration, _logger,
 				properties),
 			null);
 	}
