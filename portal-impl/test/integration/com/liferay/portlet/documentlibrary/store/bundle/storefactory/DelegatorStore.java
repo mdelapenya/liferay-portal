@@ -105,7 +105,12 @@ public class DelegatorStore extends BaseStore {
 			String versionLabel)
 		throws PortalException {
 
-		_store.deleteFile(companyId, repositoryId, fileName, versionLabel);
+		try {
+			_store.deleteFile(companyId, repositoryId, fileName, versionLabel);
+		}
+		catch (AccessDeniedException ade) {
+			throw new PrincipalException(ade);
+		}
 	}
 
 	public int getDelegatorStoresCount() {

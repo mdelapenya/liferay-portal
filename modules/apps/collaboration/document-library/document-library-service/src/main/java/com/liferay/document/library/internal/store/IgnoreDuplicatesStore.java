@@ -155,7 +155,12 @@ public class IgnoreDuplicatesStore implements Store {
 			String versionLabel)
 		throws PortalException {
 
-		_store.deleteFile(companyId, repositoryId, fileName, versionLabel);
+		try {
+			_store.deleteFile(companyId, repositoryId, fileName, versionLabel);
+		}
+		catch (AccessDeniedException ade) {
+			throw new PrincipalException(ade);
+		}
 	}
 
 	@Override
@@ -411,8 +416,13 @@ public class IgnoreDuplicatesStore implements Store {
 
 			@Override
 			public void execute() throws PortalException {
-				_store.deleteFile(
-					companyId, repositoryId, fileName, versionLabel);
+				try {
+					_store.deleteFile(
+						companyId, repositoryId, fileName, versionLabel);
+				}
+				catch (AccessDeniedException ade) {
+					throw new PrincipalException(ade);
+				}
 			}
 
 		};

@@ -182,14 +182,24 @@ public class SafeFileNameStoreWrapper implements StoreWrapper {
 				_store.hasFile(
 					companyId, repositoryId, fileName, versionLabel)) {
 
-				_store.deleteFile(
-					companyId, repositoryId, fileName, versionLabel);
+				try {
+					_store.deleteFile(
+						companyId, repositoryId, fileName, versionLabel);
+				}
+				catch (AccessDeniedException ade) {
+					throw new PrincipalException(ade);
+				}
 
 				return;
 			}
 
-			_store.deleteFile(
-				companyId, repositoryId, safeFileName, versionLabel);
+			try {
+				_store.deleteFile(
+					companyId, repositoryId, safeFileName, versionLabel);
+			}
+			catch (AccessDeniedException ade) {
+				throw new PrincipalException(ade);
+			}
 		}
 
 		@Override

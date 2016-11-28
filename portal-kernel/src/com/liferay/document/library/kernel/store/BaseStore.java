@@ -562,12 +562,12 @@ public abstract class BaseStore implements Store {
 
 		try {
 			updateFile(companyId, repositoryId, fileName, toVersionLabel, is);
+
+			deleteFile(companyId, repositoryId, fileName, fromVersionLabel);
 		}
 		catch (AccessDeniedException ade) {
 			throw new PrincipalException(ade);
 		}
-
-		deleteFile(companyId, repositoryId, fileName, fromVersionLabel);
 	}
 
 	protected void logFailedDeletion(

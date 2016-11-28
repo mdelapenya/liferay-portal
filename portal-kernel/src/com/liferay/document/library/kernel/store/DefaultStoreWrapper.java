@@ -114,7 +114,13 @@ public class DefaultStoreWrapper implements StoreWrapper {
 				String versionLabel)
 			throws PortalException {
 
-			_store.deleteFile(companyId, repositoryId, fileName, versionLabel);
+			try {
+				_store.deleteFile(
+					companyId, repositoryId, fileName, versionLabel);
+			}
+			catch (AccessDeniedException ade) {
+				throw new PrincipalException(ade);
+			}
 		}
 
 		@Override
