@@ -49,6 +49,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.StreamUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -179,6 +180,9 @@ public class S3Store extends BaseStore {
 
 			return file;
 		}
+		catch (AccessDeniedException ade) {
+			throw new PrincipalException(ade);
+		}
 		catch (IOException ioe) {
 			throw new SystemException(ioe);
 		}
@@ -190,10 +194,15 @@ public class S3Store extends BaseStore {
 			String versionLabel)
 		throws PortalException {
 
-		S3Object s3Object = getS3Object(
-			companyId, repositoryId, fileName, versionLabel);
+		try {
+			S3Object s3Object = getS3Object(
+				companyId, repositoryId, fileName, versionLabel);
 
-		return s3Object.getObjectContent();
+			return s3Object.getObjectContent();
+		}
+		catch (AccessDeniedException ade) {
+			throw new PrincipalException(ade);
+		}
 	}
 
 	@Override
