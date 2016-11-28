@@ -92,7 +92,12 @@ public class IgnoreDuplicatesStore implements Store {
 
 				@Override
 				public void execute() throws PortalException {
-					_store.addFile(companyId, repositoryId, fileName, is);
+					try {
+						_store.addFile(companyId, repositoryId, fileName, is);
+					}
+					catch (AccessDeniedException ade) {
+						throw new PrincipalException(ade);
+					}
 				}
 
 			});

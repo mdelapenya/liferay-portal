@@ -60,7 +60,12 @@ public class DelegatorStore extends BaseStore {
 			long companyId, long repositoryId, String fileName, InputStream is)
 		throws PortalException {
 
-		_store.addFile(companyId, repositoryId, fileName, is);
+		try {
+			_store.addFile(companyId, repositoryId, fileName, is);
+		}
+		catch (AccessDeniedException ade) {
+			throw new PrincipalException(ade);
+		}
 	}
 
 	@Override

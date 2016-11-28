@@ -68,7 +68,12 @@ public class DefaultStoreWrapper implements StoreWrapper {
 				InputStream is)
 			throws PortalException {
 
-			_store.addFile(companyId, repositoryId, fileName, is);
+			try {
+				_store.addFile(companyId, repositoryId, fileName, is);
+			}
+			catch (AccessDeniedException ade) {
+				throw new PrincipalException(ade);
+			}
 		}
 
 		@Override

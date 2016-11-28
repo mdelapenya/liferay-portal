@@ -116,7 +116,12 @@ public class DLStoreImpl implements DLStore {
 		if (!PropsValues.DL_STORE_ANTIVIRUS_ENABLED ||
 			!AntivirusScannerUtil.isActive()) {
 
-			store.addFile(companyId, repositoryId, fileName, is);
+			try {
+				store.addFile(companyId, repositoryId, fileName, is);
+			}
+			catch (AccessDeniedException ade) {
+				throw new PrincipalException(ade);
+			}
 		}
 		else {
 			File tempFile = null;
@@ -129,7 +134,12 @@ public class DLStoreImpl implements DLStore {
 
 					is.reset();
 
-					store.addFile(companyId, repositoryId, fileName, is);
+					try {
+						store.addFile(companyId, repositoryId, fileName, is);
+					}
+					catch (AccessDeniedException ade) {
+						throw new PrincipalException(ade);
+					}
 				}
 				else {
 					tempFile = FileUtil.createTempFile();

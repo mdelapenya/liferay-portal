@@ -72,8 +72,14 @@ public abstract class BaseStore implements Store {
 		try (UnsyncByteArrayInputStream unsyncByteArrayInputStream =
 				new UnsyncByteArrayInputStream(bytes)) {
 
-			addFile(
-				companyId, repositoryId, fileName, unsyncByteArrayInputStream);
+			try {
+				addFile(
+					companyId, repositoryId, fileName,
+					unsyncByteArrayInputStream);
+			}
+			catch (AccessDeniedException ade) {
+				throw new PrincipalException(ade);
+			}
 		}
 		catch (IOException ioe) {
 			throw new SystemException("Unable to read bytes", ioe);
@@ -96,6 +102,9 @@ public abstract class BaseStore implements Store {
 
 		try (InputStream is = new FileInputStream(file)) {
 			addFile(companyId, repositoryId, fileName, is);
+		}
+		catch (AccessDeniedException ade) {
+			throw new PrincipalException(ade);
 		}
 		catch (FileNotFoundException fnfe) {
 			throw new SystemException(fnfe);

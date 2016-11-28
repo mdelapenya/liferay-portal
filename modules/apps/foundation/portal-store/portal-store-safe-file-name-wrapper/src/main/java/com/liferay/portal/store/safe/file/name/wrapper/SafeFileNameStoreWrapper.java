@@ -104,7 +104,12 @@ public class SafeFileNameStoreWrapper implements StoreWrapper {
 
 			renameUnsafeFile(companyId, repositoryId, fileName, safeFileName);
 
-			_store.addFile(companyId, repositoryId, safeFileName, is);
+			try {
+				_store.addFile(companyId, repositoryId, safeFileName, is);
+			}
+			catch (AccessDeniedException ade) {
+				throw new PrincipalException(ade);
+			}
 		}
 
 		@Override
