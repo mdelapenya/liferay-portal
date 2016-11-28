@@ -14,11 +14,13 @@
 
 package com.liferay.document.library.internal.store;
 
+import com.liferay.document.library.kernel.exception.AccessDeniedException;
 import com.liferay.document.library.kernel.exception.DuplicateFileException;
 import com.liferay.document.library.kernel.store.Store;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.security.auth.PrincipalException;
 
 import java.io.File;
 import java.io.InputStream;
@@ -344,8 +346,14 @@ public class IgnoreDuplicatesStore implements Store {
 
 				@Override
 				public void execute() throws PortalException {
-					_store.updateFile(
-						companyId, repositoryId, fileName, versionLabel, is);
+					try {
+						_store.updateFile(
+							companyId, repositoryId, fileName, versionLabel,
+							is);
+					}
+					catch (AccessDeniedException ade) {
+						throw new PrincipalException(ade);
+					}
 				}
 
 			});

@@ -14,12 +14,14 @@
 
 package com.liferay.document.library.kernel.store;
 
+import com.liferay.document.library.kernel.exception.AccessDeniedException;
 import com.liferay.document.library.kernel.exception.NoSuchFileException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
@@ -155,7 +157,12 @@ public abstract class BaseStore implements Store {
 			is = new UnsyncByteArrayInputStream(new byte[0]);
 		}
 
-		updateFile(companyId, repositoryId, fileName, toVersionLabel, is);
+		try {
+			updateFile(companyId, repositoryId, fileName, toVersionLabel, is);
+		}
+		catch (AccessDeniedException ade) {
+			throw new PrincipalException(ade);
+		}
 	}
 
 	/**
@@ -455,9 +462,14 @@ public abstract class BaseStore implements Store {
 		try (UnsyncByteArrayInputStream unsyncByteArrayInputStream =
 				new UnsyncByteArrayInputStream(bytes)) {
 
-			updateFile(
-				companyId, repositoryId, fileName, versionLabel,
-				unsyncByteArrayInputStream);
+			try {
+				updateFile(
+					companyId, repositoryId, fileName, versionLabel,
+					unsyncByteArrayInputStream);
+			}
+			catch (AccessDeniedException ade) {
+				throw new PrincipalException(ade);
+			}
 		}
 		catch (IOException ioe) {
 			throw new SystemException("Unable to read bytes", ioe);
@@ -482,6 +494,9 @@ public abstract class BaseStore implements Store {
 
 		try (InputStream is = new FileInputStream(file)) {
 			updateFile(companyId, repositoryId, fileName, versionLabel, is);
+		}
+		catch (AccessDeniedException ade) {
+			throw new PrincipalException(ade);
 		}
 		catch (FileNotFoundException fnfe) {
 			throw new NoSuchFileException(
@@ -533,7 +548,12 @@ public abstract class BaseStore implements Store {
 			is = new UnsyncByteArrayInputStream(new byte[0]);
 		}
 
-		updateFile(companyId, repositoryId, fileName, toVersionLabel, is);
+		try {
+			updateFile(companyId, repositoryId, fileName, toVersionLabel, is);
+		}
+		catch (AccessDeniedException ade) {
+			throw new PrincipalException(ade);
+		}
 
 		deleteFile(companyId, repositoryId, fileName, fromVersionLabel);
 	}

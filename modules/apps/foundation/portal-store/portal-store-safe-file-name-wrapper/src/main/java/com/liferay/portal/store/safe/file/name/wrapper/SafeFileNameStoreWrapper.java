@@ -14,10 +14,12 @@
 
 package com.liferay.portal.store.safe.file.name.wrapper;
 
+import com.liferay.document.library.kernel.exception.AccessDeniedException;
 import com.liferay.document.library.kernel.model.DLFileEntryConstants;
 import com.liferay.document.library.kernel.store.Store;
 import com.liferay.document.library.kernel.store.StoreWrapper;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.util.FileUtil;
 
 import java.io.File;
@@ -467,8 +469,13 @@ public class SafeFileNameStoreWrapper implements StoreWrapper {
 
 			renameUnsafeFile(companyId, repositoryId, fileName, safeFileName);
 
-			_store.updateFile(
-				companyId, repositoryId, safeFileName, versionLabel, is);
+			try {
+				_store.updateFile(
+					companyId, repositoryId, safeFileName, versionLabel, is);
+			}
+			catch (AccessDeniedException ade) {
+				throw new PrincipalException(ade);
+			}
 		}
 
 		@Override

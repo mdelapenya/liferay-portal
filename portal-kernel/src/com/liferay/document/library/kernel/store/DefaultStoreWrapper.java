@@ -14,7 +14,9 @@
 
 package com.liferay.document.library.kernel.store;
 
+import com.liferay.document.library.kernel.exception.AccessDeniedException;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.security.auth.PrincipalException;
 
 import java.io.File;
 import java.io.InputStream;
@@ -253,8 +255,13 @@ public class DefaultStoreWrapper implements StoreWrapper {
 				String versionLabel, InputStream is)
 			throws PortalException {
 
-			_store.updateFile(
-				companyId, repositoryId, fileName, versionLabel, is);
+			try {
+				_store.updateFile(
+					companyId, repositoryId, fileName, versionLabel, is);
+			}
+			catch (AccessDeniedException ade) {
+				throw new PrincipalException(ade);
+			}
 		}
 
 		@Override
