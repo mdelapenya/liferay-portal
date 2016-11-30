@@ -135,7 +135,12 @@ public class S3Store extends BaseStore {
 		String key = _s3KeyTransformer.getDirectoryKey(
 			companyId, repositoryId, dirName);
 
-		deleteObjects(key);
+		try {
+			deleteObjects(key);
+		}
+		catch (AccessDeniedException ade) {
+			throw new PrincipalException(ade);
+		}
 	}
 
 	@Override
@@ -145,7 +150,12 @@ public class S3Store extends BaseStore {
 		String key = _s3KeyTransformer.getFileKey(
 			companyId, repositoryId, fileName);
 
-		deleteObjects(key);
+		try {
+			deleteObjects(key);
+		}
+		catch (AccessDeniedException ade) {
+			throw new PrincipalException(ade);
+		}
 	}
 
 	@Override
