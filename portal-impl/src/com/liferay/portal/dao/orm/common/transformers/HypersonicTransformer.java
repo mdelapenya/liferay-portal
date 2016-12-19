@@ -22,7 +22,7 @@ import java.util.regex.Matcher;
 /**
  * @author Manuel de la Peña
  */
-public class HypersonicTransformer extends BaseSQLTransformer {
+public class HypersonicTransformer extends SQLTransformerBuilder {
 
 	public HypersonicTransformer(DB db) {
 		super(db);

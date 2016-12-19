@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 /**
  * @author Manuel de la Peña
  */
-public class DB2Transformer extends BaseSQLTransformer {
+public class DB2Transformer extends SQLTransformerBuilder {
 
 	public DB2Transformer(DB db) {
 		super(db);

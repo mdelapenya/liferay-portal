@@ -23,7 +23,7 @@ import java.util.regex.Matcher;
 /**
  * @author Manuel de la Peña
  */
-public class OracleTransformer extends BaseSQLTransformer {
+public class OracleTransformer extends SQLTransformerBuilder {
 
 	public OracleTransformer(DB db) {
 		super(db);

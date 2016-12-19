@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 /**
  * @author Manuel de la Peña
  */
-public class PostgreSQLTransformer extends BaseSQLTransformer {
+public class PostgreSQLTransformer extends SQLTransformerBuilder {
 
 	public PostgreSQLTransformer(DB db) {
 		super(db);

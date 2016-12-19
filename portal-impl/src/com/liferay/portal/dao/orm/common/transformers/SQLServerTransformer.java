@@ -22,7 +22,7 @@ import java.util.regex.Matcher;
 /**
  * @author Manuel de la Peña
  */
-public class SQLServerTransformer extends BaseSQLTransformer {
+public class SQLServerTransformer extends SQLTransformerBuilder {
 
 	public SQLServerTransformer(DB db) {
 		super(db);

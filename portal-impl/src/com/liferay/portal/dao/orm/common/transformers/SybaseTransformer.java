@@ -24,7 +24,7 @@ import java.util.regex.Matcher;
 /**
  * @author Manuel de la Peña
  */
-public class SybaseTransformer extends BaseSQLTransformer {
+public class SybaseTransformer extends SQLTransformerBuilder {
 
 	public SybaseTransformer(DB db) {
 		super(db);

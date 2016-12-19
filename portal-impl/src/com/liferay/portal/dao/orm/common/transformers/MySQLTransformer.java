@@ -23,7 +23,7 @@ import java.util.regex.Matcher;
 /**
  * @author Manuel de la Peña
  */
-public class MySQLTransformer extends BaseSQLTransformer {
+public class MySQLTransformer extends SQLTransformerBuilder {
 
 	public MySQLTransformer(DB db, boolean supportsStringCaseSensitiveQuery) {
 		super(db);

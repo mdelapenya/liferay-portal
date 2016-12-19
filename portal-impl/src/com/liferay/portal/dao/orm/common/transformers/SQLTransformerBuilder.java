@@ -29,10 +29,17 @@ import java.util.regex.Pattern;
 /**
  * @author Manuel de la Peña
  */
-public abstract class BaseSQLTransformer implements Transformer {
+public class SQLTransformerBuilder {
 
-	public BaseSQLTransformer(DB db) {
-		this.db = db;
+
+
+	public interface DBStep {
+		Transformation withDB(DB db);
+	}
+
+	public interface DB
+	public interface Transformation {
+
 	}
 
 	public void register(Function<String, String>... transformations) {
@@ -127,7 +134,7 @@ public abstract class BaseSQLTransformer implements Transformer {
 		(String sql) -> sql;
 
 	private static final Log _log = LogFactoryUtil.getLog(
-		BaseSQLTransformer.class);
+		SQLTransformerBuilder.class);
 
 	private static final Pattern _bitwiseCheckPattern = Pattern.compile(
 		"BITAND\\((.+?),(.+?)\\)");
