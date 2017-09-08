@@ -231,9 +231,6 @@ public class UpgradeClient {
 					if (line.equals("exit") || line.equals("quit")) {
 						break;
 					}
-					else if (line.equals("upgrade:help")) {
-						_printHelp();
-					}
 					else {
 						System.out.println(gogoTelnetClient.send(line));
 					}
@@ -369,29 +366,14 @@ public class UpgradeClient {
 	}
 
 	private void _printHelp() {
-		System.out.println("\nUpgrade commands:");
-		System.out.println("exit or quit - Exit Gogo Shell");
 		System.out.println(
-			"upgrade:check - List upgrades that have failed, have not " +
-				"started, or are still running");
+			"\nType \"help\" to get available upgrade and verify commands.");
+
 		System.out.println(
-			"upgrade:execute {module_name} - Execute upgrade for specified " +
-				"module");
-		System.out.println("upgrade:help - Show upgrade commands");
-		System.out.println("upgrade:list - List registered upgrades");
-		System.out.println(
-			"upgrade:list {module_name} - List upgrade steps required for " +
-				"specified module");
-		System.out.println(
-			"upgrade:list | grep Registered - List registered upgrades and " +
-				"their current version");
-		System.out.println(
-			"upgrade:list | grep Registered | grep steps - List upgrades in " +
-				"progress");
-		System.out.println(
-			"verify:execute {module_name} - Execute verifier for specified " +
-				"module");
-		System.out.println("verify:list - List registered verifiers");
+			"Type \"help {command}\" to get additional information about the " +
+				"command. For example, \"help upgrade:list\".");
+
+		System.out.println("Enter \"exit\" or \"quit\" to exit.");
 	}
 
 	private Properties _readProperties(File file) {
@@ -504,15 +486,22 @@ public class UpgradeClient {
 				_appServer.getServerDetectorServerId());
 		}
 		else {
+			String dirName = _appServerProperties.getProperty("dir");
+
+			File dir = new File(dirName);
+
+			if (!dir.isAbsolute()) {
+				dir = new File(_jarDir, dirName);
+			}
+
+			dirName = dir.getCanonicalPath();
+
+			_appServerProperties.setProperty("dir", dirName);
+
 			_appServer = new AppServer(
-				_appServerProperties.getProperty("dir"),
-				_appServerProperties.getProperty("extra.lib.dirs"),
+				dirName, _appServerProperties.getProperty("extra.lib.dirs"),
 				_appServerProperties.getProperty("global.lib.dir"),
 				_appServerProperties.getProperty("portal.dir"), value);
-
-			File dir = _appServer.getDir();
-
-			_appServerProperties.setProperty("dir", dir.getCanonicalPath());
 		}
 	}
 
@@ -635,6 +624,8 @@ public class UpgradeClient {
 	private void _verifyPortalUpgradeExtProperties() throws IOException {
 		String value = _portalUpgradeExtProperties.getProperty("liferay.home");
 
+		File baseDir = new File(".");
+
 		if ((value == null) || value.isEmpty()) {
 			File defaultLiferayHomeDir = new File(_jarDir, "../../");
 
@@ -648,8 +639,15 @@ public class UpgradeClient {
 				value = defaultLiferayHomeDir.getCanonicalPath();
 			}
 		}
+		else {
+			baseDir = _jarDir;
+		}
 
 		File liferayHome = new File(value);
+
+		if (!liferayHome.isAbsolute()) {
+			liferayHome = new File(baseDir, value);
+		}
 
 		_portalUpgradeExtProperties.setProperty(
 			"liferay.home", liferayHome.getCanonicalPath());
